@@ -1,0 +1,550 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Kubeapps</title>
+    <link>/tags/kubeapps/</link>
+    <description>Recent content in Kubeapps on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 11 Jun 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/kubeapps/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Getting Started with Kubeapps</title>
+      
+      <link>/guides/kubernetes/kubeapps-gs/</link>
+      <pubDate>Thu, 23 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/kubeapps-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;This guide will walk you through the process of deploying Kubeapps for your cluster and installing an example application.&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Note&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;This getting started guide is a copy of
+&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/getting-started.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Get Started with Kubeapps&lt;/a&gt;
+in the &lt;a href=&#34;https://github.com/kubeapps/kubeapps&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubeapps/kubeapps repository&lt;/a&gt;
+inclusive of commit
+&lt;a href=&#34;https://github.com/kubeapps/kubeapps/commit/1e49264088094dfd327d2a24b62cda470cc547d0&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;1e49264&lt;/a&gt;
+on April 20, 2020.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This guide is also available in video form:&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/9HsWsoDd1fM&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Kubeapps assumes a working Kubernetes cluster (v1.8+),
+&lt;a href=&#34;https://helm.sh/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;Helm&lt;/code&gt;&lt;/a&gt; (2.14.0+) installed in your cluster and
+&lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;kubectl&lt;/code&gt;&lt;/a&gt; installed
+and configured to talk to your Kubernetes cluster. Kubeapps has been tested with
+Azure Kubernetes Service (AKS), Google Kubernetes Engine (GKE), &lt;code&gt;minikube&lt;/code&gt; and
+Docker for Desktop Kubernetes. Kubeapps works on RBAC-enabled clusters and this
+configuration is encouraged for a more secure install.&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;GKE Permissions&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;On GKE, you must either be an &amp;ldquo;Owner&amp;rdquo; or have the &amp;ldquo;Container Engine Admin&amp;rdquo; role
+in order to install Kubeapps.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;step-1-install-kubeapps&#34;&gt;Step 1: Install Kubeapps&lt;/h2&gt;
+&lt;p&gt;Use the Helm chart to install the latest version of Kubeapps:&lt;/p&gt;
+&lt;p&gt;For Helm 2:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install --name kubeapps --namespace kubeapps bitnami/kubeapps
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you are using Helm 3, you need to set an extra flag to enable it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+kubectl create namespace kubeapps
+helm install kubeapps --namespace kubeapps bitnami/kubeapps --set &lt;span class=&#34;nv&#34;&gt;useHelm3&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For detailed information on installing, configuring and upgrading Kubeapps,
+checkout the
+&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;chart README&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The above commands will deploy Kubeapps into the &lt;code&gt;kubeapps&lt;/code&gt; namespace in your
+cluster. It may take a few minutes to execute. Once it has been deployed and the
+Kubeapps pods are running, continue to step 2.&lt;/p&gt;
+&lt;h2 id=&#34;step-2-create-a-kubernetes-api-token&#34;&gt;Step 2: Create a Kubernetes API token&lt;/h2&gt;
+&lt;p&gt;Access to the Dashboard requires a Kubernetes API token to authenticate with the
+Kubernetes API server.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create serviceaccount kubeapps-operator
+kubectl create clusterrolebinding kubeapps-operator --clusterrole&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;cluster-admin --serviceaccount&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;default:kubeapps-operator
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; It&amp;rsquo;s not recommended to create &lt;code&gt;cluster-admin&lt;/code&gt; users for Kubeapps
+production usage. Please refer to the
+&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/access-control.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Access Control&lt;/a&gt;
+documentation to configure fine-grained access control for users.&lt;/p&gt;
+&lt;p&gt;To retrieve the token,&lt;/p&gt;
+&lt;h3 id=&#34;on-linuxmacos&#34;&gt;On Linux/macOS:&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get secret &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;kubectl get serviceaccount kubeapps-operator -o &lt;span class=&#34;nv&#34;&gt;jsonpath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;{range .secrets[*]}{.name}{&amp;#34;\n&amp;#34;}{end}&amp;#39;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep kubeapps-operator-token&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt; -o &lt;span class=&#34;nv&#34;&gt;jsonpath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;{.data.token}&amp;#39;&lt;/span&gt; -o go-template&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;{{.data.token | base64decode}}&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;on-windows&#34;&gt;On Windows:&lt;/h3&gt;
+&lt;p&gt;Create a file called &lt;code&gt;GetDashToken.cmd&lt;/code&gt; with the following lines in it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bat&#34; data-lang=&#34;bat&#34;&gt;&lt;span class=&#34;p&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ECHO&lt;/span&gt; OFF
+&lt;span class=&#34;c1&#34;&gt;REM Get the Service Account&lt;/span&gt;
+kubectl get serviceaccount kubeapps-operator -o jsonpath={.secrets[].name} &lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; s.txt
+&lt;span class=&#34;k&#34;&gt;SET&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;/p&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;ks&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;=&amp;lt;&lt;/span&gt;s.txt
+&lt;span class=&#34;k&#34;&gt;DEL&lt;/span&gt; s.txt
+
+&lt;span class=&#34;c1&#34;&gt;REM Get the Base64 encoded token&lt;/span&gt;
+kubectl get secret &lt;span class=&#34;nv&#34;&gt;%ks%&lt;/span&gt; -o jsonpath={.data.token} &lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; b64.txt
+
+&lt;span class=&#34;c1&#34;&gt;REM Decode The Token&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;DEL&lt;/span&gt; token.txt
+certutil -decode b64.txt token.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Open a command prompt and run the &lt;code&gt;GetDashToken.cmd&lt;/code&gt; Your token can be found in
+the &lt;code&gt;token.txt&lt;/code&gt; file.&lt;/p&gt;
+&lt;h2 id=&#34;step-3-start-the-kubeapps-dashboard&#34;&gt;Step 3: Start the Kubeapps Dashboard&lt;/h2&gt;
+&lt;p&gt;Once Kubeapps is installed, securely access the Kubeapps Dashboard from your
+system by running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl port-forward -n kubeapps svc/kubeapps 8080:80
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will start an HTTP proxy for secure access to the Kubeapps Dashboard. Visit
+http://127.0.0.1:8080/ in your preferred web browser to open the Dashboard.
+Here&amp;rsquo;s what you should see:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/dashboard-login.png&#34; alt=&#34;Dashboard login page&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Paste the token generated in the previous step to authenticate and access the
+Kubeapps dashboard for Kubernetes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/dashboard-home.png&#34; alt=&#34;Dashboard main page&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Note:&lt;/strong&gt;&lt;/em&gt; If you are setting up Kubeapps for other people to access, you will
+want to use a different service type or setup Ingress rather than using the
+above &lt;code&gt;kubectl port-forward&lt;/code&gt;. For detailed information on installing,
+configuring and upgrading Kubeapps, checkout the
+&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;chart README&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;step-4-deploy-wordpress&#34;&gt;Step 4: Deploy WordPress&lt;/h2&gt;
+&lt;p&gt;Once you have the Kubeapps Dashboard up and running, you can start deploying
+applications into your cluster.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Use the &amp;ldquo;Deploy App&amp;rdquo; or click on the &amp;ldquo;Catalog&amp;rdquo; page in the Dashboard to select
+an application from the list of charts in any of the configured Helm chart
+repositories. This example assumes you want to deploy WordPress.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-search.png&#34; alt=&#34;WordPress chart&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Deploy&amp;rdquo; button.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-chart.png&#34; alt=&#34;WordPress chart&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You will be prompted for the release name and values for the application. The
+form is populated by the values (YAML), which you can see in the adjacent tab.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-installation.png&#34; alt=&#34;WordPress installation&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Submit&amp;rdquo; button. The application will be deployed. You will be able
+to track the new Helm deployment directly from the browser. The status will be
+shown at the top and you can also look at the individual resources lower in
+the page. It will also show the number of ready pods. If you run your cursor
+over the status, you can see the workloads and number of ready and total pods
+within them.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-deployment.png&#34; alt=&#34;WordPress deployment&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To access your new WordPress site, you can run the commands in the &amp;ldquo;Notes&amp;rdquo;
+section to get the URLs or simply click a URL (HTTP and HTTPS) shown.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Note:&lt;/strong&gt;&lt;/em&gt; Depending on your cloud provider of choice, it may take some time
+for an access URL to be available for the application and the Service will stay
+in a &amp;ldquo;Pending&amp;rdquo; state until a URL is assigned. If using Minikube, you will need
+to run &lt;code&gt;minikube tunnel&lt;/code&gt; in your terminal in order for an IP address to be
+assigned to your application.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-url.png&#34; alt=&#34;WordPress deployment notes&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;To get the credentials for logging into your WordPress account, refer to the
+&amp;ldquo;Notes&amp;rdquo; section. You can also get the WordPress password by scrolling down to
+&amp;ldquo;Secrets&amp;rdquo; and clicking the eye next to &lt;code&gt;wordpress-password&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-credentials.png&#34; alt=&#34;WordPress deployment notes&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;optional-step-5-uninstalldelete-wordpress&#34;&gt;[Optional] Step 5: Uninstall/Delete WordPress&lt;/h2&gt;
+&lt;p&gt;If you want to uninstall/delete your WordPress application, you can do so by
+clicking the &amp;ldquo;Delete&amp;rdquo; button. You can choose to click the checkbox for &amp;ldquo;Purge
+Release&amp;rdquo; (default action with the Helm 3 CLI). If you do not click it, the Helm
+chart history will remain (default action with Helm 2). This is fine, so long as
+you don&amp;rsquo;t attempt to install another chart with the same name in the same
+namespace.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-uninstall.png&#34; alt=&#34;WordPress uninstall&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;next-steps&#34;&gt;Next Steps&lt;/h2&gt;
+&lt;p&gt;Learn more about Kubeapps with the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Detailed installation instructions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/operators.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Deploying Operators&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/dashboard.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubeapps Dashboard documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/architecture/overview.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubeapps components&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/wiki/Roadmap&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Roadmap&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Deploy from a Private Helm Repository Using Kubeapps</title>
+      
+      <link>/guides/kubernetes/kubeapps-private-repo/</link>
+      <pubDate>Mon, 15 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/kubeapps-private-repo/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubeapps&lt;/a&gt; is a web-based UI for
+deploying and managing applications in Kubernetes clusters. Kubeapps includes a
+built-in catalog of Helm charts and operators continuously maintained and up to
+date. Now Kubeapps also provides support for private Helm repositories with
+private Docker images. There is an option of associating Docker credentials to
+an application repository so that Kubeapps can ensure they are used to pull any
+matching private images within a chart. This option is really useful for
+enterprise development team since it allows them to have more granular access
+control as well as a known good source of images.&lt;/p&gt;
+&lt;p&gt;Kubeapps officially supports the following Helm repositories:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/private-app-repository.md#chartmuseum&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ChartMuseum&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/private-app-repository.md#harbor&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Harbor&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/private-app-repository.md#artifactory&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Artifactory Pro&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This tutorial shows you how to create a private project in Harbor, push a
+customized Helm chart to your registry and create an application repository to
+have your chart ready from the Kubeapps UI to be deployed.&lt;/p&gt;
+&lt;p&gt;Watch the following video or keep reading this tutorial to learn more:&lt;/p&gt;
+&lt;iframe width=&#34;560&#34; height=&#34;360&#34; src=&#34;https://www.youtube.com/embed/LLw1Ib8IQQk&#34; frameborder=&#34;0&#34; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and prerequisites&lt;/h2&gt;
+&lt;p&gt;This guide assumes that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have a Docker environment installed and configured. Learn more about
+&lt;a href=&#34;https://docs.docker.com/engine/install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;installing Docker&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Docker Hub account.
+&lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Register for a free account&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Kubernetes cluster. Check out our
+&lt;a href=&#34;https://docs.bitnami.com/kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with Kubernetes guides&lt;/a&gt;
+for an easy way to get started with one.&lt;/li&gt;
+&lt;li&gt;You have administrator access to a preexisting installation of
+&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/harbor&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Harbor&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have
+&lt;a href=&#34;https://docs.bitnami.com/kubernetes/get-started-kubernetes/#step-4-install-helm&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm installed in your cluster&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have
+&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/getting-started.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubeapps installed in your cluster&lt;/a&gt;
+and are logged into the Kubeapps UI with admin credentials.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-1-create-a-private-project-in-harbor&#34;&gt;Step 1: Create a private project in Harbor&lt;/h2&gt;
+&lt;p&gt;The first step is to create a project in Harbor. To do so:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to Harbor.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the &amp;ldquo;Projects&amp;rdquo; section, click &amp;ldquo;+ New Project&amp;rdquo;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the resulting screen, give a name to your project. This should be private
+so don&amp;rsquo;t activate the &amp;ldquo;Public&amp;rdquo; check. To get an unlimited storage quota, set
+that value as -1. Click &amp;ldquo;OK&amp;rdquo; to proceed.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/harbor-create-new-project.png&#34; alt=&#34;Create a private project in Harbor&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-2-pull-the-docker-image-and-push-it-to-your-private-harbor-registry&#34;&gt;Step 2: Pull the Docker image and push it to your private Harbor Registry&lt;/h2&gt;
+&lt;p&gt;Next, pull the Docker image of the chart you want to add to your private
+repository. Then, you need to push it to Harbor to make it available in your
+project. Follow these steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Execute the following command to obtain the latest Bitnami Ghost image:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker pull bitnami/ghost:3.13.2-debian-10-r0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tag the image by executing the command below. Remember to replace the
+&lt;code&gt;HARBOR_DOMAIN_NAME&lt;/code&gt; placeholder with the domain name where Harbor is installed.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker tag docker.io/bitnami/ghost:3.13.2-debian-10-r0 HARBOR_DOMAIN_NAME/project-private/ghost:3.13.2-debian-10-r0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Login in to Harbor.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker login HARBOR_DOMAIN_NAME
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Push the image to your registry by executing this command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker push HARBOR_DOMAIN_NAME/project-private/ghost:3.13.2-debian-10-r0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You should see an output message similar to this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;The push refers to repository &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;harbor.bkpr-kubeapps-gke.nami.run/project-private/ghost&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+325a01bfb407: Preparing
+17d308e7f8c1: Preparing
+0a621af6678f: Preparing
+2e366bd4c478: Preparing
+315ad5c0230e: Preparing
+1cfb963e6dd2: Waiting
+4e78eb629a01: Waiting
+f2e5c6cb0141: Waiting
+8bce1f8ba802: Waiting
+7d1d696c2212: Waiting
+9f729ba7c732: Waiting
+e048dd4e8543: Waiting
+3.13.2-debian-10-r0: digest: sha256:9121f532fbe28f8e6d4cb11bf542374689c4595378ef83adeda5bff46731d972 size: &lt;span class=&#34;m&#34;&gt;2839&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Navigate to the Harbor UI and in your project, select the tab &amp;ldquo;Repositories&amp;rdquo;.
+You should see the repository that contains the image you just pushed. Click
+on it to check image details:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/harbor-images-pushed.png&#34; alt=&#34;Harbor repositories&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;step-3-enable-a-robot-account-in-your-project&#34;&gt;Step 3: Enable a Robot Account in your project&lt;/h2&gt;
+&lt;p&gt;Next step is to enable a Robot Account in your project with access to pull both
+Helm charts from the private repositories as well as Docker images in the
+private project. To do so:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;From the Harbor UI, navigate to the &amp;ldquo;Robot Account&amp;rdquo; tab in your project and
+click &amp;ldquo;+ New Robot Account&amp;rdquo;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the resulting window, give it a name, a description (optional) and in the
+&amp;ldquo;Permissions&amp;rdquo; section, activate the &amp;ldquo;Pull&amp;rdquo; check in the Helm Chart line. Click
+&amp;ldquo;Save&amp;rdquo; to proceed.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/create-robot-account.png&#34; alt=&#34;Create a Robot Account in your project&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Once it is created, remember to copy the token in a safe place or export it to file.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/robot-account-created.png&#34; alt=&#34;Copy or export to file the token&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;step-4-customize-your-helm-chart-and-push-it-to-your-private-harbor-registry&#34;&gt;Step 4: Customize your Helm chart and push it to your private Harbor Registry&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Get the Bitnami Ghost Helm chart and change to the chart&amp;rsquo;s directory by
+executing the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm fetch bitnami/ghost --untar &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ghost
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Edit the &lt;em&gt;values.yaml&lt;/em&gt; file of the chart of the chart so that the
+image.registry and image.repository value point to your registry and
+repository path respectively:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/chart-values-yaml.png&#34; alt=&#34;Modify the chart values.yaml file&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once you have edited those values, package you chart by running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ../ &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; helm package ./ghost
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You will see an output message similar to this: &amp;ldquo;Successfully packaged chart&amp;rdquo;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;From the Harbor UI, navigate to the &amp;ldquo;Helm Charts&amp;rdquo; tab and click &amp;ldquo;Upload&amp;rdquo;.
+Browse the resultant &lt;em&gt;tgz&lt;/em&gt; file of your packaged chart and click &amp;ldquo;Upload&amp;rdquo;. You
+will see your Helm Chart uploaded in a few minutes:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/harbor-helm-chart.png&#34; alt=&#34;Harbor Helm chart uploaded&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;You can click on it to check more information about the chart:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/harbor-chart-details.png&#34; alt=&#34;Harbor Helm chart details&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Now that you have both the Ghost image and its Helm chart available in your
+Harbor private repository, it is time to create an application repository in
+Kubeapps to start deploying your charts on Kubernetes from its dashboard.&lt;/p&gt;
+&lt;h2 id=&#34;step-5-create-an-application-repository-to-enable-your-harbors-private-repository-in-kubeapps&#34;&gt;Step 5: Create an application repository to enable your Harbor&amp;rsquo;s private repository in Kubeapps&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to Kubeapps.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Select the namespace where the repository (and the secret) are to be created.
+This should be different from the &lt;em&gt;kubeapps&lt;/em&gt; namespace.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;From the menu button in the top right corner, select the &amp;ldquo;App Repositories&amp;rdquo;
+option, then click the &amp;ldquo;Add App Repository&amp;rdquo; button.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the resulting screen enter the following information:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Application repository name&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;URL: private repository URL&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Repository Authorization: select the &amp;ldquo;Basic Auth&amp;rdquo; option and enter as
+&amp;ldquo;Username&amp;rdquo; the name you gave to the Robot Account created in Harbor, and as
+&amp;ldquo;Password&amp;rdquo;, the token you obtain at the time of the creation. This way,
+Kubeapps will be able to see the charts you have pulled into your Harbor
+repository.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Associate Docker Registry Credentials: click &amp;ldquo;Add New Credentials&amp;rdquo; to add
+the credentials that will allow Kubernetes to pull images from your private
+repository. Add the values below, then click &amp;ldquo;Submit&amp;rdquo;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Secret name&lt;/li&gt;
+&lt;li&gt;Server: Harbor&amp;rsquo;s server domain&lt;/li&gt;
+&lt;li&gt;Username: in this case, as you created a Robot Account, use its name as username&lt;/li&gt;
+&lt;li&gt;Password: use the Robot Account token as password&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/app-repo-pull-secret.png&#34; alt=&#34;Add an application repository with the Harbor credentials&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Install Repo&amp;rdquo; button to finish the process. You will see your new
+application repository in the list of existing application repositories in
+your namespace.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/app-repositories.png&#34; alt=&#34;List of application repositories&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;If you click the repository link, you will be redirected to its catalog. You
+should see your Ghost chart there ready to be deployed:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/private-repo-catalog.png&#34; alt=&#34;Private repository application catalog&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-6-deploy-your-custom-ghost-from-the-kubeapps-ui&#34;&gt;Step 6: Deploy your custom Ghost from the Kubeapps UI&lt;/h2&gt;
+&lt;p&gt;Finally, you are able to install your custom application from your private
+registry on Kubernetes using the Kubeapps UI.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;In the application repository catalog you just created, click the Ghost entry
+to go to the chart page.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;On the resulting screen, you can learn about the Ghost chart, the repository
+where it is located, review older versions, and any related links. Click
+&amp;ldquo;Deploy&amp;rdquo; to deploy the chart:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/deploy-ghost.png&#34; alt=&#34;Deploy Ghost from your private repository&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;This will take you to a page where you can configure your Ghost deployment.
+You can use either the &amp;ldquo;Form&amp;rdquo; or the &amp;ldquo;YAML&amp;rdquo; tab to customize your deployment
+as you want: give your chart a name, change the version you want to deploy,
+add an admin password (if not, a random 10-character alphanumeric string will
+be set), or configure Helm values.&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Important&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;The Ghost chart requires a resolvable host. Specify it in the &amp;ldquo;Hostname&amp;rdquo; section.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/ghost-values-kubeapps.png&#34; alt=&#34;Ghost values&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click &amp;ldquo;Submit&amp;rdquo; to start the application deployment. Once submitted, you will
+be redirected to a page that describes the state of your deployment. The
+status will be &amp;ldquo;Deploying&amp;rdquo; until Ghost is up and running.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/ghost-deployment.png&#34; alt=&#34;Ghost deployment&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once the chart is deployed, you can see all the deployment details, including
+the URLs to access the application.&lt;/p&gt;
+&lt;p&gt;By default, Ghost creates a Service with LoadBalancer type to provide an
+externally accessible URL for its web interface. Depending on your cloud
+provider of choice, the load balancer can take some time to provision and will
+stay in a &amp;ldquo;Pending&amp;rdquo; state until it is available. If using Minikube, you will
+need to run minikube tunnel in a new terminal window in order for an IP
+address to be assigned.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After some time, the URL should be visible in the Access URL table. Once it is
+visible, click one of the URLs shown to access your freshly deployed Ghost
+blog.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps-private-repo/ghost.png&#34; alt=&#34;Ghost home page&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubeapps Github repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/private-app-repository.md#harbor&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Using a Private Repository with Kubeapps&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://goharbor.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Harbor&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: Kubeapps Meets Tanzu Kubernetes Grid: a New Release is out</title>
+      
+      <link>/blog/kubeapps-meets-tanzu-kubernetes-grid-a-new-release-is-out/</link>
+      <pubDate>Fri, 11 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/kubeapps-meets-tanzu-kubernetes-grid-a-new-release-is-out/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;em&gt;Special thanks to Antonio Gamez and Michael Nelson, members of the VMware Kubeapps Team&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;The latest version of &lt;a href=&#34;https://github.com/kubeapps/kubeapps/releases/tag/v2.3.2&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubeapps (v.2.3.2)&lt;/a&gt; is now available for deployment on VMware Tanzu™ Kubernetes Grid™ (TKG) workload clusters. VMware Tanzu users already benefit from deploying Kubeapps in several environments and, now with a little configuration Kubeapps can be integrated with your TKG workload cluster.&lt;/p&gt;
+&lt;p&gt;In addition to this capability,  Kubeapps also features full compatibility with the latest versions of &lt;a href=&#34;https://pinniped.dev/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Pinniped&lt;/a&gt; which means that it can be used with &lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/7aa7c579251e0fb5b446ab71a67d8d847d6ce843/docs/user/using-an-OIDC-provider-with-pinniped.md#enabling-oidc-login-in-managed-clusters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;any OIDC provider for your TKG clusters and even in managed clusters&lt;/a&gt; such as Azure Kubernetes Service (AKS) and Google Kubernetes Engine (GKE).&lt;/p&gt;
+&lt;p&gt;Want to know more? Keep reading to discover the latest capabilities of Kubeapps that will enable developers and admin clusters to deploy and manage trusted open-source content in TKG clusters.&lt;/p&gt;
+&lt;h2 id=&#34;a-bit-of-history-what-is-kubeapps&#34;&gt;A bit of History: What is Kubeapps?&lt;/h2&gt;
+&lt;p&gt;Kubeapps is an in-cluster web-based application that enables users with a one-time installation to deploy, manage, and upgrade applications on a Kubernetes cluster.&lt;/p&gt;
+&lt;p&gt;This past year, the Kubeapps team has added key new features to support different use cases and scenarios. Firstly, we added &lt;a href=&#34;https://blog.bitnami.com/2020/05/kubeapps-now-supports-private-docker-registries.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;support for private Helm and Docker registries&lt;/a&gt; and later, in &lt;a href=&#34;https://blog.bitnami.com/2020/10/Kubeapps-2.0.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubeapps version 2.0&lt;/a&gt;, we built support to run Kubeapps on various VMware Tanzu ™ platforms such as Tanzu ™ Mission Control, vSphere and Tanzu ™ Kubernetes Grid.&lt;/p&gt;
+&lt;p&gt;With Kubeapps you can:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Customize deployments through an intuitive, form-based user interface&lt;/li&gt;
+&lt;li&gt;Inspect, upgrade and delete applications installed in the cluster&lt;/li&gt;
+&lt;li&gt;Browse and deploy from public or private chart repositories including VMware Marketplace™ and Bitnami Application Catalog&lt;/li&gt;
+&lt;li&gt;Secure authentication to Kubeapps using an OAuth2/OIDC provider such as the VMware Cloud Service Portal&lt;/li&gt;
+&lt;li&gt;Secure authorization based on Kubernetes role-based access control&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;key-features-of-kubeapps-232&#34;&gt;Key Features of Kubeapps 2.3.2&lt;/h2&gt;
+&lt;p&gt;In this Kubeapps release, we have focused on delivering key user experience features including the capability to enable Tanzu users to deploy Kubeapps directly as a Helm chart in TKG workload clusters. This version is tested and validated on the latest version of TKG (v1.3.1)&lt;/p&gt;
+&lt;p&gt;Once Kubeapps is up and running, cluster admins will benefit from having :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SSO for Authentication with TKG using Pinniped by configuring an OIDC provider&lt;/li&gt;
+&lt;li&gt;Ability to configure VMware Tanzu™ Application Catalog (TAC) as a private Chart repository;&lt;/li&gt;
+&lt;li&gt;Capability to configure VMware Marketplace ™ Catalog and the Bitnami Application Catalog as public chart repositories;&lt;/li&gt;
+&lt;li&gt;A customized user interface adapted to the Tanzu look and feel.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/kubeapps-232-release/kubeapps-tkg.png&#34; alt=&#34;alt_text&#34;  title=&#34;Kubeapps support for SSO Authentication&#34; /&gt;
+&lt;em&gt;Kubeapps support for SSO Authentication&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;All these new capabilities are designed to offer a seamless experience between Kubeapps and Tanzu Kubernetes Grid clusters.&lt;/p&gt;
+&lt;h2 id=&#34;how-can-i-configure-kubeapps-to-run-in-my-tkg-clusters&#34;&gt;How can I configure Kubeapps to run in my TKG clusters?&lt;/h2&gt;
+&lt;p&gt;Tanzu users can execute these simple steps to gain the maximum advantage with this new version of Kubeapps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Configure your cluster to enable SSO for Authentication with TKG using Pinniped and integrate Kubeapps with the identity management provider&lt;/li&gt;
+&lt;li&gt;Adjust the Kubeapps user interface to get a customized look and feel&lt;/li&gt;
+&lt;li&gt;Configure role-based access control in Kubeapps (RBAC) to manage roles and permissions among the teams in your organization&lt;/li&gt;
+&lt;li&gt;Deploy Kubeapps in the cluster&lt;/li&gt;
+&lt;li&gt;Add public and private repositories to Kubeapps: the public VMware Marketplace™ repository and your private &lt;a href=&#34;https://tanzu.vmware.com/application-catalog&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu Application Catalog&lt;/a&gt; for &lt;a href=&#34;https://tanzu.vmware.com/tanzu/advanced&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Advanced&lt;/a&gt; repository&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;At this point your development team can start deploying, listing, removing and managing applications in your TKG clusters from the Kubeapps user interface with total confidence!&lt;/p&gt;
+&lt;p&gt;Refer to the Kubeapps documentation to learn how to &lt;a href=&#34;https://github.com/kubeapps/kubeapps/tree/master/docs/step-by-step/kubeapps-on-tkg&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;deploy and configure Kubeapps on VMware Tanzu Kubernetes Grid.&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;support-and-resources&#34;&gt;Support and Resources&lt;/h2&gt;
+&lt;p&gt;Since Kubeapps is an OSS project, support for this version of Kubeapps will be provided on a best-effort basis.&lt;/p&gt;
+&lt;p&gt;For solving the problems you may have (including deployment support, operational support and bug fixes), please &lt;a href=&#34;https://github.com/kubeapps/kubeapps/issues&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;open an issue in the Kubeapps GitHub repository.&lt;/a&gt; A markdown template is provided by default to open new issues with the information requested to prioritize and respond to them as soon as possible.&lt;/p&gt;
+&lt;p&gt;Also, if you want to contribute to the project, feel free to &lt;a href=&#34;https://github.com/kubeapps/kubeapps/pulls&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;send us a pull request,&lt;/a&gt; and the team will check it and guide you in the process for a successful merge.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/tree/master/docs&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Kubeapps documentation section&lt;/a&gt; is full of useful resources to help you get the best of the chart.&lt;/p&gt;
+&lt;p&gt;Check out the step-by-step guide for &lt;a href=&#34;https://github.com/kubeapps/kubeapps/tree/master/docs/step-by-step/kubeapps-on-tkg&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;deploying and configuring Kubeapps on VMware Tanzu™ Kubernetes Grid™&lt;/a&gt; and the &lt;a href=&#34;https://docs.bitnami.com/tutorials/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami documentation tutorials site&lt;/a&gt; for improving your Kubernetes skills.&lt;/p&gt;
+&lt;p&gt;For more information on VMware Tanzu Kubernetes Grid, refer to &lt;a href=&#34;https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/index.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;its documentation page&lt;/a&gt;  where you will find handy information on managing your Kubernetes clusters.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Getting Started with Kubeapps</title>
+      
+      <link>/videos/kubeapps-gs/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/kubeapps-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

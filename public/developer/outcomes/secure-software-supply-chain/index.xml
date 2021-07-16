@@ -1,0 +1,302 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Secure Software Supply Chains</title>
+    <link>/outcomes/secure-software-supply-chain/</link>
+    <description>Recent content in Secure Software Supply Chains on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/outcomes/secure-software-supply-chain/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Outcomes: Developing a DevSecOps Practice</title>
+      
+      <link>/outcomes/secure-software-supply-chain/establish-devsecops/</link>
+      <pubDate>Tue, 11 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/secure-software-supply-chain/establish-devsecops/</guid>
+      <description>
+
+        
+        &lt;p&gt;Modern software delivery demands that we think differently about how we bring
+code to production. Traditional methodologies typically took on a siloed
+approach: a development team writes the code, a security team ensures that this
+code adheres to organizational compliance requirements, and operations teams
+maintained the availability of the running service. While this organization of
+specific roles often met the demand for bringing code to production, it suffers
+from a number of drawbacks.&lt;/p&gt;
+&lt;p&gt;First, it was often slow. With different groups all involved in bringing code to
+production, responsibilities were often serialized. Once the code is ready, the
+security team takes a look. And then, once the security team blesses the
+release, an operator can deploy and maintain it. Yes, these teams could
+multi-task, and begin the next body of work while their current release
+candidate was being validated. But, this is typically not an efficient process.
+In practical terms, it introduces disruptive context switching, but it also
+means that these teams are not working collaboratively towards a common goal.&lt;/p&gt;
+&lt;p&gt;Because these teams each have different objectives, friction often develops when
+attempting to achieve outcomes. Development teams are often blindsided by
+unclear or poorly understood security requirements, operations teams do not
+usually have nuanced understanding of the code to effectively operate it, and
+security teams struggle to keep the business secure in the face of rapidly
+evolving technical requirements.&lt;/p&gt;
+&lt;p&gt;While Secure Software Supply Chains are primarily a component of getting code
+into production, they are also an opportunity to reduce the friction between the
+various stakeholders attached to software development efforts. When implemented
+properly, each part of the organization will be working together towards the
+common goal of delivering customer value through software delivery.&lt;/p&gt;
+&lt;h2 id=&#34;changing-responsibilities&#34;&gt;Changing Responsibilities&lt;/h2&gt;
+&lt;p&gt;Members of a development organization will still maintain their respective areas
+of expertise, but they will now be asked to work more collaboratively towards
+this common goal of bringing code to production. Instead of serialized tasks,
+within DevSecOps each of these groups are working together in parallel. Needs
+and solutions are clearly communicated on a regular basis. And, because these
+lines of responsibility are becoming blurred, members can come to shared
+understandings of how the system works through code. After all, they are now
+working as one team.&lt;/p&gt;
+&lt;h3 id=&#34;the-platform-operator&#34;&gt;The Platform Operator&lt;/h3&gt;
+&lt;p&gt;The role of the SRE or platform operator shifts from one of being primarily
+focused on system availability to one where the operator is an integral part of
+the development process itself. While the application teams will be focused on
+new feature development, SREs will focus on the reliability of the whole system.
+This will require new and different skills from that of a classic system
+administrator role. Instead of a simple restart of a service, an SRE will now be
+analyzing performance metrics, debugging defects, and helping to build plans to
+ensure data integrity.&lt;/p&gt;
+&lt;p&gt;Platform operators need to be involved from the beginning in order to develop
+fault-tolerant systems. Their broad infrastructure expertise will help to inform
+key code decisions during the design and development phases. Determining backup
+and recovery needs as well as how to ensure the high-availability of systems are
+just some of the tasks that require operator involvement.&lt;/p&gt;
+&lt;p&gt;Maintaining the supply chain will require the development of cross-cutting
+functionality: pipelines and tools that are suitable for all development teams.
+This may include implementation of common frameworks for business continuity,
+systems that enforce transparent security, and general infrastructure
+management.&lt;/p&gt;
+&lt;h3 id=&#34;the-security-engineer&#34;&gt;The Security Engineer&lt;/h3&gt;
+&lt;p&gt;The role of the security engineer, similar to that of a platform engineer,
+evolves into one that is closely aligned with their development partners.
+Instead of acting as a gate to production, they are now engaged with the
+development teams from the start. The goal is to ensure that security
+requirements are implemented from the beginning. And, these requirements are no
+longer defined by spreadsheets and quickly-dated documents, but where possible
+they are defined by code and continuously verified. This code will make crystal
+clear, to anyone who would like to ship new code to production, the security
+requirements that are expected to be adhered to.&lt;/p&gt;
+&lt;p&gt;Modern platforms provide for shared mechanisms of policy enforcement. This may
+include everything from how infrastructure is deployed and refreshed to clearly
+outlining which software dependencies a development team is cleared to use. With
+a DevSecOps mindset, security engineers are helping to define these policies,
+but more importantly, help to implement these policies through code. Sometimes
+that code will be implemented as simple configuration data, but there is also
+the expectation that security teams will engage on the product&amp;rsquo;s code itself;
+advising on items like dependencies, user identity flows, and similar types of
+needs.&lt;/p&gt;
+&lt;h3 id=&#34;the-app-developer&#34;&gt;The App Developer&lt;/h3&gt;
+&lt;p&gt;Within DevSecOps the application developer&amp;rsquo;s role still consists, primarily, of
+bringing new software to customers. However, the scope of their work grows.
+Instead of being squarely focused on new features, or even addressing bugs,
+their scope needs to include tasks that will help to establish and maintain the
+security of their software pipelines.&lt;/p&gt;
+&lt;p&gt;The software delivery pipeline requires the same degree of diligence as the
+product itself. After all, this is the component that stands between your
+development teams and customers realizing value through your code. Without this
+robust capability, new code will never make it to your customers.&lt;/p&gt;
+&lt;p&gt;Developers will need to be involved in the development of unit and integration
+tests that exercise their code in ways that will mimic real-world use. Likewise,
+they will be a critical part in ensuring that all of the components in their
+software artifacts are up to date and secure. And, as they are typically closest
+to the data requirements of the software, they will need to play a critical role
+in developing disaster recovery requirements with their Security and Operations
+counterparts.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: How Can Containers Help?</title>
+      
+      <link>/outcomes/secure-software-supply-chain/how-can-containers-help/</link>
+      <pubDate>Wed, 21 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/secure-software-supply-chain/how-can-containers-help/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Building a Container</title>
+      
+      <link>/outcomes/secure-software-supply-chain/building-a-container/</link>
+      <pubDate>Wed, 19 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/secure-software-supply-chain/building-a-container/</guid>
+      <description>
+
+        
+        &lt;p&gt;There&amp;rsquo;s many options that you have when deciding how you want to build the container for your code. From writing a Dockerfile by hand to automated build services, finding the right build method is an important first step. Let&amp;rsquo;s take a look at a few options that exist do see the advantages and disadvantages of each!&lt;/p&gt;
+&lt;h2 id=&#34;dockerfile&#34;&gt;Dockerfile&lt;/h2&gt;
+&lt;p&gt;If you&amp;rsquo;re already familiar with building a container image, this is probably where you got your start. A Dockerfile defines a series of actions (copy files, run commands, etc) that will be executed against a base image. These actions are used to prepare an operating system image for your applications, complete with all system-level dependencies. Consider this basic Dockerfile:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; ubuntu:18.04&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;COPY&lt;/span&gt; . /app&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; make /app&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ENTRYPOINT&lt;/span&gt; /app/my-app&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This Dockerfile tells the Docker build process to use the &lt;code&gt;ubuntu:18.04&lt;/code&gt; container image as a base and to copy the current directory from the local filesystem to &lt;code&gt;/app&lt;/code&gt; within the filesystem of the container that we&amp;rsquo;re building. The &lt;code&gt;RUN&lt;/code&gt; command then runs the command to build the application within the context of the container image. Finally, the &lt;code&gt;ENTRYPOINT&lt;/code&gt; instruction defines the command to run when the container is started. In this case, when the container is started, the executable at &lt;code&gt;/app/my-app&lt;/code&gt; is launched by default. Users may override this entry point on the command line or through Kubernetes Pod specifications.&lt;/p&gt;
+&lt;p&gt;One thing to note is that the separation between base image and your code makes a couple things easier. First, you can create a image containing only the dependencies that you need, reducing the security risk that could be inadvertently introduced by maintaining an entire system of dependencies when only a small fraction are ever used. Second, using a common base image among applications means that you&amp;rsquo;re maintaining those dependencies in one place. If you build many Java applications and there&amp;rsquo;s a security vulnerability in the JVM for example, now you only need to update your base image and point your application container to build off of that one image.&lt;/p&gt;
+&lt;p&gt;With that basic understanding, let&amp;rsquo;s look at a more specific example. In this case, this Dockerfile is used to run a Spring Boot application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; openjdk:8-jdk-alpine&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;EXPOSE&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; 8080&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ARG&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;JAR_FILE&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;target/my-application.jar&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ADD&lt;/span&gt; &lt;span class=&#34;si&#34;&gt;${&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;JAR_FILE&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;}&lt;/span&gt; app.jar&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ENTRYPOINT&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;java&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;-jar&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/app.jar&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s start with the two new instructions added here. Since our container will be running a web application running on port 8080, we can inform the container runtime of this by using the &lt;code&gt;EXPOSE&lt;/code&gt; instruction. Additionally, from the &lt;code&gt;ADD&lt;/code&gt; instruction, you might have noticed that this Dockerfile is expecting a prebuilt JAR. If you&amp;rsquo;re a Java developer, you may know that different build tools, such as Maven and Gradle, build their applications differently. The &lt;code&gt;ARG&lt;/code&gt; instruction defines a variable that can be used in the Dockerfile, with the option to override it when building the container. In this case, we set the default value of &lt;code&gt;JAR_FILE&lt;/code&gt; to &lt;code&gt;target/my-application.jar&lt;/code&gt; with the assumption that we&amp;rsquo;re  building this application with Maven outside the context of the Docker build process. If this is the case, the container could then just be built with the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker build -t USERNAME/my-application .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, Gradle would place the build artifact in the &lt;code&gt;build/libs&lt;/code&gt; directory. Luckily, the &lt;code&gt;docker build&lt;/code&gt; command allows up to override this &lt;code&gt;ARG&lt;/code&gt; instruction on the command line:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;docker build --build-arg JAR_FILE=build/libs/\*.jar -t USERNAME/my-application .
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Finally, the dependencies to build your application may be different from the dependencies to run your application. For this, you can write a Dockerfile with &lt;a href=&#34;https://docs.docker.com/develop/develop-images/multistage-build/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;multiple stages&lt;/a&gt;. A multi-stage build defines multiple &lt;code&gt;FROM&lt;/code&gt; statements, which quite literally start a new, separate build from the previous. Consider the following Dockerfile which builds a Spring application and creates a container for it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Dockerfile&#34; data-lang=&#34;Dockerfile&#34;&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; maven:3.8.1-openjdk-11 as BUILD&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;COPY&lt;/span&gt; . /spring-hello-world&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WORKDIR&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; /spring-hello-world&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt;  mvn clean package&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; openjdk:11.0.11-jre-slim&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;COPY&lt;/span&gt; --from&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;BUILD /spring-hello-world/target/spring-helloworld-0.0.1-SNAPSHOT.jar /spring-hello-world/spring-hello-world.jar&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;EXPOSE&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; 8080&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;CMD&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;java&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;-jar&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/spring-hello-world/spring-hello-world.jar&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This Dockerfile defines two stages. The first &lt;code&gt;FROM&lt;/code&gt; statement uses the &lt;code&gt;maven:3.8.1-openjdk-11&lt;/code&gt; container image as a base, and gives the label of &lt;code&gt;BUILD&lt;/code&gt; as a name for this build stage. The next few lines should look familiar: we copy our source code into it, set our working directory, and run the &lt;code&gt;mvn clean package&lt;/code&gt; command to build our application.&lt;/p&gt;
+&lt;p&gt;From there, you&amp;rsquo;ll notice a second &lt;code&gt;FROM&lt;/code&gt; command. This tells Docker to start a completely fresh container image, separate from whatever was done before it. This time, we&amp;rsquo;re using &lt;code&gt;openjdk:11.0.11-jre-slim&lt;/code&gt; as a base, which contains just the JRE and removes a lot of unneeded dependencies. You&amp;rsquo;ll notice that the &lt;code&gt;COPY&lt;/code&gt; command has the &lt;code&gt;--from=BUILD&lt;/code&gt; argument, which tells Docker that instead of copying files from the local filesystem, copy it from a previous stage, in this case the one labeled &lt;code&gt;BUILD&lt;/code&gt;. We copy the JAR file from the previous stage into our new stage, expose the port that it&amp;rsquo;s running on, and set the &lt;code&gt;CMD&lt;/code&gt; to run the resulting JAR. This results in a much slimmer container image, which in turn can result in a much more secure image. Keeping the dependencies limited and scoped to only situation where they&amp;rsquo;re required shrinks the window for possible vulnerabilities. We don&amp;rsquo;t need to ship the full JDK into production alongside each of our applications, so this method allows us to build the code within the container without that extra weight.&lt;/p&gt;
+&lt;p&gt;There&amp;rsquo;s many more instructions that a Dockerfile may contain. To learn more, please refer to the &lt;a href=&#34;https://docs.docker.com/engine/reference/builder/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Dockerfile reference&lt;/a&gt; and the &lt;a href=&#34;https://docs.docker.com/develop/develop-images/dockerfile_best-practices/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;best practices for writing Dockerfiles&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;A Dockerfile requires the most hands-on maintenance as you&amp;rsquo;re handling both the instructions to build the container (writing the Dockerfile), as well as the responsibility of actually running the &lt;code&gt;docker build&lt;/code&gt; command in your pipeline. If you&amp;rsquo;re using a CI/CD solution that provides access to a running Docker daemon that you can trust to be secure, this may not be a big deal. Be sure to consult the documentation for your CI/CD tools.&lt;/p&gt;
+&lt;h2 id=&#34;kaniko&#34;&gt;Kaniko&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/GoogleContainerTools/kaniko&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kaniko&lt;/a&gt; is an example of a tool that can help formalize your build pipeline. When building a Dockerfile directly, you need access to a running Docker daemon, and setting one up inside a container requires privileged escalation. Kaniko does not require these privileges, meaning that you will not be granting containers unnecessary permissions that could be potentially exploited. At its core, Kaniko is a prebuilt container image with an executable that knows how to compile a Dockerfile without Docker itself. You still write your Dockerfile as demonstrated, but instead of running a &lt;code&gt;docker build&lt;/code&gt; command, you provide it to Kaniko along with your code, and it will build and upload the container to the registry that you specify.&lt;/p&gt;
+&lt;p&gt;Consider the following Kubernetes pod definition:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Pod&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kaniko&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kaniko&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/kaniko-project/executor:latest&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;--dockerfile=Dockerfile&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;--context=git://github.com/ORG/REPO.git#refs/heads/main&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;--destination==&amp;lt;DOCKER USERNAME&amp;gt;/&amp;lt;CONTAINER NAME&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumeMounts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kaniko-secret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;mountPath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/kaniko/.docker&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;restartPolicy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Never&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kaniko-secret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secret&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secretName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;regcred&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;items&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;.dockerconfigjson&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;config.json&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this case, a pod will be spun up in Kubernetes using the Kaniko executor image, which will pull down the latest commit in the &lt;code&gt;main&lt;/code&gt; branch of the GitHub repository defined in the &lt;code&gt;--context&lt;/code&gt; argument, build it using the Dockerfile in the repository, and upload it to the container registry defined in the &lt;code&gt;--destination&lt;/code&gt; argument. This build process, and the build process of other similar tools, makes it much easier to integrate a container build into your CI/CD pipelines.&lt;/p&gt;
+&lt;p&gt;You will notice that we have not granted any elevated permissions to this Pod. It is operating with the same permissions that Pods will have at runtime. Limiting permissions is a critical component of a secure software supply chain.&lt;/p&gt;
+&lt;p&gt;Kaniko does not support the scanning of images for vulnerabilities. Instead, it delegates this functionality to other parts of your CI/CD pipeline. This implies that your registry will need policy enforcement capabilities that prevent the upload of insecure images. Implementing &lt;a href=&#34;https://goharbor.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Harbor&lt;/a&gt; may be a suitable solution.&lt;/p&gt;
+&lt;p&gt;To learn more about Kaniko, please reference the documentation in the &lt;a href=&#34;https://github.com/GoogleContainerTools/kaniko&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kaniko GitHub repository&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;While a solution such as this still requires you to provide a Dockerfile, you&amp;rsquo;re no longer responsible for ensuring consistent and secure access to a Docker daemon. On the other hand, you do require access to a running Kubernetes cluster. If you have this available from your build environment, then using Kaniko becomes a much simpler process. However if you need to maintain a Kubernetes cluster just for this build, perhaps there&amp;rsquo;s a better fitting solution.&lt;/p&gt;
+&lt;h2 id=&#34;tanzu-build-service&#34;&gt;Tanzu Build Service&lt;/h2&gt;
+&lt;p&gt;The final step you can take when deciding how to build your container is a fully-automated build service such as &lt;a href=&#34;https://tanzu.vmware.com/build-service&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Build Service&lt;/a&gt;.  While you can tie tools such as Kaniko into a CI/CD pipeline that you run and manage, tools such as Tanzu Build Service aim to provide that automated build-scan-publish pipeline in a single solution.&lt;/p&gt;
+&lt;p&gt;Since tools such as Kaniko do not include features such as security scanning, you will need to independently support a scanning solution. This becomes another component to be managed within your build environment.&lt;/p&gt;
+&lt;p&gt;Tanzu Build Service leverages &lt;a href=&#34;/guides/containers/cnb-what-is/&#34;&gt;Cloud Native Buildpacks&lt;/a&gt;, which contain all of the logic on how to build an application, removing the need to write your own Dockerfile. Additionally, Cloud Native Buildpacks provide a standardized base for all of your container images, meaning that if there&amp;rsquo;s a vulnerability found in the Java runtime for example, you only need to update the buildpack. Tanzu Build Service can then take this new buildpack image and rebase your application containers automatically, ensuring these security fixes are implemented across your infrastructure.
+While a primary use case for Tanzu Build Service is to manage the creation of newly built images, it is also a valuable tool for ensuring that images remain in compliance. When building a secure supply chain, we need to close the loop, by quickly leveraging our investment in these build tools to remediate our production environments. Tanzu Build Service may be a valuable component towards achieving that goal.```&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/IMmUjUjBzes&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If you&amp;rsquo;re interested in learning more about adding Tanzu Build Service to your build pipeline, you can learn more &lt;a href=&#34;https://tanzu.vmware.com/build-service&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;!&lt;/p&gt;
+&lt;p&gt;A fully-automated build system is the most turnkey of the three we&amp;rsquo;ve looked at. Removing the need to maintain a Dockerfile is not only a convenience, it can drastically improve the security of your containers. The use of heavily tested buildpacks means that you containers are being built off of known security-hardened base images, and once your containers are built, they&amp;rsquo;re automatically scanned for known CVEs.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: What is CI/CD?</title>
+      
+      <link>/outcomes/secure-software-supply-chain/what-is-ci-cd/</link>
+      <pubDate>Wed, 19 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/secure-software-supply-chain/what-is-ci-cd/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Building Containers in CI/CD Pipelines</title>
+      
+      <link>/outcomes/secure-software-supply-chain/ci-cd-containers/</link>
+      <pubDate>Wed, 19 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/secure-software-supply-chain/ci-cd-containers/</guid>
+      <description>
+
+        
+        &lt;p&gt;While we explored a number of methods to build a container, they can all integrate into your CI/CD pipelines differently. Of course, your choice of CI and CD tools can also dictate how you build your container as well, so make sure you&amp;rsquo;re reading the appropriate documentation and ensure that your pipelines are leveraging all of the features at your disposal.&lt;/p&gt;
+&lt;h2 id=&#34;docker&#34;&gt;Docker&lt;/h2&gt;
+&lt;p&gt;Depending on your choice of CI/CD tool, building container images with Docker can present its own unique challenges. Some tools will present a running Docker daemon, which makes this process very straightforward, allowing you to perform a simple &lt;code&gt;docker build&lt;/code&gt; command to build your container. In some scenarios however, a running Docker daemon isn&amp;rsquo;t always available, at least not by default. &lt;a href=&#34;https://www.jenkins.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Jenkins&lt;/a&gt; provides a &lt;a href=&#34;https://plugins.jenkins.io/docker-plugin/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker plugin&lt;/a&gt; and &lt;a href=&#34;https://circleci.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CircleCI&lt;/a&gt; allows you to &lt;a href=&#34;https://circleci.com/docs/2.0/building-docker-images/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;define the need for a Docker daemon&lt;/a&gt; for example, and the ability to build container images from a Dockerfile is becoming more prevalent, but ensure to keep this in mind when choosing your CI/CD tools.&lt;/p&gt;
+&lt;p&gt;The upside to using Dockerfiles to build your containers is that it makes your CI/CD pipeline very straightforward. There&amp;rsquo;s a straight line through test, build, and deploy without relying on external processes triggering parts of your pipeline(s).&lt;/p&gt;
+&lt;p&gt;&amp;lt;TODO: Example diagram&amp;gt;&lt;/p&gt;
+&lt;h2 id=&#34;kaniko&#34;&gt;Kaniko&lt;/h2&gt;
+&lt;p&gt;Kaniko and other tools that rely on reactively spinning up pods on Kubernetes present a different challenge of how you construct your CI/CD pipeline. Your tool of choice may have a plugin or feature to enable either the use of Kaniko directly or allow you to run a pod and wait for its outcome. If it doesn&amp;rsquo;t however, not all is lost, the solution just becomes more of a structural one.&lt;/p&gt;
+&lt;p&gt;The solution, again, can take many forms. You can have one pipeline that tests your code and spins up a Kaniko pod, then a second pipeline that is triggered when a newer version of a container image is uploaded to your registry. Alternatively, you could feed the details of the pod running your build into a step in your pipeline that&amp;rsquo;s responsible for watching that pod and waiting for it to complete. Any way you go about it, you can still leverage solutions such as Kaniko in case you don&amp;rsquo;t have access to a dedicated Docker daemon but do have a Kubernetes cluster that you can use.&lt;/p&gt;
+&lt;p&gt;&amp;lt;TODO: Example diagram&amp;gt;&lt;/p&gt;
+&lt;h2 id=&#34;tanzu-build-service&#34;&gt;Tanzu Build Service&lt;/h2&gt;
+&lt;p&gt;A difference between using a build service such as Tanzu Build Service and a solution such as Kaniko is who initiates each step of the build. With a solution such as Kaniko, you&amp;rsquo;re responsible for kicking up tests once a new commit is made to the code, and then spinning up a pod to build the container. You&amp;rsquo;re then also responsible for figuring out when the build completes, sending it to our image scanning solution, and finally watching for when the scan finishes.&lt;/p&gt;
+&lt;p&gt;Since solutions such as Tanzu Build Service offer building and scanning images in one, your pipeline could be as simple as watching for a new commit, running the tests, and then tagging the code so that the build service kicks off a build and scan. This may represent a faster and less risk-prone path to production.&lt;/p&gt;
+&lt;p&gt;&amp;lt;TODO: Example diagram&amp;gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: How a Container Registry Can Help</title>
+      
+      <link>/outcomes/secure-software-supply-chain/container-registry/</link>
+      <pubDate>Mon, 07 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/secure-software-supply-chain/container-registry/</guid>
+      <description>
+
+        
+        &lt;p&gt;A container registry provides a single place to store and retrieve your container images. At a minimum, a container registry will support the &lt;a href=&#34;https://github.com/opencontainers/distribution-spec&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;OCI Distribution Specification&lt;/a&gt;, the API that both Docker and Kubernetes expect to be supported to pull container images. They may either be a publicly hosted such as &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Hub&lt;/a&gt; or &lt;a href=&#34;https://cloud.google.com/container-registry&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Google Container Registry&lt;/a&gt;, or they may be hosted privately such as &lt;a href=&#34;https://goharbor.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Harbor&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;automated-security-scans&#34;&gt;Automated Security Scans&lt;/h2&gt;
+&lt;p&gt;A popular feature of container registry is the ability to automatically scan container images for known vulnerabilities. As a single container image can container many layers, including a base container image that you don&amp;rsquo;t even maintain, it can be a huge challenge to stay on top of keeping your dependencies up to date. Because of this, you&amp;rsquo;ll find many container registries offer the ability to scan your containers every time you upload one and report if there&amp;rsquo;s a known vulnerability discovered. For example, Harbor relies on &lt;a href=&#34;https://github.com/aquasecurity/trivy&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Trivy&lt;/a&gt;, an open-source solution that performs static analysis on container images. Of course, as new vulnerabilities are discovered, you can rerun these scans against your existing images. If an issue is found, you can configure your registry to block any requests to pull the image based on the severity.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/secure-software-supply-chain/harbor-scan.png&#34; alt=&#34;An automated scan in Harbor finding vulnerabilities in our container&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;policy-enforcement&#34;&gt;Policy Enforcement&lt;/h2&gt;
+&lt;p&gt;Being the central point for gathering and distributing container images, the container registry has a lot of say in &lt;em&gt;who&lt;/em&gt; can push or pull an image. Every major container registry &amp;ndash; public or private &amp;ndash; supports requiring the user to be authenticated to interact with it. As such, the registry can then manage a list of actions the user (or group of users) can perform. For example, suppose we create a group called &amp;ldquo;developers&amp;rdquo; and they have access to an image that contains a collections of services that the require to perform their job. We can configure the registry to allow them to pull down the image to their workstation, but prevent them from pushing up new versions of the container.&lt;/p&gt;
+&lt;p&gt;This all contributes to one of the most fundamental ideas of security: the principle of least privilege. That is, the user should have access to only the actions and resources that they absolutely require.&lt;/p&gt;
+&lt;p&gt;Finally, if your pipeline relies on container images published or hosted by others, your own container registry can act as a proxy and a cache to those remote registries. For example, say a container that we&amp;rsquo;re building relies on the &lt;code&gt;ubuntu:18.04&lt;/code&gt; container as a base. By default, your pipeline can reach out to your container registry and ask for this image. If it already exists on your private registry, great! It gets pulled down just as it would normally. If it doesn&amp;rsquo;t exist however, the registry can then proxy that request to Docker Hub where that container image lives, pull it down, and cache it in your private registry. Not only does this mean that deployments aren&amp;rsquo;t relying on an external dependency, but it also allows you to ensure the version of a container image that you&amp;rsquo;re using is exactly what you expect it to be.&lt;/p&gt;
+&lt;h2 id=&#34;using-a-container-registry-in-an-air-gapped-environment&#34;&gt;Using a Container Registry in an Air-Gapped Environment&lt;/h2&gt;
+&lt;p&gt;In an air-gapped environment, your delivery pipeline may have no access to the internet at all. The good news is, you can still use a private container registry just as you would a public one. You can push and pull to it, manage permissions, even scan for vulnerabilities. Of course new security definitions and updates must be done manually, but this also means that your delivery pipeline is physically separated from public networks and the internet, giving an additional layer of protection for your process.&lt;/p&gt;
+&lt;h2 id=&#34;additional-uses-for-a-registry&#34;&gt;Additional Uses for a Registry&lt;/h2&gt;
+&lt;p&gt;Some registries offer even more features that can really enhance your software delivery pipeline. Harbor for example can also act as a repository for &lt;a href=&#34;https://goharbor.io/docs/latest/working-with-projects/working-with-images/managing-helm-charts/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm charts&lt;/a&gt;. When you upload your Helm chart to Harbor, you can see all of the information about it right in the browser.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/secure-software-supply-chain/harbor-helm-values.png&#34; alt=&#34;Showing the values for a Helm chart in Harbor&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Another feature some repositories support is the ability to trigger webhooks based on different scenarios. For example, a common one may be that you want to trigger a new pipeline when a new version of your container image is uploaded, or you want to notify a group of people when a security scan fails. This makes is much simpler to integrate with your delivery pipeline no matter the technology used to back it.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/secure-software-supply-chain/harbor-hooks.png&#34; alt=&#34;Various webhooks in Harbor&#34;  /&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,733 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Remote</title>
+    <link>/tags/remote/</link>
+    <description>Recent content in Remote on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 09 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/remote/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Practices: Goals &amp; Anti-Goals</title>
+      
+      <link>/practices/goals-anti-goals/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/goals-anti-goals/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Draw 4 columns on the whiteboard, one for each type of goal. Put anti-goal column off to the side to introduce it later.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write out goal types on board along with prompts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Product goals&lt;/strong&gt; - “What impact do we want to have on our product space?”&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Business goals&lt;/strong&gt; - “What does success look like from a business perspective? Are there any important dates that we need to consider?”&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Project / Consulting engagement goals&lt;/strong&gt; - “As a team, what do we want to accomplish during our time together?”&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Anti-goals&lt;/strong&gt; - “What do we want to accomplish someday that would distract the team today?”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Give 7 minutes of brainstorming time. Ask everyone to write as many ideas as possible, 1 per sticky note.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In 2 minutes, have each person pick their top 2 goals for each category and rip up everything else. Remember to mention that this is okay!&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Go around the room and have everyone share out the 8 goals they selected. Have a co-facilitator put the sticky notes on the board in the right columns.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;As each person shares out, ask other people if they have a duplicate. Group these similar goals together.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When everyone has shared, hand out 6 dots per person and have everyone dot vote on their top 2 product, business, and project/consulting engagement goals (there’s no need to vote on the anti-goals). Circle the top 2 goals that emerge.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Confirm with key stakeholder(s) if there’s anything else really important that we’ve missed. If so, circle those as well or write them down.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is when the core team and stakeholders have a clear and shared understanding of the top product, business, project/consulting engagement, and anti-goals.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;If you have a lot of people in your Kickoff (e.g. 15+), consider asking everyone to organize themselves into groups of 3-4 people. This will simplify the process of sharing out and affinity mapping the generated goals.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/goals-anti-goals/example-3.jpg&#34; alt=&#34;Whiteboard with business, product, project, consulting engagement, and anti-goals written out&#34;  /&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Insight Prioritization</title>
+      
+      <link>/practices/insight-prioritization/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/insight-prioritization/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Gather all the insights you discovered from research&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If there are many (roughly 20+), first do a culling exercise by asking yourselves &lt;em&gt;&amp;ldquo;Will this insight help me make an informed product decision for this project or consulting engagement period?&amp;quot;&lt;/em&gt; Sort each Insight into a &amp;ldquo;No&amp;rdquo; or &amp;ldquo;Yes&amp;rdquo; pile on the wall&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: You can clarify this prompt further by adding additional context: “Could you use this insight to create or modify solutions? Can it be re-framed into a useful “how might we …” statement?”&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once you have a simplified list, create a 2x2 with the painter&amp;rsquo;s tape and label the axes as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;X-Axis → Smaller Size of Opportunity (left) to Greater Size of Opportunity (right)&lt;/li&gt;
+&lt;li&gt;Y-Axis → Less Useful for Making Product Decisions (bottom) to More Useful for Making Product Decisions (top)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/insight-prioritization/step-3.png&#34; alt=&#34;Empty 2x2 diagram&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Plot the &amp;ldquo;Yes&amp;rdquo; insights on the 2x2, striving to end with a list of the top 3-5 insights&lt;/p&gt;
+&lt;p&gt;
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If the top right quadrant is packed with insights, draw a second 2x2 within that quadrant and discuss what has fallen out—with some additional conversation, the team will generally agree that the new top right quadrant truly does have the highest priority insights&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;img src=&#34;/images/practices/insight-prioritization/step-4.png&#34; alt=&#34;2x2 diagram showing stickies in each quadrant&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is achieved when the team agrees to the top 3-5 Insights on which it will focus&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/2x2&#34;&gt;2x2 Prioritization&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/problem-prioritization&#34;&gt;Problem Prioritization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/research-synthesis&#34;&gt;Research Synthesis&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;parallel&#34;&gt;Parallel&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/problem-prioritization&#34;&gt;Problem Prioritization&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/solution-brainstorming&#34;&gt;Solution Brainstorming&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;Coming soon!&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Molecule Map</title>
+      
+      <link>/practices/molecule-map/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/molecule-map/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Review the &lt;a href=&#34;https://tanzu.vmware.com/content/vmware-tanzu-developer-center-slides/molecule&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Crafting a Molecule&lt;/a&gt; presentation and familiarize yourself with the concept, how to arrive at solutions, and how to identify anti-patterns.&lt;/p&gt;
+&lt;iframe src=&#34;//www.slideshare.net/slideshow/embed_code/key/1wtb5448ncVV6E&#34; width=&#34;595&#34; height=&#34;485&#34; frameborder=&#34;0&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; style=&#34;border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;&#34; allowfullscreen&gt; &lt;/iframe&gt; &lt;div style=&#34;margin-bottom:5px&#34;&gt; &lt;strong&gt; &lt;a href=&#34;//www.slideshare.net/VMwareTanzu/molecule-242998322&#34; title=&#34;Molecule&#34; target=&#34;_blank&#34;&gt;Molecule&lt;/a&gt; &lt;/strong&gt; from &lt;strong&gt;&lt;a href=&#34;https://www.slideshare.net/VMwareTanzu&#34; target=&#34;_blank&#34;&gt;VMware Tanzu Developer Center Slides&lt;/a&gt;&lt;/strong&gt; &lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Draw an example molecule on the physical or digital whiteboard&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Persona — Who are we helping? (use the &lt;a href=&#34;/practices/personas&#34;&gt;Personas&lt;/a&gt; practice) practice if you haven&amp;rsquo;t created one yet)&lt;/li&gt;
+&lt;li&gt;Problem — What is one of their problems?&lt;/li&gt;
+&lt;li&gt;Solution — What is our solution?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/molecule-map/step-1.png&#34; alt=&#34;Blank Molecule Map&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Get into groups of 3 or ask each person to draw 3 circles on a piece of paper and draw multiple molecules. Come up with as many solutions as possible.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; Many video chat systems support &amp;ldquo;breakout rooms&amp;rdquo; or similar means to temporarily divide large groups into smaller groups for closer collaboration.&lt;/p&gt;
+&lt;p&gt;Also, feel free to use real paper and hold it up to the camera when the group is remote.&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/practices/molecule-map/step-2.png&#34; alt=&#34;Filled Molecule Map&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tape or upload molecules onto the board. Treat these as assumptions to go validate.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Silent read &amp;amp; dot vote to get down to 1 molecule&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is when you have agreement on the problem and solution (aka snapshot)to move forward with as a team. You’re doing it right when you are thinking of users as humans.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/molecule-map/example-1.jpg&#34; alt=&#34;Close up of a detailed molecule map drawn on a whiteboard with persona in the center&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/molecule-map/example-2.jpg&#34; alt=&#34;Close up of a molecule map drawn on a whiteboard&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Personas</title>
+      
+      <link>/practices/personas/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/personas/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; For distributed teams, use &lt;a href=&#34;https://miro.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Miro&lt;/a&gt; or a similar &amp;ldquo;digital whiteboard&amp;rdquo; and adapt the in-person aspects to the digital world, such as drawing and using sticky notes.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;#variations&#34;&gt;More remote tips below in the Variations section&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Divide room into small groups and give a piece of paper to each group&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;Tip: If the group is small, you can also do this exercise individually&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; Many video chat systems support &amp;ldquo;breakout rooms&amp;rdquo; or similar means to temporarily divide large groups into smaller groups for closer collaboration.&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Define “persona” for the room and remind all participants this is a provisional persona—through research, what we think we know about this person will change and evolve&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Example: &amp;ldquo;A persona is a composite user used to create empathy on the team and allows you to understand the users well and design a product for them.”&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have each group (or person) fold paper into quadrants&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Draw a template on the board with the following in each quadrant:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Top left → drawing of person in a place, doing an action, with a name, face, emotion, and thought&lt;/li&gt;
+&lt;li&gt;Bottom left → demographics (facts like name, age, role, income, location, gender)&lt;/li&gt;
+&lt;li&gt;Top right → behaviors (things they do, likes, dislikes, hobbies)&lt;/li&gt;
+&lt;li&gt;Bottom right → needs and goals (wants, pains, hopes)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have the teams (or individuals) work silently for 7-8 minutes to fill out paper according to the template&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ask each team to send a representative (or have each individual come) to the board to hang the persona and describe the person they created for the group&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Give each person four dots so that they can place a dot on the quadrant that they think best explains the user (so four dots in total, one on each quadrant across all papers)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tape together the highest scoring quadrants into one &amp;ldquo;master persona&amp;rdquo; and reads it to the group&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: It&amp;rsquo;s helpful to have scissors handy in case you need to cut quadrants apart in order to reassemble&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is when you&amp;rsquo;ve created a &amp;ldquo;master persona&amp;rdquo; and everyone in the room feels like it represents the target audience as best as possible.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;h4 id=&#34;for-remote-teams&#34;&gt;For Remote Teams&lt;/h4&gt;
+&lt;p&gt;You can still facilitate this workshop even if the team is remote.&lt;/p&gt;
+&lt;p&gt;While many on-line collaboration solutions have drawing features, we suggest keeping thing low-tech: use paper and cameras.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Have people draw upon actual paper as described above.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Next, have them take a photo on their phone and upload the photo to the collaboration space.&lt;/p&gt;
+&lt;p&gt;Alternatively, people can send the photos to the facilitator via chat app, email, or even text message. They can even hold up their drawings to their webcam &amp;ndash; the facilitator can take a screenshot, then add the image to the collaboration space.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/personas/example-1.png&#34; alt=&#34;Team member presenting a persona while everyone watches and listens&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/personas/example-2.png&#34; alt=&#34;Example of a paper-based persona showing the four winning quadrants&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/personas/example-3.png&#34; alt=&#34;Example of a paper-based persona&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/personas/example-5.jpg&#34; alt=&#34;Example of a digital persona template&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Problem Prioritization</title>
+      
+      <link>/practices/problem-prioritization/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/problem-prioritization/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Gather all the problems you discovered from research&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If there are many (roughly 20+), first do a culling exercise by asking yourselves &amp;ldquo;Is this problem related to our goals?&amp;quot;; sort each problem/pain into a &amp;ldquo;No&amp;rdquo; or &amp;ldquo;Yes&amp;rdquo; pile on the wall.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a 2x2 with the painter&amp;rsquo;s tape and label the axes as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;X-Axis &amp;ndash;&amp;gt; Low User Pain (left) to High User Pain (right)&lt;/li&gt;
+&lt;li&gt;Y-Axis &amp;ndash;&amp;gt; Low Frequency (bottom) to High Frequency (top)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Optionally, you can generate different 2x2 criteria by asking the team &amp;ldquo;What makes a problem worth solving?&amp;rdquo;. Some other 2x2 examples include: higher user pain vs. higher impact (e.g. affects most users); higher user pain vs. higher business pain (e.g. in terms of lost revenue); higher impact vs. higher immediate need.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;img src=&#34;/images/practices/problem-prioritization/step-3.png&#34; alt=&#34;Empty 2x2 diagram&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Plot the problems/pains on the 2x2.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/step-4.png&#34; alt=&#34;2x2 diagram showing stickies in each quadrant&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Depending upon the size of each problem/pain, strive to end with a list of the top 3-5 problems/pains.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If there are too many priority problems in the top right quadrant, re-draw the axes within that quadrant to further separate the problems. Remember that this is possible because the axes are relative, not absolute. Keep adjusting until you land somewhere manageable.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is achieved when the team agrees to the top 3-5 problems on which it will focus.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;The timing of this activity varies along with the number of problems identified in the research process, so prepare accordingly. It can also be beneficial to timebox conversation of each problem in order to ensure the team maintains forward momentum.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/2x2&#34;&gt;2x2 Prioritization&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/research-synthesis&#34;&gt;Research Synthesis&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/insight-prioritization&#34;&gt;Insight Prioritization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/solution-brainstorming&#34;&gt;Solution Brainstorming&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/example-2.jpg&#34; alt=&#34;Two by two chart plotting problems by frequency and intensity&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/example-3.jpg&#34; alt=&#34;A group of people discusses priority in front of a whiteboard with two by two chart on it&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/example-5.jpg&#34; alt=&#34;Two by two chart with top problems prioritized&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Research Synthesis</title>
+      
+      <link>/practices/research-synthesis/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/research-synthesis/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Write the following categories on the whiteboard, taking care to leave ample space between them (to accommodate many sticky notes):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Day in the Life&lt;/li&gt;
+&lt;li&gt;Pain Points&lt;/li&gt;
+&lt;li&gt;Goals&lt;/li&gt;
+&lt;li&gt;Good to Know&lt;/li&gt;
+&lt;li&gt;Magic Wand&lt;/li&gt;
+&lt;li&gt;Actions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can also create a Parking Lot at this point, though often we do this last (as we find sticky notes that aren&amp;rsquo;t actionable)&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If you have already grouped your user interview questions into categories, use these categories in your synth instead for more targeted results. (i.e. Technology Usage, Systems &amp;amp; Integrations, etc.)&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Place sticky note findings beneath the corresponding categories, including a section to identify the users (notes for whom should each have been written on different colored sticky notes)&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Since several people may have taken notes, you will naturally find duplicates. When this happens, discuss as a team which sticky notes capture the comment best then discard the duplicates.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once all have been placed, begin the process of grouping sticky notes. This can either be done as a team, pairs, or individually (depending on who is available at the time):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Group sticky notes by a written sentiment from the point of view of the user&lt;/li&gt;
+&lt;li&gt;Draw a smiley face that appropriately captures the sentiment (smiling, meh, frowning)&lt;/li&gt;
+&lt;li&gt;Write the number of individual users that make up the group&lt;/li&gt;
+&lt;li&gt;Circle each group when you are complete so you know that you don’t have to revisit the section&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; Many video chat systems support &amp;ldquo;breakout rooms&amp;rdquo; or similar means to temporarily divide large groups into smaller groups for closer collaboration.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When all sticky notes have been grouped (or placed in the Parking Lot), do another pass to identify (a) actions to take and (b) findings to re-test&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Take pictures of the output on the wall, ensuring you get a nice wide shot (which are great for sharing out or using as deck backgrounds) and clear, close-up shots (which are perfect for re-reading the &amp;ldquo;verbatims&amp;rdquo; that make up each sentiment group)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;The goal is to walk away from research with actionable insights and an understanding of whether we&amp;rsquo;ve validated or invalidated any research objectives and to give design and/or product a set of actionable next steps to take&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;As needed, build on the Persona data you&amp;rsquo;ve captured to-date. Take any new user insights and validate or invalidate the assumptions you have about your existing &lt;a href=&#34;/practices/personas&#34;&gt;personas&lt;/a&gt; or create a new persona if you find new information that will support it.&lt;/p&gt;
+&lt;p&gt;Try using Trello (or something like it) to track your assumptions&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s also helpful to share out findings at the subsequent iteration planning meeting (IPM, similar to SCRUM Sprint planning) so that the entire team - including anyone who wasn&amp;rsquo;t present during the actual research sessions - can benefit from what was learned.&lt;/p&gt;
+&lt;p&gt;You can alternately create your categories from the questions you are asking to your identified &lt;a href=&#34;/practices/personas&#34;&gt;personas&lt;/a&gt;. These categories only tend to work for users of the same persona (i.e. do not mix user interviews with stakeholder interviews while synthesizing)&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/assumptions&#34;&gt;Assumptions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Exploratory Interviews - Coming soon!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;Various, depending on context&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;Coming soon!&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Risks &amp; Mitigations</title>
+      
+      <link>/practices/risks-and-mitigations/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/risks-and-mitigations/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Have the group silently write project risks and obstacles this team may face. One item per sticky note.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Provide an example of a risk or obstacle. For example, &amp;ldquo;We will be launching code at a different pace than other teams - there may be dependencies and blockers.&amp;rdquo;
+Tip: It may help to list the different types of risks. Business risks (&amp;ldquo;Compliance standards may alter our delivery approach&amp;rdquo;) and team risks (&amp;ldquo;Members are situated in different time zones&amp;rdquo;) should be considered along with technical risks.&amp;quot;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ask each person to select their top 5 risks and obstacles&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Split the group into pairs. Ask each pair to plot their risks together on the axes they draw.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; Many video chat systems support &amp;ldquo;breakout rooms&amp;rdquo; or similar means to temporarily divide large groups into smaller groups for closer collaboration.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Each pair should grab one sheet of paper or section of the digital whiteboard and draw axes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;X-axis: &lt;strong&gt;Easy to Mitigate&lt;/strong&gt; to &lt;strong&gt;Hard to Mitigate&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Y-axis: &lt;strong&gt;Low Risk&lt;/strong&gt; to &lt;strong&gt;High Risk&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Check in on the groups and move each group forward if they are moving faster than others&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/practices/risks-and-mitigations/step-3.png&#34; alt=&#34;2x2 with labeled axes&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Instruct each team to choose the top 2 risks from the high risk section that they would like to share out&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ask the teams to brainstorm &lt;strong&gt;one&lt;/strong&gt; (1) mitigation strategy for each of their top 2 risks&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Go around the room and have each pair read &lt;strong&gt;one&lt;/strong&gt; (1) risk and &lt;strong&gt;one&lt;/strong&gt; (1) mitigation strategy.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Group similar risks/mitigations into categories. For example, &amp;ldquo;technical risks&amp;rdquo;, &amp;ldquo;business risks&amp;rdquo;, &amp;ldquo;product risks&amp;rdquo;, etc.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is when you have a shared understanding of the biggest risks and have a set of actions items to get started with&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Ensure that there is equal representation of different disciplines present&lt;/li&gt;
+&lt;li&gt;Try to time box explanations in order to keep things succinct&lt;/li&gt;
+&lt;li&gt;Create a space in which people feel comfortable being honest by setting up the right context for the session&lt;/li&gt;
+&lt;li&gt;Curtail finger pointing or unkind feedback&lt;/li&gt;
+&lt;li&gt;Ensure that the actions are actionable and not too general e.g., “Don’t do this…”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/risks-and-mitigations/example-2.jpg&#34; alt=&#34;Whiteboard table showing risks in one column and related mitigation strategies in another&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Scenario Writing</title>
+      
+      <link>/practices/scenario-writing/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/scenario-writing/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create four columns on the physical or digital whiteboard and label each with the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;User&lt;/li&gt;
+&lt;li&gt;Goal&lt;/li&gt;
+&lt;li&gt;Context&lt;/li&gt;
+&lt;li&gt;Scenario&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If time is short and/or the full team is busy with other work, you can also do this activity by yourself/with your pair using the word processing program of your choice&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Begin by defining the &lt;strong&gt;user&lt;/strong&gt;, ideally using the persona(s) your team has created. What you write should answer these questions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Who is this person?&lt;/li&gt;
+&lt;li&gt;What is their role?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If you have your persona available, you can use it in this section instead of making one from scratch&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;You can lead the team in creating a well-formed persona using the &lt;a href=&#34;/practices/personas&#34;&gt;Personas&lt;/a&gt; activity&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Next, define the &lt;strong&gt;goal&lt;/strong&gt; of the scenario. What you write should answer these questions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What is the user trying to accomplish?&lt;/li&gt;
+&lt;li&gt;When is the scenario done?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now define the &lt;strong&gt;context&lt;/strong&gt; of the scenario. What you write should answer these questions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Where is this scene taking place?&lt;/li&gt;
+&lt;li&gt;What is the user doing when this scenario takes place?&lt;/li&gt;
+&lt;li&gt;What devices, if any, are being used?&lt;/li&gt;
+&lt;li&gt;Who is the user with, if anyone?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Finally, outline the &lt;strong&gt;scenario&lt;/strong&gt; from beginning to end, being sure to write about:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Anything relevant the user does before the key actions start&lt;/li&gt;
+&lt;li&gt;The actions the user takes to reach their goal and why they take them&lt;/li&gt;
+&lt;li&gt;Anything relevant the user does after achieving the scenario’s goal&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If you’re writing a scenario for the future state, be careful not to be too prescriptive in how you capture the solution. Leave enough ambiguity so that the team has space to ideate broadly.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You’ve succeeded once you feel the team understands the scope of current or future scenario and could confidently use it to support subsequent activities (research, design studio, etc.)&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;Example of a &lt;strong&gt;current state&lt;/strong&gt; scenario:&lt;br&gt;
+How sheep farmers currently purchase sheep at actions in person&lt;/p&gt;
+&lt;p&gt;Example of a &lt;strong&gt;future state&lt;/strong&gt; scenario:&lt;br&gt;
+How sheep farmers will purchase sheep via the internet with the new product&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/personas&#34;&gt;Personas&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/problem-prioritization&#34;&gt;Problem Prioritization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/insight-prioritization&#34;&gt;Insight Prioritization&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/design-studio&#34;&gt;Design Studio&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;Coming soon!&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Solution Brainstorming</title>
+      
+      <link>/practices/solution-brainstorming/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/solution-brainstorming/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; For distributed teams, use &lt;a href=&#34;https://miro.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Miro&lt;/a&gt; or a similar &amp;ldquo;digital whiteboard&amp;rdquo; and adapt the in-person steps to the digital world. For example, instead of passing out sheets of paper, have each team member work in their own section of the shared digital whiteboard.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Stick each problem or Insight to its own large sheet of paper, such as a sheet of tabloid (11&amp;quot;x17&amp;quot;) / A3 paper, or section of the digital workspace.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Distribute or assign a sheet with problems or insights attached to each team member.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have team members convert their assigned problem or insight into a &amp;ldquo;How might we&amp;hellip;?&amp;rdquo; statement, writing the output clearly on a new, differently colored large sticky note and attaching it over the original problem or insight.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;Tip: If there are more problems and insights than team members, you can divide the team into pairs and assign several to each pair. This can also be helpful if there are more people than problems and insights.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; Many video chat systems support &amp;ldquo;breakout rooms&amp;rdquo; or similar means to temporarily divide large groups into smaller groups for closer collaboration.&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Go around the group and have each person (or pair) share out their original problem or insight and the &amp;ldquo;How might we&amp;hellip;?&amp;rdquo; statement(s) they created from it. Make adjustments as a team until you&amp;rsquo;re happy with all statements.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Timebox the share out since this can go long. Also timebox the adjustments since this can take a while, too&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ensuring each person has a sheet or digital whiteboard section, set a timer for 3-4 minutes during which everyone quietly brainstorms ideas that could potentially solve the &amp;ldquo;How might we&amp;hellip;?&amp;rdquo; statement. These can be as simple or fanciful as you like.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;After the time is up, have everyone pass the sheet(s) to the person next to them (or create an order if remote) and repeat Step 5.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: As the rounds progress, each solution brainstorm is covered with more and more ideas. Suggest to the team that they spend part of each round adding “+1” to any ideas that already exist. This helps de-duplicate from the outset and lets everyone focus on their net new ideas.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;After the brainstorms make their way around the group and back to the person they started with, you&amp;rsquo;ll have generated a slew of ideas.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is achieved when you have extracted ideas that directly relate to your top problems and insights and captured them for further refinement.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;You may need to adjust the timing depending on how many people are present. Be sure to give sufficient time for people to both read ideas and create new ideas (this is especially critical as you get further into the pass-and-brainstorm process).&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/insight-prioritization&#34;&gt;Insight Prioritization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/problem-prioritization&#34;&gt;Problem Prioritization&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Solution Grooming &amp;ndash; coming soon!&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/solution-prioritization&#34;&gt;Solution Prioritization&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;Coming soon!&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

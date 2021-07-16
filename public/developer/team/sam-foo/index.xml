@@ -1,0 +1,151 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – </title>
+    <link>/team/sam-foo/</link>
+    <description>Recent content on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/team/sam-foo/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Blog: Debugging a Kubernetes Workload with Octant</title>
+      
+      <link>/blog/debugging-a-kubernetes-workload-with-octant/</link>
+      <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/debugging-a-kubernetes-workload-with-octant/</guid>
+      <description>
+
+        
+        &lt;p&gt;Octant is a tool designed to enable developers without a deep knowledge of Kubernetes to become productive as quickly as possible. This post will walk through an NGINX deployment with a faulty NGINX configuration to demonstrate how common pitfalls can be identified using Octant.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;Before you get started, here are the  tools you’ll need:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;An existing cluster through &lt;a href=&#34;https://kind.sigs.k8s.io/docs/user/quick-start/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;KinD&lt;/a&gt;, &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-minikube/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Minikube&lt;/a&gt;, or a cloud provider&lt;/li&gt;
+&lt;li&gt;An installation of &lt;a href=&#34;https://github.com/vmware-tanzu/octant/releases&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Octant&lt;/a&gt; 0.16.1 or above&lt;/li&gt;
+&lt;li&gt;Some knowledge of NGINX  (helpful but not required)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;create-an-nginx-deployment&#34;&gt;Create an NGINX Deployment&lt;/h2&gt;
+&lt;p&gt;Let’s start with a ConfigMap containing a basic NGINX configuration and set the mount path to &lt;code&gt;/etc/nginx&lt;/code&gt;. A deployment will mount the volume containing the NGINX configuration for the container. Copy the YAML below.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ConfigMap&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx-conf&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;nginx.conf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    user nginx;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    worker_processes  3;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    error_log  /var/log/nginx/error.log;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    events {
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      worker_connections  10240;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    }
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    http {
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      log_format  main
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          &amp;#39;remote_addr:$remote_addr\t&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          &amp;#39;time_local:$time_local\t&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          &amp;#39;method:$request_method\t&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          &amp;#39;uri:$request_uri\t&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          &amp;#39;host:$host\t&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          &amp;#39;status:$status\t&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          &amp;#39;bytes_sent:$body_bytes_sent\t&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          &amp;#39;referer:$http_referer\t&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          &amp;#39;useragent:$http_user_agent\t&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          &amp;#39;forwardedfor:$http_x_forwarded_for\t&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          &amp;#39;request_time:$request_time&amp;#39;;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      access_log	/var/log/nginx/access.log main;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      server {
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          listen       80;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          server_name  _;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          location / {
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;              root   html;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;              index  index.html index.htm;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          }
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      }
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    }&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;index.html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Hello Octant!&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;apps/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;matchLabels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;replicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx:1.19&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;containerPort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;80&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumeMounts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;mountPath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/etc/nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx-conf&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;mountPath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/usr/share/nginx/html&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx-conf&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx-conf&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;configMap&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx-conf&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;items&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx.conf&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;              &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx.conf&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;index.html&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;              &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;index.html&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Open Octant and press the &amp;ldquo;Apply YAML&amp;rdquo; button on the top menu. Paste the YAML into the editor and hit &amp;ldquo;Apply&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/octant-debugging/octant-debugging4.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;After the YAML is applied, press &lt;code&gt;Ctrl + Enter&lt;/code&gt; to open the quick switcher. Type “pod,” then navigate to the list of pods by clicking the drop-down. This shortcut is also useful for navigating around various resources.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/octant-debugging/octant-debugging1.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Upon initial inspection, the container is running. Click the name of the pod  for more information, including the volume mounts included above.&lt;/p&gt;
+&lt;h2 id=&#34;port-forward&#34;&gt;Port Forward&lt;/h2&gt;
+&lt;p&gt;The first step is to see if the NGINX landing page is visible, for which port forwarding provides a quick way to test. Click the port forward button, then click the generated link.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/octant-debugging/octant-debugging3.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The port forward link leads to a 404 page. To see if the container logs provide any insight about that error, look under the &amp;ldquo;Logs&amp;rdquo; tab&lt;/p&gt;
+&lt;h2 id=&#34;logs&#34;&gt;Logs&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/octant-debugging/octant-debugging7.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The logs show startup then the initial traffic as a result of port forwarding. And as they make clear, there are two issues with this configuration:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;There appears to be a default configuration &lt;code&gt;default.conf&lt;/code&gt; that does not exist.&lt;/li&gt;
+&lt;li&gt;The provided path for &lt;code&gt;index.html&lt;/code&gt; is not correct.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;An NGINX container would typically have all the necessary default configuration files. As to the second issue, NGINX by default has &lt;code&gt;index.html &lt;/code&gt;located at &lt;code&gt;/usr/share/nginx/html&lt;/code&gt;. The terminal tab provides a way to inspect the application on a lower level so as to understand some of the logging.&lt;/p&gt;
+&lt;h2 id=&#34;terminal&#34;&gt;Terminal&lt;/h2&gt;
+&lt;p&gt;Click the Terminal tab to start a new terminal session and list the files in &lt;code&gt;/etc/nginx&lt;/code&gt;.  As you’ll see, quite a few configuration files are missing from the expected &lt;a href=&#34;https://wiki.debian.org/Nginx/DirectoryStructure&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;directory structure&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/octant-debugging/octant-debugging6.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The mount path overwrites the entire directory even though only a single configuration file needs to change. The &lt;a href=&#34;https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#add-configmap-data-to-a-volume&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes documentation&lt;/a&gt; describes this behavior. Overwrites can be avoided by specifying a &lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/volumes/#using-subpath&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;subPath&lt;/code&gt;&lt;/a&gt;. This also prevents copying &lt;code&gt;index.html&lt;/code&gt; to unnecessary places.&lt;/p&gt;
+&lt;p&gt;Navigate to the &lt;code&gt;nginx-conf&lt;/code&gt; ConfigMap (remember the quick switcher shortcut). Then navigate to the YAML tab. Under &lt;code&gt;nginx.conf&lt;/code&gt;, change &lt;code&gt;html&lt;/code&gt; under “location” to &lt;code&gt;/usr/share/nginx/html&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/octant-debugging/octant-debugging8.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Navigate to the YAML of the &lt;code&gt;nginx&lt;/code&gt; deployment. Edit the volume mounts to add &lt;code&gt;subPath&lt;/code&gt; and update &lt;code&gt;mountPath&lt;/code&gt; to the name of the configuration.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/octant-debugging/octant-debugging5.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;This updated deployment will automatically create a new pod. If you port forward this newly created pod, the expected homepage of &lt;code&gt;Hello Octant!&lt;/code&gt; should be visible.&lt;/p&gt;
+&lt;h2 id=&#34;updating-a-configmap&#34;&gt;Updating a ConfigMap&lt;/h2&gt;
+&lt;p&gt;Let’s update &lt;code&gt;index.html&lt;/code&gt; in the ConfigMap and apply the changes.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nn&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;index.html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Hello Octant v1!&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A developer unfamiliar with Kubernetes might expect the deployment to use the new ConfigMap; however, this is not the case. We can verify the old &lt;code&gt;index.html&lt;/code&gt; is in use if we port forward the existing pod. Try navigating into the &lt;code&gt;nginx&lt;/code&gt; deployment, then edit the configuration to increase the number of replicas. The new pods created will use an updated ConfigMap, which can be confirmed via port forwarding.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/octant-debugging/octant-debugging2.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Octant provides various features designed to be used together to understand workflows on a cluster. In this scenario, you’ve used a number of debugging features with minimal knowledge of &lt;code&gt;kubectl&lt;/code&gt; as a way to understand potentially counterintuitive behaviors.&lt;/p&gt;
+&lt;p&gt;As you grow and add opinionated tooling into scope, Octant can continue providing value through an extensible plugin system as a toolbox for the growing ecosystem.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

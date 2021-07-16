@@ -1,0 +1,640 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Spring Cloud Gateway</title>
+    <link>/tags/spring-cloud-gateway/</link>
+    <description>Recent content in Spring Cloud Gateway on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 22 Apr 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/spring-cloud-gateway/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Blog: API Rate Limiting with Spring Cloud Gateway</title>
+      
+      <link>/blog/api-rate-limiting-with-spring-cloud-gateway/</link>
+      <pubDate>Thu, 22 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/api-rate-limiting-with-spring-cloud-gateway/</guid>
+      <description>
+
+        
+        &lt;p&gt;One of the imperative architectural concerns for software architects is to protect APIs and service endpoints from harmful events such as denial-of-service attacks, cascading failures, or overuse of resources. Rate limiting is a technique used to control the rate by which an API or a service is consumed, which in turn can protect you from these events that can bring your services to a screeching halt. In a distributed system, no better option exists than to centralize configuring and managing the rate at which consumers can interact with APIs. Only those requests within a defined rate would make it to the API. Any more would return an HTTP 429 (“Too Many Requests”) error.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/spring-cloud-gateway-series/diagrams/rate-limit-1.svg&#34; alt=&#34;An example how a gateway between the consumer and an API can help limit the number of requests the API is serving&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://spring.io/projects/spring-cloud-gateway&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Gateway&lt;/a&gt; is a simple and lightweight component that can be used to limit API consumption rates. In this post, I am going to demonstrate how easily that can be accomplished using a configuration method. As shown in the figure below, the demonstration consists of both a front- and backend service, with a Spring Cloud Gateway service in between.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/spring-cloud-gateway-series/diagrams/backend-gateway-frontend.svg&#34; alt=&#34;The gateway can sit between the frontend and the backend to help manage the traffic between the two&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;No code whatsoever is needed to include the Spring Cloud Gateway in the architecture. You need instead to include the Spring Boot Cloud dependency &lt;code&gt;org.springframework.cloud:spring-cloud-starter-gateway&lt;/code&gt; in a vanilla Spring Boot application, then you’ll be set to go with the appropriate configuration settings.&lt;/p&gt;
+&lt;p&gt;Requests received by Spring Cloud Gateway from a frontend service can be routed to a backend service based on a configured route definition, which makes clear to the gateway how a request should be routed to a backend endpoint. A route configuration usually defines conditions based on information that can be extracted from HTTP requests, such as paths and headers.&lt;/p&gt;
+&lt;p&gt;For example, the snippet below lists a YAML stanza to configure the condition under which requests should be routed to a backend service; it shows that requests should target the backend service when the gateway is hit with “/backend” in the path. In the configuration, the route is given an identifier and the backend service URL.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;spring&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;cloud&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;gateway&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;routes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;route1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;uri&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;http://localhost:8081&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;predicates&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;Path=/backend&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;RequestRateLimiter&lt;/code&gt; is one of the many gateway filters offered by Spring Cloud Gateway; it determines whether a request is allowed to proceed or has exceeded its limit. It also lets you (optionally) plug in a key to limit the number of requests to different services. While implementing how to resolve a key is customizable, the gateway comes with one that leverages a user’s &lt;code&gt;Principal&lt;/code&gt; name. A secured gateway is needed to resolve a user’s principal name, but you have the option to implement the &lt;code&gt;KeyResolver&lt;/code&gt; interface to instead resolve a different key from the &lt;code&gt;ServerWebExchange&lt;/code&gt;. You can point to a custom &lt;code&gt;KeyResolver&lt;/code&gt; bean (e.g., named &lt;code&gt;customKeyResolver&lt;/code&gt;) in the configuration by using a &lt;code&gt;SPEL #{@customKeyResolver}&lt;/code&gt; expression. The following listing shows the &lt;code&gt;KeyResolver&lt;/code&gt; interface:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;KeyResolver&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Mono&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;resolve&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ServerWebExchange&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;exchange&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The gateway would deny requests if no key was resolved. To let the gateway accept a missing resolved key, you can set the following property:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;spring.cloud.gateway.filter.request-rate-limiter.deny-empty-key=false
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can also specify a status code that the gateway should report when it cannot figure out a key by setting the following property:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;spring.cloud.gateway.filter.request-rate-limiter.empty-key-status-code=
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Consider a blueprint architecture in which a gateway controls the limiting of API consumption by using Redis. The provided Redis implementation uses the token bucket algorithm. To enable its use, you need to include the &lt;code&gt;spring-boot-starter-data-redis&lt;/code&gt; Spring Boot starter dependency in the gateway application. Basically, the token bucket algorithm uses balance tokens as a way to maintain an accumulating budget of utilization. The algorithm assumes tokens will be added to a bucket at a certain rate while calls to an API consume the tokens from the bucket. One API invocation may perform many operations in order to compose a response so that it fulfills a request (think of GraphQL-based APIs). In such cases, the algorithm helps Spring Cloud Gateway recognize that one invocation may cost an API more than one token.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/spring-cloud-gateway-series/diagrams/redis-rate-limiting.svg&#34; alt=&#34;An example of how Redis can be used to keep track of how many requests are being sent to the backend, which can work together with the gateway&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The provided Redis implementation lets you define the request rate at which users can make calls within a certain time period. It also makes it possible to accommodate sporadic demands while constrained by the defined consumption rate. For example, a configuration can define a replenish rate of 500 requests per second by setting the &lt;code&gt;redis-rate-limiter.replenishRate=500&lt;/code&gt; property and a burst capacity of 1,000 requests per second by setting the &lt;code&gt;redis-rate-limiter.burstCapacity=1000&lt;/code&gt; property. Doing so limits consumption to 500 requests every second. If a burst in the number of requests occurs, only 1,000 requests are allowed. However, since this exceeds our defined limit of 500 requests per second, the gateway won’t route the other 500 requests until the next second. The configuration also lets you define how many tokens a request would cost by setting the property &lt;code&gt;redis-rate-limiter.requestedTokens&lt;/code&gt;. Typically, it is set to one.&lt;/p&gt;
+&lt;p&gt;To use a gateway with a request limiting feature, it needs to be configured with the &lt;code&gt;RequestRateLimiter&lt;/code&gt; gateway filter. The configuration can specify arguments to define a replenish rate, burst capacity, and the number of tokens that a request costs. The example below illustrates how to configure a gateway with these arguments:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;spring&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;cloud&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;gateway&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;routes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;route1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;uri&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;http://localhost:8081&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;predicates&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;Path=/backend&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;filters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;RequestRateLimiter&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;              &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;redis-rate-limiter.replenishRate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;500&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;              &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;redis-rate-limiter.burstCapacity&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1000&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;              &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;redis-rate-limiter.requestedTokens&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Spring Cloud Gateway provides the flexibility to define your own custom rate limiter implementation; it offers a &lt;code&gt;RateLimiter&lt;/code&gt; interface to implement and define a bean. The rate limiter bean can be configured by using a &lt;a href=&#34;https://docs.spring.io/spring-integration/reference/html/spel.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SPEL&lt;/a&gt; expression, as in the case of a custom key resolver. For instance, you can define a custom rate limiter bean named &lt;code&gt;customRateLimiter&lt;/code&gt; and a custom key resolver named &lt;code&gt;customKeyResolver&lt;/code&gt; and configure a route like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;KeyResolver&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;customKeyResolver&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+	&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;exchange&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;....&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// returns a Mono of String
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;spring&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;cloud&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;gateway&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;routes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;route1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;uri&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;http://localhost:8081&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;predicates&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;Path=/backend&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;filters&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;RequestRateLimiter&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;              &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;rate-limiter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;#{customRateLimiter}&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;              &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;key-resolver&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;#{customKeyResolver}&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can find the code to try it yourself on &lt;a href=&#34;https://github.com/Haybu/blog-spring-cloud-gateway/tree/rate-limiting&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GitHub&lt;/a&gt;. If you’re interested in learning more about Spring Cloud Gateway, make sure to check out our &lt;a href=&#34;/guides/spring/scg-what-is/&#34;&gt;What is Spring Cloud Gateway&lt;/a&gt; and &lt;a href=&#34;/guides/spring/scg-gs/&#34;&gt;Getting Started with Spring Cloud Gateway&lt;/a&gt; guides!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Getting Started with Spring Cloud Gateway</title>
+      
+      <link>/workshops/lab-spring-gateway/</link>
+      <pubDate>Thu, 04 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-spring-gateway/</guid>
+      <description>
+
+        
+        &lt;p&gt;This workshop walks you through getting started with the Spring Cloud Gateway. The Spring Cloud Gateway is a library for building an API Gateway on top of Spring MVC. Spring Cloud Gateway aims to provide a simple, yet effective way to route to APIs and provide cross cutting concerns to them such as: security, monitoring/metrics, and resiliency.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: Highlights of the SpringOne 2020 Self-Paced Workshops---and Their New Home</title>
+      
+      <link>/blog/highlights-of-the-springone-2020-self-paced-workshops-and-their-new-home/</link>
+      <pubDate>Thu, 17 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/highlights-of-the-springone-2020-self-paced-workshops-and-their-new-home/</guid>
+      <description>
+
+        
+        &lt;p&gt;SpringOne 2020 just wrapped, and the self-paced workshops were a complete success! Moreover, all of your requests to continue providing these workshops beyond the conference have been heard. Their future home will be the &lt;a href=&#34;https://tanzu.vmware.com/developer/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Developer Center&lt;/a&gt;. &lt;em&gt;UPDATE: These workshops are available to &lt;a href=&#34;/workshops&#34;&gt;try out now&lt;/a&gt;!&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/workshops-and-training.png&#34; alt=&#34;SpringOne 2020 Workshops and Training&#34;  title=&#34;SpringOne2020&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;For those that missed SpringOne 2020, we’ll quickly recap what the workshops focused on and what they accomplished. Feel free to jump around if you need to; the recap is meant to be a quick read with plenty of pictures.&lt;/p&gt;
+&lt;p&gt;A total of 10 self-paced workshops covering a range of open source technology—from CI/CD with Tekton, several Spring technologies, and infrastructure technology like Kubernetes, Octant, and Carvel—were available at SpringOne 2020:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Kubernetes Fundamentals&lt;/li&gt;
+&lt;li&gt;Container Basics&lt;/li&gt;
+&lt;li&gt;Getting Started with Octant&lt;/li&gt;
+&lt;li&gt;Getting Started with Spring Boot on Kubernetes&lt;/li&gt;
+&lt;li&gt;Spring Boot Probes on Kubernetes&lt;/li&gt;
+&lt;li&gt;Spring Boot Skaffold on Kubernetes&lt;/li&gt;
+&lt;li&gt;Spring Microservices&lt;/li&gt;
+&lt;li&gt;Getting Started with Spring Cloud Gateway&lt;/li&gt;
+&lt;li&gt;Getting Started with Carvel (formerly k14s)&lt;/li&gt;
+&lt;li&gt;Tekton Fundamentals&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Each of these workshops has an environment prepared and ready, which is quite refreshing when you are accustomed to spending 15-30 minutes setting up to follow a tutorial. The workshop environment is also native to the technology being used. For example, you can interact with actual Kubernetes clusters in a Kubernetes workshop or work in a real Java 11 environment in Spring workshops. Finally, all the tools you need are built into the workshop, such as an IDE or Kubernetes tools like Octant to name a few.&lt;/p&gt;
+&lt;p&gt;In this screenshot from Getting Started with Spring Boot on Kubernetes, you can see the code editor utilized in it and some of the other workshops.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/code-editor.png&#34; alt=&#34;SpringOne2020 code editor example&#34;  title=&#34;SpringOne2020 code editor example&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;In Getting Started with Octant, you use the open-source Kubernetes tool Octant to inspect your Kubernetes cluster. Many developers use &lt;a href=&#34;https://octant.dev/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Octant&lt;/a&gt; to reveal the objects running in their Kubernetes clusters.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/octant-redact.png&#34; alt=&#34;SpringOne2020 Octant example&#34;  title=&#34;SpringOne2020 octant example&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;kubernetes-fundamentals&#34;&gt;Kubernetes Fundamentals&lt;/h2&gt;
+&lt;p&gt;We designed the workshops so you can mouse-click to automate manual steps that are prone to error. For example, you can click to execute terminal commands, create files, precisely insert lines of code, and more. We also designed them to eliminate errors, like small typos that can interrupt your learning progress. Our goal was to enable you to focus on learning theory and any related concepts rather than on procedural steps you can review later, like commands and code blocks.&lt;/p&gt;
+&lt;p&gt;The screenshot below from the Kubernetes Fundamentals workshop provides an example of the click automation capability we provided. In the instructions on the left, you click the command &lt;code&gt;kubectl apply -f database/&lt;/code&gt; which is then executed in the appropriate terminal on the right.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/creating-resc-underline.png&#34; alt=&#34;SpringOne2020 click automation example&#34;  title=&#34;SpringOne2020 click automation example&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The Kubernetes Fundamentals workshop, a hands-on introduction to using Kubernetes, was by far the most popular workshop at SpringOne 2020. It not only provides you with a real Kubernetes cluster to interact with, but access to the Kubernetes Dashboard!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/kubernetes-dashboard.png&#34; alt=&#34;SpringOne2020 Kubernetes dashboard example&#34;  title=&#34;SpringOne2020 Kubernetes dashboard example&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;By the second step, you are already deploying a blog application to your Kubernetes cluster!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/kubernetes-blog.png&#34; alt=&#34;SpringOne2020 Kubernetes blog example&#34;  title=&#34;SpringOne2020 Kubernetes blog example&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Kubernetes Fundamentals covers many other concepts, such as service networking and exposing those services, as well as linking a database, persistent volumes, and even application health. You’ll even learn best practices for deployments with ReplicaSets.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/replica-redact.png&#34; alt=&#34;SpringOne2020 Kubernetes ReplicaSet example&#34;  title=&#34;SpringOne2020 Kubernetes ReplicaSet example&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;container-basics&#34;&gt;Container Basics&lt;/h2&gt;
+&lt;p&gt;The Container Basics workshop, while introductory, goes into details that are typically omitted from container tutorials, like how to inspect layers.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/inspect-layers.png&#34; alt=&#34;SpringOne2020 container inspect layers example&#34;  title=&#34;SpringOne2020 container inspect layers example&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;getting-started-with-spring-boot-on-kubernetes&#34;&gt;Getting Started with Spring Boot on Kubernetes&lt;/h2&gt;
+&lt;p&gt;It wouldn’t be a Spring conference without at least a few Spring workshops. Of those we offered at Spring 2020, Getting Started with Spring Boot on Kubernetes was the most heavily attended. It shows you how to build a Spring Boot application with no fuss&amp;ndash;—and no YAML—&amp;ndash;in a handful of steps. Leave it to Spring to make Kubernetes easy!&lt;/p&gt;
+&lt;p&gt;You might recognize the terminal art in the following screenshot; it is of a Spring application being built.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/spring-jar-redact.png&#34; alt=&#34;SpringOne2020 Spring Boot Kubernetes build&#34;  title=&#34;SpringOne2020 Spring Boot Kubernetes build&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Once the Spring Boot application is built, you deploy it to Kubernetes from your very own image registry!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/deploy-2-k8s.png&#34; alt=&#34;SpringOne2020 Spring Boot Kubernetes deploy&#34;  title=&#34;SpringOne2020 Spring Boot Kubernetes deploy&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;There were so many amazing workshops from SpringOne. New and hot technologies like &lt;a href=&#34;https://k14s.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Carvel&lt;/a&gt; and &lt;a href=&#34;https://cloud.google.com/tekton&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tekton&lt;/a&gt; stood out as they are gaining traction in the industry.&lt;/p&gt;
+&lt;p&gt;All of the Spring Boot Kubernetes workshops where surprisingly painless and quick to run through. After Getting Started with Spring Boot on Kubernetes, Spring Boot Skaffold on Kubernetes is my favorite. With &lt;a href=&#34;https://skaffold.dev/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Skaffold&lt;/a&gt; Kubernetes development becomes dynamic, eliminating tedious commands and overall speeding up your work.&lt;/p&gt;
+&lt;p&gt;For those brand new to Spring or &lt;a href=&#34;https://spring.io/microservices&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Microservices&lt;/a&gt;, the Spring Microservices workshop is a good introduction that could be completed in 10 minutes or less due to the magic of the Spring Framework.&lt;/p&gt;
+&lt;p&gt;Using very similar code to the Spring Microservices workshop in Getting Started with Spring Cloud Gateway you build your own &lt;a href=&#34;https://spring.io/projects/spring-cloud-gateway&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;API Gateway&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Here is a full rundown of the self-paced workshops featured at SpringOne 2020:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/workshops-1.png&#34; alt=&#34;SpringOne2020 workshops list 1&#34;  title=&#34;SpringOne2020 workshops list&#34; /&gt;
+&lt;img src=&#34;/images/blogs/springone2020-workshops/workshops-2.png&#34; alt=&#34;SpringOne2020 workshops list 2&#34;  title=&#34;SpringOne2020 workshops list&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;self-paced-workshops-are-coming-to-tanzu-developer-center&#34;&gt;Self-Paced Workshops Are Coming to Tanzu Developer Center!&lt;/h2&gt;
+&lt;p&gt;Now that SpringOne 2020 has come and gone, the SpringOne self-paced workshops are being moved to their new home at &lt;a href=&#34;https://tanzu.vmware.com/developer/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Developer Center&lt;/a&gt;! It is a perfect fit. As its name implies, &lt;a href=&#34;https://tanzu.vmware.com/developer/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Developer Center&lt;/a&gt; is developer-focused (no marketing jargon allowed); its sole purpose is to train developers and enable them on their journey forward. The &lt;a href=&#34;https://tanzu.vmware.com/developer/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Developer Center&lt;/a&gt; already has blogs, videos, an integrated community, and a learning portal, and features weekly live streams and recordings via &lt;a href=&#34;/tv/&#34;&gt;Tanzu.TV&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Not only are you getting the workshops from SpringOne 2020, but more workshops are being made as we speak!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/overview.png&#34; alt=&#34;SpringOne2020 workshops end&#34;  title=&#34;SpringOne2020 workshops end&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;To be notified as soon as the workshops are made available, &lt;a href=&#34;/community/&#34;&gt;subscribe to Tanzu Developer Newsletter.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;UPDATE: These workshops are available to &lt;a href=&#34;/workshops&#34;&gt;try out now&lt;/a&gt;!&lt;/em&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: Save Your Stack: Build Cloud Native Apps with Spring, Kubernetes and Cassandra</title>
+      
+      <link>/blog/save-your-stack-build-cloud-native-apps-with-spring-kubernetes-and-cassandra/</link>
+      <pubDate>Wed, 08 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/save-your-stack-build-cloud-native-apps-with-spring-kubernetes-and-cassandra/</guid>
+      <description>
+
+        
+        &lt;p&gt;You can start to build modern, cloud native apps today using the latest innovations from Spring, Cassandra and Kubernetes. This blog will show you code samples and a fully working demo to get you up to speed in minutes with these open-source technologies.&lt;/p&gt;
+&lt;h2 id=&#34;context&#34;&gt;Context&lt;/h2&gt;
+&lt;p&gt;There&amp;rsquo;s no shortage of buzzwords, such as &amp;ldquo;digital transformation&amp;rdquo;, &amp;ldquo;cloud native&amp;rdquo; and &amp;ldquo;serverless,&amp;rdquo; being thrown around the internet. Peeling back a layer of the buzzword onion, we do see significant changes in the technology world that have inspired these terms. First, most companies are becoming technology companies as having a presence in the digital space grows as a requirement for survival. Second, the mad dash to the cloud is showing no signs of slowing down. Third, time to market for new applications matters more than ever.&lt;/p&gt;
+&lt;p&gt;So, how has this affected technology practitioners? Well, the developer population is multiplying rapidly and the pressures for faster delivery of these new digital experiences are getting more extreme by the day. It&amp;rsquo;s now a fundamental expectation that applications will be there whenever, wherever and however users want to engage. The cloud movement is creating complex architectures that span on-premises and cloud environments, not to mention the pure amount of data coming through these services is exploding. Sounds fun!&lt;/p&gt;
+&lt;p&gt;Open-source technology to the rescue. These factors have given rise to technologies such as Spring Boot to boost developer productivity, Apache Cassandra to deal with the volumes of distributed data and Kubernetes to manage containerized workloads across environments.&lt;/p&gt;
+&lt;h2 id=&#34;stack-overview&#34;&gt;Stack Overview&lt;/h2&gt;
+&lt;h3 id=&#34;spring&#34;&gt;Spring&lt;/h3&gt;
+&lt;p&gt;There are many handy utilities in &lt;a href=&#34;https://spring.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring&lt;/a&gt; that take care of the boilerplate required to build microservices with Kubernetes and Cassandra. In this blog post, we use the following modules:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://spring.io/projects/spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot&lt;/a&gt; to package our dependencies&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://spring.io/projects/spring-data-cassandra&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Data Cassandra&lt;/a&gt; for access to the Cassandra database&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://spring.io/projects/spring-data-rest&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Data REST&lt;/a&gt; for the API on top of the Spring Data Cassandra microservice&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot Actuator&lt;/a&gt; for health checks, liveness and readiness probes&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#spring-web&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Web&lt;/a&gt; to build our REST interface for the Spring Boot microservice&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://spring.io/projects/spring-cloud-kubernetes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Kubernetes&lt;/a&gt; to pass application configuration via ConfigMaps&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In May 2020, the Spring engineering teams released &lt;a href=&#34;https://spring.io/blog/2020/05/15/spring-boot-2-3-0-available-now&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot 2.3.0&lt;/a&gt; and &lt;a href=&#34;https://spring.io/blog/2020/05/18/what-s-new-in-spring-data-klara-dan-von-neumann&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Data Neumann&lt;/a&gt;, which brought an upgrade to the latest version 4.x of the &lt;a href=&#34;https://docs.datastax.com/en/developer/java-driver/latest/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cassandra Java driver&lt;/a&gt;. This driver upgrade provides full support for the newest major version of Cassandra 4.0, which we&amp;rsquo;ll showcase throughout the blog. The Spring and Cassandra communities continue to work together to provide tighter integrations.&lt;/p&gt;
+&lt;h3 id=&#34;cassandra&#34;&gt;Cassandra&lt;/h3&gt;
+&lt;p&gt;The Cassandra community is &lt;a href=&#34;https://www.zdnet.com/article/faster-than-ever-apache-cassandra-4-0-beta-is-on-its-way/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;nearing the release of version 4.0&lt;/a&gt;, which features extensive stability improvements, faster scaling for elastic architectures, enterprise security features such as audit logging, Java 11 support and more. Momentum is also brewing in the Cassandra community around a &lt;a href=&#34;https://cwiki.apache.org/confluence/display/CASSANDRA/Cassandra&amp;#43;Kubernetes&amp;#43;Operator&amp;#43;SIG&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;project-backed Kubernetes operator&lt;/a&gt;. There are many in the ecosystem today, and in this blog we use DataStax&amp;rsquo;s open-source Kubernetes Operator called &lt;a href=&#34;https://github.com/datastax/cass-operator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cass-operator&lt;/a&gt; with a Cassandra 4.0 pre-release build.&lt;/p&gt;
+&lt;h3 id=&#34;kubernetes&#34;&gt;Kubernetes&lt;/h3&gt;
+&lt;p&gt;The &lt;a href=&#34;https://kubernetes.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes&lt;/a&gt; wave is changing the paradigm for how applications are built, deployed and scaled. In this blog post, we&amp;rsquo;ll get into the details of tricky parts of Kubernetes-based applications and how to use Spring libraries to quickly develop microservice applications on Kubernetes.&lt;/p&gt;
+&lt;h2 id=&#34;lets-see-it-in-action&#34;&gt;Let&amp;rsquo;s See It in Action&lt;/h2&gt;
+&lt;p&gt;In the next sections, we&amp;rsquo;ll walk through an inventory application of Products and Orders that ties all of these technologies together. If you want to skip the details and go straight to hands on, head over to the GitHub repository at &lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;DataStax-Examples/spring-k8s-cassandra-microservices&lt;/code&gt;&lt;/a&gt; to hit the ground running.&lt;/p&gt;
+&lt;p&gt;At a glance, the architecture of the application looks as follows. Each portion of the stack is deployed in Kubernetes in its own namespace to have clear separation of duties and isolation between services, simulating different teams working on separate parts of a single application.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/spring-k8s-cassandra/stack.png&#34; alt=&#34;Application stack showing two microservices behind Spring Cloud Gateway, both of which connect to Cassandra&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ll use &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-minikube/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Minikube&lt;/a&gt; as we walk through deploying this stack locally. All of these commands can be translated to &lt;a href=&#34;https://kind.sigs.k8s.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kind&lt;/a&gt; alternatives, and there are step-by-step details for setting up Cassandra with Kind over on the &lt;a href=&#34;https://github.com/DataStax-Academy/kubernetes-workshop-online&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;DataStax Academy GitHub&lt;/a&gt;. You will need to install &lt;a href=&#34;https://www.docker.com/products/docker-desktop&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker&lt;/a&gt;, &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl&lt;/a&gt;, &lt;a href=&#34;https://maven.apache.org/install.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Maven&lt;/a&gt; and &lt;a href=&#34;https://adoptopenjdk.net/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Java 11+&lt;/a&gt; as prerequisites for this demo. And with that, let&amp;rsquo;s get this thing going.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# start minikube and the dashboard&lt;/span&gt;
+minikube start --driver&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;docker --extra-config&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;apiserver.authorization-mode&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;RBAC,Node
+minikube dashboard
+
+&lt;span class=&#34;c1&#34;&gt;# tell minikube to use the local docker environment&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;eval&lt;/span&gt; &lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;minikube docker-env&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# clone the example repository&lt;/span&gt;
+git clone https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;start-cassandra&#34;&gt;Start Cassandra&lt;/h3&gt;
+&lt;p&gt;Working from the bottom up, let’s first get the database deployed and ready to serve data to our APIs. When deploying microservices, it is common to have a database per service to have isolation all the way down to the data tier. Since we&amp;rsquo;re running locally, for demonstration purposes we&amp;rsquo;ll keep it light and start a single Cassandra 4.0 node for both of our services.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# create namespace&lt;/span&gt;
+kubectl create ns cass-operator
+
+&lt;span class=&#34;c1&#34;&gt;# create the storage class for the database&lt;/span&gt;
+kubectl -n cass-operator apply -f deploy/storage-class.yml
+
+&lt;span class=&#34;c1&#34;&gt;# apply the operator manifest, wait until complete&lt;/span&gt;
+kubectl -n cass-operator apply -f https://raw.githubusercontent.com/DataStax-Academy/kubernetes-workshop-online/master/1-cassandra/11-install-cass-operator-v1.1.yaml
+
+&lt;span class=&#34;c1&#34;&gt;# start a single C* 4.0 node&lt;/span&gt;
+kubectl -n cass-operator apply -f deploy/cassandra-4.0.0-1node.yml 
+
+&lt;span class=&#34;c1&#34;&gt;# check that everything started successfully&lt;/span&gt;
+kubectl -n cass-operator get pods
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Five simple commands and we have Cassandra running in Kubernetes—pretty cool. One thing that you&amp;rsquo;ll quickly notice is that this database has security enabled by default. We can browse the &lt;a href=&#34;https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes Secret&lt;/a&gt; and you should see something that resembles an encoded username and password in the output.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n cass-operator get secret cluster1-superuser -o yaml
+
+apiVersion: v1
+data:
+  password: OE92MzB2MWlDRF90ZWtVYzAyRFNpN3RtZkJ0LVpUVjlicDNxaFRDc3h1RzhYN3BKNW10ZjZ3
+  username: Y2x1c3RlcjEtc3VwZXJ1c2Vy
+kind: Secret
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To decode these we use the following commands.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; Y2x1c3RlcjEtc3VwZXJ1c2Vy &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; base64 -D &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+cluster1-superuser
+
+&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; OE92MzB2MWlDRF90ZWtVYzAyRFNpN3RtZkJ0LVpUVjlicDNxaFRDc3h1RzhYN3BKNW10ZjZ3 &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; base64 -D &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+8Ov30v1iCD_tekUc02DSi7tmfBt-ZTV9bp3qhTCsxuG8X7pJ5mtf6w
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Go ahead and save the decoded values off for later because we&amp;rsquo;ll need them to allow our services to access the database.&lt;/p&gt;
+&lt;h3 id=&#34;spring-boot-microservice&#34;&gt;Spring Boot Microservice&lt;/h3&gt;
+&lt;p&gt;Next let&amp;rsquo;s have a look at the Spring Boot service that is responsible for the Products portion of our microservices application. This module uses the Cassandra Java driver directly, and we are handling configuration, query execution and API endpoint definition explicitly in our service compared to the boilerplate abstraction that we will show in the next section with Spring Data Cassandra and Spring Data REST.&lt;/p&gt;
+&lt;h4 id=&#34;configuration&#34;&gt;Configuration&lt;/h4&gt;
+&lt;p&gt;One convenient feature of Spring Cloud Kubernetes is that it allows for the loading of sensitive information like this through Kubernetes Secrets. We&amp;rsquo;ll create a namespace for our service and then add the secrets using the database credentials that we decoded above.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create ns spring-boot-service
+kubectl -n spring-boot-service create secret generic db-secret --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;cluster1-superuser --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;8Ov30v1iCD_tekUc02DSi7tmfBt-ZTV9bp3qhTCsxuG8X7pJ5mtf6w
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We define our configuration in the application using the &lt;code&gt;@Configuration&lt;/code&gt; annotation, and this class specifies the database credentials and connection details. For example, we define our database username and password with environment variables and the &lt;code&gt;@Value&lt;/code&gt; annotation.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;${DB_USERNAME:cassandra}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;${DB_PASSWORD:cassandra}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The last piece to pass the database credentials to the application running in Kubernetes is defined in the &lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/blob/master/deploy/spring-boot/spring-boot-deployment.yml&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Deployment YAML&lt;/a&gt; for our service. This exposes the Secret username and password as &lt;code&gt;DB_USERNAME&lt;/code&gt; and &lt;code&gt;DB_PASSWORD&lt;/code&gt; environment variables, which our application will consume.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;     &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;       &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;           &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;DB_USERNAME&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;             &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;valueFrom&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;               &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secretKeyRef&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                 &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;db-secret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                 &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;           &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;DB_PASSWORD&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;             &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;valueFrom&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;               &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secretKeyRef&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                 &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;db-secret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                 &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can further customize the connection to the database with &lt;code&gt;@Beans&lt;/code&gt; that hook into Spring Boot&amp;rsquo;s auto-configuration. You&amp;rsquo;ll see that we have different switches for whether we are connecting to &lt;a href=&#34;https://astra.datastax.com/register&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;DataStax Astra&lt;/a&gt;, a Cassandra as-a-Service database or whether we are connecting to a self-managed Cassandra deployment. Any Cassandra Java driver &lt;a href=&#34;https://docs.datastax.com/en/developer/java-driver/latest/manual/core/configuration/reference/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;configuration option&lt;/a&gt; can be customized through these hooks.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CqlSessionBuilderCustomizer&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;sessionBuilderCustomizer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;astraSecureConnectBundle&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;none&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+       &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withCloudSecureConnectBundle&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Paths&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;astraSecureConnectBundle&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withAuthCredentials&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+   &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+       &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;addContactPoint&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;InetSocketAddress&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;contactPoints&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withLocalDatacenter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;localDataCenter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withAuthCredentials&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+   &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DriverConfigLoaderBuilderCustomizer&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;driverConfigLoaderBuilderCustomizer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;astraSecureConnectBundle&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;none&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+       &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;without&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DefaultDriverOption&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;CONTACT_POINTS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+   &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DefaultDriverOption&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;SESSION_KEYSPACE&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;keyspace&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With Spring Cloud Kubernetes, we can also load configuration directly from Kubernetes ConfigMaps. In this application, we show how to load the database connection information using this technique. Our simple ConfigMap for the Spring Boot service is shown below.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ConfigMap&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-boot-service&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;application.yml&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|-&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;   cassandra.contact-points: cluster1-dc1-service.cass-operator
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;   cassandra.keyspace: betterbotz
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;   cassandra.local-datacenter: dc1
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;   cassandra.port: 9042&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;controller&#34;&gt;Controller&lt;/h4&gt;
+&lt;p&gt;Thanks to Spring Boot, defining an HTTP interface for our application is a breeze with the &lt;code&gt;@Controller&lt;/code&gt; stereotype and the standard request helpers in Spring Web. With these utilities we expose the following APIs for our Spring Boot-based Products service.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/api/products/add&lt;/code&gt;: Add a new product&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/api/products/search/{name}&lt;/code&gt;: Search products by name&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/api/products/search/{name}/{id}&lt;/code&gt;: Search products by name and id&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/api/products/delete/{name}&lt;/code&gt;: Delete products by name&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/api/products/delete/{name}/{id}&lt;/code&gt;: Delete product by name and id&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;data-service&#34;&gt;Data Service&lt;/h4&gt;
+&lt;p&gt;The persistence layer of our application is handled by three classes. Note: the &lt;a href=&#34;https://docs.datastax.com/en/developer/java-driver/latest/manual/mapper/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cassandra Java Object Mapper&lt;/a&gt; is another option that could have been used for the Entity and DAO definition.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;POJO (&lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/blob/master/microservice-spring-boot/src/main/java/com/datastax/examples/product/Product.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Product.java&lt;/a&gt;): Standard object definition with getters and setters&lt;/li&gt;
+&lt;li&gt;DAO (&lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/blob/master/microservice-spring-boot/src/main/java/com/datastax/examples/product/ProductDao.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ProductDao.java&lt;/a&gt;): Contains the CQL queries and database access logic&lt;/li&gt;
+&lt;li&gt;Service (&lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/blob/master/microservice-spring-boot/src/main/java/com/datastax/examples/product/ProductService.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ProductService.java&lt;/a&gt;): Interfaces between the DAO and the Controller&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;deployment&#34;&gt;Deployment&lt;/h4&gt;
+&lt;p&gt;We package our application in a jar file and then build a local docker image to prepare for deployment to Kubernetes. If you prefer to avoid hitting a remote registry, &lt;code&gt;run eval `minikube docker-env`&lt;/code&gt; so that Kubernetes can find the image. Once the service is deployed, Kubernetes ensures that it starts and remains healthy by using the liveness and readiness that come out-of-the-box with Spring Actuator. That&amp;rsquo;s right, just include Actuator on your classpath and sit back! See this &lt;a href=&#34;https://spring.io/blog/2020/03/25/liveness-and-readiness-probes-with-spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;blog post&lt;/a&gt; for details on customization of the liveness and readiness probes. We use a minimal configuration in our &lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/blob/master/deploy/spring-boot/spring-boot-deployment.yml&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Deployment YAML&lt;/a&gt; as seen below, though we could have leveraged the &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/actuate/cassandra/CassandraHealthIndicator.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cassandra-specific health check&lt;/a&gt; as well.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;livenessProbe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;httpGet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/actuator/health&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;actuator&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;initialDelaySeconds&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;120&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;readinessProbe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;httpGet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/actuator/health&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;actuator&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we will go ahead and start our Spring Boot service.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# from the spring-k8s-cassandra-microservices root directory, build each module&lt;/span&gt;
+mvn package
+
+&lt;span class=&#34;c1&#34;&gt;# from the spring-k8s-cassandra-microservices/microservice-spring-boot directory&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# build docker image&lt;/span&gt;
+docker build -t csplinter/spring-boot-service:1.0.0-SNAPSHOT .
+
+&lt;span class=&#34;c1&#34;&gt;# deploy the service &lt;/span&gt;
+kubectl apply -n spring-boot-service -f ../deploy/spring-boot
+
+&lt;span class=&#34;c1&#34;&gt;# check that the pod is running&lt;/span&gt;
+kubectl -n spring-boot-service get pods
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To test out the endpoints exposed by the service, we can expose the target port of the service and then hit the endpoints. Note that these same endpoints are exposed through the &lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/tree/master/gateway-service&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Gateway Service&lt;/a&gt;, which would typically handle all traffic.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n spring-boot-service get pods
+kubectl -n spring-boot-service port-forward &amp;lt;pod-name&amp;gt; 8083:8083
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Add products&lt;/span&gt;
+curl -X POST -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;name&amp;#34;: &amp;#34;mobile&amp;#34;, &amp;#34;id&amp;#34;:&amp;#34;123e4567-e89b-12d3-a456-556642440000&amp;#34;, &amp;#34;description&amp;#34;:&amp;#34;iPhone&amp;#34;, &amp;#34;price&amp;#34;:&amp;#34;500.00&amp;#34;}&amp;#39;&lt;/span&gt; http://localhost:8083/api/products/add
+
+curl -X POST -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;name&amp;#34;: &amp;#34;mobile&amp;#34;, &amp;#34;id&amp;#34;:&amp;#34;123e4567-e89b-12d3-a456-556642440001&amp;#34;, &amp;#34;description&amp;#34;:&amp;#34;Android&amp;#34;, &amp;#34;price&amp;#34;:&amp;#34;600.00&amp;#34;}&amp;#39;&lt;/span&gt; http://localhost:8083/api/products/add
+
+&lt;span class=&#34;c1&#34;&gt;# Get products with name = mobile&lt;/span&gt;
+curl http://localhost:8083/api/products/search/mobile
+
+&lt;span class=&#34;c1&#34;&gt;# Get products with name = mobile and id = 123e4567-e89b-12d3-a456-556642440001&lt;/span&gt;
+curl http://localhost:8083/api/products/search/mobile/123e4567-e89b-12d3-a456-556642440001
+
+&lt;span class=&#34;c1&#34;&gt;# Delete product with name = mobile and id = 123e4567-e89b-12d3-a456-556642440001&lt;/span&gt;
+curl -X DELETE http://localhost:8083/api/products/delete/mobile/123e4567-e89b-12d3-a456-556642440001
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Just like that we have a Spring Boot service running in Kubernetes with our Cassandra 4.0 deployment to write, read and delete Products from the database. We see that the benefits of Spring Boot, Spring Cloud and Spring Web make it easy to quickly build cloud native applications with Kubernetes and Cassandra. The complete source code for this service can be found in the &lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/tree/master/microservice-spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;microservice-spring-boot&lt;/code&gt;&lt;/a&gt; module in GitHub.&lt;/p&gt;
+&lt;h3 id=&#34;spring-data-microservice&#34;&gt;Spring Data Microservice&lt;/h3&gt;
+&lt;p&gt;Now that we covered our Spring Boot Products service, let&amp;rsquo;s compare that to Spring Data Cassandra and Spring Data REST with our Orders service in the &lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/tree/master/microservice-spring-data&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;microservice-spring-data&lt;/code&gt;&lt;/a&gt; module. One of the key differences is the boilerplate that is provided by the Spring Data libraries that abstracts our development experience from the lower-level controls. This gives a lot of value for getting things done quickly, as we no longer have to spend the time writing what is otherwise already taken care of for us.&lt;/p&gt;
+&lt;h4 id=&#34;configuration-1&#34;&gt;Configuration&lt;/h4&gt;
+&lt;p&gt;Spring Data Cassandra takes care of the majority of default configuration for the connection to Cassandra. In this demo, we are extending &lt;a href=&#34;https://docs.spring.io/spring-data/cassandra/docs/current/api/org/springframework/data/cassandra/config/AbstractCassandraConfiguration.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;AbstractCassandraConfiguration&lt;/code&gt;&lt;/a&gt; so the driver customization looks slightly different than the Spring Boot example. We are using the &lt;code&gt;@Configuration&lt;/code&gt; annotation as well as the &lt;code&gt;@EnableConfigurationProperties(CassandraProperties.class)&lt;/code&gt; so that we do not lose the auto-configuration capabilities that Spring Boot provides for this module.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;protected&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;SessionBuilderConfigurer&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getSessionBuilderConfigurer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;SessionBuilderConfigurer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+       &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+       &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CqlSessionBuilder&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;configure&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CqlSessionBuilder&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cqlSessionBuilder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+           &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;astraSecureConnectBundle&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;none&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+               &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cqlSessionBuilder&lt;/span&gt;
+                       &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withCloudSecureConnectBundle&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Paths&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;astraSecureConnectBundle&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+                       &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withAuthCredentials&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+           &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+               &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cqlSessionBuilder&lt;/span&gt;
+                       &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;addContactPoint&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;InetSocketAddress&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;
+                               &lt;span class=&#34;n&#34;&gt;cassandraProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getContactPoints&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;),&lt;/span&gt;
+                               &lt;span class=&#34;n&#34;&gt;cassandraProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getPort&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()))&lt;/span&gt;
+                       &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withAuthCredentials&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+       &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+   &lt;span class=&#34;o&#34;&gt;};&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We extend &lt;code&gt;AbstractCassandraConfiguration&lt;/code&gt; to leverage the automatic schema generation methods built into Spring Data Cassandra, though this is not a requirement for many applications. Here we specify the keyspace that we want to create upon initialization of the connection as well as the table definition that we read from a file in the resources directory.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;protected&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CreateKeyspaceSpecification&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getKeyspaceCreations&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;astraSecureConnectBundle&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;none&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+       &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Arrays&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;asList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CreateKeyspaceSpecification&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;createKeyspace&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;getKeyspaceName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;ifNotExists&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withNetworkReplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DataCenterReplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;of&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;getLocalDataCenter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;with&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KeyspaceOption&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;DURABLE_WRITES&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+   &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Arrays&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;asList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;protected&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;KeyspacePopulator&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;keyspacePopulator&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;ResourceKeyspacePopulator&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;keyspacePopulate&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ResourceKeyspacePopulator&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;keyspacePopulate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setSeparator&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;keyspacePopulate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setScripts&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ClassPathResource&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;orders-schema.cql&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;keyspacePopulate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You&amp;rsquo;ll see in the code that we do the same thing here as in our Spring Boot service, where we are loading the database username and password from environment variables that are stored in Kubernetes Secrets. Since Secrets are bound to a namespace, we have to make sure that we also create these secrets in our spring-data-service namespace.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create ns spring-data-service
+
+kubectl -n spring-data-service create secret generic db-secret --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;cluster1-superuser --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;8Ov30v1iCD_tekUc02DSi7tmfBt-ZTV9bp3qhTCsxuG8X7pJ5mtf6w
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;controller-1&#34;&gt;Controller&lt;/h4&gt;
+&lt;p&gt;We use a controller in our service to customize the API endpoints for our Spring Data Orders service so that they match the pattern of the Spring Boot service. If we did not provide a controller, Spring Data REST would have generated the endpoints for us through simply annotating our &lt;code&gt;OrderRepository&lt;/code&gt; with &lt;code&gt;@RepositoryRestResource&lt;/code&gt;. In our case, we use &lt;code&gt;@RestResource(exported = false)&lt;/code&gt; in the repository to tell Spring Data REST that we wanted to handle these endpoints ourselves, which correspond to the methods in the controller. The following APIs are exposed for our Order service.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/api/orders/add&lt;/code&gt;: Add a new order&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/api/orders/search/order-by-id?{orderId}&lt;/code&gt;: Search orders by id&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/api/products/search/order-by-product-id?{orderId}&amp;amp;{productId}&lt;/code&gt;: Search orders by &lt;code&gt;orderid&lt;/code&gt; and &lt;code&gt;productid&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/api/orders/search/name-and-price-only?{orderId}&lt;/code&gt;: Search orders by id and only return product name and price&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/api/products/delete/order?{orderId}&lt;/code&gt;: Delete orders by id&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/api/products/delete/product-from-order?{orderId}&amp;amp;{productId}&lt;/code&gt;: Delete product from order&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;data-service-1&#34;&gt;Data Service&lt;/h4&gt;
+&lt;p&gt;The persistence layer of our Spring Data application is handled by our models/entities and the repository.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;POJOs (&lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/blob/master/microservice-spring-data/src/main/java/com/datastax/examples/order/Order.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Order.java&lt;/a&gt;, &lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/blob/master/microservice-spring-data/src/main/java/com/datastax/examples/order/OrderPrimaryKey.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;OrderPrimaryKey.java&lt;/a&gt;): Standard object definition with getters and setters. These are interpreted by Spring Data Cassandra as database types with the &lt;code&gt;@Table&lt;/code&gt; annotation for Order and the &lt;code&gt;@PrimaryKeyClass&lt;/code&gt; for &lt;code&gt;OrderPrimaryKey&lt;/code&gt;. The latter is required when using clustering keys in Cassandra.&lt;/li&gt;
+&lt;li&gt;Projection (&lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/blob/master/microservice-spring-data/src/main/java/com/datastax/examples/order/ProductNameAndPriceOnly.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ProductNameAndPriceOnly.java&lt;/a&gt;): This class is used by Spring Data to limit the results that are returned from the database. We use this in conjunction with a custom &lt;code&gt;@Query&lt;/code&gt; in our &lt;code&gt;OrderRepository&lt;/code&gt; to demonstrate how to return results with a subset of columns from the database.&lt;/li&gt;
+&lt;li&gt;Repository (&lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/blob/master/microservice-spring-data/src/main/java/com/datastax/examples/order/OrderRepository.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;OrderRepository.java&lt;/a&gt;): Extends Spring Data&amp;rsquo;s &lt;code&gt;CassandraRepository&lt;/code&gt; and defines the methods that are translated automatically under the hood to database queries. Note that the naming of these methods is specific to the Spring Data spec. For example, &lt;code&gt;findByKeyOrderIdAndKeyProductId&lt;/code&gt; is required to tell Spring Data that we wish to query by the &lt;code&gt;OrderId&lt;/code&gt; and &lt;code&gt;ProductId&lt;/code&gt; portions of our Primary Key.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;deployment-1&#34;&gt;Deployment&lt;/h4&gt;
+&lt;p&gt;Similar to our Spring Boot service, we get the same liveness and readiness probes with our Spring Data service. These are configured in the exact same manner and are enabled simply by having Actuator on the classpath. To build and deploy our service to Kubernetes, we execute the following commands.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# (optional if performed above) tell minikube to use the local docker environment&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;eval&lt;/span&gt; &lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;minikube docker-env&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# (optional if performed above) from the spring-k8s-cassandra-microservices root directory, build each module&lt;/span&gt;
+mvn package
+
+&lt;span class=&#34;c1&#34;&gt;# from the spring-k8s-cassandra-microservices/microservice-spring-data directory&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# build docker image&lt;/span&gt;
+docker build -t csplinter/spring-data-service:1.0.0-SNAPSHOT .
+
+&lt;span class=&#34;c1&#34;&gt;# deploy the service &lt;/span&gt;
+kubectl apply -n spring-data-service -f ../deploy/spring-data
+
+&lt;span class=&#34;c1&#34;&gt;# check that the pod is running&lt;/span&gt;
+kubectl -n spring-data-service get pods
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To test out the endpoints exposed by the service, we can expose the Service port and then hit the endpoints.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n spring-data-service get pods
+
+kubectl -n spring-data-service port-forward &amp;lt;pod-name&amp;gt; 8081:8081
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Add orders&lt;/span&gt;
+curl -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;key&amp;#34;: {&amp;#34;orderId&amp;#34;:&amp;#34;123e4567-e89b-12d3-a456-556642440000&amp;#34;, &amp;#34;productId&amp;#34;:&amp;#34;123e4567-e89b-12d3-a456-556642440000&amp;#34;}, &amp;#34;productName&amp;#34;:&amp;#34;iPhone&amp;#34;, &amp;#34;productPrice&amp;#34;:&amp;#34;500.00&amp;#34;, &amp;#34;productQuantity&amp;#34;:1, &amp;#34;addedToOrderTimestamp&amp;#34;: &amp;#34;2020-04-12T11:21:59.001+0000&amp;#34;}&amp;#39;&lt;/span&gt; http://localhost:8081/api/orders/add
+
+curl -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt;  -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;key&amp;#34;: {&amp;#34;orderId&amp;#34;:&amp;#34;123e4567-e89b-12d3-a456-556642440000&amp;#34;, &amp;#34;productId&amp;#34;:&amp;#34;123e4567-e89b-12d3-a456-556642440001&amp;#34;}, &amp;#34;productName&amp;#34;:&amp;#34;Android&amp;#34;, &amp;#34;productPrice&amp;#34;:&amp;#34;600.00&amp;#34;, &amp;#34;productQuantity&amp;#34;:1, &amp;#34;addedToOrderTimestamp&amp;#34;: &amp;#34;2020-04-12T11:22:59.001+0000&amp;#34;}&amp;#39;&lt;/span&gt; http://localhost:8081/api/orders/add
+
+&lt;span class=&#34;c1&#34;&gt;# Get orders with order_id = 123e4567-e89b-12d3-a456-556642440000&lt;/span&gt;
+curl http://localhost:8081/api/orders/search/order-by-id?orderId&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;123e4567-e89b-12d3-a456-556642440000
+
+&lt;span class=&#34;c1&#34;&gt;# Get order with order_id = 123e4567-e89b-12d3-a456-556642440000 and product_id = 123e4567-e89b-12d3-a456-556642440000&lt;/span&gt;
+curl &lt;span class=&#34;s2&#34;&gt;&amp;#34;http://localhost:8081/api/orders/search/order-by-product-id?orderId=123e4567-e89b-12d3-a456-556642440000&amp;amp;productId=123e4567-e89b-12d3-a456-556642440000&amp;#34;&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Shows how to use a projection with Spring Data REST&lt;/span&gt;
+curl http://localhost:8081/api/orders/search/name-and-price-only?orderId&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;123e4567-e89b-12d3-a456-556642440000
+curl &lt;span class=&#34;s2&#34;&gt;&amp;#34;http://localhost:8081/api/orders/search/name-and-price-only?orderId=123e4567-e89b-12d3-a456-556642440000&amp;amp;projection=product-name-and-price&amp;#34;&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Delete order with order_id = 123e4567-e89b-12d3-a456-556642440000 and product_id = 123e4567-e89b-12d3-a456-556642440000&lt;/span&gt;
+curl -X DELETE &lt;span class=&#34;s2&#34;&gt;&amp;#34;http://localhost:8081/api/orders/delete/product-from-order?orderId=123e4567-e89b-12d3-a456-556642440000&amp;amp;productId=123e4567-e89b-12d3-a456-556642440000&amp;#34;&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Delete order with order_id = 123e4567-e89b-12d3-a456-556642440000&lt;/span&gt;
+curl -X DELETE &lt;span class=&#34;s2&#34;&gt;&amp;#34;http://localhost:8081/api/orders/delete/order?orderId=123e4567-e89b-12d3-a456-556642440000&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;gateway-service&#34;&gt;Gateway Service&lt;/h3&gt;
+&lt;p&gt;There are many options for federating external access to a Kubernetes cluster. A common solution when building Spring applications is to use the Spring Cloud Gateway project as the broker to handle the routing of traffic to back-end services. This also comes with automatic discovery of other services in the cluster using Kubernetes resources, and a simple implementation that routes traffic to our two microservices is found in the &lt;a href=&#34;https://github.com/DataStax-Examples/spring-k8s-cassandra-microservices/tree/master/gateway-service&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;gateway-service&lt;/a&gt; module of the demo app.&lt;/p&gt;
+&lt;p&gt;We can start this Gateway Service to act as the router to our Spring Boot and Spring Data downstream services.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create ns gateway-service
+
+&lt;span class=&#34;c1&#34;&gt;# from the spring-k8s-cassandra-microservices/gateway-service directory&lt;/span&gt;
+docker build -t csplinter/gateway-service:1.0.0-SNAPSHOT .
+kubectl apply -n gateway-service -f ../deploy/gateway
+
+kubectl -n gateway-service get pods
+kubectl -n gateway-service port-forward &amp;lt;pod-name&amp;gt; 8080:8080
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We test this by executing the same curl commands above, but now with the port 8080. You should see the exact same result as before demonstrating that the gateway is working properly!&lt;/p&gt;
+&lt;h3 id=&#34;wrap-up&#34;&gt;Wrap-Up&lt;/h3&gt;
+&lt;p&gt;We hope that this blog post provides relevant hands-on material that you can take and apply to your own development experience. As the challenges facing developers are rising, powerful tools must keep pace in order to exceed the expectations of users, and Spring, Kubernetes and Cassandra are among those to level up your stack. We encourage you to join us on this collective journey, and we look forward to seeing you in the Spring, Kubernetes or Cassandra communities.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://spring.io/community&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Join the Spring community&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cassandra.apache.org/community/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Join the Cassandra mailing list and Slack&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://community.datastax.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ask questions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://astra.datastax.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Run Cassandra in the cloud&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This blog was written by Chris Splinter who works for DataStax, focusing on open source solutions in the Apache Cassandra ecosystem. As a former automation engineer, Chris is focused on developers and making it easier to build applications through APIs, frameworks, and tools. You can find him on &lt;a href=&#34;https://www.linkedin.com/in/csplinter/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;LinkedIn&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with Spring Cloud Gateway</title>
+      
+      <link>/guides/spring/scg-gs/</link>
+      <pubDate>Thu, 16 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/scg-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;Spring Cloud Gateway provides a library for building API gateways on top of Spring and Java. It provides a flexible way of routing requests based on a number of criteria, as well as focuses on cross-cutting concerns such as security, resiliency, and monitoring. For more information, make sure to check out &lt;a href=&#34;../scg-what-is&#34;&gt;What is Spring Cloud Gateway?&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;In this guide, you&amp;rsquo;ll stand up a bare-bones gateway using Spring Cloud Gateway, which will do some light request modification. You&amp;rsquo;ll see the basics of Spring Cloud Gateway, which will serve as a great foundation for those just starting out.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;There are a few things you need to do before getting started with Spring Cloud Gateway:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;About 15 minutes&lt;/li&gt;
+&lt;li&gt;Your text editor or IDE of choice&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.oracle.com/java/technologies/javase-downloads.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JDK 1.8&lt;/a&gt; or newer&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://gradle.org/install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Gradle 4+&lt;/a&gt; or &lt;a href=&#34;https://maven.apache.org/download.cgi&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Maven 3.2+&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;using-spring-cloud-gateway&#34;&gt;Using Spring Cloud Gateway&lt;/h2&gt;
+&lt;p&gt;Since Spring Cloud Gateway is a library built for Spring, there&amp;rsquo;s no infrastructure to set up and no networking to configure. Instead, this guide will be looking at the code that goes around defining your gateway.&lt;/p&gt;
+&lt;h3 id=&#34;generating-a-new-spring-application&#34;&gt;Generating a New Spring Application&lt;/h3&gt;
+&lt;p&gt;The easiest way to get started with a new Spring application is at &lt;a href=&#34;https://start.spring.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;start.spring.io&lt;/a&gt;. There are a few personal choices here—such as if you&amp;rsquo;d like to use Maven or Gradle—but for the sake of consistency, here are the settings used in this guide:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Project&lt;/strong&gt;: Maven Project&lt;br&gt;
+&lt;strong&gt;Language&lt;/strong&gt;: Java&lt;br&gt;
+&lt;strong&gt;Spring Boot&lt;/strong&gt;: 2.2.5&lt;br&gt;
+&lt;strong&gt;Project Group&lt;/strong&gt;: com.vmware&lt;br&gt;
+&lt;strong&gt;Project Artifact&lt;/strong&gt;: scg-getting-started&lt;/p&gt;
+&lt;p&gt;Finally, you&amp;rsquo;ll just need one dependency for our application:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Gateway&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Click &amp;ldquo;Generate&amp;rdquo; and you&amp;rsquo;ll download a zip file of the generated code.&lt;/p&gt;
+&lt;h3 id=&#34;building-your-gateway&#34;&gt;Building Your Gateway&lt;/h3&gt;
+&lt;p&gt;You can configure a basic route by creating a method that takes in a &lt;code&gt;RouteLocatorBuilder&lt;/code&gt; and returns a &lt;code&gt;RouteLocator&lt;/code&gt;. Here&amp;rsquo;s an example of &lt;code&gt;src/main/java/com/vmware/scgettingstarted/ScgGettingStartedApplication.java&lt;/code&gt; complete with a custom route:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.vmware.scggettingstarted&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.boot.SpringApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.boot.autoconfigure.SpringBootApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.cloud.gateway.route.RouteLocator&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.context.annotation.Bean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@SpringBootApplication&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;ScgGettingStartedApplication&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+	&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+		&lt;span class=&#34;n&#34;&gt;SpringApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;run&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ScgGettingStartedApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+	&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+	&lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+	&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RouteLocator&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;myRoutes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RouteLocatorBuilder&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+		&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;routes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+			&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;p&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;p&lt;/span&gt;
+				&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/get&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+				&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;filters&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;addRequestHeader&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Hello&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;World&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+				&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;uri&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;http://httpbin.org:80&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+			&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;build&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+	&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Take note of the &lt;code&gt;myRoutes&lt;/code&gt; method. This code will create a route that will take any &lt;code&gt;GET&lt;/code&gt; request, add a header named &lt;code&gt;Hello&lt;/code&gt; and a value of &lt;code&gt;World&lt;/code&gt;, then forward your request to httpbin.org.&lt;/p&gt;
+&lt;h3 id=&#34;run-your-gateway&#34;&gt;Run Your Gateway&lt;/h3&gt;
+&lt;p&gt;You can run this as a normal Spring Boot application:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;./mvnw spring-boot:run&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Once running, you can send a request to your application to ensure it&amp;rsquo;s running at &lt;a href=&#34;http://localhost:8080/get&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:8080/get&lt;/a&gt;. Say your request looks like the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; GET /get HTTP/1.1
+&amp;gt; Host: localhost:8080
+&amp;gt; User-Agent: curl/7.65.3
+&amp;gt; Accept: */*
+&amp;gt; MyHeader: MyValue
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You&amp;rsquo;ve sent a &lt;code&gt;GET&lt;/code&gt; request to your application, adding a custom header of &lt;code&gt;MyHeader&lt;/code&gt; with a value of &lt;code&gt;MyValue&lt;/code&gt;. Spring Cloud Gateway will return the following response (note that the body of the response is from httpbin.org, which is providing a breakdown of the request that it received):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt; HTTP/1.1 200 OK
+&amp;lt; Date: Fri, 06 Mar 2020 14:22:54 GMT
+&amp;lt; Content-Type: application/json
+&amp;lt; Content-Length: 471
+&amp;lt; Server: gunicorn/19.9.0
+&amp;lt; Access-Control-Allow-Origin: *
+&amp;lt; Access-Control-Allow-Credentials: true
+
+{
+  &amp;quot;args&amp;quot;: {}, 
+  &amp;quot;headers&amp;quot;: {
+    &amp;quot;Accept&amp;quot;: &amp;quot;*/*&amp;quot;, 
+    &amp;quot;Content-Length&amp;quot;: &amp;quot;0&amp;quot;, 
+    &amp;quot;Forwarded&amp;quot;: &amp;quot;proto=http;host=\&amp;quot;localhost:8080\&amp;quot;;for=\&amp;quot;127.0.0.1:58158\&amp;quot;&amp;quot;, 
+    &amp;quot;Hello&amp;quot;: &amp;quot;World&amp;quot;, 
+    &amp;quot;Host&amp;quot;: &amp;quot;httpbin.org&amp;quot;, 
+    &amp;quot;Myheader&amp;quot;: &amp;quot;MyValue&amp;quot;, 
+    &amp;quot;User-Agent&amp;quot;: &amp;quot;curl/7.65.3&amp;quot;, 
+    &amp;quot;X-Forwarded-Host&amp;quot;: &amp;quot;localhost:8080&amp;quot;
+  }, 
+  &amp;quot;origin&amp;quot;: &amp;quot;127.0.0.1&amp;quot;, 
+  &amp;quot;url&amp;quot;: &amp;quot;http://localhost:8080/get&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Here you can see the response from httpbin.org, including the &lt;code&gt;MyHeader&lt;/code&gt; header that you sent in your request, as well as the &lt;code&gt;Hello&lt;/code&gt; header that Spring Cloud Gateway added to your request.&lt;/p&gt;
+&lt;h3 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h3&gt;
+&lt;p&gt;Check out some of the great guides on the Spring website to learn how you can leverage the amazing Spring ecosystem to accomplish things like &lt;a href=&#34;https://spring.io/blog/2019/07/01/hiding-services-runtime-discovery-with-spring-cloud-gateway&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;hiding your backend services&lt;/a&gt; as well as how you can &lt;a href=&#34;https://spring.io/blog/2019/08/16/securing-services-with-spring-cloud-gateway&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;secure your services using Spring Cloud Security&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: What is Spring Cloud Gateway?</title>
+      
+      <link>/guides/spring/scg-what-is/</link>
+      <pubDate>Thu, 16 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/scg-what-is/</guid>
+      <description>
+
+        
+        &lt;p&gt;Spring Cloud Gateway provides a library for building API gateways on top of Spring and Java. It provides a flexible way of routing requests based on a number of criteria, as well as focuses on cross-cutting concerns such as security, resiliency, and monitoring.&lt;/p&gt;
+&lt;h2 id=&#34;why-is-it-important&#34;&gt;Why Is It Important?&lt;/h2&gt;
+&lt;p&gt;An API gateway can help simplify the communication between a client and a service, whether that be between a user&amp;rsquo;s web browser and a server miles away, or between a frontend application and the backend services that it relies on.&lt;/p&gt;
+&lt;p&gt;Consider a scenario in which you have a web application that relies on three backend services. As each of those services are updated, experience instability, or have the network between them become unstable, your web application will need to know where all three services are and what to do if those services move or go down.&lt;/p&gt;
+&lt;p&gt;An API gateway allows you to implement the complexity separately from the client, moving that responsibility from user side to server side. All the client needs to know is how to talk to the gateway. It doesn&amp;rsquo;t matter if the backend services move, go offline, or become unstable so long as the gateway knows how to handle these situations.&lt;/p&gt;
+&lt;p&gt;As luck would have it, &lt;a href=&#34;https://tanzu.vmware.com/content/blog/microservices-essentials-getting-started-with-spring-cloud-gateway&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Gateway&lt;/a&gt; benefits from the entirety of the Spring ecosystem. Even better, the Spring ecosystem has done a lot of work to handle this sort of complexity. From security to stability to monitoring, the Spring ecosystem can do a lot for you and your API gateway.&lt;/p&gt;
+&lt;h2 id=&#34;how-does-it-work&#34;&gt;How Does It Work?&lt;/h2&gt;
+&lt;p&gt;Spring Cloud Gateway is a library for building an API gateway, so it looks like any another Spring Boot application. If you&amp;rsquo;re a Spring developer, you&amp;rsquo;ll find it&amp;rsquo;s very easy to &lt;a href=&#34;../scg-gs&#34;&gt;get started with Spring Cloud Gateway&lt;/a&gt; with just a few lines of code.&lt;/p&gt;
+&lt;p&gt;Spring Cloud Gateway is intended to sit between a requester and a resource that&amp;rsquo;s being requested, where it intercepts, analyzes, and modifies every request. That means you can route requests based on their context. Did a developer include a header indicating an API version? We can route that request to the appropriately versioned backend. Does the request require sticky sessions? The gateway can keep track of each user&amp;rsquo;s session, even if your backend can&amp;rsquo;t.&lt;/p&gt;
+&lt;p&gt;Since every request is going through your gateway, you get a few extras on top of simple routing. In fact, since your gateway is just another Spring Boot application, you have access to the entire Spring ecosystem.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://spring.io/projects/spring-cloud&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud&lt;/a&gt; allows developers to implement things such as distributed configuration, service registration, load balancing, the circuit breaker pattern, and more. It provides these tools to implement many common patterns in distributed systems.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://cloud.spring.io/spring-cloud-security&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Security&lt;/a&gt; allows you to lock down access to your backend services. Since all requests are going through your gateway, that security propagates to all of your services that are sitting behind that gateway. For example, you can enable single sign-on (SSO) with your gateway and then control which role each route requires a user to have. This can be as granular as it needs to be, including requiring different roles for different scenarios such as GET vs POST requests, different paths, or even different parameters within the request itself.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot Actuator&lt;/a&gt; allows developers to easily emit metrics to their monitoring platform of choice. Out of the box, Spring ships with a variety of actuators that you can use to monitor any Java application. Additionally, it&amp;rsquo;s easy to create your own metrics to keep an eye on specific cases as needed. For example, you could record each time a route is hit to see trends over time, or measure the latency of each request.&lt;/p&gt;
+&lt;h2 id=&#34;how-can-i-use-it&#34;&gt;How Can I Use It?&lt;/h2&gt;
+&lt;p&gt;Check out our guide on &lt;a href=&#34;../scg-gs&#34;&gt;Getting Started With Spring Cloud Gateway&lt;/a&gt;, as well as the &lt;a href=&#34;https://spring.io/projects/spring-cloud-gateway&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;great content on spring.io&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

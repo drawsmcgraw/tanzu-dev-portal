@@ -1,0 +1,289 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – true</title>
+    <link>/featured/true/</link>
+    <description>Recent content in true on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 28 Jun 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/featured/true/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Blog: Understanding the Differences Between Dockerfile and Cloud Native Buildpacks</title>
+      
+      <link>/blog/understanding-the-differences-between-dockerfile-and-cloud-native-buildpacks/</link>
+      <pubDate>Mon, 28 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/understanding-the-differences-between-dockerfile-and-cloud-native-buildpacks/</guid>
+      <description>
+
+        
+        &lt;p&gt;Container images enable you to bundle an application with all of its dependencies—soup to nuts, all the way down to the OS file system. Effectively, you are packaging your app and its environment into a single, immutable, and runnable artifact. You can then drop that image onto any container runtime and you’re (nearly) off to the races.&lt;/p&gt;
+&lt;p&gt;The benefits of taking this approach over deploying an application-only artifact onto a custom and curated environment are well established: greater predictability, repeatability, portability, and scalability, to name just a few. So, what’s the catch? The responsibility of providing the runtime and OS shifts from the ops or IT team that formerly created and maintained the target environment to the dev or DevOps team that is now packaging the application as an image. With this transition, organizations large and small must reimagine how they ensure consistency, security, transparency, and upkeep of these modernized deployable artifacts.&lt;/p&gt;
+&lt;p&gt;How you build your images is a key part of the answer. Let’s compare two approaches—Dockerfile and Cloud Native Buildpacks—to see how they measure up when it comes to meeting, or exacerbating, these challenges.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-dockerfile&#34;&gt;What Is Dockerfile?&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.docker.com/engine/reference/builder&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Dockerfile&lt;/a&gt; is the oldest and most common approach for building images. A Dockerfile is a script where each command begins with a keyword called a Dockerfile instruction. Each instruction creates a layer in a Docker image. After the last instruction is executed, the resulting image becomes your deployable artifact.&lt;/p&gt;
+&lt;p&gt;Here is a simple example of a Dockerfile for a Java app. It adds the app artifact (.jar file) onto a base OS image that has a pre-installed Java runtime (JRE), and it defines the app startup command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; adoptopenjdk:11-jre-hotspot&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;COPY&lt;/span&gt; ./target/*.jar app.jar&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;CMD&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;java&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;-jar&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;app.jar&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You would create an image by running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; my-app-repo
+mvn package
+docker build . --tag my-image --file Dockerfile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;what-are-buildpacks&#34;&gt;What Are Buildpacks?&lt;/h2&gt;
+&lt;p&gt;A &lt;a href=&#34;https://www.cncf.io/blog/2020/11/18/toc-approves-cloud-native-buildpacks-from-sandbox-to-incubation&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Native Computing Foundation (CNCF) project&lt;/a&gt;, &lt;a href=&#34;https://buildpacks.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Native Buildpacks&lt;/a&gt;—also referred to as CNBs or buildpacks, for short—provides an opinionated and structured way to build images.&lt;/p&gt;
+&lt;p&gt;You don’t need to create or maintain any scripts of your own. You simply choose an OSS or vendored “&lt;a href=&#34;https://buildpacks.io/docs/concepts/components/builder&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;builder&lt;/a&gt;” that serves the function of a thorough and well-formed Dockerfile (without actually using a Dockerfile). The builder provides the runtime base image for your application as well as any logic for compiling your code and layering it onto the base image in a thoughtful manner.&lt;/p&gt;
+&lt;p&gt;The builder itself is an image, too, but you cannot use the &lt;code&gt;docker&lt;/code&gt; CLI to execute the builder and generate an image for your application. You need a specialized tool—a “&lt;a href=&#34;https://buildpacks.io/docs/concepts/components/platform&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;platform&lt;/a&gt;,” in CNB-speak—that knows how to access the builder and orchestrate the creation of your application image. The platform that provides the most comparable user experience to the &lt;a href=&#34;https://docs.docker.com/engine/reference/commandline/build&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;docker build&lt;/code&gt;&lt;/a&gt; command is a CLI called &lt;a href=&#34;https://buildpacks.io/docs/tools/pack&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;pack&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;You could create an image by running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; my-app-repo
+pack build my-image --builder paketobuildpacks/builder:base
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If your builder of choice can handle applications written in various languages, this command will work for any of them, as the tooling automatically figures out which logic to apply.&lt;/p&gt;
+&lt;h2 id=&#34;where-dockerfile-shines&#34;&gt;Where Dockerfile Shines&lt;/h2&gt;
+&lt;p&gt;Dockerfile has been around as long as Docker images, so it is familiar technology to many already in the container ecosystem. There are many examples on the internet, and it is often easy and convenient to reach for the most traditional tool in your kit.&lt;/p&gt;
+&lt;p&gt;Since a Dockerfile is a plain text file that uses a direct syntax comprising about a dozen &lt;a href=&#34;https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#dockerfile-instructions&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;instructions&lt;/a&gt;, it serves as a transparent (though not always precise) record of the software that has been installed into an image. It is easy to update and can be saved to a version control system along with your application code.&lt;/p&gt;
+&lt;p&gt;The true power of Dockerfile lies in its flexibility. The images you can build are limited only by your ability to script your Dockerfile. You can start from scratch or augment an existing image—any one of Docker’s &lt;a href=&#34;https://docs.docker.com/docker-hub/official_images&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Official&lt;/a&gt; or &lt;a href=&#34;https://docs.docker.com/docker-hub/publish&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Verified Publisher&lt;/a&gt; images, for example, or really any image you get your hands on. You can install system packages, allow or limit root access, lock in configuration, and so on. The sky&amp;rsquo;s the limit.&lt;/p&gt;
+&lt;h2 id=&#34;challenges-with-dockerfile&#34;&gt;Challenges With Dockerfile&lt;/h2&gt;
+&lt;p&gt;The drawbacks of Dockerfile also lie in its flexibility. Each Dockerfile becomes another piece of custom code that you own. You must account for correctness, efficiency, and security. Over the life of your app, you must also continually keep an eye out for when OS and runtime bits might require patches or upgrades.&lt;/p&gt;
+&lt;p&gt;The simplicity of Dockerfile poses additional challenges. It’s just a script that, at first pass, likely lives in the same repo as your app code. Any efforts to vet, standardize, or reuse Dockerfiles across applications or development teams is up to you. Any automation for building and maintaining images as part of a DevOps toolchain is also up to you. Without proper planning and oversight, things can quickly get messy.&lt;/p&gt;
+&lt;h2 id=&#34;where-buildpacks-shine&#34;&gt;Where Buildpacks Shine&lt;/h2&gt;
+&lt;p&gt;The CNB project provides the structure needed for creating and maintaining images at scale. At the same time, it provides a simple user experience, obviating the need to become an image-building expert when you might only be building a single image.&lt;/p&gt;
+&lt;p&gt;The task of choosing and maintaining the base image (think the “FROM” statement in a Dockerfile) and the know-how for providing the contents of the rest of the layers (analogous to all the other instructions in a Dockerfile) are delegated to buildpacks. The CNB project provides a &lt;a href=&#34;https://buildpacks.io/docs/reference/spec/buildpack-api&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Buildpack API&lt;/a&gt; to foster an ecosystem of buildpacks. In our example above, we chose the open source &lt;a href=&#34;https://paketo.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Paketo Buildpacks&lt;/a&gt;, which can handle applications written in Java, Ruby, Golang, .NET Core, and more. In each case, Paketo Buildpacks employ optimizations related to image size and layering; caching; and security; as well as standards and optimizations particular to a given programming language. One example of how buildpacks automatically do something few would reliably get right is the Paketo Java memory calculation.&lt;/p&gt;
+&lt;p&gt;CNBs also provide choices around the user experience. As with buildpacks, a &lt;a href=&#34;https://buildpacks.io/docs/reference/spec/platform-api&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Platform API&lt;/a&gt; enables an ecosystem of tools that can be incorporated into your workflow. Need a CLI to mimic the &lt;code&gt;docker build&lt;/code&gt; approach? Use &lt;code&gt;pack&lt;/code&gt;. Want to recreate the “Build as a Service” experience of the prior generation of Heroku and Cloud Foundry buildpacks? Install &lt;a href=&#34;https://github.com/pivotal/kpack#readme&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;kpack&lt;/code&gt;&lt;/a&gt; into your Kubernetes cluster and let it autonomously kick off builds whenever you commit new code to git or upgrade your builder image.&lt;/p&gt;
+&lt;p&gt;Suddenly, achieving consistent builds across your organization becomes trivial. As long as all apps are built using the same builder, you can guarantee they will be built in the same way. Since the builders are themselves images and are decoupled from platforms, CNBs inherently provide a way to distribute and reuse build logic across an organization.&lt;/p&gt;
+&lt;p&gt;The resulting app images are enriched with metadata that make them easy to inspect. You can examine an image directly, without needing to seek out the script that generated it, to determine which base images and buildpacks were used to create it. Depending on your choice of buildpacks, you may also get a detailed Software Bill of Materials (SBOM) including runtime version, application dependencies, and other details. Your security and operations teams will thank you.&lt;/p&gt;
+&lt;p&gt;Also worth mentioning is the capability to swap out OS layers without rebuilding an image. With Dockerfile, patching the OS requires an update to the “FROM” statement, which in turn forces re-creation of all the layers in the image, even if the app did not change. CNBs provide a &lt;a href=&#34;https://buildpacks.io/docs/concepts/operations/rebase&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;rebasing&lt;/a&gt; capability, which is faster and safer. That capability is particularly powerful in combination with &lt;code&gt;kpack&lt;/code&gt; as together they enable you to roll out an OS update across a large number of images in a matter of minutes.&lt;/p&gt;
+&lt;h2 id=&#34;challenges-with-buildpacks&#34;&gt;Challenges With Buildpacks&lt;/h2&gt;
+&lt;p&gt;Buildpacks require you to fit in a box. That box might be big enough for you not to care most of the time, but it will likely be too small at some point, for some application.&lt;/p&gt;
+&lt;p&gt;One one hand, your mileage will vary depending on how robustly the current ecosystem of buildpacks supports your use case. For example, if you are building Java applications, Paketo provides a set of battle-tested buildpacks that are not only likely to meet your needs, but to solve problems you might not have considered (exiting cleanly on an out-of-memory error, for example). On the other hand, if you are writing your applications in Lisp you might find yourself needing to write your own custom buildpacks, which requires significantly more work. The exact calculus for a given app will change over time as the buildpack ecosystem grows.&lt;/p&gt;
+&lt;p&gt;What’s more, you may run into certain limitations with buildpacks. For example, currently you can&amp;rsquo;t install an arbitrary OS package using &lt;code&gt;apt-get install&lt;/code&gt;. While most applications can handle it, if you wanted to run, say, PostgreSQL and needed some package that doesn&amp;rsquo;t exist on your runtime base image, you&amp;rsquo;d be out of luck. In such a case, you would be better off creating a one-off Dockerfile. To benefit from the automation at scale that buildpacks afford, you need to give up some flexibility. This tradeoff isn&amp;rsquo;t novel, but it will be a deal breaker for some workloads.&lt;/p&gt;
+&lt;h2 id=&#34;making-the-call&#34;&gt;Making The Call&lt;/h2&gt;
+&lt;p&gt;Cloud Native Buildpacks resolve much of the operational complexity of using Dockerfiles. You can embrace the opinions and leverage the expertise of the authors behind the buildpacks of your choice to easily assemble images for applications written in a variety of languages. Your organization can incorporate custom buildpacks to express and effectuate their own opinions. You can ensure that any build by any member of your team or organization, carried out on any machine, will result in the same image. You can provide insight to your operations and security teams about an image’s contents. You have a choice of platforms tailored to individual developers or large-scale systems and more. You can build one image at a time or patch an OS across an estate of images in one fell swoop.&lt;/p&gt;
+&lt;p&gt;You may run into situations where buildpacks cannot handle certain requirements. In these cases, scripting your own Dockerfile will provide the power and flexibility you need to assemble an image for your application.&lt;/p&gt;
+&lt;p&gt;Nevertheless, the advantages of Cloud Native Buildpacks are very appealing, both for simplicity and security. Enough, presumably, to justify favoring buildpacks over Dockerfile wherever possible.&lt;/p&gt;
+&lt;h2 id=&#34;learn-more&#34;&gt;Learn More&lt;/h2&gt;
+&lt;p&gt;To learn more about Dockerfile, check out the &lt;a href=&#34;https://docs.docker.com/engine/reference/builder&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Dockerfile reference documentation&lt;/a&gt; or check out our &lt;a href=&#34;/workshops/lab-container-basics&#34;&gt;Container Basics workshop&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For more information on Cloud Native Buildpacks, a great place to start is the &lt;a href=&#34;https://buildpacks.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CNB project website&lt;/a&gt;. We also have some terrific &lt;a href=&#34;/guides/containers/cnb-what-is/&#34;&gt;guides on Cloud Native Buildpacks&lt;/a&gt;, as well as &lt;a href=&#34;/guides/containers/cnb-gs-pack/&#34;&gt;pack&lt;/a&gt; and &lt;a href=&#34;/guides/containers/cnb-gs-kpack/&#34;&gt;kpack&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;You can also check out my KubeAcademy course on &lt;a href=&#34;https://kube.academy/courses/building-images&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Building Images&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Automated Code to URL on Kubernetes using Cloud Native Buildpacks, Knative and ArgoCD</title>
+      
+      <link>/guides/ci-cd/cnbp-knative-argocd/</link>
+      <pubDate>Wed, 12 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/ci-cd/cnbp-knative-argocd/</guid>
+      <description>
+
+        
+        &lt;p&gt;Technologies like Docker and Kubernetes simplify the process of building, running and maintaining cloud native applications. At the same time taking source code, building it into a container image and turning it into a deployed application on Kubernetes can be a time consuming process. A large part of the process can be automated with Continuous Integration Systems (CI) and Continuous Deployment(CD) Systems. However there are stages in the build and deployment phases that still need to be defined manually. Most CI systems aren&amp;rsquo;t application aware. They cannot build automated Docker images from source code unless explicitly defined in a spec file like &lt;a href=&#34;https://docs.docker.com/engine/reference/builder/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Dockerfiles&lt;/a&gt; or a config file that a CI system can understand. Due to which, Apart from writing application code, you also need to manually define and test Dockerfiles or config files to convert source code into an executable container image. When deploying the image onto Kubernetes, you need to then define various Kubernetes constructs needed to run the application. Like &lt;a href=&#34;https://kubernetes.io/docs/concepts/workloads/controllers/deployment/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Deployments&lt;/a&gt;, &lt;a href=&#34;https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;StatefulSets&lt;/a&gt;, &lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/service/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Services&lt;/a&gt;, &lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/ingress/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ingress&lt;/a&gt; etc. This process can add errors, security gaps and overhead.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/cnbp-knative-argocd/dev-process.png&#34; alt=&#34;Building and Running Applications on Kubernetes&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;In this Guide we are going to show how to automate building of Container Images and buildout of Kubernetes Resources using Cloud Native Buildpacks and Knative respectively. We will also demonstrate how this can process can be further optimized using &lt;strong&gt;GitOps&lt;/strong&gt; style practices via ArgoCD. We will work with a sample application based on Spring and run the application on Kubernetes with an addressable URL. We will use:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://buildpacks.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Native Buildpacks&lt;/a&gt; to automate Container Image build process. Cloud Native Buildpacks is a specification that defines how OCI compliant containers can be build, removing the need to specify or build &lt;code&gt;Dockerfiles&lt;/code&gt;. They can automatically detect the language an application is written in and determine the best and most secure way to package applications in a container image. Cloud Native Buildpacks can also be used to update container images easily for any changes. For this guide we will use an implementation of Cloud Native Buildpacks called &lt;a href=&#34;https://github.com/pivotal/kpack&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kpack&lt;/a&gt;. kpack lets you use deploy Cloud Native Buildpacks on a Kubernetes Cluster. (See &lt;a href=&#34;../../containers/cnb-what-is/&#34;&gt;What are Cloud Native Buildpacks?&lt;/a&gt; for more on Cloud Native Buildpacks, and kpack.)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://knative.dev/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Knative&lt;/a&gt; to automatically generate an Ingress Service with URL and other Kubernetes Resources for the container image that was built using Cloud Native Buildpacks. Knative Serving automates the process of creating Kubernetes objects needed for an application like Deployment, Replicasets, Services etc.,  eliminating the need to write complex Kubernetes YAML files.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://argoproj.github.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ArgoCD&lt;/a&gt; to automate deployment pipeline pushing container images on to Kubernetes using Knative. ArgoCD helps deploy application continuously using GitOps methodology. It can take specifications like Kubernetes resources, Knative, Kustomize etc. to deploy application on Kubernetes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A sample application called &lt;a href=&#34;https://github.com/Boskey/spring-petclinic&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Petclinic&lt;/a&gt; that is based on &lt;a href=&#34;https://spring.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://kind.sigs.k8s.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kind&lt;/a&gt; as a local Kubernetes Cluster&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In summary, our overall workflow will be to take the sample application in Spring, use Cloud Native Buildpacks/kpack to convert source code into a container image, use Knative Serving to create a deployment using ArgoCD. This process will eliminate the need to write &lt;code&gt;Dockerfiles&lt;/code&gt; or any &lt;code&gt;Kubernetes&lt;/code&gt; resource &lt;code&gt;YAML&lt;/code&gt; files.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and prerequisites&lt;/h2&gt;
+&lt;p&gt;There are a few things you will need before getting started&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;You have &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl&lt;/a&gt;, a tool to interact with Kubernetes Cluster installed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.docker.com/products/docker-desktop&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Desktop&lt;/a&gt; is installed on your laptop/machine with at least 4 GB of memory and 4 CPU&amp;rsquo;s allocated to Docker Resources.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You have access to &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Hub Repository&lt;/a&gt; to store container images.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You have an account in &lt;a href=&#34;https://github.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Github&lt;/a&gt; to clone the app &lt;em&gt;Petclinic&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1-prepare-a-kubernetes-cluster-and-clone-sample-application&#34;&gt;1. Prepare a Kubernetes Cluster and clone Sample Application&lt;/h3&gt;
+&lt;p&gt;We will deploy a Kind cluster using Docker Desktop and install &lt;a href=&#34;https://projectcontour.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Contour&lt;/a&gt; on it to help provide Ingress management. Contour along with &lt;a href=&#34;https://www.envoyproxy.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Envoy&lt;/a&gt; Proxy will help create service and URL management for Knative.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;brew install kind
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Create a Kubernetes Cluster called &lt;em&gt;tdp-guide&lt;/em&gt; and set &lt;strong&gt;Kubectl&lt;/strong&gt; context to &lt;em&gt;tdp-guide&lt;/em&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kind create cluster --name tdp-guide
+kubectl cluster-info --context kind-tdp-guide
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Log onto Github and Fork the repository for our sample app &lt;a href=&#34;https://github.com/Boskey/spring-petclinic&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Petclinic&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;2-install-knative-serving&#34;&gt;2. Install Knative Serving&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f https://github.com/knative/serving/releases/download/v0.22.0/serving-crds.yaml
+kubectl apply -f https://github.com/knative/serving/releases/download/v0.22.0/serving-core.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;3-install-contour-ingress-controller&#34;&gt;3. Install Contour Ingress Controller&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f https://github.com/knative/net-contour/releases/download/v0.22.0/contour.yaml
+kubectl apply -f https://github.com/knative/net-contour/releases/download/v0.22.0/net-contour.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Change Knative Serving config to use Contour Ingress&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl patch configmap/config-network \
+  --namespace knative-serving \
+  --type merge \
+  --patch &#39;{&amp;quot;data&amp;quot;:{&amp;quot;ingress.class&amp;quot;:&amp;quot;contour.ingress.networking.knative.dev&amp;quot;}}&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;4-install-and-configure-cloud-native-buildpack-using-kpack&#34;&gt;4. Install and Configure Cloud Native Buildpack using &lt;em&gt;kpack&lt;/em&gt;&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f https://github.com/pivotal/kpack/releases/download/v0.2.2/release-0.2.2.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Cloud Native Buildpacks will need a Repository to Store container images that it will be building. This could be any OCI compliant repository, for this guide we will use Docker Hub. You can easily create and account in Docker Hub if you don&amp;rsquo;t have one.&lt;/p&gt;
+&lt;p&gt;We need to create a Docker Hub account credentials &lt;em&gt;secret&lt;/em&gt; in Kubernetes. Use the below command and change the &lt;code&gt;docker-username&lt;/code&gt; to the your repo name in Docker Hub. Change the &lt;code&gt;docker-password&lt;/code&gt; to your account password.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create secret docker-registry tutorial-registry-credentials \
+    --docker-username=abc \
+    --docker-password=********* \
+    --docker-server=https://index.docker.io/v1/\
+    --namespace default
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Cloud Native Buildpacks create Container images using a &lt;code&gt;builder&lt;/code&gt; that uses a predefined &lt;code&gt;stack&lt;/code&gt; of container image layers. You can define custom stack, store and builders. For this guide, we are using standard definitions.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f https://raw.githubusercontent.com/Boskey/spring-petclinic/main/kpack-config/sa.yaml
+kubectl apply -f https://raw.githubusercontent.com/Boskey/spring-petclinic/main/kpack-config/store.yaml
+kubectl apply -f https://raw.githubusercontent.com/Boskey/spring-petclinic/main/kpack-config/stack.yaml
+kubectl apply -f https://raw.githubusercontent.com/Boskey/spring-petclinic/main/kpack-config/builder.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;5-install-and-configure-argocd&#34;&gt;5. Install and Configure ArgoCD&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Install ArgoCD CLI&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;brew install argocd
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Since ArgoCD is installed on a Kind cluster, it does not have a &lt;em&gt;Kubernetes Load Balancing Service type&lt;/em&gt; to expose the ArgoCD service. We will manually expose the ArgoCD service using &lt;code&gt;port-forward&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;On a new Terminal,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl port-forward svc/argocd-server -n argocd 8080:443
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Fetch ArgoCD credentials to login via CLI&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=&amp;quot;{.data.password}&amp;quot; | base64 -d
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Copy the output of the above command, that is the &lt;code&gt;admin&lt;/code&gt; password for ArgoCD
+Login to ArgoCD&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd login localhost:8080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;em&gt;username: &lt;code&gt;admin&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;password: &lt;code&gt;&amp;lt;copy-paste from the command above&amp;gt;&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;We have now installed Knative Serving, Cloud Native Buildpacks and ArgoCD. Its time to implement a workflow that will take our source code and convert it into a URL.&lt;/p&gt;
+&lt;h3 id=&#34;6-build-container-image-using-cloud-native-buildpacks&#34;&gt;6. Build Container Image using Cloud Native Buildpacks&lt;/h3&gt;
+&lt;p&gt;We will be using the &lt;em&gt;Petclinic&lt;/em&gt; app, the file &lt;code&gt;petclinic-image-build.yaml&lt;/code&gt; tells kpack where the source code is via the &lt;code&gt;spec.source.git.url&lt;/code&gt; , where to upload and what tag to use for the final container image using &lt;code&gt;spec.tag&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Copy this file and change the &lt;code&gt;spec.tag&lt;/code&gt; to your &lt;code&gt;&amp;lt;docker-repo&amp;gt;/&amp;lt;app-name&amp;gt;&lt;/code&gt; and change the &lt;code&gt;spec.source.git.url&lt;/code&gt; to your Git Repo for Petclinic you forked in Step 1&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;apiVersion: kpack.io/v1alpha1
+kind: Image
+metadata:
+  name: petclinic-image
+  namespace: default
+spec:
+  tag: boskey/app
+  serviceAccount: tutorial-service-account
+  builder:
+    name: my-builder
+    kind: Builder
+  source:
+    git:
+      url: https://github.com/spring-projects/spring-petclinic
+      revision: 82cb521d636b282340378d80a6307a08e3d4a4c4
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Apply the file using &lt;code&gt;Kubectl&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;kubectl apply -f petclinic-image-build.yaml&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This process will take around 5 -10 Minutes to finish depending on the resources Docker Desktop has. Keep watching the images CRD to see if the images is finished building.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get images.kpack.io
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once the image is build you should see the output of the Docker Hub URL where the Container image is located. The output should be similar to this.
+Capture the Image location from your command to list images.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[bsavla] ci-cd 🐘kubectl get images.kpack.io
+NAME        LATESTIMAGE                                                                                          READY
+ttv-image   index.docker.io/boskey/app@sha256:949a72120f888b2f37fdf3be0c439422ce4d2225529aa533aae6f6cb85da9424   True
+[bsavla] ci-cd 🐘
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;7-update-knative-service-definition&#34;&gt;7. Update Knative Service Definition&lt;/h3&gt;
+&lt;p&gt;So far we have built a container image based on the sample app &lt;em&gt;Petclinic&lt;/em&gt;, Now we will deploy the app onto Kubernetes via Knative Serving. ArgoCD will help us automate the deployment. We now need to define a &lt;code&gt;knative-serving&lt;/code&gt; spec for our app. The Git repository you forked already has the below spec in a file called &lt;code&gt;knative-service.yaml&lt;/code&gt; under the &lt;code&gt;knative&lt;/code&gt; folder. This spec file tells Knative where to fetch the container image for the application that needs to be deployed on Kubernetes. Edit the file &lt;code&gt;knative-service.yaml&lt;/code&gt; in the Git repository you forked in step 1. Change the &lt;code&gt;image&lt;/code&gt; property to the image URL you got from kpack (step 6). The file should be under the folder &lt;code&gt;knative&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: petclinic-knative # The name of the app
+  namespace: default # The namespace the app will use
+spec:
+  template:
+    spec:
+      containers:
+       - image: index.docker.io/boskey/app@sha256:9595c435357a6105bbd26405d6eaa15bd6a7d4ae4b2e5f42946b169ef9257f76  # generated by kpack
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;8-use-argocd-to-deploy-application&#34;&gt;8. Use ArgoCD to deploy application.&lt;/h3&gt;
+&lt;p&gt;Let&amp;rsquo;s create an application using ArgoCD, &lt;strong&gt;Replace the  &lt;code&gt;--repo&lt;/code&gt; URL with the Github repo you forked in Step 1&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd app create petclinic --repo https://github.com/Boskey/spring-petclinic.git --path knative --dest-server https://kubernetes.default.svc --dest-namespace default
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This tells ArgoCD to create an application called &lt;em&gt;petclinic&lt;/em&gt; on the local cluster and the &lt;em&gt;&lt;code&gt;--path&lt;/code&gt;&lt;/em&gt; variable tells ArgoCD &lt;em&gt;how&lt;/em&gt; to deploy. In our case the &lt;code&gt;--path&lt;/code&gt; variable points to the &lt;code&gt;knative-serving&lt;/code&gt; specification. So ArgoCD will pass the &lt;code&gt;knative-serving&lt;/code&gt; specification to the local Kubernetes cluster, where the CRD for Knative will understand how to deploy the application and will automatically create Deployments, resource pools, Services etc.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s Sync the app in ArgoCD&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd app sync petclinic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will deploy PetClinic on the Kubernetes Cluster along with a URL petclinic-knative.default.example.com. You can look at all the resource that were created&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get all
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can look at the application deployed.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl -n contour-external port-forward svc/envoy 8080:80 
+curl -H &amp;quot;Host: petclinic-knative.default.example.com&amp;quot; localhost:8080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you want to look at the application on your browser, create a DNS entry in your &lt;code&gt;/etc/hosts&lt;/code&gt; file as below&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;127.0.0.1       petclinic-knative.default.example.com
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And browse to &lt;a href=&#34;http://localhost:8080&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:8080&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;You should see the Petclinic Application deployed there.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s say you have an update to the PetClinic application, you apply your changes and push them to the repo on Github. To deploy the newer version, all you have to do is create a new container image using &lt;code&gt;kpack&lt;/code&gt; and update the knative-serving specification file with the new image location at &lt;code&gt;knative-service.yaml&lt;/code&gt;. When synced, ArgoCD will detect the change in the file, and re-deploy the application with the newer container image using knative-serving. Knative will detect that this is an updated version of the same application and will deploy the new version with an updated revision.&lt;/p&gt;
+&lt;p&gt;You can also create a new deployment for different pipelines like &lt;code&gt;staging&lt;/code&gt; by creating a new application in ArgoCD and pointing them to the same &lt;code&gt;knative-service.yaml&lt;/code&gt; file.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Building and Deploying a Cloud Native Application</title>
+      
+      <link>/workshops/cnd-deploy-practices/</link>
+      <pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/cnd-deploy-practices/</guid>
+      <description>
+
+        
+        &lt;p&gt;This is a workshop for developers and application operators
+new to cloud native concepts who wish to learn the basics of
+building and deploying a web application to a container
+orchestration platform.&lt;/p&gt;
+&lt;p&gt;In this workshop you will be presented:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The essence of &lt;em&gt;Cloud Native&lt;/em&gt; in a modern technology
+and practices context&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Why &lt;em&gt;Cloud Native&lt;/em&gt; practices are important to you,
+your employers and your customers&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You will also:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Build a simple blocking web application.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Containerize it for running on a container orchestration platform.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Deploy the application to a container orchestration platform.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Access your application in the public internet as an end-user.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Monitor the state of your application on the platform.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This workshop is the first in a series of workshops that explore
+cloud-native development and application operations practices.&lt;/p&gt;
+&lt;p&gt;The workshop also provides foundational background for other Tanzu
+Developer Center Spring, Spring Boot or Kubernetes content.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

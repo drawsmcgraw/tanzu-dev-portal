@@ -1,0 +1,426 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Code Samples</title>
+    <link>/samples/</link>
+    <description>Recent content in Code Samples on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/samples/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Data: Node.js - CRUD-ops</title>
+      
+      <link>/data/tanzu-gemfire/code-samples/crud-ops/</link>
+      <pubDate>Fri, 28 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/code-samples/crud-ops/</guid>
+      <description>
+
+        
+        &lt;p&gt;This Node.js example provides a simple JavaScript application that demonstrates basic CRUD operations (create, read, update, delete) on a local Tanzu GemFire cluster. This app also can be run with a local Apache Geode cluster.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Node.js - Put All</title>
+      
+      <link>/data/tanzu-gemfire/code-samples/put-all/</link>
+      <pubDate>Fri, 28 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/code-samples/put-all/</guid>
+      <description>
+
+        
+        &lt;p&gt;This Node.js example provides a simple JavaScript application that demonstrates basic &lt;code&gt;putAll&lt;/code&gt; and &lt;code&gt;getAll&lt;/code&gt; operations on Tanzu GemFire cluster. This application leverages the CRUD-ops example, which you should review prior starting. This example client works with either a local Apache Geode cluster or with a Tanzu GemFire cluster.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Spring - Convert Redis HTTP Session State to Tanzu GemFire</title>
+      
+      <link>/data/tanzu-gemfire/code-samples/convert-redis-to-gemfire-session/</link>
+      <pubDate>Fri, 28 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/code-samples/convert-redis-to-gemfire-session/</guid>
+      <description>
+
+        
+        &lt;p&gt;This repo contains examples of converting Spring Session Data Redis applications to use Spring Boot for Apache Geode to store HTTP session state data.   Each example app has its own README, and resides in its own directory within this repository:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;spring-session-boot&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;spring-session-boot-json&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;spring-session-boot-simple&lt;/code&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Node.js - SSL</title>
+      
+      <link>/data/tanzu-gemfire/code-samples/ssl/</link>
+      <pubDate>Fri, 28 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/code-samples/ssl/</guid>
+      <description>
+
+        
+        &lt;p&gt;This Node.js example demonstrates basic SSL connection of a client with a GemFire Cache cluster. This application leverages the CRUD-ops example, which should be reviewed prior starting. The example works with either a local Apache Geode or Tanzu GemFire cluster.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Spring - Convert Spring Data Redis Pub-Sub to Tanzu GemFire</title>
+      
+      <link>/data/tanzu-gemfire/code-samples/convert-redis-to-gemfire-pub-sub/</link>
+      <pubDate>Fri, 28 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/code-samples/convert-redis-to-gemfire-pub-sub/</guid>
+      <description>
+
+        
+        &lt;p&gt;The projects in this directory illustrate a Spring Boot application that creates a publish and subscribe channel with either Redis or Tanzu GemFire. In this guide, we will highlight the changes necessary for switching from Spring Data Redis to Spring Boot for Apache Geode using a publish/subscribe application.&lt;/p&gt;
+&lt;p&gt;In the Tanzu GemFire example, a &lt;code&gt;Region&lt;/code&gt; will represent the equivalent of a &lt;code&gt;PatternTopic&lt;/code&gt; as defined in the Redis example.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Next.js Page Counter</title>
+      
+      <link>/data/tanzu-gemfire/code-samples/nextjs-page-counter/</link>
+      <pubDate>Fri, 28 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/code-samples/nextjs-page-counter/</guid>
+      <description>
+
+        
+        &lt;p&gt;This example demonstrates use of the Node.js client with a simple Next.js web app.&lt;/p&gt;
+&lt;p&gt;The rendered site displays a count of page renderings, backed either by a Tanzu GemFire cluster.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Node.js - Authentication</title>
+      
+      <link>/data/tanzu-gemfire/code-samples/authentication/</link>
+      <pubDate>Fri, 28 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/code-samples/authentication/</guid>
+      <description>
+
+        
+        &lt;p&gt;This Node.js example demonstrates the basic authentication and authorization mechanism used when an app interacts with a Tanzu GemFire cluster. The app does a put, a get, and a remove operation to show authorization.&lt;/p&gt;
+&lt;p&gt;This example works with either a local Tanzu GemFire cluster or a local Apache Geode cluster.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Node.js - Book Service</title>
+      
+      <link>/data/tanzu-gemfire/code-samples/book-service/</link>
+      <pubDate>Fri, 28 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/code-samples/book-service/</guid>
+      <description>
+
+        
+        &lt;p&gt;This Node.js example provides a simple book-serving app which uses the data service as a system of record. REST endpoints allow an app user to look up books by ISBN or put new books into the service.&lt;/p&gt;
+&lt;p&gt;This app can be run with a local Apache Geode or Tanzu GemFire cluster, or with a Tanzu GemFire for VMs service instance. A common development path runs locally first to iterate quickly on feature development prior to pushing the app to a TAS environment to run with Tanzu GemFire for VMs cluster. This app has been tested with Tanzu GemFire for VMs version 1.8.1.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Node.js - Function Execution</title>
+      
+      <link>/data/tanzu-gemfire/code-samples/function-execution/</link>
+      <pubDate>Fri, 28 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/code-samples/function-execution/</guid>
+      <description>
+
+        
+        &lt;p&gt;This Node.js example provides a simple JavaScript application that demonstrates calling a server-side function on a Tanzu GemFire cluster. This app can be run with either a local Apache Geode cluster or with a Tanzu GemFire cluster.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Node.js - Object Put</title>
+      
+      <link>/data/tanzu-gemfire/code-samples/object-put/</link>
+      <pubDate>Fri, 28 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/code-samples/object-put/</guid>
+      <description>
+
+        
+        &lt;p&gt;This Node.js example provides a simple JavaScript application that demonstrates basic object usage with a local Tanzu GemFire cluster. This app also can be run with a local Apache Geode cluster.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Node.js - Query</title>
+      
+      <link>/data/tanzu-gemfire/code-samples/query/</link>
+      <pubDate>Fri, 28 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/code-samples/query/</guid>
+      <description>
+
+        
+        &lt;p&gt;This Node.js example provides a simple JavaScript application that demonstrates executing a query on a Tanzu GemFire cluster. This app can be run with either a local Apache Geode cluster or with a Tanzu GemFire cluster.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Zipkin Demo</title>
+      
+      <link>/samples/spring-zipkin-demo/</link>
+      <pubDate>Mon, 26 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-zipkin-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Boot RSocket Sample</title>
+      
+      <link>/samples/spring-boot-rsocket-demo/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-boot-rsocket-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Cloud Data Flow Sample</title>
+      
+      <link>/samples/spring-cloud-data-flow-demo/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-cloud-data-flow-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Tekton Examples</title>
+      
+      <link>/samples/tekton-examples/</link>
+      <pubDate>Mon, 15 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/tekton-examples/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Getting Started with Concourse</title>
+      
+      <link>/samples/concourse-gs/</link>
+      <pubDate>Thu, 07 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/concourse-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Reactive Revolution</title>
+      
+      <link>/samples/reactive-revolution/</link>
+      <pubDate>Thu, 07 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/reactive-revolution/</guid>
+      <description>
+
+        
+        &lt;p&gt;Code that accompanies Josh Long&amp;rsquo;s &amp;ldquo;The Reactive Revolution&amp;rdquo; talk. Learn more at &lt;a href=&#34;http://ReactiveSpring.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://ReactiveSpring.io&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Getting Started with RabbitMQ</title>
+      
+      <link>/samples/rabbitmq-gs/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/rabbitmq-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Boot REST API Demo</title>
+      
+      <link>/samples/spring-boot-build-api/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-boot-build-api/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Bootiful Microservices</title>
+      
+      <link>/samples/bootiful-microservices/</link>
+      <pubDate>Tue, 21 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/bootiful-microservices/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Bootiful Reactive Microservices</title>
+      
+      <link>/samples/bootiful-reactive-microservices/</link>
+      <pubDate>Tue, 21 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/bootiful-reactive-microservices/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Getting Started with Kafka</title>
+      
+      <link>/samples/kafka-gs/</link>
+      <pubDate>Tue, 21 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/kafka-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Boot Data REST Demo with JPA</title>
+      
+      <link>/samples/spring-boot-data-rest-demo/</link>
+      <pubDate>Tue, 21 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-boot-data-rest-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Cloud Stream Demo</title>
+      
+      <link>/samples/spring-cloud-stream-demo/</link>
+      <pubDate>Tue, 21 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-cloud-stream-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: The Spring REST Stack</title>
+      
+      <link>/samples/the-spring-rest-stack/</link>
+      <pubDate>Tue, 21 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/the-spring-rest-stack/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Using Concourse to Deploy Spring Music</title>
+      
+      <link>/samples/concourse-spring-music/</link>
+      <pubDate>Tue, 21 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/concourse-spring-music/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

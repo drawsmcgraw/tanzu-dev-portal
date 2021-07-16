@@ -1,0 +1,1122 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Inception</title>
+    <link>/tags/inception/</link>
+    <description>Recent content in Inception on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 15 Jun 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/inception/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Practices: 2x2 Prioritization</title>
+      
+      <link>/practices/2x2/</link>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/2x2/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Preparation: As a group, agree on 2 relevant prioritization criteria.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Examples: Impact vs. Likeliness, Value vs. Complexity, Risk vs. Ease of Mitigation&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create 2 perpendicular intersecting axes and label each axis with one of the chosen criteria.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/2x2/2x2-empty.png&#34; alt=&#34;Empty two by two grid&#34;  /&gt;&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Label the axes such that the top-right quadrant represents the most important/highest-priority. This is a convention that will make it easier when using this practice repeatedly.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Start by selecting an option at random and place it near the center.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Choose another option and, as a group, position it relative to other options on the grid, vertically and horizontally.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Avoid placing any 2 options on the same row or column. Each option should be clearly placed in a unique horizontal and vertical position on each axis to avoid any ambiguity.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Repeat step 4 until every option is positioned on the grid. The highest priority options should be in the top-right quadrant.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If the options are weighted towards a particular half or quadrant, you can reposition the options so that roughly half are on either side of each axis. This will remove ambiguity and make it easier to make prioritization decisions.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/practices/2x2/2x2-populated.png&#34; alt=&#34;Populated two by two grid&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You know you are done when your group has decided on an option (or options) to focus on.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;If there are too many priority solutions in the top right quadrant, re-draw the axes within that quadrant to further separate the solutions. Remember that this is possible because the axes are relative, not absolute. Keep adjusting until you land somewhere manageable.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/2x2/2x2-regrid.png&#34; alt=&#34;Re-drawn two by two axis grid&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Too many options can make this practice more difficult and time consuming. If there are 20+ items, consider spending time removing options that are irrelevant to the criterion selected.
+Involve people who can evaluate against the chosen prioritization criteria (e.g. a Designer should speak to usability, while an engineer should speak to technical complexity).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Develop the prompt for the 2x2 before the X/Y axes. If the axes don’t resonate with the prompt, the group will struggle with placement and focus.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When choosing qualifiers for the X and Y axes, consider:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Choose a less debatable qualifier for the Y axis. A qualifier with a stronger yes/no statement will help people with initial placement and allow the group to disqualify items (get them below the X axis) with less debate.&lt;/li&gt;
+&lt;li&gt;You want debate to happen along the X axis, so choose a qualifier which leaves more room for debate.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/insight-prioritization&#34;&gt;Insight Prioritization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/problem-prioritization&#34;&gt;Problem Prioritization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/solution-prioritization&#34;&gt;Solution Prioritization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Stack Ranking (coming soon.)&lt;/p&gt;
+&lt;p&gt;Dump and Sort (coming soon.)&lt;/p&gt;
+&lt;p&gt;Affinity Mapping (coming soon.)&lt;/p&gt;
+&lt;h2 id=&#34;variations&#34;&gt;Variations&lt;/h2&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/example-2.jpg&#34; alt=&#34;Two by two chart plotting problems by frequency and intensity&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/example-3.jpg&#34; alt=&#34;A group of people discusses priority in front of a whiteboard with two by two chart on it&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/example-5.jpg&#34; alt=&#34;Two by two chart with top problems prioritized&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/solution-prioritization/example-6.jpg&#34; alt=&#34;Digital two by two with prioritized solutions&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.productplan.com/glossary/2x2-prioritization-matrix/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;2×2 Prioritization Matrix from ProductPlan&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Lean Experiments</title>
+      
+      <link>/practices/lean-experiments/</link>
+      <pubDate>Mon, 10 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/lean-experiments/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Introduce the team to lean experimentation&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Explain what Lean Experiments are, why we do them, and introduce common types of experiments.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;&amp;ldquo;Lean Experiments are based on the Lean Startup approach to creating new products and services under conditions of extreme uncertainty. Lean Experiments are designed to quickly and cheaply gather evidence to validate or invalidate risky assumptions about your product.&amp;quot;&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/lean-experiments/lean-experiment-1.png&#34; alt=&#34;Risks Without Validation&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Common types of experiments:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;A/B Test&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;A comparison of two versions of a product or feature to see which one performs best. Works best with large sets of users for small incremental optimizations of an experience and business model.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Concierge Test&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;A technique to replace a complex automated technical solution with humans who directly interact with the customer. Helps us validate whether anyone wants our product.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Wizard of Oz Test&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;A technique to replace the product backend with humans. The customer believes they are interacting with an automated solution. Helps us validate whether anyone wants our product.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Smoke Test&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Commonly a website that describes the product’s value proposition and asks customers to sign up for the product before it’s available. Helps us validate whether anyone wants our product.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Feel free to come up with your introduction deck and examples. Prompt the room for a few additional examples to get them thinking in the right direction. Bonus points if you can find comparable examples to your own product space.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Catalog the team’s “leap-of-faith” assumptions&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Add this term to the whiteboard, including the definition so that the team can refer to it throughout the exercise (Assumptions that if we’re wrong about, our product will likely fail).&lt;/p&gt;
+&lt;p&gt;Ask the team to brainstorm leap-of-faith assumptions on sticky notes for 2 minutes. If a team member comes up with more than two, ask them to self-edit down to those that are most important.&lt;/p&gt;
+&lt;p&gt;Catalog the product’s unvalidated, leap-of-faith assumptions on the whiteboard.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Try framing assumptions in the positive (users will feel safe getting into a stranger’s car) rather than the negative (no one will want to get in a stranger’s car). This will make it easier to reflect on how much evidence we have/need.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If you end up with more than a few leap-of-faith assumptions, prioritize one to focus on first. Use the &lt;a href=&#34;/practices/assumptions&#34;&gt;Assumptions&lt;/a&gt; practice or consider a 2x2 with “more likely to stop the project” vs. “less likely to stop the project” on the Y-axis and “needs more evidence” vs. “have lots of evidence” on the X-axis. High likelihood of stopping the project assumptions that need more evidence are the target.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Explain that an assumption needs to be converted into a falsifiable hypothesis:&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;[Specific testable action]&lt;/strong&gt;&lt;/em&gt; will drive &lt;em&gt;&lt;strong&gt;[expected measurable outcome]&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Introduce the format/template that you will use to track your hypotheses, experiments and measurements.&lt;/p&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/files/Lean_Hypothesis_Template_Public.pdf&#34;&gt;Lean Experiment Template (PDF)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://assets.strategyzer.com/assets/resources/the-test-card.pdf&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Strategyzer Test Card (PDF)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Describe what each of the following represent:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Hypothesis — The thing we believe to be true&lt;/li&gt;
+&lt;li&gt;Experiment — The test that we will run to validate our hypothesis&lt;/li&gt;
+&lt;li&gt;Measurement — What signal we will look to for validation&lt;/li&gt;
+&lt;li&gt;Outcome — The success and failure criteria&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Don’t forget to timebox your experiments. The length of time you’ll have the experiment running should be defined up front.&lt;/p&gt;
+&lt;/div&gt;
+
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If your team is not familiar with what makes good metrics, consider giving a primer or examples&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Generate experiments&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Distribute a sheet of paper to each team member and instruct them to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Copy the format of the Hypothesis &amp;amp; Experiment template&lt;/li&gt;
+&lt;li&gt;Write the leap-of-faith assumption as a falsifiable hypothesis&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;If there are more than 4 participants, consider breaking into teams to generate experiments&lt;/p&gt;
+&lt;/div&gt;
+
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;Tip: Print out your templates, email/share them, or create and share the digital workspace before the workshop.&lt;/p&gt;
+&lt;p&gt;Feel free to copy this Miro board: &lt;a href=&#34;https://miro.com/app/board/o9J_lGThxtc=/&#34;&gt;Validation Research/MVP Experiment on Miro&lt;/a&gt;&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Prompt everyone to take 5 minutes individually to think of an experiment to test the hypothesis and associated measurable outcomes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Share experiments&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;When time is up, have each team member (one by one) stick their sheet up on the wall and share the details of their experiment for group discussion.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Iteration on experiments from team feedback should be encouraged.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Give everyone 5 minutes to share their experiments.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Select an experiment&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Explain that the best experiment should require the least amount of effort for the maximum amount of learning. Have the team members silently dot vote (1 or 2 votes depending on group size and # of experiments) on the experiment they think is best to run.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If you think the experiment could use refinement, consider prompting the team to redesign the experiment. Assign different team members to create experiments for the same hypothesis that take 2 days with $200, 2 weeks with $2000, and 2 months with $20,000. This should help find the right size for the experiment and encourage ways to learn smaller.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Discuss how to evaluate your experiments&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;With the experiment selected, talk through how to evaluate it. Typically experiments result in one of three learning outcomes, each with an expected next step:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Uncertainty &amp;gt; test more &amp;amp; possibly iterate on experiment&lt;/li&gt;
+&lt;li&gt;Validated &amp;gt; progress&lt;/li&gt;
+&lt;li&gt;Invalidated &amp;gt; pivot&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For any of the outcomes, record the results of the experiment and planned next steps. A good resource to leverage is &lt;a href=&#34;https://assets.strategyzer.com/assets/resources/the-learning-card.pdf&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Learning Card&lt;/a&gt; from Strategyzer.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: It’s good practice to set a super fail condition on your experiment. This is a failure so bad that it could indicate the experiment itself has an issue. We should believe something to be true in order to test it, so an epic failure should be unlikely.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Plan next steps &amp;amp; action items&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Brainstorm and then assign actions for team members to take in order to execute the experiment.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Create an experiment tracker&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Keep track of the experiments that were not selected in this session in a backlog. Regularly review these experiments and implement the experiments that are relevant to validate your product direction, especially if your product direction changes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h3&gt;
+&lt;p&gt;Success is when the whole team has aligned on a documented Lean Experiment that is ready to be executed on&lt;/p&gt;
+&lt;h2 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h2&gt;
+&lt;p&gt;If there are many assumptions to validate, consider following up with a hypothesis/experiment tracker, as suggested in the last step above. This can help the team visualize what hypotheses should be tested in what order, and their associated experiments.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/assumptions&#34;&gt;Assumptions&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;variations&#34;&gt;Variations&lt;/h2&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/assumptions&#34;&gt;Assumptions&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/lean-experiments/lean-experiment-2.jpg&#34; alt=&#34;Lean Experiment Drawings&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/lean-experiments/lean-experiment-3.jpg&#34; alt=&#34;Lean Experiment Drawings&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.amazon.com/Lean-Startup-Eric-Ries/dp/B007YXSYTK&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Lean Startup&lt;/a&gt; by Eric Ries&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.amazon.com/Lean-Product-Playbook-Innovate-Products/dp/1118960874/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Lean Product Playbook&lt;/a&gt; by Dan Olsen&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: 3 Column Retrospective</title>
+      
+      <link>/practices/3-column-retro/</link>
+      <pubDate>Mon, 03 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/3-column-retro/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; For distributed teams, use &lt;a href=&#34;https://miro.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Miro&lt;/a&gt; or a similar &amp;ldquo;digital whiteboard&amp;rdquo; and adapt the in-person aspects to the digital world, such as drawing and using sticky notes.&lt;/p&gt;
+&lt;p&gt;There are many online tools that support team retrospectives. We&amp;rsquo;ve listed several in the &lt;a href=&#34;#variations&#34;&gt;&amp;ldquo;For Remote Teams&amp;rdquo; section&lt;/a&gt; below.&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Draw three columns on the whiteboard or digital workspace:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What went well (“I’m glad that”)&lt;/li&gt;
+&lt;li&gt;Questions (“I’m wondering about”)&lt;/li&gt;
+&lt;li&gt;Opportunities (“It wasn’t so great that”)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Give each person 10 minutes to add items under each column, 1 idea per card. There is no limit to how many cards people can add, and everyone should feel free to freely add items to voice their ideas and concerns.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Give members 5 minutes to vote on the cards they feel are most important to discuss.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Start on a column and begin discussing the highest voted card (facilitators may choose to start on ‘What went well’ to start the retro on a positive note, but it is up to the individual where to begin). Be sure to give the author of the card time to further elaborate what he/she wrote.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For items which require follow-ups, add a card to the ‘Action Items’ section/column, asking for volunteers to be accountable for each action.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Ask for volunteers in pairs, so that no one person is responsible for an action item by themselves.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Move to the next column and discuss the highest rated card.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Continue steps 5-7 until all cards have been covered, or only 5 minutes remain.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: End this part of the retrospective with a “What went well” item. This ensures the retrospective discussion ends on a positive note.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For the remaining 5 minutes, review the Action Items, making sure each item has a person or pair assigned.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h3&gt;
+&lt;p&gt;Success is when the core team has a shared understanding of:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The most important things that happened during   the week, Sprint, project planning iteration, or whichever time-span is the subject of the retrospective&lt;/li&gt;
+&lt;li&gt;The challenges they are currently facing&lt;/li&gt;
+&lt;li&gt;The actionable steps they will take to try and improve&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;If this is the first retrospective run with the team, provide background and set the expectation on what a retrospective entails.&lt;/li&gt;
+&lt;li&gt;Keep conversations constructive and respectful&lt;/li&gt;
+&lt;li&gt;Consider holding retros on Wednesday. This will provide a couple of benefits. First, the action items can be acted upon immediately (next day) as opposed the following Monday. This will better track progress amongst team members. Second, members tend to be more engaged mid-week compared to end-of-week, providing greater engagement from every individual.&lt;/li&gt;
+&lt;li&gt;To successfully manage action items, start with a verb, be specific, include an achievable target date, and ensure there’s at least one owner&lt;/li&gt;
+&lt;li&gt;It’s important to manage the action Items from each retro - there is no benefit in performing retrospectives if the team does not act upon it to improve team dynamics&lt;/li&gt;
+&lt;li&gt;While some may choose to run a retrospective every two weeks, a weekly cadence provides an optimal feedback loop frequency for the team to proactively improve team dynamics.&lt;/li&gt;
+&lt;li&gt;Timebox discussion on each card to ensure you can cover as many cards in the retrospective.&lt;/li&gt;
+&lt;li&gt;To better keep track of Action Items from previous retrospectives, consider creating a Kanban board (‘Backlog’, ‘In Progress’, ‘Done’) on a whiteboard visible to the entire team (or on a Miro board if it is done remotely)&lt;/li&gt;
+&lt;li&gt;If possible, create a different environment when running the retro so that members can actively disconnect from the daily work tasks and solely focus on the retrospective. This may include moving to a different floor or providing snacks to the team.&lt;/li&gt;
+&lt;li&gt;At the end of the retrospective, consider asking the team whether there was any card not discussed which any individual feels strongly about.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/futurespective&#34;&gt;&amp;ldquo;Sailboat&amp;rdquo; Futurespective&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;variations&#34;&gt;Variations&lt;/h2&gt;
+&lt;h4 id=&#34;for-remote-teams&#34;&gt;For Remote Teams&lt;/h4&gt;
+&lt;p&gt;There are many free retrospective tools available.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://miro.com/miroverse/atlassian-team-plays-retrospective/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Team Retrospective Miro Template&lt;/a&gt; from Atlassian&lt;/li&gt;
+&lt;li&gt;Trello Template - &lt;a href=&#34;https://trello.com/b/0DnfRtxv/template-glad-sad-mad&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Glad, Sad, Mad&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/pivotal/postfacto&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Postfacto&lt;/a&gt; - open source and deployable by you.&lt;/li&gt;
+&lt;li&gt;Spreadsheets - You can always make a simple 3-column retro board using Google Sheets or Excel.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/3-column-retro/retro-3.png&#34; alt=&#34;3 Column Retrospective in Action&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Sometimes it&amp;rsquo;s worth paying for something that&amp;rsquo;s being actively maintained and enhanced. Here are a few options.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Pricing&lt;/th&gt;
+&lt;th&gt;Notes&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://funretro.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Fun Retro&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;GBP £84/month for 6 teams (£14/team/month)&lt;/td&gt;
+&lt;td&gt;Established tool.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.teamretro.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;TeamRetro&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $90/month for 6 teams ($15/team/month)&lt;/td&gt;
+&lt;td&gt;Established and feature-rich tool.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.retrium.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Retrium&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $29/team/month&lt;/td&gt;
+&lt;td&gt;Established and feature-rich tool.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.scatterspoke.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ScatterSpoke&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $225/100 users/month ($2.25/user/month)&lt;/td&gt;
+&lt;td&gt;Established and feature-rich.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.neatro.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Neatro&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $17/team/month&lt;/td&gt;
+&lt;td&gt;Simple UI.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.parabol.co/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Parabol&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $6/user/month&lt;/td&gt;
+&lt;td&gt;Open-sourced. Established.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.goreflect.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;goReflect&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $2.67/user/month&lt;/td&gt;
+&lt;td&gt;Simple UI.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://reetro.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Reetro&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Free to sign up, used to have paid upgraded features.&lt;/td&gt;
+&lt;td&gt;Less established than other options.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;h4 id=&#34;example-using-postfacto&#34;&gt;Example using Postfacto&lt;/h4&gt;
+&lt;p&gt;There are many free retrospective tools available.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/3-column-retro/retro-1.png&#34; alt=&#34;3 Column Retrospective in Action&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;3-column-retro-with-fun-themes-using-miro&#34;&gt;3-Column Retro with fun themes using Miro&lt;/h4&gt;
+&lt;p&gt;Online tools like this allow for people to get more engaged with fun themes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/3-column-retro/retro-2.png&#34; alt=&#34;3 Column Retrospective in Miro&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://pragprog.com/titles/dlret/agile-retrospectives/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Agile Retrospectives - Making Good Teams Great&lt;/a&gt;  by Esther Derby and Diana Larsen, Foreword by Ken Schwaber&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/blog/how-to-run-a-really-good-retrospective&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;How to Run a Really Good Retrospective&lt;/a&gt; - Blog Post by Nicola Rushton&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/videos/measure-success-in-agile-retrospectives-enrico-teotti&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Measure Success in Agile Retrospectives&lt;/a&gt; – Video by Enrico Teotti&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Value Stream Map</title>
+      
+      <link>/practices/value-stream-map/</link>
+      <pubDate>Wed, 28 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/value-stream-map/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Explain the purpose of the workshop.&lt;/p&gt;
+&lt;p&gt;Using product development lifecycle as an example, you might say something like:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“To identify our product development life cycle, we’ll follow a feature from the moment user gives feedback (e.g. a story is written) to its deployment on production. We’ll focus on the current deployment process before the future state, because understanding what’s happening now will surface real blockers and stakeholders faster than an idealized workflow. Additionally, we want to discover not only the steps, but also the roles and the lead time of each steps.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Start with the current product development process. On one end of the whiteboard or section of the digital collaboration board, write the first step of your chosen value stream. On the other end, write the last step.&lt;/p&gt;
+&lt;p&gt;For product development life cycle, put “User Feedback” as a first step and “Release to Prod” as a last step.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If the team having trouble determining the end point, ask a question like &amp;ldquo;when would we consider the job done for this journey?&amp;rdquo;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have the group identify the high-level steps that take place from beginning to end in the value stream, being as detailed as possible. Write each step on a sticky note and place it in order on the whiteboard. Iterate as needed.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Ideally you’ll move from start to end but don’t get hung up on the order because you can easily move the sticky notes around. The idea is just to start generating as a team.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once the group is satisfied they’ve captured all of the high-level steps in the right order, loop through the flow again. This time, capture the following information about each step on another sticky note or on the whiteboard:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What happens at this step?&lt;/li&gt;
+&lt;li&gt;Where does it happen?&lt;/li&gt;
+&lt;li&gt;Who is responsible for this step? (e.g. is it automated or manual; when do they need to be involved; are they an employee or third party)&lt;/li&gt;
+&lt;li&gt;When can this step happen? (e.g. what must happen before it can proceed)&lt;/li&gt;
+&lt;li&gt;How long does this step take? (e.g. process time)&lt;/li&gt;
+&lt;li&gt;How much lead time is required?&lt;/li&gt;
+&lt;li&gt;What works well or is painful about this step?&lt;/li&gt;
+&lt;li&gt;How do we know this step is done?&lt;/li&gt;
+&lt;li&gt;How long does the whole value stream take and how does the team feel about it?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: These are example questions. Use whatever “lens data” that’s appropriate for your content to shape your picture of the problem. Care about handoffs? Capture them explicitly. Want to visualize system touch-points? Add in &lt;strong&gt;Service Blueprint&lt;/strong&gt;-type details. In short, capture what matters.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have the team take a step back to review the flow and adjust anything that feels incorrect.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When the value stream map feels the right visualization of current processes, calculate the total lead time for the whole process and discuss it with the team to find area that can be improved.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Repeat steps 2-6 for the &amp;ldquo;to be&amp;rdquo; process.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h3&gt;
+&lt;p&gt;You know you’re done when you have a visual value stream on the whiteboard and the team feels confident it accurately represents the current process.&lt;/p&gt;
+&lt;h2 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h2&gt;
+&lt;p&gt;Some teams are sensitive to the idea of calling out “waste” in their processes. Another way to frame the purpose of this activity is to call it an opportunity to increase efficiency.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The Seven Wastes of Product Development&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Partially done work (because we cannot release it)&lt;/li&gt;
+&lt;li&gt;Extra features (because they are unnecessary right now or perhaps always)&lt;/li&gt;
+&lt;li&gt;Relearning (because this takes time away from learning new things and releasing working software)&lt;/li&gt;
+&lt;li&gt;Hand-offs (because this leads to waiting, and adds communication)&lt;/li&gt;
+&lt;li&gt;Delays (because this slows the team down)&lt;/li&gt;
+&lt;li&gt;Task switching (because it leads to context switching which reduces our focus and slows us down)&lt;/li&gt;
+&lt;li&gt;Defects (because this adds work cycles)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/event-storming&#34;&gt;Event Storming&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/service-blueprint&#34;&gt;Service Blueprint&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;Path-to-production exercise&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;Example of a &lt;strong&gt;product development life cycle&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/value-stream-map/value-stream-map-3.jpg&#34; alt=&#34;Value Stream Map image&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.oreilly.com/library/view/value-stream-mapping/9780071828918/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Value Stream Mapping: How to Visualize Work and Align Leadership for Organizational Transformation&lt;/a&gt; by Mike Osterling &amp;amp; Karen Martin&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://codepunk.io/the-seven-wastes-of-software-development/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Seven Wastes of Software Development&lt;/a&gt; - Blog post by Michael Szul&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.researchgate.net/publication/313360479_Software_Development_Waste&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Software Development Waste&lt;/a&gt; - Conference paper by Todd Sedano&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.amazon.com/Lean-Software-Development-Agile-Toolkit/dp/0321150783&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Lean Software Development: An Agile Toolkit&lt;/a&gt; by Mary Poppendieck &amp;amp; Tom Poppendieck&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://cloud.vmware.com/community/2020/12/02/devops-processes-value-stream-mapping/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;DevOps Processes: Value Stream Mapping&lt;/a&gt; by Mandy Storbakken&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: &#34;Sailboat&#34; Futurespective</title>
+      
+      <link>/practices/futurespective/</link>
+      <pubDate>Fri, 16 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/futurespective/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Write or reveal the following prompt for the group:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Imagine that it’s half a year from now and you just heard back from the users of your product that they are extremely happy with it. In short - it’s everything they expected, and more.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Ask the team to take 10 minutes to write down one idea per sticky note what that goal or vision would look like.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Take 5 minutes to discuss and vote on the top 1 goal members have ideated on.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write or reveal the following prompt for the group to consider:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Imagine the actions you have done to achieve the said goal or vision. Which practices did you use and how did you do them? How did you work together as a team, with your stakeholders, customers, and users? What have you tried that worked out well?”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Ask the team to take 10 minutes to write down these positive practices.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write or reveal the following prompt for the group:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Next, imagine the problems (anchors) that you had along the way and how you dealt with them.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Take 10 minutes for members to scribble down the problems and/or impediments the team has experienced in the imaginary past.&lt;/p&gt;
+&lt;p&gt;Ask the team to take 10 minutes to write down ways they dealt with the problems.&lt;/p&gt;
+&lt;p&gt;In other words, what can the team do today to mitigate or minimize problems that may occur in the future that could impede on achieving the goal or vision?&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You know you are done when the team has a group of positive practices and assigned actions upon at the end of the exercise.&lt;/p&gt;
+&lt;h2 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Use futurespective templates (Sailboat, racecar, etc.) to help the team better visualize the exercise&lt;/li&gt;
+&lt;li&gt;Some Futurespectives may have additional sections (example: risks that may occur which should be proactively dealt with) to further facilitate the conversation on how to achieve the goal or vision.&lt;/li&gt;
+&lt;li&gt;Consider discussing the difference between a retrospective and futurespective at the beginning to avoid any confusion during the exercise&lt;/li&gt;
+&lt;li&gt;Templates (public): &lt;a href=&#34;https://metroretro.io/templates/the-sailboat-retrospective&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Public Trello Board with many Retrospective types, including Futurespectives.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;variations&#34;&gt;Variations&lt;/h2&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/futurespective/example.png&#34; alt=&#34;Design Studio Example&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://metroretro.io/templates/the-speed-car-and-the-abyss&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Speed Car Futurespective Miro Template&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Draw Toast</title>
+      
+      <link>/practices/draw-toast/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/draw-toast/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;Paraphrased from &lt;a href=&#34;http://www.drawtoast.com/&#34; target=&#34;_blank&#34;&gt;DrawToast.com&lt;/a&gt;. Draw Toast is part of Tom Wujec&amp;rsquo;s Wicked Problem Solving™ toolkit to help you get playfully clear about what&amp;rsquo;s important in your organization. This work is licensed under a &lt;a href=&#34;https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US&#34; target=&#34;_blank&#34;&gt;Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Hand out paper and writing utensils to all the participants&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; For distributed teams, use &lt;a href=&#34;https://miro.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Miro&lt;/a&gt; or a similar &amp;ldquo;digital whiteboard&amp;rdquo; and adapt the in-person aspects to the digital world, such as drawing and using sticky notes.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;#variations&#34;&gt;More remote tips below in the Variations section&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Hand out markers and paper to everyone and ask participants to &lt;strong&gt;draw each step in the process of making toast&lt;/strong&gt;. Give them 2-3 minutes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have each person hold up their drawing for all to see and quickly explain their thought process. As facilitator, when relevant, point out trends or divergences that emerge. A follow up might be to ask how some could be made more lean or who thought it through in more steps versus just a few steps.&lt;/p&gt;
+&lt;p&gt;Some great questions to ask about individual drawings during Step 3 include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Could you tell me more about how you chose what to draw?&lt;/li&gt;
+&lt;li&gt;Why did you draw it the way you did?&lt;/li&gt;
+&lt;li&gt;How did you decide where to start?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now that everyone can see how even a simple prompt has led to so much differentiation between each drawing, tie this point back to the group:&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Example: &lt;em&gt;&amp;ldquo;Even on a simple, daily activity we are all familiar with getting alignment and holding a shared vision is difficult. In software building it is even more difficult and that’s why we’re here today—to create alignment, understand the degrees of complexity, and find ways to work toward common goals.&amp;quot;&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You’ll know you’re successful when you see the diversity in thought that each person put in to such a simple, daily activity everyone is familiar with.&lt;/p&gt;
+&lt;p&gt;You’ll know you’re even more successful when you can use this as an analogy throughout the project to point out how complex software building really is and how critical alignment is. For example, you might remind participants &lt;em&gt;&amp;ldquo;Just like when we were drawing toast, everyone has a different idea in their mind and we need to get those ideas out so we can get some alignment.&amp;quot;&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;Sometimes people say “Do I have to draw? I don’t know how to draw.” Generally, it’s okay to encourage that person to draw and let them know no one will pass judgement on their drawing, but if they really hold out and want to write something out that’s okay too. Generally people who choose not to draw regret not drawing when everyone else in the room has done drawings.&lt;/p&gt;
+&lt;p&gt;If short on time, have everyone tape theirs up and just ask participants to take a look during a break.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;h4 id=&#34;for-remote-teams&#34;&gt;For Remote Teams&lt;/h4&gt;
+&lt;p&gt;You can still facilitate this workshop even if the team is remote.&lt;/p&gt;
+&lt;p&gt;While many on-line collaboration solutions have drawing features, we suggest keeping thing low-tech: use paper and cameras.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Have people draw upon actual paper as described above.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Next, have them take a photo on their phone and upload the photo to the collaboration space.&lt;/p&gt;
+&lt;p&gt;Alternatively, people can send the photos to the facilitator via chat app, email, or even text message. They can even hold up their drawings to their webcam &amp;ndash; the facilitator can take a screenshot, then add the image to the collaboration space.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here&amp;rsquo;s a good example using a digital drawing tablet:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/draw-toast/example-6.jpg&#34; alt=&#34;Digital Drawing Toast&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/draw-toast/example-5.jpg&#34; alt=&#34;Drawing Toast&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/draw-toast/example-3.jpg&#34; alt=&#34;Drawing Toast&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/draw-toast/example-4.jpg&#34; alt=&#34;Drawing Toast&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/draw-toast/example-1.jpg&#34; alt=&#34;Drawing Toast&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.drawtoast.com/&#34; target=&#34;_blank&#34;&gt;DrawToast.com&lt;/a&gt; has a wealth of information including a TED talk and examples of others&#39; work on this subject. One particularly helpful resource is &lt;a href=&#34;http://www.drawtoast.com/downloads/DrawToast%20Systems%20Thinking%20Guide.pdf&#34; target=&#34;_blank&#34;&gt;A Primer in Systems Thinking&lt;/a&gt; (PDF).&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Goals &amp; Anti-Goals</title>
+      
+      <link>/practices/goals-anti-goals/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/goals-anti-goals/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Draw 4 columns on the whiteboard, one for each type of goal. Put anti-goal column off to the side to introduce it later.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write out goal types on board along with prompts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Product goals&lt;/strong&gt; - “What impact do we want to have on our product space?”&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Business goals&lt;/strong&gt; - “What does success look like from a business perspective? Are there any important dates that we need to consider?”&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Project / Consulting engagement goals&lt;/strong&gt; - “As a team, what do we want to accomplish during our time together?”&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Anti-goals&lt;/strong&gt; - “What do we want to accomplish someday that would distract the team today?”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Give 7 minutes of brainstorming time. Ask everyone to write as many ideas as possible, 1 per sticky note.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In 2 minutes, have each person pick their top 2 goals for each category and rip up everything else. Remember to mention that this is okay!&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Go around the room and have everyone share out the 8 goals they selected. Have a co-facilitator put the sticky notes on the board in the right columns.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;As each person shares out, ask other people if they have a duplicate. Group these similar goals together.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When everyone has shared, hand out 6 dots per person and have everyone dot vote on their top 2 product, business, and project/consulting engagement goals (there’s no need to vote on the anti-goals). Circle the top 2 goals that emerge.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Confirm with key stakeholder(s) if there’s anything else really important that we’ve missed. If so, circle those as well or write them down.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is when the core team and stakeholders have a clear and shared understanding of the top product, business, project/consulting engagement, and anti-goals.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;If you have a lot of people in your Kickoff (e.g. 15+), consider asking everyone to organize themselves into groups of 3-4 people. This will simplify the process of sharing out and affinity mapping the generated goals.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/goals-anti-goals/example-3.jpg&#34; alt=&#34;Whiteboard with business, product, project, consulting engagement, and anti-goals written out&#34;  /&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Molecule Map</title>
+      
+      <link>/practices/molecule-map/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/molecule-map/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Review the &lt;a href=&#34;https://tanzu.vmware.com/content/vmware-tanzu-developer-center-slides/molecule&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Crafting a Molecule&lt;/a&gt; presentation and familiarize yourself with the concept, how to arrive at solutions, and how to identify anti-patterns.&lt;/p&gt;
+&lt;iframe src=&#34;//www.slideshare.net/slideshow/embed_code/key/1wtb5448ncVV6E&#34; width=&#34;595&#34; height=&#34;485&#34; frameborder=&#34;0&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; style=&#34;border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;&#34; allowfullscreen&gt; &lt;/iframe&gt; &lt;div style=&#34;margin-bottom:5px&#34;&gt; &lt;strong&gt; &lt;a href=&#34;//www.slideshare.net/VMwareTanzu/molecule-242998322&#34; title=&#34;Molecule&#34; target=&#34;_blank&#34;&gt;Molecule&lt;/a&gt; &lt;/strong&gt; from &lt;strong&gt;&lt;a href=&#34;https://www.slideshare.net/VMwareTanzu&#34; target=&#34;_blank&#34;&gt;VMware Tanzu Developer Center Slides&lt;/a&gt;&lt;/strong&gt; &lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Draw an example molecule on the physical or digital whiteboard&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Persona — Who are we helping? (use the &lt;a href=&#34;/practices/personas&#34;&gt;Personas&lt;/a&gt; practice) practice if you haven&amp;rsquo;t created one yet)&lt;/li&gt;
+&lt;li&gt;Problem — What is one of their problems?&lt;/li&gt;
+&lt;li&gt;Solution — What is our solution?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/molecule-map/step-1.png&#34; alt=&#34;Blank Molecule Map&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Get into groups of 3 or ask each person to draw 3 circles on a piece of paper and draw multiple molecules. Come up with as many solutions as possible.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; Many video chat systems support &amp;ldquo;breakout rooms&amp;rdquo; or similar means to temporarily divide large groups into smaller groups for closer collaboration.&lt;/p&gt;
+&lt;p&gt;Also, feel free to use real paper and hold it up to the camera when the group is remote.&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/practices/molecule-map/step-2.png&#34; alt=&#34;Filled Molecule Map&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tape or upload molecules onto the board. Treat these as assumptions to go validate.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Silent read &amp;amp; dot vote to get down to 1 molecule&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is when you have agreement on the problem and solution (aka snapshot)to move forward with as a team. You’re doing it right when you are thinking of users as humans.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/molecule-map/example-1.jpg&#34; alt=&#34;Close up of a detailed molecule map drawn on a whiteboard with persona in the center&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/molecule-map/example-2.jpg&#34; alt=&#34;Close up of a molecule map drawn on a whiteboard&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Product Valuation</title>
+      
+      <link>/practices/product-valuation/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/product-valuation/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;p&gt;The time needed varies greatly for several reasons. For example, if you have the data already and are producing a fairly high level estimate, this could take a half day. If you have a complex product, need to gather a lot of data, and are producing a detailed estimate, it could take weeks.&lt;/p&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Brainstorm Your Value&lt;/strong&gt; (30 min)&lt;/p&gt;
+&lt;p&gt;Bring the full core team together.&lt;/p&gt;
+&lt;p&gt;Give them 5 minutes to silently generate the value that they believe the team is creating. You can use some of these prompts to help them focus:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;How are we making someone’s life/job easier?&lt;/li&gt;
+&lt;li&gt;What can they do now that their life is easier?&lt;/li&gt;
+&lt;li&gt;What connection did we make that wasn’t there before?&lt;/li&gt;
+&lt;li&gt;How is the system that we’re working within more efficient now?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Have the group share out what they’ve written and affinity map (group) related items; you’ll use these in &lt;strong&gt;Step 2.&lt;/strong&gt; Visit the &lt;a href=&#34;https://miro.com/app/board/o9J_lNuKt0U=/?moveToWidget=3074457356234182070&amp;amp;cot=14&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;ldquo;brainstorm your values&amp;rdquo; part of the related Miro board&lt;/a&gt; for examples and more ideas on how to frame the prompts for your team.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If appropriate, you can include stakeholders during this step. Use your judgement.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/practices/product-valuation/step-1.png&#34; alt=&#34;Sticky notes representing team value clustered on a digital whiteboard&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Identify Assumptions&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Choose the assumptions upon which you will base your calculations. This usually means:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Prioritized pieces of value&lt;/strong&gt;. Take your brainstormed and affinity-mapped value ideas from &lt;strong&gt;Step 1&lt;/strong&gt;, and pick the top few. There will be a long tail of value created, but if you include too many, you’ll make this exercise difficult and distract from the most important items.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;A unit&lt;/strong&gt;. Often value is communicated in terms of dollars, but hours is another popular choice. You can use whatever unit makes the most sense for your team.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;System boundary&lt;/strong&gt;. This is very important, but easy to overlook. You need to decide:
+&lt;ul&gt;
+&lt;li&gt;What amount of time you’ll include (i.e. “we’ll include value generated for the next 2 years”)&lt;/li&gt;
+&lt;li&gt;How many users you’re creating value for (i.e. just the people who use your product, or maybe also the people who use THOSE people’s product too, and so forth)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Visit the &lt;a href=&#34;https://miro.com/app/board/o9J_lNuKt0U=/?moveToWidget=3074457356234182071&amp;amp;cot=14&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;ldquo;identifying assumptions&amp;rdquo; section of the Miro board&lt;/a&gt; for more notes and examples on how to identify clear assumptions.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/product-valuation/step-2.png&#34; alt=&#34;Bulleted outline describing the teams identified value assumptions&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Identify Input Numbers&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Gather data through normal user research means, like talking to users, experts, etc. Make sure to gather:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A high, low, and average to support the range you’ll be building&lt;/li&gt;
+&lt;li&gt;The reasoning behind an opinion&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Remember: “You don’t need to be precise - you just need to outrun your intuition.” &amp;ndash; Donald Reinertsen from &lt;em&gt;The Principles of Product Development Flow&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Visit the &lt;a href=&#34;https://miro.com/app/board/o9J_lNuKt0U=/?moveToWidget=3074457356234182072&amp;amp;cot=14&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;ldquo;identifying input numbers&amp;rdquo; section of the Miro board&lt;/a&gt; for more notes and examples about identifying the right input numbers.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/product-valuation/step-3.png&#34; alt=&#34;Example input numbers mapped back to related parts of the identified value assumption outline&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Calculate Your Value &amp;amp; A Range&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Plug your numbers into a spreadsheet to calculate the end valuation, as well as a range. The range is very important for building trust because it allows you to be transparent about the accuracy of your estimate.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Feel free to use &lt;a href=&#34;/files/PM-onomics-Examples.xlsx&#34;&gt;this sample spreadsheet&lt;/a&gt; of a fictional product valuation, complete with sample formulas.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Here&amp;rsquo;s an example:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/product-valuation/api1.png&#34; alt=&#34;Screenshot of an example calculation in a spreadsheet Step 1&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/product-valuation/api2.png&#34; alt=&#34;Screenshot of an example calculation in a spreadsheet Step 2&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/product-valuation/api3.png&#34; alt=&#34;Screenshot of an example calculation in a spreadsheet Step 3&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/product-valuation/step-4.png&#34; alt=&#34;Screenshot of an example calculation in a spreadsheet Step 2&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Calculate Your ROI&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Generate the return on investment in your team by dividing the product value you’ve calculated by the amount invested in your team.&lt;/p&gt;
+&lt;p&gt;Visit the &lt;a href=&#34;https://miro.com/app/board/o9J_lNuKt0U=/?moveToWidget=3074457356234182074&amp;amp;cot=14&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;ldquo;calculate the ROI of your team&amp;rdquo; section of the Miro board&lt;/a&gt; for more helpful notes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/product-valuation/step-5.png&#34; alt=&#34;Screenshot of example ROI calculation in a spreadsheet&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Tell Your Story&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Create a slide or other artifact to present the information you have gathered for your stakeholders. Remember:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Simplify, and put assumptions in the appendix&lt;/li&gt;
+&lt;li&gt;Transparency and consistency matter more than precision&lt;/li&gt;
+&lt;li&gt;ABI - Always Be Iterating: when you get new information,  use it to update and refine your calculations and resulting estimate&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Visit the &lt;a href=&#34;https://miro.com/app/board/o9J_lNuKt0U=/?moveToWidget=3074457356234182075&amp;amp;cot=14&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;ldquo;tell your story&amp;rdquo; section of the Miro board&lt;/a&gt; for more helpful notes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/product-valuation/step-6.png&#34; alt=&#34;Example slide depicting the value of a fake API the team is creating, including dollar value of projected savings and an ROI value&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;A single slide that demonstrates the value prop that you can present to stakeholders, and is easily understood.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;Remember to do a gut check at every step of the way - that means checking in with your stakeholders and other experts to make sure that you’re staying aligned with them and getting their input.&lt;/p&gt;
+&lt;p&gt;You may have some of the concerns listed below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&amp;ldquo;I can’t prove it&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&amp;ldquo;Seems like we’re over-simplifying and therefore not representing the situation accurately&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&amp;ldquo;Someone will poke holes in my calculations&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&amp;ldquo;The situation will change and the numbers will get stale&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Our advice is to remember that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Your product valuation is a product itself - you’ll continue to user-test and iterate on it&lt;/li&gt;
+&lt;li&gt;You can lean on your assumptions at all times - your assumptions might be wrong, but that’s ok. When you get better information, you’ll change them, and the resulting calculations&lt;/li&gt;
+&lt;li&gt;Estimating the product valuation is just adding details to the intuition that your stakeholders already have that this product is valuable.&lt;/li&gt;
+&lt;li&gt;The practice of making assumptions, building calculations on top of them, and making decisions based on those calculations is extremely common. People across industries do this every single day.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;In step 1 or 2, you may want to use a prioritization exercise similar to &lt;a href=&#34;/practices/insight-prioritization&#34;&gt;Insight Prioritization&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/product-valuation/example-1.png&#34; alt=&#34;Example value slide showing how an MVP saves 60 minutes of time per document for a set of users with a future projection based on an assumed adoption rate&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/product-valuation/example-2.png&#34; alt=&#34;Another example value slide showing the number of developer hours saved with the team&amp;amp;rsquo;s solution in place&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.howtomeasureanything.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;ldquo;How to Measure Anything&amp;rdquo; by Douglas W. Hubbard&lt;/a&gt; &amp;ndash; Book&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/blog/measuring-the-immeasurable&#34;&gt;Measuring the Immeasurable&lt;/a&gt; &amp;ndash; Blog Post&lt;/p&gt;
+&lt;p&gt;Particularly helpful for step 1&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.brainpickings.org/2011/12/21/steve-jobs-bicycle-for-the-mind-1990/&#34; target=&#34;_blank&#34;&gt;The Computer as the Bicycle of the Mind&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.interaction-design.org/literature/article/google-s-heart-framework-for-measuring-ux&#34; target=&#34;_blank&#34;&gt;Google’s HEART Framework for Measuring UX&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@ms.mbalke/aarrr-framework-metrics-that-let-your-startup-sound-like-a-pirate-ship-e91d4082994b&#34; target=&#34;_blank&#34;&gt;Pirate Metrics&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Risks &amp; Mitigations</title>
+      
+      <link>/practices/risks-and-mitigations/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/risks-and-mitigations/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Have the group silently write project risks and obstacles this team may face. One item per sticky note.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Provide an example of a risk or obstacle. For example, &amp;ldquo;We will be launching code at a different pace than other teams - there may be dependencies and blockers.&amp;rdquo;
+Tip: It may help to list the different types of risks. Business risks (&amp;ldquo;Compliance standards may alter our delivery approach&amp;rdquo;) and team risks (&amp;ldquo;Members are situated in different time zones&amp;rdquo;) should be considered along with technical risks.&amp;quot;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ask each person to select their top 5 risks and obstacles&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Split the group into pairs. Ask each pair to plot their risks together on the axes they draw.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; Many video chat systems support &amp;ldquo;breakout rooms&amp;rdquo; or similar means to temporarily divide large groups into smaller groups for closer collaboration.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Each pair should grab one sheet of paper or section of the digital whiteboard and draw axes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;X-axis: &lt;strong&gt;Easy to Mitigate&lt;/strong&gt; to &lt;strong&gt;Hard to Mitigate&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Y-axis: &lt;strong&gt;Low Risk&lt;/strong&gt; to &lt;strong&gt;High Risk&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Check in on the groups and move each group forward if they are moving faster than others&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/practices/risks-and-mitigations/step-3.png&#34; alt=&#34;2x2 with labeled axes&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Instruct each team to choose the top 2 risks from the high risk section that they would like to share out&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ask the teams to brainstorm &lt;strong&gt;one&lt;/strong&gt; (1) mitigation strategy for each of their top 2 risks&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Go around the room and have each pair read &lt;strong&gt;one&lt;/strong&gt; (1) risk and &lt;strong&gt;one&lt;/strong&gt; (1) mitigation strategy.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Group similar risks/mitigations into categories. For example, &amp;ldquo;technical risks&amp;rdquo;, &amp;ldquo;business risks&amp;rdquo;, &amp;ldquo;product risks&amp;rdquo;, etc.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is when you have a shared understanding of the biggest risks and have a set of actions items to get started with&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Ensure that there is equal representation of different disciplines present&lt;/li&gt;
+&lt;li&gt;Try to time box explanations in order to keep things succinct&lt;/li&gt;
+&lt;li&gt;Create a space in which people feel comfortable being honest by setting up the right context for the session&lt;/li&gt;
+&lt;li&gt;Curtail finger pointing or unkind feedback&lt;/li&gt;
+&lt;li&gt;Ensure that the actions are actionable and not too general e.g., “Don’t do this…”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/risks-and-mitigations/example-2.jpg&#34; alt=&#34;Whiteboard table showing risks in one column and related mitigation strategies in another&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Story Mapping</title>
+      
+      <link>/practices/story-mapping/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/story-mapping/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Before mapping, create a short product or feature brief to frame and constrain what you map. Think of this as the big story. What is the product you are creating or the problem you are solving? Who are the customers or users? How does each user benefit? Why are you interested in building this and how do you benefit?&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Hand out a stack of stickies (of the same color) to each of the participants. Explain that everyone is going to use these stickies to tell the story of the product through user tasks.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: The story should start with the first action your “primary user” takes. As the story unfolds, other users may need to be weaved into the story. That’s fine! (Sometimes, from a narrative perspective, it makes sense to weave in the computer or device as a user too!) Just make sure participants note which users are taking the action on a given sticky.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Give everyone a few minutes to silently generate user tasks that together compose the narrative flow of the product or solution.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: At this point, it’s important to remain a mile wide and inch deep. Getting the full scope of the story is more important at this point than getting all the granular detail.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Start putting user tasks on the whiteboard by asking each participant for a task, one at a time. If there are duplicates, use the one that best captures the step and discard the rest.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Focus on a single happy path for this step. We will incorporate secondary actions later.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Check with the group after adding each task to make sure the order feel rights and critical tasks have not been skipped.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Optional:&lt;/strong&gt; Use stickies to label groups of user stories by their corresponding epic.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have the participants to come up to the whiteboard and engage with the map. Ask them to think about variations or deviations from the “happy path” already outlined.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Play “wouldn’t it be cool if?” and feel free to go as blue sky as you’d like. Add in product details, like proposed UI or business rules.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ask the participants to write these secondary tasks on stickies and place them underneath the backbone stickies in the appropriate order.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Decide how many releases you’d like to divide the map into (you can always adjust this later).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use the tape to slice the story map into segments (releases) of user stories that will provide relatively equal value.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Define the goal of each release and write it next to each corresponding release.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Reassess the placement of each user story. Move stories if necessary.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You’re done when the team feels like they have an accurate representation of what will be built and a backlog of users stories.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;A user task is a short verb phrase like “read an email” or “respond to a message”. Don’t get too detailed. Stick to tasks at the functional level. This means the resolution of the task is right when it’s as big as it can be without a person plausibly taking a break in the middle of it. (e.g. In the story of my daily routine, a task might be “taking a shower”. “Changing the temperature” of the shower is too detailed (sub-functional) while “Getting ready for work” is too broad.&lt;/p&gt;
+&lt;p&gt;Work on the happy path first. Then in the deep dive portion, capture the alternative paths a user might take through the product.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;Completion of Discovery &amp;amp; Framing&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;Share out at Inception&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;Coming soon!&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

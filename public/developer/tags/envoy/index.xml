@@ -1,0 +1,52 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Envoy</title>
+    <link>/tags/envoy/</link>
+    <description>Recent content in Envoy on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 26 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/envoy/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Controlling Ingress with Contour</title>
+      
+      <link>/guides/kubernetes/controlling-ingress-with-contour/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/controlling-ingress-with-contour/</guid>
+      <description>
+
+        
+        &lt;p&gt;In Kubernetes, Ingress is a set of routing rules that define how external traffic is routed to an application inside a Kubernetes cluster. An Ingress controller watches for changes to objects in the cluster and then wires together a data path for each request to be resolved. An Ingress controller processes the requests for resources, provides transport layer security (TLS) termination, and performs other functions.&lt;/p&gt;
+&lt;p&gt;Ingress is an important component of Kubernetes because it cleanly separates an application from how it is accessed. A cluster administrator enables access to the application through the Ingress controller, while the application developer focuses on the application itself. Ingress, and the Ingress Controller, provide the glue that tie the two together.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://projectcontour.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Contour&lt;/a&gt; is an open source Kubernetes &lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ingress controller&lt;/a&gt; that acts as a control plane for the Envoy edge and service proxy (see below).​ Contour supports dynamic configuration updates and multi-team ingress delegation while maintaining a lightweight profile.&lt;/p&gt;
+&lt;p&gt;Contour is built for Kubernetes to empower you to quickly deploy cloud native applications by using the flexible IngressRoute API. Contour deploys the Envoy proxy as a reverse proxy and load balancer.&lt;/p&gt;
+&lt;h3 id=&#34;what-is-envoy&#34;&gt;What Is Envoy?&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.envoyproxy.io/docs/envoy/latest/intro/what_is_envoy&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Envoy&lt;/a&gt; is a Layer 7 (application layer) bus for proxy and communication in modern service-oriented architectures, such as Kubernetes clusters. Envoy strives to make the network transparent to applications while maximizing observability to ease troubleshooting.&lt;/p&gt;
+&lt;h2 id=&#34;what-problems-does-contour-solve&#34;&gt;What Problems Does Contour Solve?&lt;/h2&gt;
+&lt;p&gt;One of the most critical needs when running workloads at scale on Kubernetes is efficient and smooth traffic Ingress management at the application layer. Getting an application up and running is not the entire story; the app still needs a way for users to access it. Contour was designed to fill this operational gap.&lt;/p&gt;
+&lt;h2 id=&#34;benefits-of-using-contour&#34;&gt;Benefits of Using Contour&lt;/h2&gt;
+&lt;p&gt;Here are some of the benefits of using Contour:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Quickly deploy and integrate Envoy with a simple installation mechanism&lt;/li&gt;
+&lt;li&gt;Safely support Ingress in multi-team Kubernetes clusters&lt;/li&gt;
+&lt;li&gt;Cleanly integrate with the Kubernetes object model&lt;/li&gt;
+&lt;li&gt;Dynamically update the Ingress configuration without dropped connections&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;Ingress and Ingress controllers remain an active topic in Kubernetes. Watch this short video for an &lt;a href=&#34;https://kube.academy/lessons/introduction-to-ingress&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Introduction to Ingress&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The Contour Ingress controller has become popular because of features such as the ability to do blue-green deployments using &lt;a href=&#34;https://tanzu.vmware.com/content/blog/deploying-new-app-versions-by-using-blue-green-deployments-with-contour-s-ingressroute&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Contour’s IngressRoute&lt;/a&gt;. This &lt;a href=&#34;https://www.youtube.com/watch?v=xUJbTnN3Dmw&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;video&lt;/a&gt; also explains blue-green deployments. This &lt;a href=&#34;/guides/kubernetes/harbor-gs/&#34;&gt;guide&lt;/a&gt; provides an example of deploying Contour in conjunction with Harbor, an open source registry for containers and Helm charts.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

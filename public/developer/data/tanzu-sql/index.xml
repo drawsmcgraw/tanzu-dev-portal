@@ -1,0 +1,35 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Tanzu SQL</title>
+    <link>/data/tanzu-sql/</link>
+    <description>Recent content in Tanzu SQL on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/data/tanzu-sql/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Data: VMware Tanzu SQL, Now GA for Kubernetes: A Consistent Postgres Experience Everywhere</title>
+      
+      <link>/data/tanzu-sql/blog/tanzu-sql-now-on-k8s/</link>
+      <pubDate>Tue, 10 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-sql/blog/tanzu-sql-now-on-k8s/</guid>
+      <description>
+
+        
+        &lt;p&gt;Data services—such as caches, messaging queues, and relational databases—are the backbone of applications. And when it comes to relational databases, Postgres is a pretty popular option. &lt;a href=&#34;https://tanzu.vmware.com/content/blog/pivotal-postgres&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Its killer feature is its versatility&lt;/a&gt;. Natively and through plugins, Postgres supports a wide variety of data types, formats, and programming languages, which makes it useful for all kinds of applications, including text, geospatial, graph, and more. With Postgres, organizations have the potential to reduce the need for specialized databases, decreasing operational overhead.&lt;/p&gt;
+&lt;p&gt;To run Postgres effectively, you need higher availability, instant scalability, operational simplicity, and the ability to run on-premises and across clouds. Perhaps most importantly, you need Postgres delivered on-demand via self-service. The idea of requesting an instance via a ticket is a non-starter these days.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/vmware-tanzu-sql/vmware-tanzu-sql-now-ga-kubernetes-postgres&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Read More&amp;hellip;&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

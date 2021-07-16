@@ -1,0 +1,241 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Concourse</title>
+    <link>/tags/concourse/</link>
+    <description>Recent content in Concourse on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 29 May 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/concourse/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Blog: From Commit to Container</title>
+      
+      <link>/blog/from-commit-to-container/</link>
+      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/from-commit-to-container/</guid>
+      <description>
+
+        
+        &lt;p&gt;While running software in containers is very popular, it can be a little confusing to figure out the best way to get your code into a container. Now that the industry is mostly unified on Open Container Initiative (OCI) Standard container image formats, they can be built in any number of ways.&lt;/p&gt;
+&lt;p&gt;Building via Dockerfiles is the most commonly used approach, but there are also other tools that can make it easier with less learning upfront and some other advantages.&lt;/p&gt;
+&lt;h2 id=&#34;dockerfiles&#34;&gt;Dockerfiles&lt;/h2&gt;
+&lt;p&gt;If you’re not familiar with the specification for Dockerfiles, you can find it &lt;a href=&#34;https://docs.docker.com/engine/reference/builder/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;. The basic layout looks something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; debian:latest&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ADD&lt;/span&gt; my-app-file /app/&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;CMD&lt;/span&gt; /app/my-app-file&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first thing we need is a starting point, and in this case, we’re using a debian image, and the &lt;code&gt;latest&lt;/code&gt; version. There are also ones that are language-specific like &lt;code&gt;python&lt;/code&gt; or &lt;code&gt;golang&lt;/code&gt; and ones tied to specific distributions.&lt;/p&gt;
+&lt;p&gt;The next lines include whatever steps we need to prepare the image, and the last line tells the image what command to run when the image is executed. There are a lot of variations of this but these are the basics. How can we make it better? Well a real application that is a bit more complicated would make this easier. Here’s a very simple golang http server application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;main&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+    &lt;span class=&#34;s&#34;&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+    &lt;span class=&#34;s&#34;&gt;&amp;#34;net/http&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;http&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;HandleFunc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;w&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;http&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ResponseWriter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;r&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;http&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Fprintf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;w&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Hello World!&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
+
+    &lt;span class=&#34;nx&#34;&gt;http&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;ListenAndServe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;:8080&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A very simple Dockerfile for this app would look like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; golang:latest&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; mkdir /app&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ADD&lt;/span&gt; main.go /app/ &lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WORKDIR&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; /app&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;CGO_ENABLED&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;GOOS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;linux go build -a -installsuffix cgo -o main .&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;CMD&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/app/main&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;EXPOSE&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; 8080&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;FROM&lt;/code&gt; is a language-specific image. We’re creating a directory, copying our application into the image, and then using go to compile the binary. The last line &lt;code&gt;EXPOSE&lt;/code&gt; tells your container runtime which port this image exposes.&lt;/p&gt;
+&lt;p&gt;When you run a &lt;code&gt;docker build . -t myrepo/myimage&lt;/code&gt; with just these two short text files, you end up with an 829MB image- that’s rather large.&lt;/p&gt;
+&lt;h3 id=&#34;multistage-dockerfiles&#34;&gt;Multistage Dockerfiles&lt;/h3&gt;
+&lt;p&gt;The reason the resulting image is so large is that the source image is large too, but for good reason. The golang image is 810MB as it contains a lot more operating system components to successfully be able to compile all sorts of golang programs. The nice thing about go is that the resulting binary is portable. So you can use one image to build the binary, and then copy it to a new, smaller image that doesn’t need all the extra build components, as shown in this example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; golang:latest as builder&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; mkdir /app &lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ADD&lt;/span&gt; main.go /app/ &lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WORKDIR&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; /app &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;CGO_ENABLED&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;GOOS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;linux go build -a -installsuffix cgo -o main .&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; alpine:latest&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;COPY&lt;/span&gt; --from&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;builder /app/main main&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;CMD&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;main&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;EXPOSE&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; 8080&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now if you build using this Dockerfile, your image is only 13MB. Much better! You can see we tagged the first image as &lt;code&gt;builder&lt;/code&gt; and then used the &lt;code&gt;--from&lt;/code&gt; option of &lt;code&gt;COPY&lt;/code&gt; to copy the file to the smaller image based on alpine linux. But can you get it smaller? Yes! Change the &lt;code&gt;FROM alpine:latest&lt;/code&gt; to &lt;code&gt;FROM scratch&lt;/code&gt; which is an empty image. The result will be a 7.41MB image. Now though if you need bash or literally anything but your binary in that image, you’ll have to explicitly add it- that&amp;rsquo;s the main downside of using &lt;code&gt;scratch&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;There are a whole bunch of other tricks to building Dockerfiles and it really depends on your comfort with them and what you’re trying to accomplish.&lt;/p&gt;
+&lt;h2 id=&#34;cloud-native-buildpacks&#34;&gt;Cloud-Native Buildpacks&lt;/h2&gt;
+&lt;p&gt;If your goal is just to get your code into a running image without being concerned about all the details in the last section, buildpacks might be right for you. &lt;a href=&#34;../../guides/containers/cnb-what-is/&#34;&gt;Cloud-Native Buildpacks&lt;/a&gt; are designed to identify your code and automatically build and image. Here’s an &lt;a href=&#34;../../guides/containers/cnb-gs-pack/&#34;&gt;example&lt;/a&gt; using java, but we can do the same for our go app here.&lt;/p&gt;
+&lt;p&gt;All you need to do is initialize the go module with a simple &lt;code&gt;go mod init&lt;/code&gt; command. Now you can use the &lt;code&gt;pack&lt;/code&gt; CLI to build our app by running &lt;code&gt;pack build myrepo/myimage.&lt;/code&gt; The resulting image will be a reasonable 82MB, and you didn’t even need to write a single line of Dockerfile. Buildpacks also have a lot of other advantages for automating image builds and updated existing ones to provide more secure, scalable image building.&lt;/p&gt;
+&lt;h2 id=&#34;cloud-foundry-on-kubernetes&#34;&gt;Cloud Foundry on Kubernetes&lt;/h2&gt;
+&lt;p&gt;Both the &lt;code&gt;docker build&lt;/code&gt; and &lt;code&gt;pack build&lt;/code&gt; commands get you a container image, but neither gets you a running copy of your application. Cloud Foundry leverages buildpacks too, but it also manages the deployment of the images as well via the &lt;a href=&#34;../../guides/kubernetes/cf4k8s-gs/&#34;&gt;cf-for-k8s&lt;/a&gt; project. For this example here, once you’re setup, a simple &lt;code&gt;cf push myapp&lt;/code&gt; would take your go application, build it, push it, and also deploy it. In the end you would have a single instance of your application running without having to know anything about Dockerfiles, buildpacks, or Kubernetes.&lt;/p&gt;
+&lt;h2 id=&#34;using-these-tools-in-your-pipeline-to-production&#34;&gt;Using These Tools in Your Pipeline to Production&lt;/h2&gt;
+&lt;p&gt;In these examples, you ran these commands manually, which is great to get started but isn&amp;rsquo;t scalable. The key to speeding up your code moving to production is automatically building your images no matter which tool you choose.&lt;/p&gt;
+&lt;p&gt;For the case of Dockerfiles or Cloud Foundry, the most common approach is to use a &lt;a href=&#34;../../guides/ci-cd/ci-cd-what-is/&#34;&gt;Continuous Integration&lt;/a&gt; tool like Jenkins or &lt;a href=&#34;../../guides/ci-cd/concourse-gs/&#34;&gt;Concourse&lt;/a&gt; to automatically run these commands on each code commit.&lt;/p&gt;
+&lt;p&gt;For buildpacks, there’s a tool called &lt;a href=&#34;../../guides/containers/cnb-gs-kpack/&#34;&gt;&lt;code&gt;kpack&lt;/code&gt;&lt;/a&gt; which can run on Kubernetes and help automate the building of your images. It supports multiple source formats and can push to any standard container registry.&lt;/p&gt;
+&lt;p&gt;Try out some of these different approaches to running your application and see which works the best for different applications.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Getting Started with Concourse</title>
+      
+      <link>/samples/concourse-gs/</link>
+      <pubDate>Thu, 07 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/concourse-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with Concourse CI</title>
+      
+      <link>/guides/ci-cd/concourse-gs/</link>
+      <pubDate>Mon, 04 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/ci-cd/concourse-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;Writing code is one thing. Testing and deploying that code into production is another. Many tools exist to automate the workflow, from code commit to production release. Continuous Integration (CI), Continuous Deployment (CD), Continuous Delivery (CD again), artifact registries, code security scanners, and various other tools are used to achieve this goal. But it all starts with code integration.&lt;/p&gt;
+&lt;p&gt;How can you make sure your code is ready to be integrated into a release? Continuous Integration (CI) is not a new concept for most developers, and—once the system is implemented, it is rarely thought about deeply again. Even when it’s agreed that the current implementation is non-optimal, the CI system runs in the background, churning away. For the most part, it “just works.”&lt;/p&gt;
+&lt;p&gt;But what if there was a better system? One that was built for cloud native development paradigms on the foundation of a stateless architecture where all pipelines are built and treated as code? That’s where Concourse CI comes in.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/concourse/screenshots/overview.png&#34; alt=&#34;Concourse dashboard&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;An example Concourse CI dashboard showing the status of many pipelines&lt;/p&gt;
+&lt;h2 id=&#34;concourse-ci&#34;&gt;Concourse CI&lt;/h2&gt;
+&lt;p&gt;Concourse CI is a system built with a loosely coupled microservices architecture; a &lt;a href=&#34;https://concourse-ci.org/postgresql-node.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;database node&lt;/a&gt; using PostgreSQL is the only state saved by the system. All build histories, stored pipelines, as well as user and group access privileges are stored here.&lt;/p&gt;
+&lt;p&gt;A &lt;a href=&#34;https://concourse-ci.org/concourse-web.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;web node&lt;/a&gt; service provides the user interface to Concourse CI. Here, developers and administrators can get a quick view of their pipelines, including their status. Broken pipelines can be easily identified so users can fix any issues.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://concourse-ci.org/concourse-worker.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Worker nodes&lt;/a&gt; run each of the tasks defined in a Concourse CI pipeline. They download container images, clone git repositories, and run tests as defined. And when they are done, the testing containers are entirely ephemeral, so you get a clean test every time.&lt;/p&gt;
+&lt;p&gt;Concourse CI pipelines are built using three different abstraction paradigms: tasks, jobs, and resources.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://concourse-ci.org/tasks.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tasks&lt;/a&gt; are the smallest unit of work Concourse CI does. They can be called to run a script or even just a single command within the testing container. Meanwhile, task output is provided as detailed log files, which can be parsed programmatically if needed.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://concourse-ci.org/jobs.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Jobs&lt;/a&gt; are a package of tasks. By bundling up a group of tasks as a job, Concourse CI users can make their pipeline code reusable for other systems. Such bundling provides a higher-level abstraction as pipelines get larger and more complex, which makes it easier for new team members to get up to speed.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://concourse-ci.org/resources.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Resources&lt;/a&gt; are what jobs perform actions on. A typical example would be a git repository; once configured, Concourse CI can pull in new code to test, run test scripts stored in git, or even push its own changes. And since everything in Concourse CI is configured as code, even resource configurations can be managed in git and reused across an organization.&lt;/p&gt;
+&lt;p&gt;Intrigued? What follows here is a guide to get started with Concourse CI. You will deploy a small Concourse CI cluster locally on top of Kubernetes. Then you will push a new pipeline to your cluster, which will run a series of tests on a sample application, which you will clone.&lt;/p&gt;
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Before you get started, you will need to do a number of things.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Install &lt;a href=&#34;https://www.docker.com/products/docker-desktop&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Desktop&lt;/a&gt; and &lt;a href=&#34;https://docs.docker.com/docker-for-mac/#kubernetes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;enable Kubernetes&lt;/a&gt;&lt;/strong&gt;: Other methods of deploying a local Kubernetes cluster like &lt;a href=&#34;https://kind.sigs.k8s.io/docs/user/quick-start/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;KIND&lt;/a&gt; or &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-minikube/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Minikube&lt;/a&gt; may also work. Cloud-based or other production Kubernetes deployments should work, too. This guide was written using Docker Desktop; other methods will require modification of commands and have not been fully tested for use in this guide.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Install &lt;a href=&#34;https://helm.sh/docs/intro/install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm 3&lt;/a&gt;&lt;/strong&gt;: Helm 3 will be used to install Concourse CI.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Install &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl&lt;/a&gt;&lt;/strong&gt;: This is the local client application you will use for interacting with your Kubernetes cluster. It is also how Helm will reach and interact with your cluster.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Secure a Slack instance&lt;/strong&gt;: One via which you have access to create webhooks and can post messages to a channel.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Set aside 15-20 minutes&lt;/strong&gt;: Roughly the time it will take to run through this guide.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;setting-up&#34;&gt;Setting up&lt;/h2&gt;
+&lt;p&gt;To make the installation and configuration of Concourse CI and its pipelines a little easier, a GitHub repo is provided here along with some helpful files. Download it, then &lt;code&gt;cd&lt;/code&gt; into that directory. In this guide, commands will assume this as your working directory unless otherwise noted.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/anthonyvetter/concourse-getting-started.git &amp;amp;&amp;amp; cd concourse-getting-started
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In this repository are three directories: &lt;code&gt;install&lt;/code&gt;, &lt;code&gt;pipelines&lt;/code&gt;, and &lt;code&gt;test-scripts&lt;/code&gt;. You will explore the &lt;code&gt;pipelines&lt;/code&gt; and &lt;code&gt;test-scripts&lt;/code&gt; directories later on in this guide. They contain a helpful starter pipeline you will push to our Concourse CI cluster, as well as some unit test scripts. The &lt;code&gt;install&lt;/code&gt; directory contains an abbreviated version of the Concourse CI &lt;code&gt;values.yml&lt;/code&gt; file, and a (very) small BASH script for exposing access to Concourse CI locally. Let’s get into that next.&lt;/p&gt;
+&lt;p&gt;Next, define a variable for your username of your GitHub account.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;export GH_USERNAME=your-github-username
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;installation&#34;&gt;Installation&lt;/h3&gt;
+&lt;p&gt;Let’s get started by installing Concourse CI onto Kubernetes. This installation will be abbreviated; it’s intended for demonstration and learning purposes only. Full installation instructions using Helm can be found &lt;a href=&#34;https://github.com/concourse/concourse-chart&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;via the Concourse CI team&lt;/a&gt; from which the installation instructions in this guide borrow heavily.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Optional step&lt;/strong&gt;: Concourse CI installation in a local context is fairly straightforward. There are some default attributes contained in the &lt;code&gt;install/values.yml&lt;/code&gt; file; leaving these as their default values will get you a working installation. That said, there are a few values that you may choose to modify in order to slightly customize your installation and experiment with Concourse CI. Modify this file to suit your needs. Comments on each line will explain their respective functions.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vim install/values.yml # replace vim with your text editor of choice
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Helm 3 does not come with the chart repository for Concourse CI by default (it doesn’t include any repositories by default). So the next step is to add that to Helm and update Helm’s caches.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helm repo add concourse https://concourse-charts.storage.googleapis.com/ &amp;amp;&amp;amp; helm repo update
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;These are pretty much the only required steps prior to install. But before you run the install command, be sure to check kubectl to ensure you are targeting the correct Kubernetes cluster. If you are using Docker Desktop, this should be your output.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;❯ kubectl config get-contexts
+
+CURRENT   NAME                 CLUSTER          AUTHINFO         NAMESPACE
+*         docker-desktop       docker-desktop   docker-desktop
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Further instructions for managing contexts and clusters using kubectl can be found &lt;a href=&#34;https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Now you can install Concourse CI. This command will use Helm to install the cluster into the default Kubernetes namespace using our &lt;code&gt;values.yml&lt;/code&gt; file. If you left this file as default, then the &lt;code&gt;-f&lt;/code&gt; flag can be left out.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helm install concourse concourse/concourse -f install/values.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This command will complete quickly, but there will still be pods spinning up on the back end. To see the status of the system as it is being deployed, use &lt;code&gt;watch&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;watch kubectl get pods
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will show a list of pods in the default namespace and their status. Wait until they are all in a running status.&lt;/p&gt;
+&lt;p&gt;Once all the pods are ready, Concourse CI will be up and running. But it won’t be accessible outside the cluster. To expose it, run the provided expose script.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./install/expose-concourse.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Running this script opens up a node port in your Kubernetes cluster and forwards it to your localhost. Assuming you left these values as default, your Concourse CI cluster should now be available at &lt;a href=&#34;http://localhost:8080&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:8080&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: This port-forward task is running in the foreground in your terminal. To keep UI access available, open a new terminal window or tab and cd back into your working directory.&lt;/p&gt;
+&lt;p&gt;You can access the cluster by logging in using the credentials set in the &lt;code&gt;values.yml&lt;/code&gt; file. If you left them as default the username and the password are both &lt;code&gt;test&lt;/code&gt;. At this point, there are no pipelines set; you need to install the fly client application first.&lt;/p&gt;
+&lt;h3 id=&#34;installing-fly&#34;&gt;Installing fly&lt;/h3&gt;
+&lt;p&gt;Fly is the local client application developers and Concourse CI administrators use as their primary way to interact with the cluster from the command line. To install fly, download the binary from your Concourse CI cluster directly by clicking the link appropriate for your system, as shown here.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/concourse/screenshots/download-fly.png&#34; alt=&#34;Download Fly&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The Concourse CI interface upon a new installation showing download links for the fly client application&lt;/p&gt;
+&lt;p&gt;Once completed, make the binary executable, then move it into your &lt;code&gt;$PATH&lt;/code&gt;. That’s it!&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo chmod +x ~/Downloads/fly &amp;amp;&amp;amp; mv ~/Downloads/fly /usr/local/bin
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: These commands are for use on a Macintosh computer. They will need to be modified for other platforms.&lt;/p&gt;
+&lt;p&gt;Now you need to let fly know about your Concourse CI cluster. Do that with the &lt;code&gt;target&lt;/code&gt; command for your fly client. Notice we are giving our Concourse CI a name of &lt;code&gt;demo&lt;/code&gt;. It can be any name you want, just keep it short. Every command run using fly must include the &lt;code&gt;--target&lt;/code&gt; flag to explicitly run commands on a specific cluster, so unless you &lt;code&gt;alias&lt;/code&gt; it, you will be typing it a lot.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fly --target demo login --concourse-url http://127.0.0.1:8080 -u test -p test
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then, to ensure compatible versions of Concourse CI and fly are running, use the &lt;code&gt;sync&lt;/code&gt; command.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fly -t demo sync
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Notice you can abbreviate &lt;code&gt;--target&lt;/code&gt; with &lt;code&gt;-t&lt;/code&gt;, making commands shorter to type. There are many abbreviations in fly like this. You will use these abbreviations throughout this guide.&lt;/p&gt;
+&lt;h2 id=&#34;creating-the-demo-application&#34;&gt;Creating the demo application&lt;/h2&gt;
+&lt;p&gt;For this guide, you will use &lt;a href=&#34;https://github.com/spring-projects/spring-petclinic&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;spring-petclinic&lt;/a&gt; as an application to test against in your pipeline, which is a small Java application written in Spring. But there are no specific dependencies on this application other than the test scripts running Maven testing jobs.&lt;/p&gt;
+&lt;p&gt;To follow along, &lt;a href=&#34;https://help.github.com/en/github/getting-started-with-github/fork-a-repo&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;fork&lt;/a&gt; this application (&lt;a href=&#34;https://github.com/spring-projects/spring-petclinic&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;linked here&lt;/a&gt;) into your own GitHub repository or provide your own application and modify the test scripts as needed (they are very rudimentary).&lt;/p&gt;
+&lt;p&gt;Next, clone the repository locally and place it anywhere on your system. Then &lt;code&gt;cd&lt;/code&gt; into the directory.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/$GH_USERNAME/spring-petclinic.git &amp;amp;&amp;amp; cd spring-petclinic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Next, you need to create a test branch. You can mimic an example GitOps flow where a new feature or bug fix is pulled into this branch for testing; the automated system takes it from there.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git checkout -b test
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will create a test branch for your project, which will be monitored by Concourse CI. Next, push this branch to your repository so Concourse CI can monitor it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git push origin test
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The result is that once you deploy the pipeline and push a change to this branch, Concourse CI will pick it up and run its configured automated tests.&lt;/p&gt;
+&lt;h2 id=&#34;deploying-a-pipeline&#34;&gt;Deploying a pipeline&lt;/h2&gt;
+&lt;p&gt;Now that your Concourse CI installation is up and running, it’s time to create your first pipeline. Go back to the concourse-getting-started folder for the configuration files. But before you set that pipeline to Concourse CI, take a look at each of the sections to understand what they are doing. Comments are provided within the pipeline YAML as well, to describe each section.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat pipelines/pipeline.yml | less
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This pipeline is going to pull in your demo application from your repository. Then it will pull in test scripts from a separate repository. And finally, it will run those tests, one at a time, in a dedicated container, all the while reporting out status via Slack. Review the comments in the file to understand the function of each section.&lt;/p&gt;
+&lt;p&gt;You will notice there are a few &lt;code&gt;((variables))&lt;/code&gt; contained within the pipeline; you will define those next. The &lt;code&gt;credentials.yml&lt;/code&gt; file contains those variable assignments. Open the file and fill in the variables for your environment. Again, the comments in the file will help you understand the function of each line.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vim pipelines/credentials.yml # replace vim with your favorite text editor
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: This will include a step for setting up a Slack webhook integration. A link to the instructions from Slack to set it up is provided in the file, or you can view it &lt;a href=&#34;https://slack.com/help/articles/115005265063-Incoming-Webhooks-for-Slack&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Another note&lt;/strong&gt;: Using credentials files in this way provides an easy way to make changes to a pipeline. For example, by modifying just this one file in a straightforward way, the pipeline can be used flexibly across many environments, with many applications. However, in a production environment you would want to configure Concourse CI to use a &lt;a href=&#34;https://concourse-ci.org/creds.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;credential management system&lt;/a&gt; like &lt;a href=&#34;https://learn.hashicorp.com/vault/getting-started/install&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Vault&lt;/a&gt;, &lt;a href=&#34;https://docs.cloudfoundry.org/credhub/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CredHub&lt;/a&gt;, or something similar.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;That’s because using a credentials file provides just a simple translation done at the time when the pipeline is set. Which is not a big deal when it&amp;rsquo;s just URLs, but when these files contain access tokens, private SSH keys, passwords, and the like, you will want a more secure system.&lt;/p&gt;
+&lt;p&gt;Now you will set the pipeline onto your Concourse CI deployment by using fly and the &lt;code&gt;set-pipeline&lt;/code&gt; command, which can be abbreviated &lt;code&gt;sp&lt;/code&gt;. Here the &lt;code&gt;-c&lt;/code&gt; flag denotes which configuration file you will use for your pipeline. The &lt;code&gt;-p&lt;/code&gt; flag will be the name of your pipeline in Concourse CI and the &lt;code&gt;-l&lt;/code&gt; flag will tell Concourse CI where to load variables from. Once it is run, type &lt;code&gt;y&lt;/code&gt; to accept the configuration changes.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fly -t demo set-pipeline -c pipelines/pipeline.yml -p petclinic-tests -l pipelines/credentials.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Pipelines start “paused,” meaning they won’t start running until you tell them to, which you can do from the UI or the fly CLI tool. But before you unpause, take a look at the UI to confirm your pipeline has been created successfully.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/concourse/screenshots/dashboard.png&#34; alt=&#34;Concourse Pipeline&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The main Concourse CI UI showing your pipeline set&lt;/p&gt;
+&lt;p&gt;When clicking into that pipeline, you will see the jobs and resources depicted as connected entities. The jobs are the big gray boxes; the resources used by the jobs are the smaller, black boxes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/concourse/screenshots/pipeline.png&#34; alt=&#34;Download Fly&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;the-pipeline&#34;&gt;The pipeline&lt;/h3&gt;
+&lt;p&gt;Back at the CLI, unpause the pipeline using the &lt;code&gt;unpause-pipeline&lt;/code&gt; command, which can be abbreviated &lt;code&gt;up&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fly -t demo unpause-pipeline -p petclinic-tests
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Watch the pipeline complete. Then click into the running job and watch it complete in more detail.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/concourse/screenshots/concourse-test.gif&#34; alt=&#34;Pipeline run&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;the-pipeline-and-job-run-details&#34;&gt;The pipeline and job run details&lt;/h3&gt;
+&lt;p&gt;That’s it! Your pipeline is now monitoring your test branch for changes. Whenever a change is made, this pipeline will be kicked off and the tests will be run. Feel free to keep experimenting with this pipeline configuration, and build it to suit your needs. Push more changes to the application and watch Concourse CI trigger a new test run.&lt;/p&gt;
+&lt;p&gt;For more information on Concourse CI, check out the &lt;a href=&#34;https://concourse-ci.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;open source project&lt;/a&gt; site. For information about the commercially-supported version, check out the Concourse CI &lt;a href=&#34;https://tanzu.vmware.com/concourse&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;page&lt;/a&gt; on VMware.com.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Using Concourse to Deploy Spring Music</title>
+      
+      <link>/samples/concourse-spring-music/</link>
+      <pubDate>Tue, 21 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/concourse-spring-music/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

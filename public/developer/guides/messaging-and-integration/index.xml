@@ -1,0 +1,664 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Messaging and Integration</title>
+    <link>/guides/messaging-and-integration/</link>
+    <description>Recent content in Messaging and Integration on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/guides/messaging-and-integration/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Build a Scalable, Fault-Tolerant Messaging Cluster on Kubernetes with Apache Kafka and MongoDB</title>
+      
+      <link>/guides/messaging-and-integration/kafka-mongodb/</link>
+      <pubDate>Wed, 29 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/messaging-and-integration/kafka-mongodb/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://kafka.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Kafka&lt;/a&gt; is a popular open source tool for real-time publish/subscribe messaging. It uses a scalable, fault-tolerant cluster for message storage, and it can also be integrated with other open source data-oriented solutions such as &lt;a href=&#34;https://hadoop.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Hadoop&lt;/a&gt;, &lt;a href=&#34;https://spark.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Spark&lt;/a&gt; or &lt;a href=&#34;https://hbase.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache HBase&lt;/a&gt; for real-time analysis and rendering of streaming data.&lt;/p&gt;
+&lt;p&gt;Apache Kafka provides a &lt;a href=&#34;https://kafka.apache.org/documentation/#connectapi&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Connect API&lt;/a&gt;, which allows external storage systems to be integrated with Kafka. One such example is the &lt;a href=&#34;https://www.mongodb.com/kafka-connector&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MongoDB Kafka Connector&lt;/a&gt;, which allows Kafka messages to be stored in MongoDB, or MongoDB data to be published to Kafka. This integration allows users to combine Kafka&amp;rsquo;s real-time messaging features with the powerful document-oriented data querying capabilities of MongoDB.&lt;/p&gt;
+&lt;p&gt;Bitnami offers secure and up-to-date Helm charts for &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/kafka&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Kafka&lt;/a&gt; and &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MongoDB&lt;/a&gt;. These charts can be used to deploy and integrate Apache Kafka and MongoDB on Kubernetes, adding improved scalability and reliability and ensuring that the deployments conform to current best practices. This article walks you through the integration.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and prerequisites&lt;/h2&gt;
+&lt;p&gt;This article explains the process of integrating Apache Kafka and MongoDB on Kubernetes, such that messages published on Kafka topics are automatically stored as documents in a MongoDB collection using a sink connector. It assumes that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have a Docker environment installed and configured. &lt;a href=&#34;https://docs.docker.com/engine/installation/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about installing Docker&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Docker Hub account. &lt;a href=&#34;https://hub.docker.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Register for a free account&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Kubernetes cluster running with Helm v3.x and &lt;em&gt;kubectl&lt;/em&gt; installed. &lt;a href=&#34;https://docs.bitnami.com/kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about getting started with Kubernetes and Helm using different cloud providers&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1: Deploy MongoDB on Kubernetes&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you already have a MongoDB deployment, you can use that instead and skip to &lt;a href=&#34;#step-2-create-and-publish-a-custom-mongodb-kafka-connector-image&#34;&gt;Step 2&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The first step is to deploy a MongoDB service on Kubernetes. The simplest way to do this is with Bitnami&amp;rsquo;s MongoDB Helm chart. Follow the steps below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Add the Bitnami chart repository to Helm:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Execute the following command to deploy MongoDB. Remember to replace the MONGODB-ROOT-PASSWORD placeholder with a custom password for the MongoDB administrator account.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install mongodb bitnami/mongodb --set auth.rootPassword&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;MONGODB-ROOT-PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wait for a few minutes until the chart is deployed.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the Bitnami MongoDB Helm chart&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use the commands shown in the &amp;ldquo;Notes&amp;rdquo; section to create a MongoDB client and connect to the MongoDB service. Remember to replace the MONGODB-ROOT-PASSWORD placeholder with the password defined at deployment time.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl run --namespace default mongodb-client --rm --tty -i --restart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Never&amp;#39;&lt;/span&gt; --image docker.io/bitnami/mongodb:4.2.8-debian-10-r39 --command -- bash
+mongo admin --host &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb&amp;#34;&lt;/span&gt; --authenticationDatabase admin -u root -p MONGODB-ROOT-PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;At the MongoDB command prompt, create a new MongoDB database and user, and grant the user access to the database. The commands below create a new database named &lt;em&gt;mydb&lt;/em&gt; and a user account named &lt;em&gt;user&lt;/em&gt; with full privileges on that database. Replace the MONGODB-USER-PASSWORD placeholder with a custom password.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;use mydb
+db.createUser&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    user: &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt;,
+    pwd: &lt;span class=&#34;s2&#34;&gt;&amp;#34;MONGODB-USER-PASSWORD&amp;#34;&lt;/span&gt;,
+    roles: &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; role: &lt;span class=&#34;s2&#34;&gt;&amp;#34;dbOwner&amp;#34;&lt;/span&gt;, db: &lt;span class=&#34;s2&#34;&gt;&amp;#34;mydb&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Exit the MongoDB CLI and terminate the client pod.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-2-create-and-publish-a-custom-mongodb-kafka-connector-image&#34;&gt;Step 2: Create and publish a custom MongoDB Kafka Connector image&lt;/h2&gt;
+&lt;p&gt;The next step is to create a container image with the MongoDB Connector for Apache Kafka. This image should also include the Kafka Connect application, which takes care of streaming data between Apache Kafka and other storage systems (such as MongoDB). Follow these steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Create a file named &lt;em&gt;Dockerfile&lt;/em&gt; with the following content:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;FROM bitnami/kafka:latest
+
+RUN mkdir -p /opt/bitnami/kafka/plugins &amp;amp;&amp;amp; \
+    cd /opt/bitnami/kafka/plugins &amp;amp;&amp;amp; \
+    curl --remote-name --location --silent https://search.maven.org/remotecontent?filepath=org/mongodb/kafka/mongo-kafka-connect/1.2.0/mongo-kafka-connect-1.2.0-all.jar
+
+CMD /opt/bitnami/kafka/bin/connect-standalone.sh /opt/bitnami/kafka/config/connect-standalone.properties /opt/bitnami/kafka/config/mongo.properties
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This &lt;em&gt;Dockerfile&lt;/em&gt; uses Bitnami&amp;rsquo;s Kafka container image as its base image. This is because the Bitnami Kafka container image already contains a working Apache Kafka environment, including the Kafka Connect application and other required dependencies, configuration files and libraries.&lt;/p&gt;
+&lt;p&gt;After selecting the base image, this &lt;em&gt;Dockerfile&lt;/em&gt; performs two main actions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It downloads the latest version of the MongoDB Connector for Apache Kafka and adds it to the image.&lt;/li&gt;
+&lt;li&gt;It starts the Kafka Connect application in &amp;ldquo;standalone mode&amp;rdquo;, passing it a set of configuration files. These files contain the information needed for Kafka Connect to integrate with both Apache Kafka and MongoDB. The files are not included in the image at this point; instead, they will be defined using a Kubernetes &lt;em&gt;ConfigMap&lt;/em&gt; in a later step.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;At the time of writing, the latest version of the MongoDB Connector for Apache Kafka is v1.2.0. Replace this with the most recent version when using the Dockerfile shown above. You can find the latest version on &lt;a href=&#34;https://github.com/mongodb/mongo-kafka/releases&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;the project&amp;rsquo;s GitHub page&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Build the image using the command below. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker build -t DOCKER-USERNAME/mykafka:1.0 .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result of this command is a Docker image containing Apache Kafka, Kafka Connect, the MongoDB Connector for Apache Kafka and all the related dependencies.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to Docker Hub and publish the image. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker login
+docker push DOCKER-USERNAME/mykafka:1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-3-deploy-apache-kafka-and-kafka-connect-on-kubernetes&#34;&gt;Step 3: Deploy Apache Kafka and Kafka Connect on Kubernetes&lt;/h2&gt;
+&lt;p&gt;The next step is to deploy Apache Kafka and the custom Kafka Connect container on Kubernetes. Although you can do this as two separate deployments, an easier way is to combine the two steps into one using the Bitnami Kafka Helm chart. This chart supports an &lt;em&gt;extraDeploy&lt;/em&gt; parameter which lets you deploy a set of extra objects with your Apache Kafka deployment.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Begin by creating the following &lt;em&gt;values.yml&lt;/em&gt; file holding the values that will be supplied to the Helm chart. Replace the KAFKA-USERNAME and KAFKA-PASSWORD with a custom username and password for Kafka client authentication. Replace the DOCKER-USERNAME placeholder with your Docker account username and the MONGODB-USER-PASSWORD placeholder with the password set for the MongoDB &lt;em&gt;user&lt;/em&gt; account in &lt;a href=&#34;#step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;auth:
+  clientProtocol: sasl
+  interBrokerProtocol: plaintext
+  jaas:
+    clientUser: KAFKA-USERNAME
+    clientPassword: KAFKA-PASSWORD
+extraDeploy: |-
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: {{ include &amp;quot;kafka.fullname&amp;quot; . }}-connect
+      labels: {{- include &amp;quot;kafka.labels&amp;quot; . | nindent 6 }}
+        app.kubernetes.io/component: connector
+    spec:
+      replicas: 1
+      selector:
+        matchLabels: {{- include &amp;quot;kafka.matchLabels&amp;quot; . | nindent 8 }}
+          app.kubernetes.io/component: connector
+      template:
+        metadata:
+          labels: {{- include &amp;quot;kafka.labels&amp;quot; . | nindent 10 }}
+            app.kubernetes.io/component: connector
+        spec:
+          containers:
+            - name: connect
+              image: DOCKER-USERNAME/mykafka:1.0
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/bash
+                - -ec
+                - |
+                  /opt/bitnami/kafka/bin/connect-standalone.sh /config/connect-standalone.properties /config/mongodb.properties
+              ports:
+                - name: connector
+                  containerPort: 8083
+              volumeMounts:
+                - name: configuration
+                  mountPath: /config
+          volumes:
+            - name: configuration
+              configMap:
+                name: {{ include &amp;quot;kafka.fullname&amp;quot; . }}-connect
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: {{ include &amp;quot;kafka.fullname&amp;quot; . }}-connect
+      labels: {{- include &amp;quot;kafka.labels&amp;quot; . | nindent 6 }}
+        app.kubernetes.io/component: connector
+    data:
+      connect-standalone.properties: |-
+        bootstrap.servers = {{ include &amp;quot;kafka.fullname&amp;quot; . }}-0.{{ include &amp;quot;kafka.fullname&amp;quot; . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}:{{ .Values.service.port }}
+        key.converter=org.apache.kafka.connect.json.JsonConverter
+        value.converter=org.apache.kafka.connect.json.JsonConverter
+        key.converter.schemas.enable=true
+        value.converter.schemas.enable=true
+        offset.storage.file.filename=/tmp/connect.offsets
+        offset.flush.interval.ms=10000
+        plugin.path=/opt/bitnami/kafka/plugins
+        sasl.mechanism=PLAIN
+        security.protocol=SASL_PLAINTEXT
+        sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
+          username=&amp;quot;KAFKA-USERNAME&amp;quot; \
+          password=&amp;quot;KAFKA-PASSWORD&amp;quot;;
+        consumer.sasl.mechanism=PLAIN
+        consumer.security.protocol=SASL_PLAINTEXT
+        consumer.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
+          username=&amp;quot;KAFKA-USERNAME&amp;quot; \
+          password=&amp;quot;KAFKA-PASSWORD&amp;quot;;
+      mongodb.properties: |-
+        connection.uri=mongodb://user:MONGODB-ROOT-PASSWORD@mongodb.default.svc.cluster.local:27017/mydb
+        name=mongo-sink
+        topics=mytopic
+        connector.class=com.mongodb.kafka.connect.MongoSinkConnector
+        tasks.max=1
+        key.converter=org.apache.kafka.connect.json.JsonConverter
+        value.converter=org.apache.kafka.connect.json.JsonConverter
+        key.converter.schemas.enable=false
+        value.converter.schemas.enable=false
+        database=mydb
+        collection=sink
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{ include &amp;quot;kafka.fullname&amp;quot; . }}-connect
+      labels: {{- include &amp;quot;kafka.labels&amp;quot; . | nindent 6 }}
+        app.kubernetes.io/component: connector
+    spec:
+      ports:
+        - protocol: TCP
+          port: 8083
+          targetPort: connector
+      selector: {{- include &amp;quot;kafka.matchLabels&amp;quot; . | nindent 6 }}
+        app.kubernetes.io/component: connector
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This file contains a lot of information, so let&amp;rsquo;s step through it in detail:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;em&gt;auth&lt;/em&gt; parameters define the protocol that Kafka will use for client and inter-broker communication. It also specifies the username and password for JAAS-based client authentication.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;em&gt;extraDeploy&lt;/em&gt; parameter creates an additional deployment using the custom Kafka Connect image created in &lt;a href=&#34;#step-2-create-and-publish-a-custom-mongodb-kafka-connector-image&#34;&gt;Step 2&lt;/a&gt;. It also mounts a configuration volume at the &lt;em&gt;/config&lt;/em&gt; mount point. This volume will hold the configuration files for Kafka Connect.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The file defines an additional &lt;em&gt;ConfigMap&lt;/em&gt; which is mounted at &lt;em&gt;/config&lt;/em&gt; and holds two minimal configuration files:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;em&gt;connect-standalone.properties&lt;/em&gt; file defines the standalone mode configuration for Kafka Connect. It specifies the host name of the Apache Kafka server and the client credentials to use when connecting to it. It also tells Kafka Connect which converter to use (JSON) when serializing messages for MongoDB.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;mongodb.properties&lt;/em&gt; file contains additional configuration for the MongoDB sink connector. This configuration includes the MongoDB connection URI, database and collection to use for the saved messages. It also specifies the converter to use for the data (JSON again). In particular, note the &lt;em&gt;topics&lt;/em&gt; parameter, which specifies the list of topics to monitor/save in MongoDB.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Find additional properties to control how data is handled by the sink connector in the official &lt;a href=&#34;https://docs.mongodb.com/kafka-connector/master/kafka-sink/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kafka Sink Connector documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once the configuration file has been created, deploy Apache Kafka on Kubernetes using the Helm chart:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install kafka bitnami/kafka -f values.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wait for a few minutes until the chart is deployed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Confirm that the Apache Kafka and Kafka Connect pods are running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get pods
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see something like the output below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/messaging-and-integration/kafka-mongodb/pods.png&#34; alt=&#34;Running pods&#34;  /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/kafka#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the Bitnami Apache Kafka Helm chart&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-4-test-the-integration&#34;&gt;Step 4: Test the integration&lt;/h2&gt;
+&lt;p&gt;You can now proceed to test the integration, by publishing messages to the Apache Kafka topic &lt;em&gt;mytopic&lt;/em&gt; and then checking if the messages were streamed and saved to MongoDB. Follow the steps below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;em&gt;kafka_jaas.conf&lt;/em&gt; file with the content below. Replace the KAFKA-USER and KAFKA-PASSWORD placeholders with the values used in &lt;a href=&#34;#step-3-deploy-apache-kafka-and-kafka-connect-on-kubernetes&#34;&gt;Step 3&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;KafkaClient &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    org.apache.kafka.common.security.plain.PlainLoginModule required
+    &lt;span class=&#34;nv&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;KAFKA-USER&amp;#34;&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;KAFKA-PASSWORD&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;em&gt;client.properties&lt;/em&gt; file with the content below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;security.protocol&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;SASL_PLAINTEXT
+sasl.mechanism&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;PLAIN
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create an Apache Kafka client pod and copy the files above to it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl run kafka-client --restart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Never&amp;#39;&lt;/span&gt; --image docker.io/bitnami/kafka:2.5.0-debian-10-r96 --namespace default --command -- sleep infinity
+kubectl cp --namespace default client.properties kafka-client:/tmp/client.properties
+kubectl cp --namespace default kafka_jaas.conf kafka-client:/tmp/kafka_jaas.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to the Apache Kafka client pod console:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; --tty -i kafka-client --namespace default -- bash
+&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;KAFKA_OPTS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;-Djava.security.auth.login.config=/tmp/kafka_jaas.conf&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;At the pod console, publish one or more messages to the &lt;em&gt;mytopic&lt;/em&gt; topic. Ensure that the messages are formatted in JSON, as shown in the example below.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kafka-console-producer.sh --producer.config /tmp/client.properties --broker-list kafka-0.kafka-headless.default.svc.cluster.local:9092 --topic mytopic
+&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;hello&amp;#34;&lt;/span&gt;:&lt;span class=&#34;s2&#34;&gt;&amp;#34;world&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;foo&amp;#34;&lt;/span&gt;:&lt;span class=&#34;s2&#34;&gt;&amp;#34;bar&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Exit the Apache Kafka client pod.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a new MongoDB client pod:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl run --namespace default mongodb-client --rm --tty -i --restart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Never&amp;#39;&lt;/span&gt; --image docker.io/bitnami/mongodb:4.2.8-debian-10-r39 --command -- bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;At the MongoDB client pod console, log in to the MongoDB client pod using the &lt;em&gt;user&lt;/em&gt; account credentials defined in &lt;a href=&#34;#step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mongo admin --host &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb&amp;#34;&lt;/span&gt; --authenticationDatabase mydb -u user -p MONGODB-USER-PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Confirm that the messages sent previously are saved in the &lt;em&gt;sink&lt;/em&gt; collection in the &lt;em&gt;mydb&lt;/em&gt; database:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;use mydb
+db.sink.find&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see the output below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/messaging-and-integration/kafka-mongodb/mongodb.png&#34; alt=&#34;Query results&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;At this point, the integration between Apache Kafka and MongoDB is complete. Messages sent to specified topics in Apache Kafka will be automatically transferred and saved in MongoDB, where they can be further queried, analyzed or modified.&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;p&gt;To learn more about the topics discussed in this guide, use the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Apache Kafka Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami MongoDB Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://kafka.apache.org/documentation/#connectapi&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Kafka Connect API&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.mongodb.com/kafka-connector/master/kafka-sink/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MongoDB Kafka Sink Connector guide &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with Kafka</title>
+      
+      <link>/guides/messaging-and-integration/kafka-gs/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/messaging-and-integration/kafka-gs/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;what-is-kafka&#34;&gt;What Is Kafka?&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://kafka.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Kafka&lt;/a&gt; is a distributed streaming platform built for publishing, consuming, storing, and processing streams of records. It’s built to run as a cluster of servers potentially across multiple data centers, and to focus on performance and reliability.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;Before you begin, there are a few tools you will need:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.docker.com/get-docker/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Desktop&lt;/a&gt;. You’ll run your Kafka server in a container to ease the setup. If you’d prefer to run Kafka natively, checkout the&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://kafka.apache.org/quickstart&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kafka Quickstart guide&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.docker.com/compose/install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Compose&lt;/a&gt;. Kafka has a dependency on &lt;a href=&#34;https://zookeeper.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Zookeeper&lt;/a&gt;, so instead you can use a &lt;code&gt;docker-compose.yml&lt;/code&gt; file, referenced later, to make standing up your Kafka server easier.
+Your text editor or IDE of choice.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.oracle.com/java/technologies/javase-downloads.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JDK 1.8&lt;/a&gt; or newer.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This example has been written in Java, but if you’d like to see the example in other languages, to see the whole thing put together, you can find these &lt;a href=&#34;https://github.com/BrianMMcClain/kafka-getting-started&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;on GitHub&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;using-kafka&#34;&gt;Using Kafka&lt;/h2&gt;
+&lt;p&gt;To ease the setup of your Kafka server, you can run Kafka and Zookeeper in containers, already built and configured, ready to go. Ensure that Docker is running, and then stand up your Kafka server by running the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ curl  https://raw.githubusercontent.com/BrianMMcClain/kafka-getting-started/master/docker-compose.yml -o docker-compose.yml
+
+$ docker-compose up
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will do a few things:&lt;/p&gt;
+&lt;p&gt;Start the Zookeeper container and expose port 2182
+Start the Kafka container and expose ports 9092 and 29092
+Configure Kafka so it knows where Zookeeper is&lt;/p&gt;
+&lt;p&gt;You’ll see quite a few logs fly by, but it should end with something like the following, letting you know that Kafka is up and running:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kafka_1      | [2020-04-17 16:36:02,261] INFO Kafka startTimeMs: 1587141362239 (org.apache.kafka.common.utils.AppInfoParser)
+kafka_1      | [2020-04-17 16:36:02,263] INFO [KafkaServer id=1001] started (kafka.server.KafkaServer)
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;building-the-application&#34;&gt;Building the Application&lt;/h2&gt;
+&lt;p&gt;The application has two parts: the emitter, which will generate and send messages to Kafka, and the receiver, which will constantly listen for messages from Kafka and print them to the console. Both applications share a similar &lt;code&gt;pom.xml&lt;/code&gt; file, which only has one dependency:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.apache.kafka&amp;lt;/groupId&amp;gt;
+	&amp;lt;artifactId&amp;gt;kafka-clients&amp;lt;/artifactId&amp;gt;
+	&amp;lt;version&amp;gt;2.5.0&amp;lt;/version&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This Kafka client will handle everything from the connection to the server, to sending messages, to polling the server for new messages.&lt;/p&gt;
+&lt;h3 id=&#34;building-the-emitter&#34;&gt;Building The Emitter&lt;/h3&gt;
+&lt;p&gt;The entirety of the code for the emitter can be found in the &lt;code&gt;emitter.java&lt;/code&gt; file. There’s a few things going on in this code, so as usual it’s best to walk through it step  by step:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// Set the properties to use when connecting to Kafka
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Properties&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;props&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Properties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;props&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;bootstrap.servers&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;localhost:29092&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;props&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;key.serializer&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;org.apache.kafka.common.serialization.StringSerializer&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;props&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;value.serializer&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;org.apache.kafka.common.serialization.StringSerializer&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;Producer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;producer&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;KafkaProducer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;props&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here is where the connection and communication with Kafka is configured. First, &lt;code&gt;bootstrap.servers&lt;/code&gt; is defined, providing one or more servers to the client to make the initial connection with Kafka. In this example, there’s only one server, but in a production cluster you could provide multiple servers. This will tell the Kafka client who to talk to so that it can find out the information for the rest of the Kafka cluster.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;key.serializer&lt;/code&gt; and &lt;code&gt;value.serializer&lt;/code&gt; tell the client how to serialize the data sent to the Kafka server. There’s a couple of options for which serializer to use, but to keep the example simple and knowing you’ll only be sending strings to Kafka, you can set both to use the &lt;code&gt;StringSerializer&lt;/code&gt;. As always, if you’re interested in learning more, make sure to check out the &lt;a href=&#34;https://kafka.apache.org/090/javadoc/index.html?org/apache/kafka/clients/producer/KafkaProducer.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;//Begin reading user input
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Ready to send messages. Type \&amp;#34;exit\&amp;#34; to quit.&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;gt; &amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;console&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;readLine&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// Close application when user types &amp;#34;exit&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equalsIgnoreCase&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;exit&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    	&lt;span class=&#34;n&#34;&gt;producer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;close&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+		&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;exit&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+	&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+	&lt;span class=&#34;c1&#34;&gt;// Send the message to the queue
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;	&lt;span class=&#34;n&#34;&gt;producer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ProducerRecord&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TOPIC_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;key-&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Sent &amp;#39;&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;#39;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once connected to Kafka, the code begins a loop of taking the user input, checking if they wish to exit, and—if not—sending their input to Kafka. Earlier in the code, the constant &lt;code&gt;TOPIC_NAME&lt;/code&gt; is set to &lt;code&gt;hello&lt;/code&gt;, which is where all messages will be sent to. None  of this code is specific to Kafka, except for this line:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;n&#34;&gt;producer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ProducerRecord&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TOPIC_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This creates a new &lt;code&gt;ProducerRecord&lt;/code&gt;, taking in three arguments: a topic, key, and message. This record is then sent to Kafka using the &lt;code&gt;producer&lt;/code&gt; created earlier in the code. While the &lt;code&gt;message&lt;/code&gt; is simply the input that was read from the user, the &lt;code&gt;key&lt;/code&gt; is a bit less obvious. In short, keys in Kafka are used to figure out how to distribute messages. This key can be set to the same value for all messages if you want to guarantee all messages go to one consumer. This could be a unique key to distribute messages across multiple consumers. In this case, the key is set to &lt;code&gt;null&lt;/code&gt; so that the consumer will be chosen at random.&lt;/p&gt;
+&lt;p&gt;With this, your producer is ready to start sending messages! Now it’s time to focus on the other end: receiving messages.&lt;/p&gt;
+&lt;h3 id=&#34;building-the-consumer&#34;&gt;Building the Consumer&lt;/h3&gt;
+&lt;p&gt;Much of the consumer code, found in the &lt;a href=&#34;https://github.com/BrianMMcClain/kafka-getting-started/blob/master/java/consumer/src/main/java/com/github/brianmmcclain/kafkagettingstarted/consumer.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;consumer.java file&lt;/a&gt;, will look similar to the producer. Or at least setting up the connection will.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;n&#34;&gt;Properties&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;props&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Properties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;props&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;bootstrap.servers&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;localhost:29092&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;props&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;group.id&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;kafka-getting-started&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;props&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;key.deserializer&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;org.apache.kafka.common.serialization.StringDeserializer&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;props&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;value.deserializer&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;org.apache.kafka.common.serialization.StringDeserializer&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;KafkaConsumer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;consumer&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;KafkaConsumer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;props&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The one additional property that’s set here is &lt;code&gt;group.id&lt;/code&gt;. This property defines which consumer group the consumer is part of. A consumer group controls how consumers are assigned partitions of a topic, and every consumer that connects with the same group ID will be placed in the same consumer group. Other than that, the other properties are the same as the emitter.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// Subscribe to the topic in Kafka
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;consumer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;subscribe&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Arrays&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;asList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;TOPIC_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the consumer is created and connected, it is then subscribed to a topic. Much like the emitter, &lt;code&gt;TOPIC_NAME&lt;/code&gt; is defined earlier in the code as a string.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// Begin polling Kafka for new messages
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Waiting for messages. To exit press CTRL+C\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;ConsumerRecords&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;records&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;consumer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;poll&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Duration&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;ofMillis&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ConsumerRecord&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;record&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;records&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;record&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, the consumer begins polling Kafka for new messages. For each new message that it received, it prints it out to the console.&lt;/p&gt;
+&lt;h2 id=&#34;running-the-example&#34;&gt;Running the Example&lt;/h2&gt;
+&lt;p&gt;With Kafka running from earlier in the example, all that’s left is to run the emitter and the consumer. Open two terminals, one in the &lt;code&gt;java/emitter&lt;/code&gt; directory and one in the &lt;code&gt;java/consumer&lt;/code&gt; directory. To run the consumer, you can run the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./mvnw clean package
+java -jar target/kafka-getting-started-consumer-0.0.1-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Likewise, you can run the emitter with the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./mvnw clean package
+java -jar target/kafka-getting-started-emitter-0.0.1-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;After a few moments, both will be running. You’ll be greeted with a prompt for input from the emitter, and you can start sending messages to Kafka!&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Ready to send messages. Type &amp;quot;exit&amp;quot; to quit.
+&amp;gt; 1
+Sent &#39;1&#39;
+&amp;gt; 2
+Sent &#39;2&#39;
+&amp;gt; 3
+Sent &#39;3&#39;
+&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As you send messages from the emitter, you should start seeing them arrive on the consumer:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1
+2
+3
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;This example covers just the very basics of using Kafka in your code, but there’s a whole lot more to learn. More than anything, if you’re looking to learn more about Kafka, make sure to check out the &lt;a href=&#34;https://kafka.apache.org/documentation/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;official documentation&lt;/a&gt; and just the &lt;a href=&#34;https://kafka.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Kafka&lt;/a&gt; site in general.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with RabbitMQ</title>
+      
+      <link>/guides/messaging-and-integration/rabbitmq-gs/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/messaging-and-integration/rabbitmq-gs/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;what-is-rabbitmq&#34;&gt;What Is RabbitMQ?&lt;/h2&gt;
+&lt;p&gt;At a high level, &lt;a href=&#34;https://www.rabbitmq.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;RabbitMQ&lt;/a&gt; is an open source message broker. A message broker accepts and translates messages from a producer (the message sender) and holds it in a queue so that a consumer (the message receiver) can retrieve it. This allows for multiple producers and consumers to share the same queue without having to directly pass messages between each other. What RabbitMQ excels at is doing this at scale while staying lightweight and easy to deploy.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;Before you begin, there are a few tools you will need:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.docker.com/get-docker/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker&lt;/a&gt;. You’ll run your RabbitMQ server in a container to ease the setup. If you’d prefer to run RabbitMQ natively, checkout the documentation on &lt;a href=&#34;https://www.rabbitmq.com/download.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;RabbitMQ’s website&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Your text editor or IDE of choice.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.oracle.com/java/technologies/javase-downloads.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JDK 1.8&lt;/a&gt; or newer.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can see the &lt;a href=&#34;https://github.com/BrianMMcClain/rabbitmq-getting-started&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;completed example on GitHub&lt;/a&gt;, including examples in other languages.&lt;/p&gt;
+&lt;h2 id=&#34;using-rabbitmq&#34;&gt;Using RabbitMQ&lt;/h2&gt;
+&lt;p&gt;To ease the setup of our RabbitMQ node, you’ll run the RabbitMQ container image from Docker Hub. Luckily, a lot of work has gone into this container image and there’s a lot of settings that you could tweak to meet your exact needs. For this example, you’ll just need a simple single-node RabbitMQ server, so you won’t need to change any of the default settings. You can run the container image with the following:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;docker run -it --rm -p 5672:5672 -p 15672:15672 rabbitmq:3-management&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Here, you’ll run the &lt;code&gt;3-management tag&lt;/code&gt; of the RabbitMQ container image. The &lt;code&gt;3-management&lt;/code&gt; tag of this image ships with the &lt;a href=&#34;https://www.rabbitmq.com/management.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;management plug-in&lt;/a&gt;, which will provide an HTTP API and web-based UI for your RabbitMQ server. You’ll tell Docker to run this with an interactive shell with the &lt;code&gt;-it&lt;/code&gt; option, as well as tell it to automatically remove the container when it exits with the &lt;code&gt;-rm&lt;/code&gt; option. You’ll also forward a couple of ports (5672 for the RabbitMQ server and 15672 for the HTTP API and web UI) from your local machine to the container, which means that you can connect to it on &lt;code&gt;localhost&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To access the web UI, go to &lt;a href=&#34;http://localhost:15672&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:15672&lt;/a&gt;. The &lt;code&gt;username&lt;/code&gt; and &lt;code&gt;password&lt;/code&gt; are both &lt;code&gt;guest&lt;/code&gt;. Here you can change settings, add and remove users, as well as view diagnostic information from the server.&lt;/p&gt;
+&lt;h3 id=&#34;building-the-emitter&#34;&gt;Building the Emitter&lt;/h3&gt;
+&lt;p&gt;First, you’ll need some code to emit messages to RabbitMQ. There are &lt;a href=&#34;https://www.rabbitmq.com/devtools.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;client libraries&lt;/a&gt; for many languages and frameworks, but this example has been written in Java. You can find examples for other languages, as well as the full example put together, &lt;a href=&#34;https://github.com/BrianMMcClain/rabbitmq-getting-started&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Before you can begin sending messages to RabbitMQ, you’ll first need to connect to the server.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// Connect to the RabbitMQ server
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ConnectionFactory&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;factory&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ConnectionFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;factory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setHost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;Connection&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;connection&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;factory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newConnection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here, a &lt;code&gt;ConnectionFactory&lt;/code&gt; is used to create the new connection. Since the server does not require a username or password, only the hostname needs to be set. Also, since all of the container’s required ports are published, you can connect on &lt;code&gt;localhost&lt;/code&gt;. Finally, since the &lt;code&gt;factory.newConnection()&lt;/code&gt; call can throw both an &lt;code&gt;IOException&lt;/code&gt; and a &lt;code&gt;TimeoutException&lt;/code&gt;, you can start the connection in a new &lt;code&gt;try&lt;/code&gt; block.&lt;/p&gt;
+&lt;p&gt;Great! You’ve connected to the RabbitMQ server, but now you’ll need to create a &lt;a href=&#34;https://www.rabbitmq.com/channels.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;channel&lt;/a&gt; (a logical connection within your physical connection) to communicate over, as well as a &lt;a href=&#34;https://www.rabbitmq.com/queues.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;queue&lt;/a&gt; to send messages to. Make sure to refer to the RabbitMQ documentation for more information on both channels and queues. This can be done in a few lines of code:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// Create a channel
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Channel&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;channel&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;connection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;createChannel&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;// Create and connect to the queue. The arguments, in order, are:
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// queue - Name of the queue we are connecting on
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// durable - If true, RabbitMQ will write messages to disk
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// exclusive - If true, only this connection may connect to the queue
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// autoDelete - If true, the queue will be deleted when it is no longer in use
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// The final argument takes a Map of additional optional arguments
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;channel&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;queueDeclare&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;QUEUE_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As noted in the comments of the code, &lt;code&gt;connection.createChannel()&lt;/code&gt; will create the channel for you without any arguments. Creating and connecting to the queue with &lt;code&gt;channel.queueDeclare()&lt;/code&gt;, however, will take a few arguments. Make sure to read the comments explaining each argument. Another thing to note is that if this queue already exists, the code will simply connect to the existing one.&lt;/p&gt;
+&lt;p&gt;With this code, you’ve successfully done all of the setup needed to start sending messages!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// Begin reading user input
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;gt; &amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;console&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;readLine&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+	
+  &lt;span class=&#34;c1&#34;&gt;// Send the message to the queue
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;channel&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;basicPublish&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;QUEUE_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getBytes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Sent &amp;#39;&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;#39;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The example will continuously loop, prompting the user to input the message  they wish to send, then send it to RabbitMQ with the &lt;code&gt;channel.basicPublish()&lt;/code&gt; method. From there, all that’s left is to close out the initial &lt;code&gt;try&lt;/code&gt; block by catching any exceptions that may occur.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+	&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the sake of simplicity, the example will just catch any exception thrown, but as always it’s best practice to catch the specific exceptions that the various methods throw. Connecting to the server may throw a &lt;code&gt;TimeoutException&lt;/code&gt;, for example, but publishing the message could throw an &lt;code&gt;IOException&lt;/code&gt;. Once it’s all put together, the code looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.github.brianmmcclain.rabbitmqgettingstarted&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.rabbitmq.client.ConnectionFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.rabbitmq.client.Connection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.rabbitmq.client.Channel&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;emitter&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+	&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;QUEUE_NAME&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;hello&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+	&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+		
+		&lt;span class=&#34;c1&#34;&gt;// Connect to the RabbitMQ server
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;		&lt;span class=&#34;n&#34;&gt;ConnectionFactory&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;factory&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ConnectionFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+		&lt;span class=&#34;n&#34;&gt;factory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setHost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+		&lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+			&lt;span class=&#34;n&#34;&gt;Connection&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;connection&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;factory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newConnection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+				
+			&lt;span class=&#34;c1&#34;&gt;// Create a channel
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;n&#34;&gt;Channel&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;channel&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;connection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;createChannel&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+			
+			&lt;span class=&#34;c1&#34;&gt;// Create and connect to the queue. The arguments, on order, are:
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;c1&#34;&gt;// queue - Name of the queue we are connecting on
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;c1&#34;&gt;// durable - If true, RabbitMQ will write messages to disk
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;c1&#34;&gt;// exclusive - If true, only this connection may connect to the queue
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;c1&#34;&gt;// autoDelete - If true, the queue will be deleted when it is no longer in use
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;c1&#34;&gt;// The final argument takes a Map of additional optional arguments
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;n&#34;&gt;channel&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;queueDeclare&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;QUEUE_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+			
+			&lt;span class=&#34;c1&#34;&gt;// Begin reading user input
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+				&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;gt; &amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+				&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;console&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;readLine&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+				
+				&lt;span class=&#34;c1&#34;&gt;// Send the message to the queue
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;				&lt;span class=&#34;n&#34;&gt;channel&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;basicPublish&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;QUEUE_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getBytes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+				&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Sent &amp;#39;&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;#39;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+			&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+		&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+			&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+		&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+	&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you’d like to build the emitter yourself, check out the &lt;a href=&#34;https://github.com/BrianMMcClain/rabbitmq-getting-started/tree/master/java/emitter&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete example on GitHub&lt;/a&gt; which includes the &lt;code&gt;pom.xml&lt;/code&gt; file with all the required dependencies. You can build the code by running:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;./mvnw clean package&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;And run it with:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;java -jar target/rabbitmq-getting-started-emitter-0.0.1-SNAPSHOT.jar&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;building-the-consumer&#34;&gt;Building the Consumer&lt;/h3&gt;
+&lt;p&gt;Now that you’re emitting messages to RabbitMQ, you’ll need some code to consume those messages. The code to connect to the server is the same as the emitter. You’ll set up a &lt;code&gt;ConnectionFactory&lt;/code&gt; to connect on &lt;code&gt;localhost&lt;/code&gt; as well as create a channel with the &lt;code&gt;createChannel()&lt;/code&gt; method:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// Connect to the RabbitMQ server
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ConnectionFactory&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;factory&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ConnectionFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;factory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setHost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;Connection&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;connection&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;factory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newConnection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+	&lt;span class=&#34;c1&#34;&gt;// Create a channel and connect it to the queue
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;Channel&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;channel&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;connection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;createChannel&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+
+  &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Waiting for messages. To exit press CTRL+C\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You’ll need to do something a bit different for consuming messages, however, as the code doesn’t know when messages are coming in. For this limited example, sitting around waiting for the next message may be fine, but that may not be the case for a more realistic use case., So, you’ll need to create a callback. That way any time your code receives a new message, the callback will be invoked with the details of the message.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// Setup the callback to be invoked when a new message is received
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DeliverCallback&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;deliverCallback&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;consumerTag&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;delivery&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;// Read the message from the message object and print to stdout
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;delivery&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getBody&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;UTF-8&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34; &amp;gt; &amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the callback defined, you’ll then need to tell the server you’re ready to start consuming messages from the queue. You can do this with the &lt;code&gt;basicConsume()&lt;/code&gt; method by providing it with the queue you wish to consume from as well as the callback to invoke when a message is received:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// Begin consuming messages from the queue. The second argument will tell
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
+ &lt;span class=&#34;c1&#34;&gt;// RabbitMQ to automatically consider the message acknowledged once received.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;channel&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;basicConsume&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;QUEUE_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;deliverCallback&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;consumerTag&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, as with the emitter, all that remains is to handle any exceptions thrown in the &lt;code&gt;try&lt;/code&gt; block. Take a look at the whole code put together:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.github.brianmmcclain.rabbitmqgettingstarted&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.rabbitmq.client.Channel&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.rabbitmq.client.Connection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.rabbitmq.client.ConnectionFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.rabbitmq.client.DeliverCallback&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;consumer&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+	&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;QUEUE_NAME&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;hello&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+	&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+		
+		&lt;span class=&#34;c1&#34;&gt;// Connect to the RabbitMQ server
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;		&lt;span class=&#34;n&#34;&gt;ConnectionFactory&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;factory&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ConnectionFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+		&lt;span class=&#34;n&#34;&gt;factory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setHost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+		
+		&lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+			&lt;span class=&#34;n&#34;&gt;Connection&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;connection&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;factory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newConnection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+
+			&lt;span class=&#34;c1&#34;&gt;// Create a channel and connect it to the queue
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;n&#34;&gt;Channel&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;channel&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;connection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;createChannel&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+			&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Waiting for messages. To exit press CTRL+C\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+			&lt;span class=&#34;c1&#34;&gt;// Setup the callback to be invoked when a new message is received
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;n&#34;&gt;DeliverCallback&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;deliverCallback&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;consumerTag&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;delivery&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+				&lt;span class=&#34;c1&#34;&gt;// Read the message from the message object and print to stdout
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;				&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;delivery&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getBody&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;UTF-8&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+				&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34; &amp;gt; &amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+			&lt;span class=&#34;o&#34;&gt;};&lt;/span&gt;
+
+			&lt;span class=&#34;c1&#34;&gt;// Begin consuming messages from the queue. The second argument will tell
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;c1&#34;&gt;// RabbitMQ to automatically consider the message acknowledged once received.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;			&lt;span class=&#34;n&#34;&gt;channel&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;basicConsume&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;QUEUE_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;deliverCallback&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;consumerTag&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;});&lt;/span&gt;
+		&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+			&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getMessage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+		&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+	&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Much as you can with the emitter, you can see the entire example for the consumer &lt;a href=&#34;https://github.com/BrianMMcClain/rabbitmq-getting-started/tree/master/java/consumer&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;on GitHub&lt;/a&gt; which includes the &lt;code&gt;pom.xml&lt;/code&gt; file with all the required dependencies. You can build the code by running:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;./mvnw clean package&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;And run it with:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;java -jar target/rabbitmq-getting-started-emitter-0.0.1-SNAPSHOT.jar&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;running-the-code&#34;&gt;Running the Code&lt;/h2&gt;
+&lt;p&gt;Assuming you’ve already started the RabbitMQ container, you can run this example by opening two terminals, running the emitter in one and the consumer in the other.&lt;/p&gt;
+&lt;p&gt;Terminal 1&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ java -jar target/rabbitmq-getting-started-emitter-0.0.1-SNAPSHOT.jar
+&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Terminal 2&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ java -jar target/rabbitmq-getting-started-consumer-0.0.1-SNAPSHOT.jar
+Waiting for messages. To exit press CTRL+C
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, in the first terminal, you may begin typing the message you’d like to send, pressing [Enter] to send it:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ java -jar target/rabbitmq-getting-started-emitter-0.0.1-SNAPSHOT.jar
+&amp;gt; Hello RabbitMQ!
+Sent &#39;Hello RabbitMQ!&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In the second terminal, you should see that the message was received:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ java -jar target/rabbitmq-getting-started-consumer-0.0.1-SNAPSHOT.jar
+Waiting for messages. To exit press CTRL+C
+
+ &amp;gt; Hello RabbitMQ!
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Congratulations! You’ve just sent and received your first message using RabbitMQ!&lt;/p&gt;
+&lt;h3 id=&#34;multiple-consumers&#34;&gt;Multiple Consumers&lt;/h3&gt;
+&lt;p&gt;There’s still so much that RabbitMQ can offer with regards to how messages can be sent and received, different delivery methods, and different ways to include information around your messages. For example, you may wish for all consumers to receive a message, or for exactly one consumer to receive a message. To learn more make sure to &lt;a href=&#34;https://www.rabbitmq.com/getstarted.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;check out the documentation on the RabbitMQ website&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;One interesting scenario to explore is the case of multiple consumers. You can start multiple consumers and, as you’ll notice,  each message is delivered to only one consumer, alternating which consumer gets which message. Give it a try by opening up a third terminal and running another instance of the consumer. Try sending several messages from the emitter:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ java -jar target/rabbitmq-getting-started-emitter-0.0.1-SNAPSHOT.jar
+&amp;gt; 1
+Sent &#39;1&#39;
+&amp;gt; 2
+Sent &#39;2&#39;
+&amp;gt; 3
+Sent &#39;3&#39;
+&amp;gt; 4
+Sent &#39;4&#39;
+&amp;gt; 5
+Sent &#39;5&#39;
+&amp;gt; 6
+Sent &#39;6&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You’ll notice that one consumer only received half of the messages:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ java -jar target/rabbitmq-getting-started-consumer-0.0.1-SNAPSHOT.jar
+Waiting for messages. To exit press CTRL+C
+
+ &amp;gt; 1
+ &amp;gt; 3
+ &amp;gt; 5
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;While the other consumer received the other half:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ java -jar target/rabbitmq-getting-started-consumer-0.0.1-SNAPSHOT.jar
+Waiting for messages. To exit press CTRL+C
+
+ &amp;gt; 2
+ &amp;gt; 4
+ &amp;gt; 6
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is one pattern that can be leveraged for scenarios where you only need one consumer to process a message. But it will allow you to easily scale up to meet the workload your environment needs just by adding more consumers.&lt;/p&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;This overview has only scratched the surface of the capabilities of RabbitMQ;  there are many more docs that lay out  &lt;a href=&#34;https://www.rabbitmq.com/getstarted.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;how to route and deliver messages&lt;/a&gt;, as well as how to &lt;a href=&#34;https://www.rabbitmq.com/clustering.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;build and configure bigger, more robust and reliable clusters&lt;/a&gt;. The &lt;a href=&#34;https://www.rabbitmq.com/documentation.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;official RabbitMQ documentation&lt;/a&gt; is very thorough and covers both operation and development using RabbitMQ.&lt;/p&gt;
+&lt;p&gt;Additionally, if you’re a Spring developer, make sure to check out &lt;a href=&#34;/guides/event-streaming/scs-gs&#34;&gt;Getting Started With Spring Cloud Stream&lt;/a&gt;, which is a very powerful way of implementing messaging using the message broker of your choice. Or, if you are using Kubernetes, check out &lt;a href=&#34;https://tanzu.vmware.com/content/blog/introducing-rabbitmq-for-kubernetes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;RabbitMQ for Kubernetes&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

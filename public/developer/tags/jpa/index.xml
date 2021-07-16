@@ -1,0 +1,33 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – JPA</title>
+    <link>/tags/jpa/</link>
+    <description>Recent content in JPA on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 21 Apr 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/jpa/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Samples: Spring Boot Data REST Demo with JPA</title>
+      
+      <link>/samples/spring-boot-data-rest-demo/</link>
+      <pubDate>Tue, 21 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-boot-data-rest-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

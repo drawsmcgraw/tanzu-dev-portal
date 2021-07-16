@@ -1,0 +1,424 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Cloud Foundry</title>
+    <link>/tags/cloud-foundry/</link>
+    <description>Recent content in Cloud Foundry on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 28 Jul 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/cloud-foundry/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Getting Started with Cloud Foundry for Kubernetes</title>
+      
+      <link>/guides/kubernetes/cf4k8s-gs/</link>
+      <pubDate>Wed, 29 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/cf4k8s-gs/</guid>
+      <description>
+
+        
+        &lt;blockquote&gt;
+&lt;p&gt;Updated October 2020: CF CLI version 7+ and 6 CPU availability now required, removed metrics server install, new values added to the install yaml eliminate steps from before, and new Kubernetes rendering file. Overall this simplifies installation from previous iterations.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/cloudfoundry/cf-for-k8s.git&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CF-for-k8s&lt;/a&gt; brings Cloud Foundry to Kubernetes.&lt;/p&gt;
+&lt;p&gt;Cloud Foundry is an open-source, multi-cloud application platform as a service governed by the Cloud Foundry Foundation, a 501 organization.&lt;/p&gt;
+&lt;p&gt;Using Cloud Foundry developers only have to focus on writing and delivering code as CF takes care of the rest. Developers enter &lt;code&gt;cf push&lt;/code&gt; into the command line and their app will be deployed immediately receiving an endpoint. The CF platform will take care of containerizing the source code into a working app with the required dependencies, can be configured to bind to a database, connect to a market place and much more.&lt;/p&gt;
+&lt;p&gt;The cf-for-k8s platform adds a higher level of abstraction to Kubernetes by removing the sharp learning curve required for teams, developers don&amp;rsquo;t have to know Kubernetes they only have to &lt;code&gt;cf push&lt;/code&gt;. Kubernetes adds new possibilities to Cloud Foundry opening up the massive Kubernetes ecosystem.&lt;/p&gt;
+&lt;p&gt;In this guide you&amp;rsquo;ll deploy Cloud Foundry on Kubernetes locally.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before you begin&lt;/h2&gt;
+&lt;h3 id=&#34;machine-requirements&#34;&gt;Machine Requirements&lt;/h3&gt;
+&lt;p&gt;Currently cf-for-k8s supports Kubernetes 1.15.x or 1.16.x, the config yaml file we are using to make our kind cluster will make a cluster with the following requirements, see that your computer can handle them:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;have a minimum of 1 node&lt;/li&gt;
+&lt;li&gt;have a minimum of 6 CPU, 8GB memory per node&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;tools-required&#34;&gt;Tools required&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You will need a few tools before beginning and once set up installation usually takes 10 minutes or less.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;CF CLI version requirement changed to version 7+&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.cloudfoundry.org/cf-cli/install-go-cli.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Foundry CLI&lt;/a&gt; (version 7+) to talk to Cloud Foundry&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew install cloudfoundry/tap/cf-cli
+# verify install 
+cf version
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You will need &lt;code&gt;kubectl&lt;/code&gt; to interact with your cluster &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl install instructions&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew install kubectl
+# verify install 
+kubectl version --client
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;KinD (Kubernetes in Docker) to instantiate your local cluster &lt;a href=&#34;https://kind.sigs.k8s.io/docs/user/quick-start/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kind install instructions&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew install kind
+# verify install 
+kind version
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://bosh.io/docs/cli-v2-install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bosh CLI&lt;/a&gt; the &lt;code&gt;./hack/generate-values.sh&lt;/code&gt; script will use the Bosh CLI to generate certificates, keys, and passwords in the file &lt;code&gt;./cf-install-values.yml&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew install cloudfoundry/tap/bosh-cli
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://k14s.io/#install&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kapp&lt;/a&gt; (v0.21.0+) will aid you to deploy cf-for-k8s to your cluster&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew tap k14s/tap
+brew install ytt kapp
+kapp --version
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://k14s.io/#install&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ytt&lt;/a&gt; (v0.26.0+) will help create templates to deploy cf-for-k8s&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac you should have this installed from the above command, to verify:
+&lt;pre&gt;&lt;code&gt;ytt version
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;DockerHub&lt;/a&gt; is the image registry used in this guide please make an account if you don&amp;rsquo;t have one they are free and quickly made.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;clone-the-cf-for-k8s-repo&#34;&gt;Clone the CF for K8s repo&lt;/h2&gt;
+&lt;p&gt;Clone the repo to preferred location and cd into it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/cloudfoundry/cf-for-k8s.git &amp;amp;&amp;amp; cd cf-for-k8s
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;setup-your-local-k8s-cluster-with-kind&#34;&gt;Setup your local k8s cluster with KinD&lt;/h2&gt;
+&lt;p&gt;Create your cluster using the config yaml from the cf-for-k8s repo obtained above.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kind create cluster --config=./deploy/kind/cluster.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Point your kubeconfig to your new cluster.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl cluster-info --context kind-kind
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;generate-the-yaml-used-to-deploy-cf-for-k8s&#34;&gt;Generate the yaml used to deploy CF for k8s&lt;/h2&gt;
+&lt;p&gt;In this script you use &lt;code&gt;vcap.me&lt;/code&gt; as your CF domain with the flag &lt;code&gt;-d&lt;/code&gt;, this way you can avoid configuring DNS for a domain.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;./hack/generate-values.sh&lt;/code&gt; script will generate certificates, keys, passwords, and configuration needed to deploy into `./cf-install-values.yml&#39;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./hack/generate-values.sh -d vcap.me &amp;gt; ./cf-install-values.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Append the app_registry credentials to your DockerHub registry to the bottom of the &lt;code&gt;./cf-install-values.yml&lt;/code&gt; replacing with your information. You can copy/paste  or use the following command.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The repeated username is a requirement for DockerHub, this setting changes with some container registries. Also, don&amp;rsquo;t forget to add the quotes.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;To use another container registry follow the &lt;a href=&#34;https://github.com/cloudfoundry/cf-for-k8s/blob/master/docs/deploy.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;instructions under step 3&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;cat &amp;gt;&amp;gt; cf-install-values.yml &amp;lt;&amp;lt; EOL
+app_registry:
+  hostname: https://index.docker.io/v1/
+  repository_prefix: &amp;quot;&amp;lt;DockerHub-username&amp;gt;&amp;quot;
+  username: &amp;quot;&amp;lt;DockerHub-username&amp;gt;&amp;quot;
+  password: &amp;quot;&amp;lt;DockerHub-password&amp;gt;&amp;quot;
+EOL
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;There are a few more lines to add to your cf-install-values.yml, like adding a metrics server because KinD doesn&amp;rsquo;t come with one.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat &amp;gt;&amp;gt; cf-install-values.yml &amp;lt;&amp;lt; EOL
+add_metrics_server_components: true
+enable_automount_service_account_token: true
+metrics_server_prefer_internal_kubelet_address: true
+remove_resource_requirements: true
+use_first_party_jwt_tokens: true
+
+load_balancer:
+  enable: false
+EOL
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, use cf-install-values.yml to render the final Kubernetes template to raw Kubernetes configuration.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ytt -f config -f ./cf-install-values.yml &amp;gt; ./cf-for-k8s-rendered.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;deploy-cf-for-k8s&#34;&gt;Deploy CF for k8s&lt;/h2&gt;
+&lt;p&gt;You are ready to deploy cf-for-k8s using the &lt;code&gt;./cf-for-k8s-rendered.yml&lt;/code&gt; file created above. Once you deploy it should take around 10 minutes to finish.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The deployment has a timer and will exit with a timeout error if it takes too long. Assuming all previous steps were followed correctly enter the deployment command again to finish if it exits early.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;kapp deploy -a cf -f ./cf-for-k8s-rendered.yml -y
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;validate-the-deployment&#34;&gt;Validate the deployment&lt;/h2&gt;
+&lt;p&gt;Target your CF CLI to point to the new CF instance.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf api --skip-ssl-validation https://api.vcap.me
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Set the CF_ADMIN_PASSWORD environment variable to the CF administrative password, stored in the cf_admin_password key in the configuration-values/deployment-values.yml file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;CF_ADMIN_PASSWORD=&amp;quot;$(bosh interpolate ./cf-install-values.yml --path /cf_admin_password)&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Log into the installation as the admin user.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf auth admin &amp;quot;$CF_ADMIN_PASSWORD&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Enable Docker&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf enable-feature-flag diego_docker
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;A powerful feature provided by CF is multi-tenancy, where you can create a space for a team, an app or whatever your workflow requires.&lt;/p&gt;
+&lt;p&gt;Create and target an organization and space.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf create-org test-org
+cf create-space -o test-org test-space
+cf target -o test-org -s test-space
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;deploy-an-application-with-cf-push&#34;&gt;Deploy an application with &lt;code&gt;cf push&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;At last you can push the included sample &lt;code&gt;test-node-app&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf push test-node-app -p ./tests/smoke/assets/test-node-app
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;Or you can push any app you wish just cd into the directory and push the app with the following command.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf push APP-NAME
+&lt;/code&gt;&lt;/pre&gt;&lt;/blockquote&gt;
+&lt;p&gt;Once your app stages you can find it in Cloud Foundry with this command.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf apps
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The output in the terminal should look something as follows.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Getting apps in org test-org / space test-space as admin...
+OK
+
+name            requested state   instances   memory   disk   urls
+test-node-app   started           1/1         1G       1G     test-node-app.vcap.me
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To see the pods that have applications on your Cloud Foundry instance look in the &lt;code&gt;cf-workloads&lt;/code&gt; namespace.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get pods -n cf-workloads
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can now play with cf for k8s and deploy other apps and observe how it affects the Kubernetes infrastructure. Try other cf commands like &lt;code&gt;cf delete test-node-app&lt;/code&gt; and see what changes, enjoy you new cf for k8s instance.&lt;/p&gt;
+&lt;h2 id=&#34;delete-the-cf-for-k8s-deployment&#34;&gt;Delete the cf-for-k8s deployment&lt;/h2&gt;
+&lt;p&gt;You can delete the cf-for-k8s deployment from your cluster by running the following command.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kapp delete -a cf
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;delete-your-kind-cluster&#34;&gt;Delete your Kind cluster&lt;/h2&gt;
+&lt;p&gt;To delete your KinD cluster.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kind delete cluster
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;next-steps&#34;&gt;Next Steps&lt;/h2&gt;
+&lt;p&gt;Learn more about Cloud Foundry with the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/cloudfoundry/cf-for-k8s.git&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cf-for-k8s GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cloudfoundry.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cloudfoundry.org&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://katacoda.com/cloudfoundry-tutorials/scenarios/trycf&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Online CF Tutorial&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Python Like A Pro: How To Deploy Python Application Into Production</title>
+      
+      <link>/guides/python/cf-gs/</link>
+      <pubDate>Tue, 28 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/python/cf-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;In this guide, you&amp;rsquo;ll learn how to get a Python application into production in seconds.&lt;/p&gt;
+&lt;p&gt;Production is super important. It&amp;rsquo;s where your users meet your code and where you get recognition for all the hard work you&amp;rsquo;ve put in. Production is where your company competes, and where it gets rewarded for all the risks it&amp;rsquo;s taken &amp;mdash; large and small.&lt;/p&gt;
+&lt;p&gt;Getting code into production quickly and regularly is life changing for developers like yourself. It opens the door to true agility &amp;mdash; a huge win for you, your team, and your company. But if the path to production is littered with roadblocks, getting your applications out there will be tiring and time consuming.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s where Cloud Foundry comes in.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-cloud-foundry&#34;&gt;What Is Cloud Foundry?&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://cloudfoundry.org&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Foundry&lt;/a&gt; is an open-source platform that simplifies the lives of developers. Cloud Foundry&amp;rsquo;s &lt;a href=&#34;https://www.cloudfoundry.org/application-runtime/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;lsquo;Application Runtime&amp;rsquo;&lt;/a&gt; takes your application code &amp;mdash; written in Python or a number of other languages or frameworks &amp;mdash; and runs it on any cloud, including Azure, AWS, GCP, Kubernetes, or even vSphere VMs.&lt;/p&gt;
+&lt;p&gt;A unique feature of Cloud Foundry is its smooth developer experience. Using a single command you can have your code running in a safe, secure, and stable environment in seconds. Once running, Cloud Foundry takes care of everything else including log streaming, health monitoring, scaling, networking, load-balancing, and makes everyday chores like starting and stopping applications a breeze.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;There are a few things you need to do before getting started with Cloud Foundry:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Install the &lt;a href=&#34;https://docs.cloudfoundry.org/cf-cli/install-go-cli.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Foundry CLI&lt;/a&gt; tool on your computer. This is the tool you will use to interact with Cloud Foundry. You can check that the tool is working by issuing the command &lt;code&gt;cf help&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Decide which Cloud Foundry you&amp;rsquo;re going to use and obtain it&amp;rsquo;s endpoint URL. If you don&amp;rsquo;t have a Cloud Foundry to work with, consider installing Cloud Foundry locally onto Kubernetes on your computer by following the steps in &lt;a href=&#34;/guides/kubernetes/cf4k8s-gs&#34;&gt;this guide&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note: Cloud Foundry goes by many names. There are many &lt;a href=&#34;https://www.cloudfoundry.org/thefoundry/#cert-distros&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;lsquo;certified distributions&amp;rsquo;&lt;/a&gt; that offer Cloud Foundry as a commercial product. The &lt;a href=&#34;https://tanzu.vmware.com/application-service&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu Application Service&lt;/a&gt; is one example. It is certified to meet the Cloud Foundry open-source standard and is fully compatible with the &lt;a href=&#34;https://docs.cloudfoundry.org/cf-cli/install-go-cli.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cf CLI&lt;/a&gt; tool.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;get-the-sample-python-application&#34;&gt;Get The Sample Python Application&lt;/h2&gt;
+&lt;p&gt;Download the sample Python application from Github and make the sample application&amp;rsquo;s folder your current working directory as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; git clone https://github.com/benwilcock/buildpacks-python-demo.git
+&amp;gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; buildpacks-python-demo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the folder you will notice three text files, &lt;code&gt;web.py&lt;/code&gt;, &lt;code&gt;requirements.txt&lt;/code&gt;, and &lt;code&gt;Procfile&lt;/code&gt;. If you already know what each of these files is for, you can skip ahead to the next section. If you want to know more about them, read on.&lt;/p&gt;
+&lt;p&gt;The file &lt;code&gt;web.py&lt;/code&gt; contains a hello-world web application written in &lt;code&gt;Python3&lt;/code&gt; using the &lt;code&gt;Flask&lt;/code&gt; and &lt;code&gt;MarkupSafe&lt;/code&gt; libraries.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;flask&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Flask&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;markupsafe&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;escape&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;app&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Flask&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;vm&#34;&gt;__name__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello_world&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Hello, World!&amp;#39;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/hello/&amp;lt;username&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello_user&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;# say hello to that user&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Hello &lt;/span&gt;&lt;span class=&#34;si&#34;&gt;%s&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;%&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;escape&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The file &lt;code&gt;requirements.txt&lt;/code&gt; clarifies which libraries your application is dependent on, and their versions. Pip can generate the contents of this file for you using the command &lt;code&gt;pip freeze&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;click==7.1.2
+Flask==1.1.2
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+Werkzeug==1.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;Procfile&lt;/code&gt; specifies the command-line used to execute the application at runtime. In this case the Procfile declares that the &lt;code&gt;web.py&lt;/code&gt; file contains your &lt;code&gt;FLASK_APP&lt;/code&gt;, calls &lt;code&gt;flask run&lt;/code&gt;, and binds the web-server to the &lt;code&gt;--host&lt;/code&gt; with the IP address &lt;code&gt;0.0.0.0&lt;/code&gt;. It is expected that the &lt;code&gt;--port&lt;/code&gt; to bind the application to will be set as an environment variable using the name &lt;code&gt;$PORT&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;web: FLASK_APP=web.py python3 -m flask run --host=0.0.0.0 --port=$PORT
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Cloud Foundry&amp;rsquo;s buildpack system uses these files to determine that your application is a Python application. Follow the steps below to run this application in Cloud Foundry.&lt;/p&gt;
+&lt;h2 id=&#34;login-to-cloud-foundry&#34;&gt;Login To Cloud Foundry&lt;/h2&gt;
+&lt;p&gt;You can login to your Cloud Foundry application service using the &lt;code&gt;cf login&lt;/code&gt; command as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf login -a &amp;lt;your-api-url&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;cf&lt;/code&gt; tool will then prompt you for your credentials and ask you to select an &amp;lsquo;org&amp;rsquo; and a &amp;lsquo;space&amp;rsquo;. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf login -a CF_API_ENDPOINT_URL
+API endpoint: CF_API_ENDPOINT_URL
+
+Email: &amp;lt;enter-your-email&amp;gt;
+
+Password: &amp;lt;enter-your-password&amp;gt;
+
+Select an org:
+1. tanzu-devrel
+
+&amp;lt;enter-selected-org-number&amp;gt;
+
+Select a space:
+1. development
+2. production
+
+&amp;lt;enter-selected-space-number&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you&amp;rsquo;re using your employers Cloud Foundry, the login process may be different. For example, you may have single sign on (SSO) rather than a username and password and you may be restricted in terms of which orgs and spaces are available to you.&lt;/p&gt;
+&lt;p&gt;&amp;lsquo;Org and space&amp;rsquo; are simply Cloud Foundry terms for application partitioning. Depending on how your cloud foundry was set up, you may see very different names and options. Cloud Foundry doesn&amp;rsquo;t attach any special meaning to these names. Production could just as easily be called &amp;lsquo;bob&amp;rsquo; if that makes sense in your organization. Ask your platform team for advice on which space to use.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Don&amp;rsquo;t really push apps to production unless it&amp;rsquo;s definitely safe for you to do so!&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;If at any point you need to remind yourself which API url, org, or space you are currently using, you can use the &lt;code&gt;cf target&lt;/code&gt; command like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf target
+
+api endpoint:   CF_API_ENDPOINT_URL
+api version:    2.151.0
+user:           &amp;lt;your-email&amp;gt;
+org:            tanzu-devrel
+space:          production
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If at any time you need help with a specific command such as &lt;code&gt;cf login&lt;/code&gt; simply ask for context specific help using the &lt;code&gt;--help&lt;/code&gt; option as shown below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf login --help
+
+NAME:
+   login - Log user in
+
+USAGE:
+   cf login &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-a API_URL&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-u USERNAME&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-p PASSWORD&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-o ORG&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-s SPACE&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--sso &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; --sso-passcode PASSCODE&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--origin ORIGIN&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;run-your-python-application-in-the-production-space&#34;&gt;Run Your Python Application In The &amp;lsquo;Production&amp;rsquo; Space&lt;/h2&gt;
+&lt;p&gt;The &lt;code&gt;cf target&lt;/code&gt; command above confirmed that the &lt;code&gt;production&lt;/code&gt; space is the current target for your applications. Any space is fine, it doesn&amp;rsquo;t have to be production, the process is the same.&lt;/p&gt;
+&lt;p&gt;The command you use to run your application on Cloud Foundry is &lt;code&gt;cf push&lt;/code&gt;. You must give the application a name when you push it. In the example below the name &lt;code&gt;python-demo&lt;/code&gt; has been used:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf push python-demo --random-route
+Pushing app python-demo to org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;You don&amp;rsquo;t have to use &lt;code&gt;--random-route&lt;/code&gt; either, it just prevents clashes when an app exists with the same name elsewhere on your Cloud Foundry instance.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The &lt;code&gt;cf push&lt;/code&gt; command uses a technology called &amp;lsquo;&lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;buildpacks&lt;/a&gt;&amp;rsquo; to put your Python application into a Docker container before running it. The process takes no more than a minute or two on average. During that time, Cloud Foundry will communicate what the buildpack is doing before finally confirming that your application is running.&lt;/p&gt;
+&lt;p&gt;When the application has started, Cloud Foundry will alert you and give you the route (URL) that has been assigned to the application.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;Waiting &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; app to start...
+
+name:              python-demo
+requested state:   started
+routes:            python-demo-lean-quokka-sc.cfapps.io
+last uploaded:     Tue &lt;span class=&#34;m&#34;&gt;28&lt;/span&gt; Jul 16:32:38 BST &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt;
+stack:             cflinuxfs3
+buildpacks:        python
+
+type:            web
+instances:       1/1
+memory usage:    1024M
+start command:   &lt;span class=&#34;nv&#34;&gt;FLASK_APP&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;web.py python3 -m flask run --host&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0.0.0.0 --port&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$PORT&lt;/span&gt;
+     state     since                  cpu    memory       disk           details
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;   running   2020-07-28T15:32:55Z   0.0%   4.3M of 1G   214.6M of 1G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this case, the route assigned to this application by Cloud Foundry is &lt;code&gt;python-demo-lean-quokka-sc.cfapps.io&lt;/code&gt;. Your application&amp;rsquo;s route will be different. You will use the route &lt;strong&gt;you&lt;/strong&gt; have been given to test that you can communicate with the application.&lt;/p&gt;
+&lt;h2 id=&#34;test-your-python-application-is-running&#34;&gt;Test Your Python Application Is Running&lt;/h2&gt;
+&lt;p&gt;To test the application is running, issue a HTTP GET request to the route Cloud Foundry gave to you when you used the &lt;code&gt;cf push&lt;/code&gt; command in the previous step.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; http python-demo-lean-quokka-sc.cfapps.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The application will respond with the legend &amp;lsquo;Hello, World!&amp;rsquo; like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;HTTP/1.1 &lt;span class=&#34;m&#34;&gt;200&lt;/span&gt; OK
+Connection: keep-alive
+Content-Length: &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt;
+Content-Type: text/html&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;charset&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;utf-8
+Date: Tue, &lt;span class=&#34;m&#34;&gt;28&lt;/span&gt; Jul &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt; 15:37:41 GMT
+Server: Werkzeug/1.0.1 Python/3.8.3
+X-Vcap-Request-Id: 7b49d6ff-30d3-46c1-75d8-0bb75275b75d
+
+Hello, World!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The test above uses the &lt;a href=&#34;https://httpie.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;HTTPie&lt;/a&gt; tool, but you could also use &lt;code&gt;curl&lt;/code&gt; or a regular web browser. It&amp;rsquo;s up to you.&lt;/p&gt;
+&lt;h2 id=&#34;theres-more&#34;&gt;There&amp;rsquo;s More&lt;/h2&gt;
+&lt;p&gt;Here&amp;rsquo;s a few more commonly used &lt;code&gt;cf&lt;/code&gt; commands for you. Don&amp;rsquo;t forget, you can use &lt;code&gt;cf help&lt;/code&gt; to get a full list of all the available commands at any time, and &lt;code&gt;cf &amp;lt;command&amp;gt; --help&lt;/code&gt; will give you detailed information on each of them.&lt;/p&gt;
+&lt;h3 id=&#34;listing-your-applications&#34;&gt;Listing Your Applications&lt;/h3&gt;
+&lt;p&gt;You can see a list of all the applications you have running in your current space at any time using the &lt;code&gt;cf apps&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf apps
+Getting apps in org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;...
+OK
+
+name          requested state   instances   memory   disk   urls
+python-demo   started           1/1         1G       1G     python-demo-lean-quokka-sc.cfapps.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;getting-detailed-application-status&#34;&gt;Getting Detailed Application Status&lt;/h3&gt;
+&lt;p&gt;You can get fine-grained application status using the &lt;code&gt;cf app&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf app python-demo
+Showing health and status &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; app python-demo in org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;...
+
+name:              python-demo
+requested state:   started
+routes:            python-demo-lean-quokka-sc.cfapps.io
+last uploaded:     Tue &lt;span class=&#34;m&#34;&gt;28&lt;/span&gt; Jul 16:32:38 BST &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt;
+stack:             cflinuxfs3
+buildpacks:        python
+
+type:           web
+instances:      1/1
+memory usage:   1024M
+     state     since                  cpu    memory        disk           details
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;   running   2020-07-28T15:32:55Z   0.5%   30.8M of 1G   214.6M of 1G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;tailing-an-applications-log&#34;&gt;Tailing An Applications Log&lt;/h3&gt;
+&lt;p&gt;You can view the log stream for your application in realtime with the &lt;code&gt;cf logs&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf logs python-demo
+Retrieving logs &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; app python-demo in org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;...
+
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can get recent logs (rather than a tail of the log) using the &lt;code&gt;--recent&lt;/code&gt; option.&lt;/p&gt;
+&lt;h3 id=&#34;deleting-removing-an-application&#34;&gt;Deleting (Removing) An Application&lt;/h3&gt;
+&lt;p&gt;You can remove and delete your application from Cloud Foundry at any time using the &lt;code&gt;cf delete&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf delete python-demo
+Really delete the app python-demo?&amp;gt; y
+Deleting app python-demo in org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;...
+OK
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;Most Cloud Foundry installations include a Python Buildpack. But did you know that you can use buildpacks without using Cloud Foundry? Buildpacks are a fabulous, sustainable, stress-free way to get code into Docker containers. To find out how to use them in your Python tool chain take a look at our &lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;Python buildpack guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Did you know that can push Docker images directly to Cloud Foundry? You use the same &lt;code&gt;cf push&lt;/code&gt; command but add the &lt;code&gt;--docker-image&lt;/code&gt; option. Take a look at the help for the push command for more information or read the docs &lt;a href=&#34;http://cli.cloudfoundry.org/en-US/cf/push.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Did you know that you can run Cloud Foundry directly on top of Kubernetes? That means you can get the same smooth &lt;code&gt;cf push&lt;/code&gt; experience on your Kubernetes cluster. Just think, less YAML, less &lt;code&gt;kubectl&lt;/code&gt;, less stress! You can get started with our &lt;a href=&#34;/guides/kubernetes/cf4k8s-gs&#34;&gt;CF for K8s guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you liked this guide, you might find these others in our &amp;lsquo;Python Like A Pro&amp;rsquo; series useful:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;Install Python Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-managing-python-packages&#34;&gt;Managing Python Project Dependencies Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-installing-global-packages&#34;&gt;Managing Python Global Packages Like A Pro&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;Build Python Docker Containers Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And if you&amp;rsquo;d prefer to see Cloud Foundry in action without actually following the steps above, check out our video guide:&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/qLg2xtQ5kTA&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Getting Started with Cloud Foundry for Kubernetes</title>
+      
+      <link>/videos/cf-for-k8s-gs/</link>
+      <pubDate>Wed, 13 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/cf-for-k8s-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

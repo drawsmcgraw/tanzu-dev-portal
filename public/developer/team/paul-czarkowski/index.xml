@@ -1,0 +1,1275 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – </title>
+    <link>/team/paul-czarkowski/</link>
+    <description>Recent content on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/team/paul-czarkowski/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Getting Started with Contour - To Ingress and Beyond</title>
+      
+      <link>/guides/kubernetes/service-routing-contour-to-ingress-and-beyond/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/service-routing-contour-to-ingress-and-beyond/</guid>
+      <description>
+
+        
+        &lt;h3 id=&#34;introduction-to-contour&#34;&gt;Introduction to Contour&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://projectcontour.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Contour&lt;/a&gt; is an open source Kubernetes
+&lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ingress controller&lt;/a&gt;
+that acts as a control plane for the Envoy edge and service proxy (see below).​
+Contour supports dynamic configuration updates and multi-team ingress delegation
+while maintaining a lightweight profile.&lt;/p&gt;
+&lt;p&gt;Contour is built for Kubernetes to empower you to quickly deploy cloud native
+applications by using the flexible HTTPProxy API which is a lightweight system
+that provides many of the advanced routing features of a Service Mesh.&lt;/p&gt;
+&lt;p&gt;Contour deploys the
+&lt;a href=&#34;https://www.envoyproxy.io/docs/envoy/latest/intro/what_is_envoy&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Envoy&lt;/a&gt; proxy
+as a reverse proxy and load balancer. Envoy is a Layer 7 (application layer) bus
+for proxy and communication in modern service-oriented architectures, such as
+Kubernetes clusters. Envoy strives to make the network transparent to
+applications while maximizing observability to ease troubleshooting.&lt;/p&gt;
+
+&lt;div class=&#34;youtube-video-shortcode&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/Kz671dXioS0&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;div align=&#34;center&#34;&gt;&lt;i&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=Kz671dXioS0&amp;feature=youtu.be&#34;&gt;Watch Paul livestream trying Contour 1.12.0 for the first time.&lt;/a&gt;&lt;/i&gt;&lt;/div&gt;
+&lt;h3 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h3&gt;
+&lt;p&gt;You&amp;rsquo;ll need a Kubernetes cluster. This guide uses a
+&lt;a href=&#34;https://tanzu.vmware.com/kubernetes-grid&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Kubernetes Grid&lt;/a&gt; cluster, but
+any Kubernetes Cluster whether they&amp;rsquo;re running on a Public Cloud, in your
+[Home] Lab, or on your desktop such as &lt;a href=&#34;https://kind.sigs.k8s.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;KIND&lt;/a&gt; or
+&lt;a href=&#34;https://minikube.sigs.k8s.io/docs/start/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;minikube&lt;/a&gt;. You&amp;rsquo;ll also need the
+Kubernetes CLI
+&lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl&lt;/a&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Verify access to your Kubernetes cluster&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl version --short
+Client Version: v1.20.2
+Server Version: v1.19.3+vmware.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a scratch directory to work from&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir ~/scratch/contour-demo
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ~/scratch/contour-demo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;installing-contour-1120&#34;&gt;Installing Contour 1.12.0&lt;/h3&gt;
+&lt;p&gt;Since version 1.11.0 we&amp;rsquo;ve got two primary options for installing Contour, A
+singleton install from manifests, or by using the
+&lt;a href=&#34;https://projectcontour.io/resources/deprecation-policy/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Operator&lt;/a&gt; (which is
+currently in Alpha). Since we only plan to install Contour once on the cluster,
+we can stick to the safer method of using the Contour provided manifests.&lt;/p&gt;
+&lt;p&gt;You can install Contour directly from the manifests provided by the project,
+however best practice would have you download them locally first for validation
+and repeatability.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Download contour installation manifests&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;wget https://projectcontour.io/quickstart/v1.12.0/contour.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;View the manifests in your favorite local text editor&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;less contour.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Validate even further by doing a dry run install&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f contour.yaml --dry-run&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;client
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If that all looks good (and it should!), perform the actual install&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f contour.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;After a few moments you can confirm that its ready.&lt;/p&gt;
+&lt;p&gt;You&amp;rsquo;re looking for both the &lt;strong&gt;deployment&lt;/strong&gt; and &lt;strong&gt;DaemonSet&lt;/strong&gt; to show as fully
+Available, and a valid IP (or hostname) in the &lt;code&gt;EXTERNAL-IP&lt;/code&gt; field of your
+envoy &lt;strong&gt;service&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl -n projectcontour get deployment,daemonset,service
+
+  NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
+  deployment.apps/contour   2/2     &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;           2m18s
+
+  NAME                   DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+  daemonset.apps/envoy   &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;       &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;           &amp;lt;none&amp;gt;          2m17s
+
+  NAME              TYPE           CLUSTER-IP       EXTERNAL-IP
+  PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;                      AGE
+  service/contour   ClusterIP      100.71.191.199   &amp;lt;none&amp;gt;
+  8001/TCP                     2m18s
+  service/envoy     LoadBalancer   100.66.114.136   a36c85343e9284c1cb4236d844c31aab-1691151764.us-east-2.elb.amazonaws.com   80:30825/TCP,443:30515/TCP   2m18s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Save the Ingress &lt;code&gt;EXTERNAL-IP&lt;/code&gt; for later use as a &lt;a href=&#34;http://xip.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;xip.io&lt;/a&gt; dynamic DNS host.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Note for AWS Users&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;Since this is deployed in Amazon Web Services I had to resolve the hostname
+using the &lt;code&gt;host&lt;/code&gt; command, but in other clouds you will probably get an IP
+address.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;INGRESS_HOST&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;lt;external ip address from above&amp;gt;.xip.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;creating-an-ingress-using-contour-1120&#34;&gt;Creating an Ingress using Contour 1.12.0&lt;/h3&gt;
+&lt;p&gt;Now that Contour is installed we can validate it is functioning correctly by
+deploying an application, exposing it as a service, then creating an Ingress
+resource. As well as creating the resources we&amp;rsquo;ll output the manifests to a file
+for later re-use.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a namespace&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create namespace my-ingress-app -o yaml &amp;gt; my-ingress-app-namespace.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a deployment containing a basic nginx pod&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n my-ingress-app create deployment --image&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;nginx &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  nginx -o yaml &amp;gt; my-ingress-app-deployment.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a service for the deployment&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n my-ingress-app expose deployment nginx --port &lt;span class=&#34;m&#34;&gt;80&lt;/span&gt; -o yaml &amp;gt; my-ingress-app-service.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Finally create an Ingress for the service&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n my-ingress-app create ingress nginx --class&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;default &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --rule&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx.&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$INGRESS_HOST&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;/*=nginx:80&amp;#34;&lt;/span&gt; -o yaml &amp;gt; my-ingress-app-ingress.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Validate that your resources are deployed and ready&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl -n my-ingress-app get all,ingress
+
+Warning: extensions/v1beta1 Ingress is deprecated in v1.14+, unavailable in v1.22+&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; use networking.k8s.io/v1 Ingress
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/nginx-6799fc88d8-dphdt   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          13m
+
+NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;   AGE
+service/nginx   ClusterIP   100.69.247.38   &amp;lt;none&amp;gt;        80/TCP    12m
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginx   1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           13m
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginx-6799fc88d8   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       13m
+
+NAME                       CLASS     HOSTS                                                                     ADDRESS                                                                   PORTS   AGE
+ingress.extensions/nginx   default   a36c85343e9284c1cb4236d844c31acb-1691151764.us-east-2.elb.amazonaws.com   a36c85343e9284c1cb4236d844c31acb-1691151764.us-east-2.elb.amazonaws.com   &lt;span class=&#34;m&#34;&gt;80&lt;/span&gt;      51s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Validate that you can access the application&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ curl -s nginx.3.13.150.109.xip.io  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep h1
+
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Congratulations! If you see the &lt;strong&gt;Welcome to nginx!&lt;/strong&gt; message, that means you&amp;rsquo;ve
+successfully installed and tested Contour as an Ingress Controller. However its
+so much more than that, so lets explore further.&lt;/p&gt;
+&lt;p&gt;However let&amp;rsquo;s clean up our resources before we move on. Since all of our
+resources are in a single namespace we could use
+&lt;code&gt;kubectl delete namespace my-ingress-app&lt;/code&gt;, However we also saved the manifests
+so we can use those like so:&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-warning&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Caution&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;We created these manifests in the same directory as our contour manifests, so
+we will move them into a subdirectory to ensure we only delete the app itself.
+This is a lesson learned that we should have created them in a subdirectory
+in the first place for organizational purposes.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir my-ingress-app
+mv my-ingress-app-* my-ingress-app/
+kubectl delete -f my-ingress-app
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;beyond-ingress-with-contour-1120&#34;&gt;Beyond Ingress with Contour 1.12.0&lt;/h3&gt;
+&lt;p&gt;As well as &lt;strong&gt;Ingress&lt;/strong&gt; Contour supports a resource type &lt;strong&gt;HTTPProxy&lt;/strong&gt; which
+extends the concept of &lt;strong&gt;Ingress&lt;/strong&gt; to add many features that you would normally
+have to reach for &lt;strong&gt;Istio&lt;/strong&gt; or a similar service mesh to get. We can explore
+some of those features here.&lt;/p&gt;
+&lt;p&gt;Having learned our lesson about sub directories above, lets create a directory
+for our exploration of HTTPProxy.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir http-proxy
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; http-proxy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As we did earlier we&amp;rsquo;ll start by deploying a nginx &lt;strong&gt;Pod&lt;/strong&gt; and a &lt;strong&gt;Service&lt;/strong&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a namespace&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create namespace http-proxy -o yaml &amp;gt; http-proxy-namespace.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a Deployment containing a basic nginx pod&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy create deployment --image&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;nginx &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  nginx -o yaml &amp;gt; http-proxy-nginx-deployment.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a service for the deployment&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy expose deployment nginx --port &lt;span class=&#34;m&#34;&gt;80&lt;/span&gt; -o yaml &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  &amp;gt; http-proxy-nginx-service.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Now that we have the Deployment and Service created we can create the HTTPProxy
+resource. Unfortunately we can&amp;rsquo;t just sling a &lt;code&gt;kubectl create httpproxy&lt;/code&gt; like we
+could with the other resources so we&amp;rsquo;ll need to get creative.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a HTTPProxy manifest&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; http-proxy.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;apiVersion: projectcontour.io/v1
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;kind: HTTPProxy
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;metadata:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  name: www
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  namespace: http-proxy
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;spec:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  virtualhost:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    fqdn: www.$INGRESS_HOST
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  routes:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    - conditions:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      - prefix: /
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      services:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        - name: nginx
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          port: 80
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Apply the HTTPProxy manifest&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -n http-proxy -f http-proxy.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Wait a few moments and then attempt to access the nginx service&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -s www.3.13.150.109.xip.io &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep h1
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;rate-limiting&#34;&gt;Rate Limiting&lt;/h4&gt;
+&lt;p&gt;Now that your nginx is working via &lt;strong&gt;HTTPProxy&lt;/strong&gt; we can look at some of the more
+advanced features. Let&amp;rsquo;s start with Rate limiting. Contour 1.12.0 supports doing
+&lt;em&gt;local&lt;/em&gt; rate limiting, which means that each Envoy &lt;strong&gt;Pod&lt;/strong&gt; will have its own
+limits, vs a &lt;em&gt;global&lt;/em&gt; rate limit which would need further coordination between
+the Envoy &lt;strong&gt;Pods&lt;/strong&gt;. You can also set the Rate limit for the virtualhost, or for
+a specific route.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s create a fairly aggressive rate limit so we can see the affects of it
+fairly quickly. The example cluster I am using has three worker nodes, which
+means three Envoy &lt;strong&gt;Pods&lt;/strong&gt; so if I set a rate limit of 2 per minute we should be
+able to hit the limit after 6 requests.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a new &lt;strong&gt;HTTPProxy&lt;/strong&gt; resource with rate limiting enabled&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; rate-limit.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;apiVersion: projectcontour.io/v1
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;kind: HTTPProxy
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;metadata:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  name: rate
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  namespace: http-proxy
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;spec:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  virtualhost:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    fqdn: rate.$INGRESS_HOST
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    rateLimitPolicy:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      local:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        requests: 2
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        unit: minute
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  routes:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    - conditions:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      - prefix: /
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      services:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        - name: nginx
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          port: 80
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Apply the new rate limited manifest:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy apply -f rate-limit.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Wait a few moments and then fire up a while loop to connecting to the service
+and watch it hit the limit after a few hits.&lt;/p&gt;
+&lt;p&gt;Note: You&amp;rsquo;ll need to hit CTRL-C to break the while loop.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; true&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; curl -s rate.&lt;span class=&#34;nv&#34;&gt;$INGRESS_HOST&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -E &lt;span class=&#34;s1&#34;&gt;&amp;#39;h1|rate&amp;#39;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;done&lt;/span&gt;
+
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+local_rate_limited
+local_rate_limited
+local_rate_limited
+^C
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;That&amp;rsquo;s it, rate limiting is enabled. This is incredibly useful if you have a
+service with known limitations or you want to restrict any one user from
+overwhelming the service.&lt;/p&gt;
+&lt;h4 id=&#34;weighted-routing&#34;&gt;Weighted routing&lt;/h4&gt;
+&lt;p&gt;The &lt;strong&gt;HTTPProxy&lt;/strong&gt; resource can also route a Virtual Host to multiple services,
+this is a great feature if you want to perform Blue/Green deployments, or you
+want to send a small percentage of requests to a special debug endpoint. Let&amp;rsquo;s
+explore Weighted routing by adding an Apache service to receive 10% of the
+requests.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a Deployment containing a basic httpd pod&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy create deployment --image&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;httpd &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  httpd -o yaml &amp;gt; http-proxy-httpd-deployment.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a service for the deployment&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy expose deployment httpd --port &lt;span class=&#34;m&#34;&gt;80&lt;/span&gt; -o yaml &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  &amp;gt; http-proxy-httpd-service.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ensure the new &lt;strong&gt;Pod&lt;/strong&gt; is available beside the existing nginx one.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get pods -n http-proxy
+NAME                     READY   STATUS    RESTARTS   AGE
+httpd-757fb56c8d-kz476   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          23s
+nginx-6799fc88d8-jxvj7   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          163m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;strong&gt;HTTPProxy&lt;/strong&gt; resource to perform weighted routing across the two services&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; weighted.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;apiVersion: projectcontour.io/v1
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;kind: HTTPProxy
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;metadata:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  name: weight
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  namespace: http-proxy
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;spec:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  virtualhost:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    fqdn: weight.$INGRESS_HOST
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  routes:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    - conditions:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      - prefix: /
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      services:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        - name: httpd
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          port: 80
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          weight: 10
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        - name: nginx
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          port: 80
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          weight: 90
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Apply the new resource&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy apply -f weighted.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Test the weighting&lt;/p&gt;
+&lt;p&gt;Note: It&amp;rsquo;s not clear in the documentation, but it appears that the weighting
+is applied per Envoy &lt;strong&gt;Pod&lt;/strong&gt;, so it might not be exactly 10% for small test
+runs, but would statistically work out over time.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; true&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; curl -s weight.&lt;span class=&#34;nv&#34;&gt;$INGRESS_HOST&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep h1 &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;done&lt;/span&gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;html&amp;gt;&amp;lt;body&amp;gt;&amp;lt;h1&amp;gt;It works!&amp;lt;/h1&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+^C
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;That&amp;rsquo;s it! we&amp;rsquo;ve successfully done a walk through of some of the new features of
+Contour 1.12.0 and tested out both Rate Limiting and Weighted Routing. Let&amp;rsquo;s
+clean up.&lt;/p&gt;
+&lt;h4 id=&#34;cleanup&#34;&gt;Cleanup&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Delete your http-proxy namespace and resources&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy delete -f .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Uninstall Contour&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ..
+kubectl delete -f contour.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;As you can see Contour 1.12.0 is more than just an Ingress Controller as it
+brings some of the more advanced features of a service mesh but without all the
+extra resources required. Next time you find yourself looking to run Istio,
+remember to check in with Contour and see if it will do what you need.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: How to use Harbor Registry to Eliminate Docker Hub Rate Limits</title>
+      
+      <link>/guides/kubernetes/harbor-as-docker-proxy/</link>
+      <pubDate>Fri, 22 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/harbor-as-docker-proxy/</guid>
+      <description>
+
+        
+        
+&lt;div class=&#34;youtube-video-shortcode&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/KSH2Hzk-E7U&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;div align=&#34;center&#34;&gt;&lt;i&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=KSH2Hzk-E7U&amp;feature=youtu.be&#34;&gt;Watch Paul Walk through this guide on Tanzu.TV Shortcuts.&lt;/a&gt;&lt;/i&gt;&lt;/div&gt;
+&lt;p&gt;On August 24 2020 &lt;a href=&#34;https://docker.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker&lt;/a&gt; announced they would be
+implementing
+&lt;a href=&#34;https://www.docker.com/blog/scaling-docker-to-serve-millions-more-developers-network-egress/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Rate Limits on the Docker Hub&lt;/a&gt;
+and they were
+&lt;a href=&#34;https://www.docker.com/blog/what-you-need-to-know-about-upcoming-docker-hub-rate-limiting/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;implemented on November 2 2020&lt;/a&gt;
+thus ending our free ride of unlimited Docker Image pulls.&lt;/p&gt;
+&lt;p&gt;Unless you&amp;rsquo;re a paid customer of Docker or very lucky you&amp;rsquo;ve probably started to
+see errors like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ERROR: toomanyrequests: Too Many Requests.
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Or&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;You have reached your pull rate limit. You may increase
+the limit by authenticating and upgrading:
+https://www.docker.com/increase-rate-limits.
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This can be very frustrating, especially in Kubernetes where it might not be
+apparent why your new Pod is just sitting there in a &lt;code&gt;Pending&lt;/code&gt; state. Imagine
+this happening right as you need to scale your Deployments to serve a sudden
+increase in traffic.&lt;/p&gt;
+&lt;p&gt;This would be where a troll on Reddit (You know the sort, the kind that will
+&amp;ldquo;&lt;a href=&#34;https://news.ycombinator.com/item?id=6277943&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;What you guys are referring to as Linux, is in fact, GNU/Linux&amp;rdquo;&lt;/a&gt;
+at you would proclaim
+&amp;ldquo;&lt;a href=&#34;https://www.whoownsmyavailability.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;You own your availability&lt;/a&gt;&amp;rdquo;. He&amp;rsquo;s not
+wrong &amp;hellip; but also not helpful.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/harbor-as-docker-proxy/tweet-who-owns-your-availability.png&#34; alt=&#34;that twitter troll&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Thankfully the team developing the &lt;a href=&#34;https://goharbor.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Harbor Registry&lt;/a&gt; have
+been hard at work to ensure that you can access the images you need without
+downloading the whole internet to your server.&lt;/p&gt;
+&lt;p&gt;There are actually two features in Harbor that will let us work around the rate
+limits, Registry Replication, and Registry Proxy.&lt;/p&gt;
+&lt;p&gt;Registry Replication allows you to replicate images between registries, whereas
+Proxy lets you keep a local copy of images on an as-requested basis.&lt;/p&gt;
+&lt;p&gt;In a production scenario you would probably look to Replication so that you can
+be very specific about what Images to allow, however in a Development scenario
+you might use Proxy-ing as you don&amp;rsquo;t necessarily know ahead of time what Images
+you might need access to. Further using Proxy-ing can be really useful for a
+home lab to cut down on internet traffic as you pull images.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ll explore both options below.&lt;/p&gt;
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Before you get started, you&amp;rsquo;ll need Harbor (ideally version 2.1.3 or newer)
+installed somewhere. If you don&amp;rsquo;t already have it installed, we&amp;rsquo;ve made it
+incredibly easy for your with our &lt;a href=&#34;../harbor-gs/&#34;&gt;Getting Started with Harbor&lt;/a&gt;
+Guide.&lt;/p&gt;
+&lt;p&gt;Once you have a Harbor registry installed, log into it&amp;rsquo;s Web UI as an Admin user.&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Confirm Versions&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;Note: Docker has been rapidly changing both the Docker Hub and the Docker CLI,
+this makes it difficult for Integrations such as Harbor&amp;rsquo;s replication / proxy
+features to keep pace. To ensure the best chance of functionality, ensure you&amp;rsquo;re
+using the versions stated in this document.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;set-up-a-registry-endpoint&#34;&gt;Set up a Registry Endpoint&lt;/h2&gt;
+&lt;p&gt;Whether doing replication or proxy, you need to configure Dockerhub as a
+replication endpoint.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Go to &lt;strong&gt;Administration&lt;/strong&gt; -&amp;gt; &lt;strong&gt;Registries&lt;/strong&gt; and click the &lt;strong&gt;+ New Endpoint&lt;/strong&gt; button.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set the &lt;strong&gt;Provider&lt;/strong&gt; and &lt;strong&gt;Name&lt;/strong&gt; both to &lt;code&gt;Docker Hub&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You can leave the rest of the settings as default, unless you want access to
+private images, in which case add in your &lt;strong&gt;Access ID&lt;/strong&gt; and &lt;strong&gt;Access
+Secret&lt;/strong&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/harbor-as-docker-proxy/create-endpoint.png&#34; alt=&#34;Create Endpoint&#34;  /&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Press the &lt;strong&gt;Test Connection&lt;/strong&gt; button and an a successful test hit &lt;strong&gt;OK&lt;/strong&gt; to save.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;create-a-dockerhub-proxy&#34;&gt;Create a Dockerhub Proxy&lt;/h2&gt;
+&lt;p&gt;For more information about how Proxy Projects work, see the
+&lt;a href=&#34;https://goharbor.io/docs/2.1.0/administration/configure-proxy-cache/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;official documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Go to &lt;strong&gt;Projects&lt;/strong&gt; and click the &lt;strong&gt;+ New Project&lt;/strong&gt; button.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set &lt;strong&gt;Project Name&lt;/strong&gt; to &lt;code&gt;dockerhub-proxy&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set &lt;strong&gt;Access Level&lt;/strong&gt; to &lt;code&gt;Public&lt;/code&gt; (unless you intend to make it private and require login).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Leave &lt;strong&gt;Storage Quota&lt;/strong&gt; at the default &lt;code&gt;-1 GB&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set &lt;strong&gt;Proxy Cache&lt;/strong&gt; to &lt;code&gt;Docker Hub&lt;/code&gt; (the Endpoint we created earlier).&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/harbor-as-docker-proxy/create-proxy-project.png&#34; alt=&#34;Create Proxy Project&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Test the proxy is working with &lt;code&gt;docker pull&lt;/code&gt;:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ docker pull &amp;lt;url-of-registry&amp;gt;/dockerhub-proxy/library/ubuntu:20.04
+20.04: Pulling from dockerhub-proxy/library/ubuntu
+83ee3a23efb7: Pull &lt;span class=&#34;nb&#34;&gt;complete&lt;/span&gt;
+db98fc6f11f0: Pull &lt;span class=&#34;nb&#34;&gt;complete&lt;/span&gt;
+f611acd52c6c: Pull &lt;span class=&#34;nb&#34;&gt;complete&lt;/span&gt;
+Digest: sha256:703218c0465075f4425e58fac086e09e1de5c340b12976ab9eb8ad26615c3715
+Status: Downloaded newer image &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; harbor.aws.paulczar.wtf/dockerhub-proxy/library/ubuntu:20.04
+harbor.aws.paulczar.wtf/dockerhub-proxy/library/ubuntu:20.04
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&#34;aside aside-warning&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Content-Type Error&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;If you receive error
+&lt;code&gt;Error response from daemon: missing or empty Content-Type header&lt;/code&gt;, you&amp;rsquo;ll need
+to upgrade Harbor to version 2.1.3 as some changes in Docker have had downstream
+ripple effects. Older versions of Docker will still work.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;configure-docker-hub-replication&#34;&gt;Configure Docker Hub Replication&lt;/h2&gt;
+&lt;h3 id=&#34;create-a-project-to-replicate-to&#34;&gt;Create a Project to replicate to&lt;/h3&gt;
+&lt;p&gt;With Proxy-ing enabled, let&amp;rsquo;s now turn our eyes to Replication. This is where we
+can surgically select which images we want to make available.&lt;/p&gt;
+&lt;p&gt;For more information about how Replication works, see the
+&lt;a href=&#34;https://goharbor.io/docs/2.1.0/administration/configuring-replication/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;official documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Go to &lt;strong&gt;Projects&lt;/strong&gt; and click the &lt;strong&gt;+ New Project&lt;/strong&gt; button.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set &lt;strong&gt;Project Name&lt;/strong&gt; to &lt;code&gt;dockerhub-replica&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Leave all other settings as their defaults.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/harbor-as-docker-proxy/create-replica-project.png&#34; alt=&#34;Create Replica Project&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;create-a-replication-rule&#34;&gt;Create a Replication Rule&lt;/h3&gt;
+&lt;p&gt;Next we create a Replication Rule to determine the specific Images we want to
+replicate. In this case we want only the &lt;code&gt;library/python:3.8.2-slim&lt;/code&gt; image. We
+restrict this as Replication can quickly hit the Docker Hub rate limits.&lt;/p&gt;
+&lt;p&gt;The resource filters support basic pattern recognition, so you could use
+&lt;code&gt;library/**&lt;/code&gt; if you wanted to replicate all of the official images, however this
+would quickly hit the rate limits.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Go to &lt;strong&gt;Administration&lt;/strong&gt; -&amp;gt; &lt;strong&gt;Replication&lt;/strong&gt; and click the &lt;strong&gt;+ New Replication Rule&lt;/strong&gt; button.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set &lt;strong&gt;Name&lt;/strong&gt; to &lt;code&gt;dockerhub-python-slim&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set &lt;strong&gt;Replication mode&lt;/strong&gt; to &lt;code&gt;Pull-based&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set &lt;strong&gt;Source registry&lt;/strong&gt; to &lt;code&gt;Docker Hub&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set &lt;strong&gt;Source resource filter&lt;/strong&gt; -&amp;gt; &lt;strong&gt;Name&lt;/strong&gt; to &lt;code&gt;library/python&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set &lt;strong&gt;Source resource filter&lt;/strong&gt; -&amp;gt; &lt;strong&gt;Tag&lt;/strong&gt; to &lt;code&gt;3.8.2-slim&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set &lt;strong&gt;Destination namespace&lt;/strong&gt; to &lt;code&gt;dockerhub-replica/python&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Leave the rest as their defaults.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/harbor-as-docker-proxy/create-replica-python.png&#34; alt=&#34;Create Replica for Python&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;test-replication&#34;&gt;Test Replication&lt;/h3&gt;
+&lt;p&gt;We chose manual replication (so that we don&amp;rsquo;t overwhelm the rate limits) so we
+need to actually perform the replication step, and then validate that it worked.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Go to &lt;strong&gt;Administration&lt;/strong&gt; -&amp;gt; &lt;strong&gt;Replication&lt;/strong&gt; and click the
+&lt;strong&gt;dockerhub-python-slim&lt;/strong&gt; item then click the &lt;strong&gt;Replicate&lt;/strong&gt; Button.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Harbor will kick off the replication and will show the attempt below in the
+&lt;strong&gt;Executions&lt;/strong&gt; section. You can click on it for more details or logs, but for
+now we&amp;rsquo;re just waiting for it to &lt;strong&gt;finish&lt;/strong&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Go to &lt;strong&gt;Projects&lt;/strong&gt; and select &lt;strong&gt;dockerhub-replica&lt;/strong&gt; then click
+&lt;strong&gt;Repositories&lt;/strong&gt;. You should see &lt;code&gt;dockerhub-replica/python/python&lt;/code&gt; with at
+least one Artifact. *To avoid this accidental redundancy in the name we
+should have set &lt;strong&gt;Destination namespace&lt;/strong&gt; to &lt;code&gt;dockerhub-replica&lt;/code&gt; rather than
+&lt;code&gt;dockerhub-replica/python&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/harbor-as-docker-proxy/replica-success.png&#34; alt=&#34;Successful replication&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;That&amp;rsquo;s it! We&amp;rsquo;ve learned how to replicate Docker images from Docker Hub using
+both Proxy-ing and Replication. This can be applied for Harbor to Harbor
+replication as well. It&amp;rsquo;s not uncommon to have one main Harbor registry as the
+source of truth and then Replication to remote sites, and Proxy-ing to edge
+sites.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: What is Helmfile?</title>
+      
+      <link>/guides/kubernetes/helmfile-what-is/</link>
+      <pubDate>Thu, 30 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/helmfile-what-is/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://github.com/roboll/helmfile&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helmfile&lt;/a&gt; adds additional functionality to &lt;a href=&#34;https://helm.sh&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm&lt;/a&gt; by wrapping it in a declarative spec that allows you to compose several charts together to create a comprehensive deployment artifact for anything from a single application to your entire infrastructure stack.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: If you&amp;rsquo;re not familiar with Helm, start with our &lt;a href=&#34;../helm-what-is&#34;&gt;Getting Started with Helm&lt;/a&gt; guide.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;In addition to the Templating and Packaging Helm gives you for your Kubernetes manifests, Helmfile provides a way to apply GitOps style CI/CD methodologies over your Helm charts by:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Separating out your Environment specific information from your Chart&lt;/li&gt;
+&lt;li&gt;Performing a diff of your existing deployment and only applying the changes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Helmfile uses the same templating system as Helm and in a way lets you template your templates (&lt;em&gt;&lt;insert yo dawg meme here&gt;&lt;/em&gt;). This can be a bit difficult to wrap your mind around at first, but adds a ton of powerful features as it allows you to put basic programming logic like &lt;em&gt;if/then/else&lt;/em&gt; into just about any component including your actual Helm Chart Values.&lt;/p&gt;
+&lt;h2 id=&#34;why-is-it-important&#34;&gt;Why Is It Important?&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://helm.sh&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm&lt;/a&gt; is a great tool for templating and sharing Kubernetes manifests for your applications. However it can become quite cumbersome to install larger multi-tier applications or groups of applications across multiple Kubernetes clusters.&lt;/p&gt;
+&lt;p&gt;Helmfile addresses this issue and more by providing a fairly simple but very powerful declarative specification for deploying Helm charts across many environments.&lt;/p&gt;
+&lt;p&gt;First and foremost Helm is a &lt;strong&gt;declarative&lt;/strong&gt; specification. Like Kubernetes manifests you can store them in version control, and perform declarative style actions. Much like Kubernetes has &lt;code&gt;kubectl apply&lt;/code&gt; for Kubernetes manifests, Helmfile has &lt;code&gt;helmfile apply&lt;/code&gt; for Helm charts.&lt;/p&gt;
+&lt;p&gt;Helmfile is very &lt;strong&gt;modular&lt;/strong&gt;, you can have one large &lt;code&gt;helmfile.yaml&lt;/code&gt; that does everything or you can break it down to suit your way of working. This modularity allows you to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Give each Helm chart its own &lt;code&gt;helmfile.yaml&lt;/code&gt; and include them recursively in a centralized &lt;code&gt;helmfile.yaml&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Separate out &lt;a href=&#34;https://github.com/roboll/helmfile/blob/master/docs/writing-helmfile.md#layering-state-files&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;environment specific&lt;/a&gt; values from general values. Often you&amp;rsquo;ll find while a Helm chart can take 50 different values, only a few actually differ between your environments.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;As well as providing a set of values, either Environment specific or otherwise, you can also read Environment Variables, Execute scripts and read their output.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Store &lt;a href=&#34;https://github.com/roboll/helmfile/pull/648&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;remote state&lt;/a&gt; in git/s3/fileshare/etc in much the same way as Terraform does.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Helmfile is &lt;strong&gt;versatile&lt;/strong&gt; enough to allow you to also include raw Kubernetes manifests, &lt;a href=&#34;https://github.com/kubernetes-sigs/kustomize&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kustomizations&lt;/a&gt;, or even execute scripts via hooks, turning all of these into &lt;a href=&#34;https://github.com/roboll/helmfile/pull/673&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm releases&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Need to modify the resources generated by a specific Helm chart? Helmfile allows you to &lt;a href=&#34;https://github.com/roboll/helmfile/pull/673&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JSON/Strategic-Merge&lt;/a&gt; &lt;strong&gt;patch&lt;/strong&gt; resources before actually installing them.&lt;/p&gt;
+&lt;h2 id=&#34;how-does-it-work&#34;&gt;How Does It Work?&lt;/h2&gt;
+&lt;p&gt;Helmfile works by reading in your Helmfile manifest (usually &lt;code&gt;helmfile.yaml&lt;/code&gt;) which declares the Helm Charts you want to install and the values you wish to install them with, these are compared against the actual state of what is running in your cluster and any differences are then acted upon by calling out to Helm itself.&lt;/p&gt;
+&lt;p&gt;A basic &lt;code&gt;helmfile.yaml&lt;/code&gt; to install nginx would look something like this:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;./apps/nginx/helmfile.yaml&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;repositories&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;stable&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;https://kubernetes-charts.storage.googleapis.com&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;releases&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;my-nginx-server&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;chart&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;stable/nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;~1.24.1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;values&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;./nginx/vault.yaml.gotmpl&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;my.registry.com/nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Values are a list that can be passed in as a file or a list of key/values. These are the helm style values that will be rendered into your chart. Helmfile will treat any file with the &lt;code&gt;.gotmpl&lt;/code&gt; extension as a template and will render it &lt;strong&gt;before&lt;/strong&gt; passing it onto Helm.&lt;/p&gt;
+&lt;p&gt;If you wanted to load the above into a parent &lt;code&gt;helmfile.yaml&lt;/code&gt; you could do the following:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;./helmfile.yaml&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;helmfiles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;apps/*/helmfile.yaml&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can even make all of your included &lt;code&gt;helmfile.yaml&lt;/code&gt; files templates and render stuff right into the helmfiles. It really is templates all the way down.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;./helmfile.yaml&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helmfiles:
+  - apps/*/helmfile.yaml.gotmpl
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Thankfully the Helmfile GitHub repository has some really good &lt;a href=&#34;https://github.com/roboll/helmfile#configuration&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;documentation&lt;/a&gt; and &lt;a href=&#34;https://github.com/roboll/helmfile/blob/master/docs/writing-helmfile.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;best practices&lt;/a&gt; showing different ways to construct your &lt;code&gt;helmfile.yaml&lt;/code&gt; files.&lt;/p&gt;
+&lt;h2 id=&#34;how-can-i-use-it&#34;&gt;How Can I Use It?&lt;/h2&gt;
+&lt;p&gt;It&amp;rsquo;s pretty easy to get started with Helmfile. The documentation in the repository is quite good.&lt;/p&gt;
+&lt;p&gt;For an interesting perspective showing how to completely decouple your Code and Environment data have a look at Paul Czarkowski&amp;rsquo;s &lt;a href=&#34;https://github.com/paulczar/helmfile-starter-kit&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helmfile Starter Kit&lt;/a&gt; and the &lt;a href=&#34;https://github.com/paulczar/platform-operations-on-kubernetes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Platform Operations on Kubernetes&lt;/a&gt; project built on top of it. The latter of which is used to deploy a whole kitchen sink worth of platform tooling across dozens of Kubernetes clusters.&lt;/p&gt;
+&lt;link rel=&#34;stylesheet&#34; href=&#34;/css/faq.css&#34;&gt;
+&lt;div class=&#34;faqs&#34; id=&#34;faqs&#34;&gt;
+    &lt;div class=&#34;flex-container jc-between&#34;&gt;&lt;/div&gt;
+        &lt;h2 class=&#34;h2 mb-md&#34;&gt;Frequently Asked Questions&lt;/h2&gt;
+        &lt;div class=&#34;faq&#34;&gt;
+            
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;What is a Helmfile?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Helmfile is a declarative specification wrapping for deploying distributions of Helm charts. They add additional functionality to Helm by allowing you to compose several charts together to create a comprehensive deployment artifact.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;What is a Helm chart?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Helm charts are Kubernetes manifests or a collection of files that correspond to a directly related set of Kubernetes resources.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;How do Helmfiles work?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Helmfiles work by reading your Helmfile manifests and comparing them against the actual state of what is running in your cluster. Any differences are then acted upon by calling out to Helm itself.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;What is the difference between Helm and Helmfile?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Helm is a tool for templating and sharing Kubernetes manifests for your applications, while a Helmfile is a declarative specification for deploying Helm charts that adds functionality to Helm.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;How do you modify the resources generated by a specific Helm chart?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Resources generated by a specific Helm chart can be modified before installation by allowing you to JSON/Strategic-Merge patch resources.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;What are the benefits of Helmfiles?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Helmfiles are beneficial because they provide powerful declarative specification for deploying Helm charts across many environments.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+        &lt;/div&gt;
+    &lt;/div&gt;
+    
+&lt;/div&gt;
+
+&lt;script type=&#34;text/javascript&#34;&gt;
+    $(&#34;.faq-item&#34;).each( function() {
+        $(this).click(function () {
+            $(this).find(&#34;#arrow&#34;).toggleClass(&#34;flip&#34;); 
+            $(this).find(&#34;.faq-answer&#34;).slideToggle(200); 
+        });
+    });
+&lt;/script&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Installing Harbor on Kubernetes with Project Contour, Cert Manager, and Let’s Encrypt</title>
+      
+      <link>/guides/kubernetes/harbor-gs/</link>
+      <pubDate>Mon, 02 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/harbor-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;Running a private container image registry has been a staple in many enterprise
+environments for years. These registries allow full control over access,
+updates, and the software platform itself. And while your organization may have
+an official image registry, having your own can also be a benefit!&lt;/p&gt;
+&lt;p&gt;Maybe it&amp;rsquo;s just for learning. Or maybe you like the idea of self-hosting your
+own services. Or maybe, like so many companies that have also made the decision
+to self-host, you are concerned about security and access. Whatever the reason,
+you have made the decision to deploy your own. But this process includes a lot
+more than just an initial install.&lt;/p&gt;
+&lt;p&gt;A container image registry needs to be accessible to many online services to be
+useful, not the least of which is your desktop. It’s what makes pulling and
+pushing images possible. And you probably want it to be accessible from outside
+your own network, too, so that you can collaborate and share your projects.
+These days, to be secure, this requires TLS encryption to enable HTTPS traffic.&lt;/p&gt;
+&lt;p&gt;In this guide, you will deploy Harbor to Kubernetes as the actual image registry
+application. You will also use Project Contour to manage ingress to your
+Kubernetes cluster.&lt;/p&gt;
+
+&lt;div class=&#34;youtube-video-shortcode&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/SXSqrgYKO4s&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;harbor-and-contour&#34;&gt;Harbor and Contour&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://goharbor.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Harbor&lt;/a&gt; is a powerful registry for containers and Helm
+charts. It is fully open source and backed by the
+&lt;a href=&#34;https://landscape.cncf.io/selected=harbor&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Native Computing Foundation (CNCF)&lt;/a&gt;.
+But getting it up and running, with automated TLS certificate renewal in
+particular, can be a challenge—especially with the multiple services Harbor uses
+that require east-west and north-south network communication.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://projectcontour.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Contour&lt;/a&gt;, also a CNCF project, is an ingress
+controller built for Kubernetes. It functions as a control plane for Envoy while
+also offering advanced routing functionality beyond the default ingress
+controller provided by Kubernetes.&lt;/p&gt;
+&lt;p&gt;You will deploy Harbor and Contour, and use
+&lt;a href=&#34;https://cert-manager.io/docs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cert-manager&lt;/a&gt; and
+&lt;a href=&#34;https://letsencrypt.org&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt; to automate TLS certificate generation
+and renewal for your Harbor installation. This will allow you to keep your
+Harbor installation up and running and utilizing HTTPS without manually
+generating and applying new certificates.&lt;/p&gt;
+&lt;p&gt;Also, using the patterns in this guide, you should be able to deploy other
+services to Kubernetes and secure their ingress as well. And once you understand
+the basics of certificate management, ingress, and routing services, you’ll be
+able to keep on deploying other services to Kubernetes and enabling secure
+access over the internet!&lt;/p&gt;
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Before you get started, you’ll need to do the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Install Helm 3&lt;/strong&gt;: Helm is used in this guide to install Contour and Harbor.
+A guide for installing Helm can be found
+&lt;a href=&#34;https://helm.sh/docs/intro/install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Create a Kubernetes cluster&lt;/strong&gt;: This guide was built using Google Kubernetes
+Engine (GKE) with Kubernetes version 1.17. Any Kubernetes cluster with access
+to the internet should work fine, but your results may vary depending on the
+version you use. Initial testing with 1.16 resulted in errors during the
+Harbor install. For a guide on creating a GKE cluster, see
+&lt;a href=&#34;https://cloud.google.com/kubernetes-engine/docs/quickstart&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this page&lt;/a&gt; from
+Google. Ensure your
+&lt;a href=&#34;https://kubernetes.io/docs/reference/kubectl/cheatsheet/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;kubectl&lt;/code&gt; context&lt;/a&gt;
+is using this cluster.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Install watch&lt;/strong&gt;: watch is a small command-line utility that continually
+shows the output of a command being run. This allows you to monitor
+&lt;code&gt;kubectl get pods&lt;/code&gt;, for example, without explicitly re-running the command
+multiple times. Instructions for installing on macOS are
+&lt;a href=&#34;https://osxdaily.com/2010/08/22/install-watch-command-on-os-x/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;About 30 minutes&lt;/strong&gt;: It could take more time than that; it will depend on how
+long the Let’s Encrypt servers take to issue certificates. But in most of my
+testing for writing this post, it took about 30 minutes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Optional - buy a domain name&lt;/em&gt;: You can use &lt;code&gt;.xip.io&lt;/code&gt; (a
+&lt;a href=&#34;http://xip.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;service&lt;/a&gt; that provides dynamic DNS based on IP address)
+addresses to avoid needing to buy a domain. Otherwise you will need a domain
+name that you control in order to configure DNS. This guide uses a
+Google-managed domain and DNS zone, but instructions can be modified for other
+providers. Note: if you do decide to use &lt;code&gt;.xip.io&lt;/code&gt;, you may experience issues
+using the &lt;code&gt;letsencrypt-prod&lt;/code&gt; ClusterIssuer later in the demo due to rate
+limiting. Often you can just wait a few hours and it&amp;rsquo;ll eventually work. For
+best results, we recommend using your own domain.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;prepare-the-environment&#34;&gt;Prepare the Environment&lt;/h2&gt;
+&lt;p&gt;Create a Kubernetes cluster.  In GKE this can be as simple as running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gcloud container clusters create jan8 --num-nodes &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Being organized is key to any successful project. So before you dig in, create a
+new project directory and &lt;code&gt;cd&lt;/code&gt; into it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir harbor-install &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;install-project-contour&#34;&gt;Install Project Contour&lt;/h2&gt;
+&lt;p&gt;While you are going to use Helm to install Project Contour, Helm will not create
+the namespace for you. So the first step in this installation is to create that
+namespace.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ kubectl create namespace projectcontour
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you do not have the Bitnami repo referenced in Helm yet (you can check by
+running &lt;code&gt;helm repo list&lt;/code&gt;), you will need to install it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You will also need to update your Helm repositories.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helm repo update
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Next, run &lt;code&gt;helm install&lt;/code&gt; to finish the installation. Here you will install
+Bitnami&amp;rsquo;s image for Contour. This chart includes defaults that will work out of
+the box for this guide. And since it comes from Bitnami, you can trust that the
+image has been thoroughly tested and scanned.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helm install ingress bitnami/contour -n projectcontour --version 3.3.1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now simply wait for the Pods to become &lt;code&gt;READY&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;watch kubectl get pods -n projectcontour
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then define some environment variables for your proposed Harbor domain and your
+email address. It is recommended that you use a subdomain under the domain
+procured in the prerequisites section (e.g., harbor.example.com). This way you
+can use other subdomain URLs to access other services you may deploy in the
+future. The email address will be used for your Let&amp;rsquo;s Encrypt certificate so the
+cert authority can notify you about expirations.&lt;/p&gt;
+&lt;p&gt;Defining these variables will make the rest of the commands in this guide more
+simple to run. The email address and the domain do not have to use the same
+domain (a Gmail address is fine).&lt;/p&gt;
+&lt;p&gt;If you do not have a custom domain run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;IP&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;kubectl describe svc ingress-contour-envoy --namespace projectcontour &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep Ingress &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $3}&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;DOMAIN&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$IP&lt;/span&gt;.xip.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Otherwise run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;DOMAIN&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;your.domain.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Set your email address for cert-manager:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;EMAIL_ADDRESS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;username@example.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;set-up-dns&#34;&gt;Set Up DNS&lt;/h2&gt;
+
+
+&lt;div class=&#34;aside aside-warning&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;You may skip this section&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;This section is not applicable for those using &lt;code&gt;xip.io&lt;/code&gt;.
+If that&amp;rsquo;s you, please skip this entire section.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In this section, things can vary a bit. Because this guide was written using
+Google Cloud Platform (GCP) tooling, the instructions below will reflect that.
+But should you be using another provider, I will try to provide a generalized
+description of what is being done so you can look up those specific steps. I
+have also numbered these steps for clarity.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;In order to set up DNS records, you need the IP address of the Envoy ingress
+router installed by Project Contour. Use the following command to describe
+the service. If the &lt;code&gt;EXTERNAL-IP&lt;/code&gt; is still in a &lt;code&gt;&amp;lt;pending&amp;gt;&lt;/code&gt; state, just wait
+until one is assigned. Record this value for a future step.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;watch kubectl get service ingress-contour-envoy -n projectcontour -o wide
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Now set up a DNS zone within your cloud provider.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;For GCP, this can be found in the GCP web UI, under Networking Services,
+Cloud DNS. Click &lt;code&gt;Create Zone&lt;/code&gt; and follow the instructions to give the zone
+a descriptive name, as well as provide the DNS name. The DNS name will be
+whatever domain you have registered (e.g., &lt;code&gt;example.com&lt;/code&gt;).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For AWS, this is done via a service called
+&lt;a href=&#34;https://aws.amazon.com/route53/faqs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Route 53&lt;/a&gt;, and for Azure,
+&lt;a href=&#34;https://docs.microsoft.com/en-us/azure/dns/dns-getstarted-portal_&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this is done&lt;/a&gt;
+by creating a resource in the Azure Portal.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once completed, the important part is that you now have a list of name
+servers. For example, one or more of the format
+&lt;code&gt;ns-cloud-x1.googledomains.com.&lt;/code&gt; Record these for a future step.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;Next, add an A record to your DNS zone for a wildcard (&lt;code&gt;*&lt;/code&gt;) subdomain. An A
+record is an &amp;ldquo;Address&amp;rdquo; record, one of the most fundamental types of DNS
+records; it maps the more user-friendly URL (harbor.example.com) to an IP
+address. Setting this up as a wildcard will allow you to configure any
+traffic coming into any subdomain to first be resolved by Project Contour and
+Envoy, then be routed to its final destination based on the specific
+subdomain requested.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;For GCP, click into the DNS zone you just created and select &lt;code&gt;Add Record Set&lt;/code&gt;.
+From here, add a &lt;code&gt;*&lt;/code&gt; as the DNS name field so the full DNS name reads
+&lt;code&gt;*.example.com&lt;/code&gt;. In the IPv4 address field, enter the &lt;code&gt;EXTERNAL_IP&lt;/code&gt; of the
+Envoy service recorded earlier in Step 1. Then click create.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For AWS and Azure, this is done via the respective services listed in the previous step.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once completed, your DNS zone should have an A record set up for any subdomain
+(&lt;code&gt;*&lt;/code&gt;) to be mapped to the IP address of the Envoy service running in
+Kubernetes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;For the last of the somewhat confusing UI-based steps, you need to add the
+list of name servers from Step 2 to your personal domain. This will allow any
+HTTP/HTTPS requests for your domain to reference the records you set up
+previously in your DNS zone.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;For Google-managed domains, in the Google Domains UI, click &lt;code&gt;manage&lt;/code&gt; next to
+the domain you want to modify. Then click on &lt;code&gt;DNS&lt;/code&gt;. In the Name Servers
+section at the top, click &lt;code&gt;edit&lt;/code&gt;. Now, one at a time, simply paste in the list
+of name servers recorded in Step 2. There should be four name server
+addresses. Then click &lt;code&gt;Save&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For other domain name registrars, the process is similar. Contact your
+registrar if you require further assistance with this process.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;That&amp;rsquo;s it for configuring DNS. Now you need to wait for all the new records to
+propagate. Run the following command and wait for the output to show that your
+domain is now referencing the IP address of the Envoy service. This could take a
+few minutes.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;watch host &lt;span class=&#34;nv&#34;&gt;$DOMAIN&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;install-cert-manager&#34;&gt;Install cert-manager&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://cert-manager.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cert-manager&lt;/a&gt; will automate certificate renewal for
+your services behind Project Contour. When a certificate is set to expire,
+cert-manager will automatically request a new one from the certificate issuer
+(you will set this up in the next section). This is especially important when
+using a project like Let&amp;rsquo;s Encrypt, whose certificates are only valid for 90
+days.&lt;/p&gt;
+&lt;p&gt;To install cert-manager, this guide uses Helm, for uniformity. As with
+installing Project Contour, Helm will not create a namespace, so the first step
+is to create one.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create namespace cert-manager
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you do not have the Jetstack repo referenced in Helm yet (you can check by
+running &lt;code&gt;helm repo list&lt;/code&gt;), you will need to install that reference.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add jetstack https://charts.jetstack.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once again, update your Helm repositories.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo update
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, run &lt;code&gt;helm install&lt;/code&gt; to install cert-manager.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install cert-manager jetstack/cert-manager --namespace cert-manager &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;   --version v1.0.2 --set &lt;span class=&#34;nv&#34;&gt;installCRDs&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, wait for the Pods to become &lt;code&gt;READY&lt;/code&gt; before moving on to the next step.
+This should only take a minute or so.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;watch kubectl get pods -n cert-manager
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;set-up-lets-encrypt-staging-certificates&#34;&gt;Set up Let&amp;rsquo;s Encrypt Staging Certificates&lt;/h2&gt;
+&lt;p&gt;When initially setting up your Harbor service, or any service that will be using
+Let&amp;rsquo;s Encrypt, it is important to start by using certificates from their staging
+server as opposed to the production server. Staging certificates allow you to
+test your service without the risk of running up against any API rate limiting,
+which Let’s Encrypt imposes on its production environment. This is not a
+requirement, however; production certificates can be used initially. But using
+the staging ones is a good habit to get into, and will highlight how these
+certificates are applied.&lt;/p&gt;
+&lt;p&gt;Create the deployment YAML for the staging certificate by pasting the block
+below into a new file. Once applied, this will set up the staging cert
+configuration along with your email address, for certificate expirations
+notifications. You won&amp;rsquo;t need to worry about these emails, however, as
+cert-manager will take care of the renewal for you.&lt;/p&gt;
+&lt;p&gt;Notice that this is of &lt;code&gt;kind: ClusterIssuer&lt;/code&gt;. That means this certificate issuer
+is scoped to all namespaces in this Kubernetes cluster. For more granular
+controls in production, you may decide to simply change this to &lt;code&gt;kind: Issuer&lt;/code&gt;,
+which will be scoped to a specific namespace and only allow services in that
+namespace to request certificates from that issuer. But be aware that this will
+necessitate changing other configuration options throughout this guide. We are
+using &lt;code&gt;ClusterIssuer&lt;/code&gt; because it is secure enough for our use case, and
+presumably you are not using a multi-tenant Kubernetes cluster when following
+this guide.&lt;/p&gt;
+&lt;p&gt;Finally, this sets up a “challenge record&amp;quot; in the &lt;code&gt;solvers&lt;/code&gt; section, which
+allows Let&amp;rsquo;s Encrypt to verify that the certificate it is issuing is really
+controlled by you.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; letsencrypt-staging.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;apiVersion: cert-manager.io/v1alpha2
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;kind: ClusterIssuer
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;metadata:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  name: letsencrypt-staging
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;spec:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  acme:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    email: $EMAIL_ADDRESS
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    privateKeySecretRef:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      name: letsencrypt-staging
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    server: https://acme-staging-v02.api.letsencrypt.org/directory
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    solvers:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    - http01:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        ingress:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          class: contour
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now &lt;code&gt;apply&lt;/code&gt; the file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f letsencrypt-staging.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The process of creating the cluster issuer should be fairly quick, but you can
+confirm it completed successfully by running the following and ensuring the
+cluster issuer was issued.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl get clusterissuers.cert-manager.io
+NAME                  READY   AGE
+letsencrypt-staging   True    74s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;install-harbor&#34;&gt;Install Harbor&lt;/h2&gt;
+&lt;p&gt;Now that you have your staging certificate, you can install Harbor, for which
+this guide uses Helm in combination with the Bitnami repo set up earlier. As
+with your other install steps, the first thing to do is create the namespace.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create namespace harbor
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Next, create the values file. The Bitnami Helm chart includes defaults that, for
+the most part, will work for your needs. However, there are a few configuration
+options that need to be set.&lt;/p&gt;
+&lt;p&gt;Here you will notice that you are giving the TLS secret in Kubernetes a name,
+&lt;code&gt;harbor-tls-staging&lt;/code&gt;. You can choose any name you like, but it should be
+descriptive and reflect that this secret will be distinct from the production
+certificate you will apply later.&lt;/p&gt;
+&lt;p&gt;You are also setting up references to your domain so Harbor and Contour can set
+up routing. The Annotations section is important as it tells Harbor about our
+configuration. Notice that for
+&lt;code&gt;cert-manager.io/cluster-issuer: letsencrypt-staging&lt;/code&gt; you are telling Harbor to
+use the &lt;code&gt;ClusterIssuer&lt;/code&gt; called letsencrypt-staging, the one you set up earlier.
+This will come up again later when you move to production certificates. Comments
+are provided in the file for further detail.&lt;/p&gt;
+&lt;p&gt;Finally, this values file will disable the Harbor Notary service. At the time of
+this writing there is a bug in the Bitnami Helm chart (already reported) that
+doesn&amp;rsquo;t allow a TLS certificate to be applied for both &lt;code&gt;notary.$DOMAIN&lt;/code&gt; and
+&lt;code&gt;registry.$DOMAIN&lt;/code&gt;. I will try to update this post once that bug is fixed.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; harbor-values.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;harborAdminPassword: Password12345
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;service:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  type: ClusterIP
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  tls:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    enabled: true
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    existingSecret: harbor-tls-staging
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    notaryExistingSecret: notary-tls-staging
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;ingress:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  enabled: true
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  hosts:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    core: registry.$DOMAIN
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    notary: notary.$DOMAIN
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  annotations:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    cert-manager.io/cluster-issuer: letsencrypt-staging  # use letsencrypt-staging as the cluster issuer for TLS certs
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    ingress.kubernetes.io/force-ssl-redirect: &amp;#34;true&amp;#34;     # force https, even if http is requested
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    kubernetes.io/ingress.class: contour                 # using Contour for ingress
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    kubernetes.io/tls-acme: &amp;#34;true&amp;#34;                       # using ACME certificates for TLS
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;externalURL: https://registry.$DOMAIN
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;portal:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  tls:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    existingSecret: harbor-tls-staging
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now install Harbor using this values file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install harbor bitnami/harbor -f harbor-values.yaml -n harbor --version 9.4.4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And wait for the Pods to become &lt;code&gt;&amp;lt;READY&amp;gt;&lt;/code&gt;. This may take a minute or two.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;watch kubectl get pods -n harbor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, ensure that the certificates were requested and returned successfully.
+This should happen fairly quickly, but may take up to an hour. It all depends on
+the server load at that time.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl -n harbor get certificate
+NAME                 READY   SECRET               AGE
+harbor-tls-staging   True    harbor-tls-staging   2m26s
+notary-tls-staging   True    notary-tls-staging   2m26s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Print out the URL, username, and password:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;url: https://registry.$DOMAIN
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;username: admin
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;password: $(kubectl get secret --namespace harbor harbor-core-envvars -o jsonpath=&amp;#34;{.data.HARBOR_ADMIN_PASSWORD}&amp;#34; | base64 --decode)
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now open your browser of choice and go to your URL. You will notice that you
+will need to accept the security warning that the site is &amp;ldquo;untrusted.&amp;rdquo; This is
+because you are still using the staging certificates, which are not signed by a
+trusted certificate authority (CA).&lt;/p&gt;
+&lt;p&gt;Once you ensure that you can log in and that Harbor is working as intended, you
+can move to production certificates.&lt;/p&gt;
+&lt;h2 id=&#34;set-up-lets-encrypt-production-certificates&#34;&gt;Set Up Let&amp;rsquo;s Encrypt Production Certificates&lt;/h2&gt;
+
+
+&lt;div class=&#34;aside aside-warning&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Rate Limits&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;Reminder, if using &lt;code&gt;.xip.io&lt;/code&gt; you may encounter rate limit issues with Lets
+Encrypt causing major delays in the certificate issuance.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Similar to how you set up the Let&amp;rsquo;s Encrypt staging certificate, you now need to
+create the &lt;code&gt;ClusterIssuer&lt;/code&gt; for production certificates. First, &lt;code&gt;echo&lt;/code&gt; the
+following to create the file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; letsencrypt-prod.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;apiVersion: cert-manager.io/v1alpha2
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;kind: ClusterIssuer
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;metadata:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  name: letsencrypt-prod
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;spec:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  acme:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    email: $EMAIL_ADDRESS
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    privateKeySecretRef:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      name: letsencrypt-prod
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    server: https://acme-v02.api.letsencrypt.org/directory
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    solvers:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    - http01:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        ingress:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          class: contour
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then apply it to your Kubernetes cluster.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f letsencrypt-prod.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Again, you can confirm this process completed successfully by running the
+following and ensuring the cluster issuer was issued.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get clusterissuers
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Recall how earlier in the annotations of the Harbor &lt;code&gt;values.yml&lt;/code&gt; file you told
+Harbor to use the &lt;code&gt;letsencrypt-staging&lt;/code&gt; cluster issuer, as well as the secret
+&lt;code&gt;harbor-tls-staging&lt;/code&gt;. You must now tell Harbor to use the production cluster
+issuer you just created, and trigger it to create a new secret based on that
+certificate. To do this, you are going to update the &lt;code&gt;harbor-values.yaml&lt;/code&gt; file
+using &lt;code&gt;sed&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sed -i &#39;s/-staging/-prod/&#39; harbor-values.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Run &lt;code&gt;helm delete&lt;/code&gt; then &lt;code&gt;helm install&lt;/code&gt; to uninstall and reinstall Harbor:&lt;/p&gt;
+&lt;p&gt;Note: The persistent volumes are not deleted during the &lt;code&gt;helm delete&lt;/code&gt; so any
+changes in Harbor you may have made should persist.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm delete -n harbor harbor
+helm install harbor bitnami/harbor -f harbor-values.yaml -n harbor --version 9.4.4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wait for the new Pods to become &lt;code&gt;&amp;lt;READY&amp;gt;&lt;/code&gt;. This may take a minute or two.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;watch kubectl get pods -n harbor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This process may take as little as a minute or as long as an hour. It just
+depends on the server load at that time. But in most of my testing, it took less
+than 10 minutes.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;watch kubectl get certificate harbor-tls-prod -n harbor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the certificates are generated successfully, your Harbor instance should be
+up and running with valid and trusted TLS certificates. Try logging into Harbor
+again.&lt;/p&gt;
+&lt;p&gt;Your browser should no longer present a warning, as the certificate you are now
+using is signed by a trusted CA.&lt;/p&gt;
+&lt;p&gt;Note: If you still see certificate warnings, you may need to re-open it from a
+fresh browser.&lt;/p&gt;
+&lt;h2 id=&#34;test-harbor&#34;&gt;Test Harbor&lt;/h2&gt;
+&lt;p&gt;Run &lt;code&gt;docker login&lt;/code&gt; to log into your new registry:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker login https://registry.&lt;span class=&#34;nv&#34;&gt;$DOMAIN&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Push an image to the new registry:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker pull nginx:latest
+docker tag nginx:latest registry.&lt;span class=&#34;nv&#34;&gt;$DOMAIN&lt;/span&gt;/library/nginx:latest
+docker push registry.&lt;span class=&#34;nv&#34;&gt;$DOMAIN&lt;/span&gt;/library/nginx:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Test that Kubernetes can access the new image:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create deployment nginx --image&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;registry.&lt;span class=&#34;nv&#34;&gt;$DOMAIN&lt;/span&gt;/library/nginx:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wait a few moments and check that the Pod is running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ NAME                         READY   STATUS    RESTARTS   AGE
+pod/nginx-7cdffc88cf-p8v9r   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          5s
+
+NAME                 TYPE        CLUSTER-IP     EXTERNAL-IP   PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;   AGE
+service/kubernetes   ClusterIP   10.123.240.1   &amp;lt;none&amp;gt;        443/TCP   166m
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginx   1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           5s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginx-7cdffc88cf   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       5s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;That&amp;rsquo;s it! You now have a service running in Kubernetes with TLS encryption
+enforced and certificate generation automated. And by using these patterns, you
+should be able to install and configure other services as well. Specific steps,
+especially around the configuration of the service itself, will be different,
+but after using this guide you should have a leg up in getting started.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

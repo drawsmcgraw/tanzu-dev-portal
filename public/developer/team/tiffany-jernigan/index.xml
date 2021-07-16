@@ -1,0 +1,1456 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – </title>
+    <link>/team/tiffany-jernigan/</link>
+    <description>Recent content on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/team/tiffany-jernigan/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: What are Kubernetes Secrets and Service Accounts?</title>
+      
+      <link>/guides/kubernetes/platform-security-secrets-sa-what-is/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/platform-security-secrets-sa-what-is/</guid>
+      <description>
+
+        
+        &lt;p&gt;In software, there’s often data that you want to keep separate from your build
+process. These could be simple configuration properties, such as URLs or IP
+addresses, or more sensitive data, such as usernames and passwords, OAuth tokens
+or TLS certificates. In Kubernetes, these are referred to as
+&lt;a href=&#34;https://kubernetes.io/docs/concepts/configuration/secret/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Secrets&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;secrets&#34;&gt;Secrets&lt;/h2&gt;
+&lt;p&gt;It’s worth noting that while the name “secret” may imply “secure”, there are
+some qualifiers. By default, all secrets are stored unencrypted in &lt;code&gt;etcd&lt;/code&gt;. As of
+Kubernetes 1.13 though, operators are given the option of
+&lt;a href=&#34;https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;encrypting data at rest in etcd&lt;/a&gt;.
+Additionally, you can
+&lt;a href=&#34;https://kubernetes.io/docs/tasks/administer-cluster/kms-provider/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;integrate with an external Key Management Service&lt;/a&gt;,
+such as &lt;a href=&#34;https://cloud.google.com/kms/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Google Cloud KMS&lt;/a&gt; or
+&lt;a href=&#34;https://www.vaultproject.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;HashiCorp Vault&lt;/a&gt;. This guide doesn’t cover these
+topics, but the above links are a great start to learn more.&lt;/p&gt;
+&lt;p&gt;All examples used in this guide can be
+&lt;a href=&#34;https://github.com/BrianMMcClain/k8s-secrets-and-sa&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;found on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Before you can get started using secrets, you first need to create a secret. As
+you may expect, this can be done by defining an object of kind &lt;code&gt;Secret&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Secret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;mysecret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Opaque&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;bXl1c2VybmFtZQo=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;#Base64 encoded value of &amp;#34;myusername&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;bXlwYXNzd29yZAo=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;#Base64 encoded value of &amp;#34;mypassword&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Secrets in Kubernetes are, at their most basic form, a collection of keys and
+values. The above example creates a secret named &lt;code&gt;mysecret&lt;/code&gt; with two keys:
+&lt;code&gt;username&lt;/code&gt; and &lt;code&gt;password&lt;/code&gt;. There’s one very important thing to note though,
+which is that the values of these key/value pairs are encoded as base64.
+Remember that base64 is an encoding algorithm, not an encryption algorithm. This
+is done to help facilitate data that may not be entirely alpha-numeric, and
+instead could include binary data, non-ASCII data, etc. You apply can this YAML
+as you would if you were creating any other Kubernetes object:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f https://raw.githubusercontent.com/BrianMMcClain/k8s-secrets-and-sa/main/secret-base64.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once applied, you can see that while you can get the secret with &lt;code&gt;kubectl&lt;/code&gt;, it
+avoids printing the values of each key by default:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl describe secret mysecret
+
+Name:         mysecret
+Namespace:    default
+Labels:       &amp;lt;none&amp;gt;
+Annotations:  
+Type:         Opaque
+
+&lt;span class=&#34;nv&#34;&gt;Data&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;====&lt;/span&gt;
+password:  &lt;span class=&#34;m&#34;&gt;11&lt;/span&gt; bytes
+username:  &lt;span class=&#34;m&#34;&gt;11&lt;/span&gt; bytes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Of course, if you want to see the base64-encoded contents of the secret, you can
+still fetch them with a slightly different command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl get secret mysecret -o yaml
+
+apiVersion: v1
+data:
+  password: &lt;span class=&#34;nv&#34;&gt;bXlwYXNzd29yZAo&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;
+  username: &lt;span class=&#34;nv&#34;&gt;bXl1c2VybmFtZQo&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;
+kind: Secret
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Great! With your secret created, it’s time to start creating pods to use it!
+You’re faced with another decision, however, since Kubernetes provides a couple
+of methods for presenting secrets to a pod. The first example you’ll look at is
+mounting them as files in a volume:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Pod&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;secret-as-file&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;secret-as-file&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumeMounts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;mysecretvol&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;mountPath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/etc/mysecret&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;readOnly&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;mysecretvol&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secret&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secretName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;mysecret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here, a new pod named &lt;code&gt;secret-as-file&lt;/code&gt; is created from the
+&lt;a href=&#34;https://hub.docker.com/_/nginx&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;NGINX Docker image&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;NOTE: The nginx container image is used here simply because it&amp;rsquo;s an easily
+accessible long-running process, this would look the same for your own container
+image.&lt;/p&gt;
+&lt;p&gt;There are two sections to point out, the first being the &lt;code&gt;volumes&lt;/code&gt; section,
+which defines a new volume. Kubernetes has
+&lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/volumes/#types-of-volumes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;many different types of volumes to choose from&lt;/a&gt;,
+but for this case you’re specifically interested in creating a
+&lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/volumes/#secret&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;volume of type &lt;code&gt;secret&lt;/code&gt;&lt;/a&gt;.
+These volumes are backed by &lt;code&gt;tmpfs&lt;/code&gt;, a RAM-based file system, rather than
+written to a persistent disk. Secret volumes require you to define the secret to
+mount (in the &lt;code&gt;secretName&lt;/code&gt; field), and for each key in your secret, it creates a
+file that contains the key’s value. You can see this in action by applying this
+YAML and then listing the files at the &lt;code&gt;mountPath&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f https://raw.githubusercontent.com/BrianMMcClain/k8s-secrets-and-sa/main/pod-secret-as-file.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; secret-as-file -- ls /etc/mysecret
+
+password
+username
+
+$ kubectl &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; secret-as-file -- cat /etc/mysecret/username
+
+myusername
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As you can see, there are two files in the volume that was created: &lt;code&gt;password&lt;/code&gt;
+and &lt;code&gt;username&lt;/code&gt;. If you print out the contents of the &lt;code&gt;username&lt;/code&gt; file, you can
+see the secret’s value of &lt;code&gt;myusername&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; secret-as-file -- cat /etc/mysecret/username
+
+myusername
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Alternatively, secrets can also be presented to your container as environment
+variables. Consider the following YAML:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Pod&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;secret-as-env&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;secret-as-env&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;SECRET_USERNAME&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;valueFrom&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secretKeyRef&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;mysecret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;SECRET_PASSWORD&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;valueFrom&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secretKeyRef&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;mysecret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here, instead of defining volumes that reference your secret, two environment
+variables are defined and reference the secret name and key name. Applying this
+YAML allows you to retrieve these environment variables from a shell in the pod:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f https://raw.githubusercontent.com/BrianMMcClain/k8s-secrets-and-sa/main/pod-secret-as-env.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; secret-as-env -- sh -c &lt;span class=&#34;s2&#34;&gt;&amp;#34;echo \$SECRET_USERNAME&amp;#34;&lt;/span&gt;
+
+myusername
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As you can see, the value of your secret is stored in the &lt;code&gt;$SECRET_USERNAME&lt;/code&gt;
+environment variable as defined!&lt;/p&gt;
+&lt;h2 id=&#34;service-accounts&#34;&gt;Service Accounts&lt;/h2&gt;
+&lt;p&gt;When you interact directly with Kubernetes, using &lt;code&gt;kubectl&lt;/code&gt; for example, you’re
+using a user account. When processes in pods need to interact with Kubernetes
+though, they use a
+&lt;a href=&#34;https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;service account&lt;/a&gt;,
+which describes the set of permissions they have within Kubernetes. The good
+news is that out of the box, all pods are given the &lt;code&gt;default&lt;/code&gt; service account.
+Unless your Kubernetes administrator has changed the &lt;code&gt;default&lt;/code&gt; service account
+though, the permissions are limited. If you run &lt;code&gt;kubectl&lt;/code&gt; in a container on
+Kubernetes, it will automatically know where to find the cluster that it&amp;rsquo;s
+running on. You can verify this by standing up a pod and running
+&lt;code&gt;kubectl version&lt;/code&gt;, which will show information about the server it&amp;rsquo;s connected
+to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl run -it kubectl --restart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Never --rm --image&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;brianmmcclain/kubectl-alpine -- /bin/bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl version
+
+Client Version: version.Info&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;Major:&lt;span class=&#34;s2&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;, Minor:&lt;span class=&#34;s2&#34;&gt;&amp;#34;18&amp;#34;&lt;/span&gt;, GitVersion:&lt;span class=&#34;s2&#34;&gt;&amp;#34;v1.18.4&amp;#34;&lt;/span&gt;, GitCommit:&lt;span class=&#34;s2&#34;&gt;&amp;#34;c96aede7b5205121079932896c4ad89bb93260af&amp;#34;&lt;/span&gt;, GitTreeState:&lt;span class=&#34;s2&#34;&gt;&amp;#34;clean&amp;#34;&lt;/span&gt;, BuildDate:&lt;span class=&#34;s2&#34;&gt;&amp;#34;2020-06-17T11:41:22Z&amp;#34;&lt;/span&gt;, GoVersion:&lt;span class=&#34;s2&#34;&gt;&amp;#34;go1.13.9&amp;#34;&lt;/span&gt;, Compiler:&lt;span class=&#34;s2&#34;&gt;&amp;#34;gc&amp;#34;&lt;/span&gt;, Platform:&lt;span class=&#34;s2&#34;&gt;&amp;#34;linux/amd64&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+Server Version: version.Info&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;Major:&lt;span class=&#34;s2&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;, Minor:&lt;span class=&#34;s2&#34;&gt;&amp;#34;18&amp;#34;&lt;/span&gt;, GitVersion:&lt;span class=&#34;s2&#34;&gt;&amp;#34;v1.18.2&amp;#34;&lt;/span&gt;, GitCommit:&lt;span class=&#34;s2&#34;&gt;&amp;#34;52c56ce7a8272c798dbc29846288d7cd9fbae032&amp;#34;&lt;/span&gt;, GitTreeState:&lt;span class=&#34;s2&#34;&gt;&amp;#34;clean&amp;#34;&lt;/span&gt;, BuildDate:&lt;span class=&#34;s2&#34;&gt;&amp;#34;2020-04-30T20:19:45Z&amp;#34;&lt;/span&gt;, GoVersion:&lt;span class=&#34;s2&#34;&gt;&amp;#34;go1.13.9&amp;#34;&lt;/span&gt;, Compiler:&lt;span class=&#34;s2&#34;&gt;&amp;#34;gc&amp;#34;&lt;/span&gt;, Platform:&lt;span class=&#34;s2&#34;&gt;&amp;#34;linux/amd64&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Notice that you haven’t provided any credentials or configuration file. This
+information is provided by Kubernetes and the &lt;code&gt;default&lt;/code&gt; service account.
+However, almost any attempt at interacting with the Kubernetes API will be
+greeted with denial:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl get pods
+
+Error from server &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Forbidden&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;: pods is forbidden: User
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;system:serviceaccount:default:default&amp;#34;&lt;/span&gt; cannot list resource &lt;span class=&#34;s2&#34;&gt;&amp;#34;pods&amp;#34;&lt;/span&gt; in API group
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt; in the namespace &lt;span class=&#34;s2&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;
+
+$ &lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note: If you need to check if you have permission to run a command before
+actually running it, you can use the &lt;code&gt;kubectl auth can-i&lt;/code&gt; command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ kubectl auth can-i get pods
+no
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To address this, you can
+&lt;a href=&#34;https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;create a new service account&lt;/a&gt;
+with a wider set of permissions. This is demonstrated in the following YAML:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Role&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;pod-read-role&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;rules&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;apiGroups&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# &amp;#34;&amp;#34; indicates the core API group&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;resources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;pods&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;verbs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;get&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;watch&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;list&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ServiceAccount&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;pod-read-sa&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;RoleBinding&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;pod-read-rolebinding&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;subjects&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ServiceAccount&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;pod-read-sa&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiGroup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;roleRef&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Role&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;pod-read-role&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiGroup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here, three things are created: a &lt;code&gt;Role&lt;/code&gt; named “pod-read-role”, a
+&lt;code&gt;ServiceAccount&lt;/code&gt;, and a &lt;code&gt;RoleBinding&lt;/code&gt; to tie them together. Specifically, the
+&lt;code&gt;Role&lt;/code&gt; gives access to the “get”, “watch” and “list” actions on the resource
+“pods”. Described more simply, this role allows you to read information about
+pods, but not write or delete information about pods. This will allow you to do
+things like &lt;code&gt;kubectl get pods&lt;/code&gt;, but not &lt;code&gt;kubectl delete pod&lt;/code&gt;. You can see this
+in action by applying this YAML, creating a pod with this service account and
+running the commands yourself:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f https://raw.githubusercontent.com/BrianMMcClain/k8s-secrets-and-sa/main/role-sa-pod-read.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl run -it --restart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Never --rm kubectl-with-sa --image&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;brianmmcclain/kubectl-alpine --serviceaccount&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;pod-read-sa -- /bin/bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl get pods
+
+NAME              READY   STATUS    RESTARTS   AGE
+kubectl           1/1     Running   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;          22s
+kubectl-with-sa   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          6s
+secret-as-env     1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          3h40m
+secret-as-file    1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          4h10m
+
+$ kubectl delete pod secret-as-file
+
+Error from server &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Forbidden&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;: pods &lt;span class=&#34;s2&#34;&gt;&amp;#34;secrets-as-file&amp;#34;&lt;/span&gt; is forbidden: User
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;system:serviceaccount:default:pod-read-sa&amp;#34;&lt;/span&gt; cannot delete resource &lt;span class=&#34;s2&#34;&gt;&amp;#34;pods&amp;#34;&lt;/span&gt; in API
+group &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt; in the namespace &lt;span class=&#34;s2&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;
+
+$ &lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, the combination of secrets and service accounts can be leveraged to
+pull container images from private registries by
+&lt;a href=&#34;https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;using the &lt;code&gt;imagePullSecrets&lt;/code&gt; configuration property&lt;/a&gt;.
+You can create a secret from the command line with the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create secret docker-registry myregistrykey --docker-server&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;DUMMY_SERVER &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;        --docker-username&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;DUMMY_USERNAME --docker-password&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;DUMMY_DOCKER_PASSWORD &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;        --docker-email&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;DUMMY_DOCKER_EMAIL
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note: The secret used here isn&amp;rsquo;t exposed to the pod in the same way that you&amp;rsquo;ve
+seen earlier. The processes inside the containers of the pod don&amp;rsquo;t have access
+to this information. Instead, Kubernetes knows that it needs to use these
+credentials to pull the container images.&lt;/p&gt;
+&lt;p&gt;Once you create the secret by filling in your registry’s server, username,
+password, and email, you can create a service account, or edit an existing one,
+to use this secret when pulling container images. For example, you can add this
+to the &lt;code&gt;default&lt;/code&gt; service account. Make note, however, that this will overwrite
+any &lt;code&gt;imagePullSecret&lt;/code&gt; previously set:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl patch serviceaccount default -p &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;imagePullSecrets&amp;#34;: [{&amp;#34;name&amp;#34;: &amp;#34;myregistrykey&amp;#34;}]}&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Since this adds the &lt;code&gt;imagePullSecrets&lt;/code&gt; property to the default service account,
+any pod that you create without specifying a different service account will have
+these permissions. However, it&amp;rsquo;s worth noting that you can also
+&lt;a href=&#34;https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;specify &lt;code&gt;imagePullSecrets&lt;/code&gt; on an individual pod&lt;/a&gt;
+if it fits your deployment model better.&lt;/p&gt;
+&lt;h2 id=&#34;cleanup&#34;&gt;Cleanup&lt;/h2&gt;
+&lt;p&gt;To remove the resources that you&amp;rsquo;ve created, you can use &lt;code&gt;kubectl delete -f&lt;/code&gt;
+command and provide the file names used when applying them:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl delete -f &amp;lt;insert file&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;learn-more&#34;&gt;Learn More&lt;/h2&gt;
+&lt;p&gt;As with all things Kubernetes, the best place to go to keep learning is the
+&lt;a href=&#34;https://kubernetes.io/docs/home/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;official documentation&lt;/a&gt;, which covers
+&lt;a href=&#34;https://kubernetes.io/docs/concepts/configuration/secret/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;secrets&lt;/a&gt; and
+&lt;a href=&#34;https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;service accounts&lt;/a&gt;
+in even greater detail. You can also see where these are used in other guides,
+such as &lt;a href=&#34;/guides/containers/cnb-gs-kpack/&#34;&gt;Getting Started with kpack&lt;/a&gt; and
+&lt;a href=&#34;/guides/ci-cd/tekton-gs-p1/&#34;&gt;Getting Started with Tekton&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Basics of REST</title>
+      
+      <link>/guides/microservices/basics-of-rest/</link>
+      <pubDate>Thu, 07 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/microservices/basics-of-rest/</guid>
+      <description>
+
+        
+        &lt;p&gt;So what is &lt;a href=&#34;https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;REST&lt;/a&gt;? At a high level REST, or REpresentational State Transfer, is an architectural style for distributed hypermedia systems. It was created from a combination of other architectural styles and enlists several constraints. Roy Fielding, its creator, said that &amp;ldquo;REST provides a set of architectural constraints that, when applied as a whole, emphasizes scalability of component interactions, generality of interfaces, independent deployment of components, and intermediary components to reduce interaction latency, enforce security, and encapsulate legacy systems.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;This guide will cover:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;REST HTTP requests&lt;/li&gt;
+&lt;li&gt;REST HTTP responses&lt;/li&gt;
+&lt;li&gt;Constraints needed for an API to be RESTful&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;requests&#34;&gt;Requests&lt;/h2&gt;
+&lt;p&gt;The client has to make a request to the server to get or modify data on the server. A request contains the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;HTTP verb&lt;/li&gt;
+&lt;li&gt;headers&lt;/li&gt;
+&lt;li&gt;path: to a resource&lt;/li&gt;
+&lt;li&gt;[optional] message body: data&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Consider the example of a todo list. An example request could look like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;GET /todos
+Accept: application/json
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;http-methodsverbs&#34;&gt;HTTP Methods/Verbs&lt;/h3&gt;
+&lt;p&gt;HTTP methods, or verbs, define what kind of operation to perform on a resource. Some of the primary ones used with RESTful APIs are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;GET&lt;/code&gt;: get a resource or collection of resources&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;POST&lt;/code&gt;: create a new resource&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PUT&lt;/code&gt;: update a resource&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PATCH&lt;/code&gt;: partially modify a resource&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;DELETE&lt;/code&gt;: delete a resource&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;http-headers&#34;&gt;HTTP Headers&lt;/h3&gt;
+&lt;p&gt;The client uses headers to pass along request information to the server. Requests can have an &lt;code&gt;Accept&lt;/code&gt; request HTTP header which specifies what content type the client can accept from the server. The values are of the media, or &lt;a href=&#34;https://www.iana.org/assignments/media-types/media-types.xhtml&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MIME type&lt;/a&gt;. The simplest MIME types are of the format &lt;code&gt;type/subtype&lt;/code&gt;. For example, this could be &lt;code&gt;text/html&lt;/code&gt; which is for a text file containing HTML. Or &lt;code&gt;application/json&lt;/code&gt; for a JSON file. To see a list of common &lt;code&gt;Accept&lt;/code&gt; values check out the &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MDN web docs&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;path&#34;&gt;Path&lt;/h3&gt;
+&lt;p&gt;Requests need to contain a path to the resource it is trying to perform the HTTP request on. In the above example, that is &lt;code&gt;/todos&lt;/code&gt;. This is the resource that you are looking to read from or write to.&lt;/p&gt;
+&lt;p&gt;One important thing to note is the difference between addressing a collection and an individual item in that collection. The path &lt;code&gt;/todos&lt;/code&gt; would be addressing all of the items on the todo list. A &lt;code&gt;POST&lt;/code&gt; to this path could create a new item on that list, and a request to &lt;code&gt;GET /todos&lt;/code&gt; would return all items. On the other hand, &lt;code&gt;GET /todos/2&lt;/code&gt; would return just the second item on the todo list.&lt;/p&gt;
+&lt;h2 id=&#34;response&#34;&gt;Response&lt;/h2&gt;
+&lt;p&gt;After the client sends a request to the server, the server sends a response back to the client. This response consists of a:
+status code
+headers
+message body: data&lt;/p&gt;
+&lt;p&gt;For the previous request:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;GET /todos
+Accept: application/json
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The response could contain the following for a successful request:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;HTTP/1.1 200 OK
+Content-Type: application/json
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;pay rent&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;due&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1589031653&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;completed&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;get groceries&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;due&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1588869295&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;completed&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;http-headers-1&#34;&gt;HTTP Headers&lt;/h3&gt;
+&lt;p&gt;The responses have a &lt;code&gt;Content-Type&lt;/code&gt; entity header which specifies the MIME type of the resource. Its value should match one of the &lt;code&gt;Accept&lt;/code&gt; types sent by the client. In the above example, both the &lt;code&gt;Content-Type&lt;/code&gt; and &lt;code&gt;Accept&lt;/code&gt; header values are &lt;code&gt;application/json&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Headers can contain information on a wide array of topics including how to handle the TCP connection, authentication, caching, and more. Some REST APIs may have headers specific to them, but there’s also some headers that have a &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;universal definition&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;response-status-code&#34;&gt;Response Status Code&lt;/h3&gt;
+&lt;p&gt;One of the return values in a response is a response status code. Each code has a specific designation; for example, &lt;code&gt;200&lt;/code&gt; is &lt;code&gt;OK&lt;/code&gt; and means the request was successful. The response code categories are as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;1XX&lt;/code&gt;: Informational&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;2XX&lt;/code&gt;: Successful&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;3XX&lt;/code&gt;: Redirects&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;4XX&lt;/code&gt;: Client Errors&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;5XX&lt;/code&gt;: Server Errors&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To see the detailed list of response codes and their meaning, check out the &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Status&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MDN web docs&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;body&#34;&gt;Body&lt;/h3&gt;
+&lt;p&gt;The body contains the data the client requested in the MIME type specified in the &lt;code&gt;Content-Type&lt;/code&gt; header. In the example above, the body of the response is:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;pay rent&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;due&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1589031653&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;completed&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;get groceries&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;due&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1588869295&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;completed&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;constraints&#34;&gt;Constraints&lt;/h2&gt;
+&lt;p&gt;In order to create RESTful APIs, they need to adhere to six style constraints:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Client-Server Separation&lt;/li&gt;
+&lt;li&gt;Stateless&lt;/li&gt;
+&lt;li&gt;Cache&lt;/li&gt;
+&lt;li&gt;Uniform Interface&lt;/li&gt;
+&lt;li&gt;Layered System&lt;/li&gt;
+&lt;li&gt;[Optional] Code-On-Demand&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;client-server&#34;&gt;Client-Server&lt;/h3&gt;
+&lt;p&gt;First, there needs to be a separation of client and server. This means that the client and server each need to work independent of each other. Their only form of interaction is when a client makes requests and a server sends a response whenever it receives a request. One of the benefits is that the client and server can each be updated or modified independently without affecting the other.&lt;/p&gt;
+&lt;p&gt;For example, if you make a call to a restaurant to place a takeout order, the only interaction is you asking for a specific item and them responding with an ok or saying they don’t have it.&lt;/p&gt;
+&lt;h3 id=&#34;stateless&#34;&gt;Stateless&lt;/h3&gt;
+&lt;p&gt;Next, the client and server communication needs to be stateless: the server and client don&amp;rsquo;t need to know the state of the other. The server doesn&amp;rsquo;t store state from the client and therefore the client can&amp;rsquo;t depend on it. Therefore the client needs to send everything the server would need to process a request every time and any storing needs to happen client-side.&lt;/p&gt;
+&lt;p&gt;To continue with the analogy, when you make your call, you don’t need to know what the restaurant has in stock, and they don’t need to know what you want until you order. Additionally, you’re responsible for keeping track of what you like to order, not the restaurant.&lt;/p&gt;
+&lt;h3 id=&#34;cache&#34;&gt;Cache&lt;/h3&gt;
+&lt;p&gt;Cache constraints require that the response be labeled as cacheable or non-cacheable. If it&amp;rsquo;s cacheable, then the client can choose to use this data for future requests that are equivalent. For instance, if the data is valid for a set time, the cached data will be used instead of making a request to the server.&lt;/p&gt;
+&lt;p&gt;For your takeout call, the restaurant may tell you that a specific item is not available until a certain date. You can then remember to not order it again if you make another request before that date.&lt;/p&gt;
+&lt;h3 id=&#34;uniform-interface&#34;&gt;Uniform Interface&lt;/h3&gt;
+&lt;p&gt;As mentioned, the client and server are independent of each other, meaning they evolve and change independently. For this reason, it’s imperative that the interface between the client and server expect some commonality in their communication. This constraint can actually be broken down even further:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Resource-Based&lt;/strong&gt;: This is two-fold: First, individual resources should be identifiable in the request. Often this is done in the path of the URI of the request. For example, &lt;code&gt;/todos/2&lt;/code&gt; would directly address the &lt;code&gt;todo&lt;/code&gt; item with the ID of &lt;code&gt;2&lt;/code&gt;. Second, the presentation of the resource does not necessarily need to match the internal representation by the server. The &lt;code&gt;todo&lt;/code&gt; item may be returned as JSON, but more realistically the server is storing this in a database in another format.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Manipulate Resources Through Representations&lt;/strong&gt;: When the client receives a resource, the representation of that resource contains enough information to update or delete it. This could be seen as the flip-side of the “stateless” constraint. Using the same example of a todo list, if a client requests all items in a todo list, each of those items would likely include an ID so that it could be individually addressed.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Self-Descriptive Messages&lt;/strong&gt;: Each message or resource should include enough information so that the client knows how to process that message. For example, if a client has requested a resource that’s returned as JSON, the response should also include a &lt;code&gt;Content-Type&lt;/code&gt; header with the value &lt;code&gt;application/json&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Hypermedia as the Engine of Application Sate&lt;/strong&gt;: AKA &lt;a href=&#34;https://en.wikipedia.org/wiki/HATEOAS&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;“HATEOAS”&lt;/a&gt;. This could be a whole conversation on it’s own, and it’s encouraged to read on this topic as well, but in short each response should include related links that the client can use to discover other actions and resources. Continuing the ToDo example, requesting an individual todo item may include links to the list that it is a part of.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;layered-system&#34;&gt;Layered System&lt;/h3&gt;
+&lt;p&gt;Layered system constraints are used to scope hierarchical layers based on behavior and have each layer be unable to have visibility past the layer it is interacting with. That’s to say, a client may send a request to a server, which in turn may send a request to a data service, which sends a request to an authentication service. All of this is invisible to the client and the client can not and should not distinguish between a direct request to the data or one that has multiple requests server-side. This is also true for infrastructure and operational components such as proxies and load balancers. Introducing these components to the server architecture should require no updates from the client.&lt;/p&gt;
+&lt;h2 id=&#34;optional-code-on-demand&#34;&gt;[Optional] Code-On-Demand&lt;/h2&gt;
+&lt;p&gt;This constraint states that a server can extend the functionality of a client by providing it executable code. Probably the most common example of this is client-side scripting with JavaScript, but this can take many forms. While this keeps clients simpler and smaller, it also reduces visibility of features and can introduce ambiguity. Because of this, while the absence of other constraints may mean a service isn’t actually RESTful, this constraint is optional.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Well, this is the end of this coverage of the basics of REST. Reading Roy Fielding&amp;rsquo;s REST &lt;a href=&#34;https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;dissertation&lt;/a&gt; is a great place to start if you haven&amp;rsquo;t already. If you’d like to start building your own REST APIs and are a Spring developer, be sure to check out &lt;a href=&#34;/guides/spring/spring-build-api&#34;&gt;Building a REST API with Spring Boot&lt;/a&gt; to see these principles in action!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with Kubeapps</title>
+      
+      <link>/guides/kubernetes/kubeapps-gs/</link>
+      <pubDate>Thu, 23 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/kubeapps-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;This guide will walk you through the process of deploying Kubeapps for your cluster and installing an example application.&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Note&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;This getting started guide is a copy of
+&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/getting-started.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Get Started with Kubeapps&lt;/a&gt;
+in the &lt;a href=&#34;https://github.com/kubeapps/kubeapps&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubeapps/kubeapps repository&lt;/a&gt;
+inclusive of commit
+&lt;a href=&#34;https://github.com/kubeapps/kubeapps/commit/1e49264088094dfd327d2a24b62cda470cc547d0&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;1e49264&lt;/a&gt;
+on April 20, 2020.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This guide is also available in video form:&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/9HsWsoDd1fM&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Kubeapps assumes a working Kubernetes cluster (v1.8+),
+&lt;a href=&#34;https://helm.sh/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;Helm&lt;/code&gt;&lt;/a&gt; (2.14.0+) installed in your cluster and
+&lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;kubectl&lt;/code&gt;&lt;/a&gt; installed
+and configured to talk to your Kubernetes cluster. Kubeapps has been tested with
+Azure Kubernetes Service (AKS), Google Kubernetes Engine (GKE), &lt;code&gt;minikube&lt;/code&gt; and
+Docker for Desktop Kubernetes. Kubeapps works on RBAC-enabled clusters and this
+configuration is encouraged for a more secure install.&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;GKE Permissions&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;On GKE, you must either be an &amp;ldquo;Owner&amp;rdquo; or have the &amp;ldquo;Container Engine Admin&amp;rdquo; role
+in order to install Kubeapps.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;step-1-install-kubeapps&#34;&gt;Step 1: Install Kubeapps&lt;/h2&gt;
+&lt;p&gt;Use the Helm chart to install the latest version of Kubeapps:&lt;/p&gt;
+&lt;p&gt;For Helm 2:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install --name kubeapps --namespace kubeapps bitnami/kubeapps
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you are using Helm 3, you need to set an extra flag to enable it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+kubectl create namespace kubeapps
+helm install kubeapps --namespace kubeapps bitnami/kubeapps --set &lt;span class=&#34;nv&#34;&gt;useHelm3&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For detailed information on installing, configuring and upgrading Kubeapps,
+checkout the
+&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;chart README&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The above commands will deploy Kubeapps into the &lt;code&gt;kubeapps&lt;/code&gt; namespace in your
+cluster. It may take a few minutes to execute. Once it has been deployed and the
+Kubeapps pods are running, continue to step 2.&lt;/p&gt;
+&lt;h2 id=&#34;step-2-create-a-kubernetes-api-token&#34;&gt;Step 2: Create a Kubernetes API token&lt;/h2&gt;
+&lt;p&gt;Access to the Dashboard requires a Kubernetes API token to authenticate with the
+Kubernetes API server.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create serviceaccount kubeapps-operator
+kubectl create clusterrolebinding kubeapps-operator --clusterrole&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;cluster-admin --serviceaccount&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;default:kubeapps-operator
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; It&amp;rsquo;s not recommended to create &lt;code&gt;cluster-admin&lt;/code&gt; users for Kubeapps
+production usage. Please refer to the
+&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/access-control.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Access Control&lt;/a&gt;
+documentation to configure fine-grained access control for users.&lt;/p&gt;
+&lt;p&gt;To retrieve the token,&lt;/p&gt;
+&lt;h3 id=&#34;on-linuxmacos&#34;&gt;On Linux/macOS:&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get secret &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;kubectl get serviceaccount kubeapps-operator -o &lt;span class=&#34;nv&#34;&gt;jsonpath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;{range .secrets[*]}{.name}{&amp;#34;\n&amp;#34;}{end}&amp;#39;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep kubeapps-operator-token&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt; -o &lt;span class=&#34;nv&#34;&gt;jsonpath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;{.data.token}&amp;#39;&lt;/span&gt; -o go-template&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;{{.data.token | base64decode}}&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;on-windows&#34;&gt;On Windows:&lt;/h3&gt;
+&lt;p&gt;Create a file called &lt;code&gt;GetDashToken.cmd&lt;/code&gt; with the following lines in it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bat&#34; data-lang=&#34;bat&#34;&gt;&lt;span class=&#34;p&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ECHO&lt;/span&gt; OFF
+&lt;span class=&#34;c1&#34;&gt;REM Get the Service Account&lt;/span&gt;
+kubectl get serviceaccount kubeapps-operator -o jsonpath={.secrets[].name} &lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; s.txt
+&lt;span class=&#34;k&#34;&gt;SET&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;/p&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;ks&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;=&amp;lt;&lt;/span&gt;s.txt
+&lt;span class=&#34;k&#34;&gt;DEL&lt;/span&gt; s.txt
+
+&lt;span class=&#34;c1&#34;&gt;REM Get the Base64 encoded token&lt;/span&gt;
+kubectl get secret &lt;span class=&#34;nv&#34;&gt;%ks%&lt;/span&gt; -o jsonpath={.data.token} &lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; b64.txt
+
+&lt;span class=&#34;c1&#34;&gt;REM Decode The Token&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;DEL&lt;/span&gt; token.txt
+certutil -decode b64.txt token.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Open a command prompt and run the &lt;code&gt;GetDashToken.cmd&lt;/code&gt; Your token can be found in
+the &lt;code&gt;token.txt&lt;/code&gt; file.&lt;/p&gt;
+&lt;h2 id=&#34;step-3-start-the-kubeapps-dashboard&#34;&gt;Step 3: Start the Kubeapps Dashboard&lt;/h2&gt;
+&lt;p&gt;Once Kubeapps is installed, securely access the Kubeapps Dashboard from your
+system by running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl port-forward -n kubeapps svc/kubeapps 8080:80
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will start an HTTP proxy for secure access to the Kubeapps Dashboard. Visit
+http://127.0.0.1:8080/ in your preferred web browser to open the Dashboard.
+Here&amp;rsquo;s what you should see:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/dashboard-login.png&#34; alt=&#34;Dashboard login page&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Paste the token generated in the previous step to authenticate and access the
+Kubeapps dashboard for Kubernetes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/dashboard-home.png&#34; alt=&#34;Dashboard main page&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Note:&lt;/strong&gt;&lt;/em&gt; If you are setting up Kubeapps for other people to access, you will
+want to use a different service type or setup Ingress rather than using the
+above &lt;code&gt;kubectl port-forward&lt;/code&gt;. For detailed information on installing,
+configuring and upgrading Kubeapps, checkout the
+&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;chart README&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;step-4-deploy-wordpress&#34;&gt;Step 4: Deploy WordPress&lt;/h2&gt;
+&lt;p&gt;Once you have the Kubeapps Dashboard up and running, you can start deploying
+applications into your cluster.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Use the &amp;ldquo;Deploy App&amp;rdquo; or click on the &amp;ldquo;Catalog&amp;rdquo; page in the Dashboard to select
+an application from the list of charts in any of the configured Helm chart
+repositories. This example assumes you want to deploy WordPress.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-search.png&#34; alt=&#34;WordPress chart&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Deploy&amp;rdquo; button.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-chart.png&#34; alt=&#34;WordPress chart&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You will be prompted for the release name and values for the application. The
+form is populated by the values (YAML), which you can see in the adjacent tab.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-installation.png&#34; alt=&#34;WordPress installation&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Submit&amp;rdquo; button. The application will be deployed. You will be able
+to track the new Helm deployment directly from the browser. The status will be
+shown at the top and you can also look at the individual resources lower in
+the page. It will also show the number of ready pods. If you run your cursor
+over the status, you can see the workloads and number of ready and total pods
+within them.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-deployment.png&#34; alt=&#34;WordPress deployment&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To access your new WordPress site, you can run the commands in the &amp;ldquo;Notes&amp;rdquo;
+section to get the URLs or simply click a URL (HTTP and HTTPS) shown.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Note:&lt;/strong&gt;&lt;/em&gt; Depending on your cloud provider of choice, it may take some time
+for an access URL to be available for the application and the Service will stay
+in a &amp;ldquo;Pending&amp;rdquo; state until a URL is assigned. If using Minikube, you will need
+to run &lt;code&gt;minikube tunnel&lt;/code&gt; in your terminal in order for an IP address to be
+assigned to your application.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-url.png&#34; alt=&#34;WordPress deployment notes&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;To get the credentials for logging into your WordPress account, refer to the
+&amp;ldquo;Notes&amp;rdquo; section. You can also get the WordPress password by scrolling down to
+&amp;ldquo;Secrets&amp;rdquo; and clicking the eye next to &lt;code&gt;wordpress-password&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-credentials.png&#34; alt=&#34;WordPress deployment notes&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;optional-step-5-uninstalldelete-wordpress&#34;&gt;[Optional] Step 5: Uninstall/Delete WordPress&lt;/h2&gt;
+&lt;p&gt;If you want to uninstall/delete your WordPress application, you can do so by
+clicking the &amp;ldquo;Delete&amp;rdquo; button. You can choose to click the checkbox for &amp;ldquo;Purge
+Release&amp;rdquo; (default action with the Helm 3 CLI). If you do not click it, the Helm
+chart history will remain (default action with Helm 2). This is fine, so long as
+you don&amp;rsquo;t attempt to install another chart with the same name in the same
+namespace.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/kubeapps/screenshots/wordpress-uninstall.png&#34; alt=&#34;WordPress uninstall&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;next-steps&#34;&gt;Next Steps&lt;/h2&gt;
+&lt;p&gt;Learn more about Kubeapps with the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Detailed installation instructions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/operators.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Deploying Operators&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/user/dashboard.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubeapps Dashboard documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/master/docs/architecture/overview.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubeapps components&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/wiki/Roadmap&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Roadmap&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Carvel</title>
+      
+      <link>/guides/kubernetes/carvel/</link>
+      <pubDate>Wed, 14 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/carvel/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://carvel.dev/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Carvel&lt;/a&gt;&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; is an open source suite of tools. Carvel provides a set of reliable, single-purpose, composable tools that aid in your application building, configuration, and deployment to Kubernetes.&lt;/p&gt;
+&lt;p&gt;It currently&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt; contains the following tools:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://carvel.dev/ytt/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ytt&lt;/a&gt;&lt;/strong&gt;: Template and overlay Kubernetes configuration via YAML structures, not text documents. No more counting spaces, or manual quoting.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://carvel.dev/kbld/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kbld&lt;/a&gt;&lt;/strong&gt;: Build or reference container images in Kubernetes configuration in an immutable way.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://carvel.dev/kapp/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kapp&lt;/a&gt;&lt;/strong&gt;: Install, upgrade, and delete multiple Kubernetes resources as one &amp;ldquo;application&amp;rdquo;. Be confident your application is fully reconciled.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://carvel.dev/imgpkg/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;imgpkg&lt;/a&gt;&lt;/strong&gt;: Bundle and relocate application configuration (with images) via Docker registries. Be assured app contents are immutable.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://github.com/vmware-tanzu/carvel-kapp-controller&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kapp-controller&lt;/a&gt;&lt;/strong&gt;: Capture application deployment workflow declaratively via App CRD. Reliable GitOps experience powered by kapp.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://carvel.dev/vendir/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;vendir&lt;/a&gt;&lt;/strong&gt;: Declaratively state what files should be in a directory.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;learn-more&#34;&gt;Learn more&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;/%28https:/carvel.dev/%29&#34;&gt;carvel.dev&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Guides&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/kubernetes/kapp-gs/&#34;&gt;Getting Started with kapp&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Workshops&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/developer/workshops/lab-getting-started-with-carvel/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with Carvel&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;Formerly k14s&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;As of April 13, 2021&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with kapp</title>
+      
+      <link>/guides/kubernetes/kapp-gs/</link>
+      <pubDate>Wed, 14 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/kapp-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://carvel.dev/kapp/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kapp&lt;/a&gt; (part of the open source &lt;a href=&#34;https://carvel.dev&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Carvel&lt;/a&gt; suite) is a lightweight application-centric tool for deploying resources on Kubernetes. Being both explicit and application-centric it provides an easier way to deploy and view all resources created together regardless of what namespace they’re in. Being dependency-aware, it is able to wait for resources to be created, updated, or deleted, and provides a live status on the progress of the actions. Continue on to see how to get started with kapp.&lt;/p&gt;
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Before you get started you will need to do the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Create a Kubernetes cluster&lt;/em&gt;:&lt;/li&gt;
+&lt;li&gt;Install &lt;em&gt;&lt;code&gt;kubectl&lt;/code&gt;&lt;/em&gt; locally&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Install the &lt;code&gt;kapp&lt;/code&gt; CLI&lt;/em&gt; via one of these options:
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/vmware-tanzu/homebrew-carvel&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Homebrew&lt;/a&gt;:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;brew tap vmware-tanzu/carvel
+brew install kapp
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/vmware-tanzu/carvel-kapp/releases/tag/v0.35.0&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GitHub releases&lt;/a&gt;: move it to &lt;code&gt;/usr/local/bin&lt;/code&gt; or add it to your &lt;code&gt;$PATH&lt;/code&gt; and run &lt;code&gt;chmod +x&lt;/code&gt; to make it executable&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note: This guide uses Kapp v0.35.0, and we suggest you download and install the same version to ensure the best experience as you follow through this guide.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;deploy-app&#34;&gt;Deploy App&lt;/h2&gt;
+&lt;p&gt;Let’s go ahead and deploy our first application with kapp!&lt;/p&gt;
+&lt;h3 id=&#34;first-run&#34;&gt;First Run&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a namespace to use as a &lt;a href=&#34;https://carvel.dev/kapp/docs/latest/state-namespace/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;state namespace&lt;/a&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create namespace kapp-demo
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create &lt;code&gt;kapp-spring-petclinic.yaml&lt;/code&gt; file with a &lt;a href=&#34;https://spring-petclinic.github.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring PetClinic&lt;/a&gt; namespace, deployment, and service:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;l&#34;&gt;cat &amp;lt;&amp;lt;EOF &amp;gt; kapp-spring-petclinic.yaml&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Namespace&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;apps/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;matchLabels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;replicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;springcommunity/spring-framework-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;http&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containerPort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8080&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Service&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;80&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;protocol&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;TCP&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;targetPort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8080&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;EOF&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Here is where  &lt;code&gt;kapp&lt;/code&gt; gets involved. We will use it to create our deployment and service.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kapp deploy -n kapp-demo -a spring-petclinic -f kapp-spring-petclinic.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This format is fairly similar to &lt;code&gt;kubectl apply -f kapp-spring-petclinic.yaml&lt;/code&gt;, but it also has an application name. You can also provide a directory instead of a single file.&lt;/p&gt;
+&lt;p&gt;The next difference you will notice is it prompts you if you want to actually run the command. You can shortcut this by adding the &lt;code&gt;-y&lt;/code&gt; flag.&lt;/p&gt;
+&lt;p&gt;It should give you an output similar to the following before hit &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Target cluster &#39;https://35.247.3.14&#39; (nodes: demo-default-pool-0f8526ab-rb7b, 2+)
+
+Changes
+
+Namespace         Name              Kind        Conds.  Age  Op      Op st.  Wait to    Rs  Ri
+(cluster)         spring-petclinic  Namespace   -       -    create  -       reconcile  -   -  
+spring-petclinic  spring-petclinic  Deployment  -       -    create  -       reconcile  -   -  
+^                 spring-petclinic  Service     -       -    create  -       reconcile  -   -  
+
+Op:      3 create, 0 delete, 0 update, 0 noop
+Wait to: 3 reconcile, 0 delete, 0 noop
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can see that it’s creating the &lt;code&gt;spring-petclinic&lt;/code&gt; namespace, deployment, and service inside that namespace.&lt;/p&gt;
+&lt;p&gt;Here is a more significant difference with &lt;code&gt;kubectl&lt;/code&gt;. &lt;code&gt;kapp&lt;/code&gt; will wait on the resources to become available before terminating and will also show the progress for each resource and tell you if it succeeded or failed. Don’t worry, I didn’t set you up for failure :).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now that we have the deployment and service up, we can verify it’s working properly. First we can just take a look and see that they are up.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl -n spring-petclinic get all
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And then we can create a container and curl the service from within it. We need to do this right now since the service type is &lt;code&gt;ClusterIP&lt;/code&gt; (default) so we can’t see it from outside of the cluster itself.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl run -it --rm --restart=Never curl --image=curlimages/curl spring-petclinic.spring-petclinic.svc.cluster.local
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;looking-at-the-app-with-kapp&#34;&gt;Looking At the App with kapp&lt;/h3&gt;
+&lt;p&gt;Okay, so let’s use kapp instead to take a look at our application.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;We can take a look at everything we have running with kapp using the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kapp list -A
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you didn’t run anything else prior, we should just see Spring PetClinic. You will notice here kapp uses &lt;code&gt;kapp-demo&lt;/code&gt; as the state namespace. This is separate from the &lt;code&gt;spring-petclinic&lt;/code&gt; namespace(s) used in the deployment/service.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Target cluster &#39;https://35.247.3.14&#39; (nodes: demo-default-pool-0f8526ab-rb7b, 2+)
+
+Apps in namespace &#39;kapp-demo&#39;
+
+Name              Namespaces             Lcs    Lca
+spring-petclinic  spring-petclinic       false  22h
+
+Lcs: Last Change Successful
+Lca: Last Change Age
+
+1 apps
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If we had other applications running in the &lt;code&gt;spring-petclinic&lt;/code&gt; namespace when we ran &lt;code&gt;kubectl -n spring-petclinic get all&lt;/code&gt;, then we would see everything there and not just our application. We could add labels and filter on them, but then we have to make sure to do that with everything in that application. Well, the good news is that kapp does it for you. You can see the labels by running this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl -n spring-petclinic get all --show-labels
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And if we want to dig into one resource we can see labels there:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl -n spring-petclinic get deployment spring-petclinic -o=jsonpath=&#39;{.metadata.labels}&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To see all of the resources &lt;code&gt;kapp&lt;/code&gt; created for the app, we use &lt;code&gt;kapp inspect&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kapp -n kapp-demo inspect -a spring-petclinic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We’ll come back to this in a bit to dig further into what kapp does to keep track of resources and changes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;We can also look at logs, which is especially useful if something fails after the pods are up. &lt;code&gt;kapp logs&lt;/code&gt; will show all pod logs in the app.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kapp -n kapp-demo logs -a spring-petclinic
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;update-app&#34;&gt;Update App&lt;/h3&gt;
+&lt;p&gt;Well, now we want to make it so we can share our app with other people without them needing to be in the cluster.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Let’s make a change to the YAML file and try running it again.
+To reach the service externally, we can change it to type &lt;code&gt;LoadBalancer&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;echo &#39;  type: LoadBalancer&#39; &amp;gt;&amp;gt; kapp-spring-petclinic.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And let’s run our &lt;code&gt;kapp&lt;/code&gt; command again.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kapp deploy -n kapp-demo -a spring-petclinic -f kapp-spring-petclinic.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This time our output should like this where we see the change is that the service is being updated.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Target cluster &#39;https://35.247.3.14&#39; (nodes: demo-default-pool-0f8526ab-rb7b, 2+)
+
+Changes
+
+Namespace         Name              Kind     Conds.  Age  Op      Op st.  Wait to    Rs  Ri
+spring-petclinic  spring-petclinic  Service  -       1m   update  -       reconcile  ok  -  
+
+Op:      0 create, 0 delete, 1 update, 0 noop
+Wait to: 1 reconcile, 0 delete, 0 noop
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Here we can see that kapp knows that only the service should be changing. Kapp keeps track by creating a &lt;a href=&#34;https://kubernetes.io/docs/concepts/configuration/configmap/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ConfigMap&lt;/a&gt; when the resources are first created and then every time there is a change. To see the ConfigMaps in this namespace you can run:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl -n spring-petclinic get configmaps
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Let’s continue on.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now if we run &lt;code&gt;kubectl get&lt;/code&gt;, we should see an &lt;code&gt;EXTERNAL_IP&lt;/code&gt; for the service.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl -n spring-petclinic get all
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can use curl, or you can open that IP in your browser which will look like the following:
+&lt;img src=&#34;/images/guides/kubernetes/kapp/spring-petclinic-main.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Congrats, you did it!&lt;/p&gt;
+&lt;p&gt;To see what else you can do, run the following or go to the &lt;a href=&#34;https://carvel.dev/kapp/docs/latest/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;docs&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kapp -h
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;cleanup&#34;&gt;Cleanup&lt;/h2&gt;
+&lt;p&gt;Now, if you want, you can delete what was created in this guide.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;To delete the app you can run the following command. Make sure it is wanting to only delete what you are trying to delete before agreeing.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kapp delete -n kapp-demo -a spring-petclinic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Mine looks like the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Target cluster &#39;https://35.247.3.14&#39; (nodes: demo-default-pool-0f8526ab-rb7b, 2+)
+
+Changes
+
+Namespace         Name                               Kind        Conds.  Age  Op      Op st.  Wait to  Rs  Ri
+spring-petclinic  spring-petclinic                   Deployment  2/2 t   4h   delete  -       delete   ok  -
+^                 spring-petclinic                   Endpoints   -       4h   -       -       delete   ok  -
+^                 spring-petclinic                   Service     -       4h   delete  -       delete   ok  -
+^                 spring-petclinic-6bdff5c97c        ReplicaSet  -       4h   -       -       delete   ok  -
+^                 spring-petclinic-6bdff5c97c-84ksw  Pod         4/4 t   4h   -       -       delete   ok  -
+^                 spring-petclinic-6bdff5c97c-bdhd5  Pod         4/4 t   4h   -       -       delete   ok  -
+^                 spring-petclinic-6bdff5c97c-bdhd5  PodMetrics  -       1s   -       -       delete   ok  -
+
+Op:      0 create, 2 delete, 0 update, 5 noop
+Wait to: 0 reconcile, 7 delete, 0 noop
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Delete namespace:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl delete namespace kapp-demo
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;learn-more&#34;&gt;Learn More&lt;/h2&gt;
+&lt;p&gt;To learn more, here are some resources:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://carvel.dev/kapp/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kapp&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/vmware-tanzu/carvel-kapp-controller&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kapp-controller&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cncf.io/webinars/cncf-live-webinar-how-to-manage-kubernetes-application-lifecycle-using-carvel/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CNCF Live Webinar: How to Manage Kubernetes Application Lifecycle Using Carvel (Feb 9, 2021)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://carvel.dev/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Carvel Toolset&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with Velero</title>
+      
+      <link>/guides/kubernetes/velero-gs/</link>
+      <pubDate>Fri, 29 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/velero-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;What do you do if you lose state in your cluster, or something went very wrong
+and you need to revert it or move my resources to another cluster? Are you out
+of luck?&lt;/p&gt;
+&lt;p&gt;That’s where &lt;a href=&#34;https://velero.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero&lt;/a&gt; comes in. Velero is an open source
+tool to safely backup and restore, perform disaster recovery, and migrate
+Kubernetes cluster resources and persistent volumes. This guide will show you
+how to deploy Velero to your Kubernetes cluster, create backups, and recover
+from a backup after something goes wrong in the cluster.&lt;/p&gt;
+
+&lt;div class=&#34;youtube-video-shortcode&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/VBwBR9Em_1A&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Before you get started you will need to do the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Create a Kubernetes cluster&lt;/strong&gt;: You need a Kubernetes cluster, v1.10 or
+later, with DNS and container networking enabled. This guide uses a Google
+Kubernetes Engine (GKE) Linux cluster with Kubernetes version 1.16.5 and
+Velero 1.5.3. As of the writing of this guide, Velero
+&lt;a href=&#34;https://velero.io/docs/v1.5/basic-install/#velero-on-windows&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;does not officially support Windows&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Install
+&lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;kubectl&lt;/code&gt;&lt;/a&gt; on our
+local machine&lt;/strong&gt;: You probably already have this one if you&amp;rsquo;re working with
+Kubernetes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Verify the cluster has a
+&lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/storage-classes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;storage class&lt;/a&gt;&lt;/strong&gt;:
+Check if you have a storage class with &lt;code&gt;kubectl get storageclasses&lt;/code&gt;. You need
+one to create persistent volumes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Install the &lt;code&gt;velero&lt;/code&gt; CLI&lt;/strong&gt;: There are a few
+&lt;a href=&#34;https://velero.io/docs/v1.5/basic-install/#install-the-cli&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;options&lt;/a&gt; to
+install Velero. This guide uses &lt;code&gt;brew install velero&lt;/code&gt; and &lt;code&gt;velero&lt;/code&gt; v1.5.3 .
+&lt;a href=&#34;https://velero.io/docs/v1.5/customize-installation/#enabling-shell-autocompletion&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Enabling shell autocompletion&lt;/a&gt;
+can be very helpful too.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can also look at the &lt;a href=&#34;https://velero.io/docs/v1.5/basic-install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero Basic Install documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;setup&#34;&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Now that you have your Kubernetes cluster and the Velero CLI installed, we can
+move to the next step.&lt;/p&gt;
+&lt;p&gt;First you need to &lt;strong&gt;install Velero server components&lt;/strong&gt; in your cluster. To do
+this, you need a &lt;strong&gt;storage provider&lt;/strong&gt; for Velero to store your resources and
+volumes. In this guide, since we use GKE, we will use Google Cloud Storage as
+the object store. If you&amp;rsquo;re deploying Velero in a different environment, check
+the &lt;a href=&#34;https://velero.io/docs/v1.5/supported-providers/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;providers documentation&lt;/a&gt;
+for specific setup instructions.&lt;/p&gt;
+&lt;p&gt;You can either use the &lt;code&gt;velero install&lt;/code&gt; CLI command with the required storage
+provider flags or the
+&lt;a href=&#34;https://vmware-tanzu.github.io/helm-charts/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero Helm chart&lt;/a&gt;. We will use
+the CLI in this guide.&lt;/p&gt;
+&lt;h3 id=&#34;initial-setup&#34;&gt;Initial Setup&lt;/h3&gt;
+&lt;p&gt;There are quite a few different storage provider options such as &lt;a href=&#34;https://tanzu.vmware.com/content/blog/a-deep-dive-into-the-kubernetes-vsphere-csi-driver-with-tkgi-and-tkg&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;vSphere&lt;/a&gt;, AWS,
+and GCP. This guide uses the
+&lt;a href=&#34;https://github.com/vmware-tanzu/velero-plugin-for-gcp#setup&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;setup for GCP&lt;/a&gt;.&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Note for GKE Users&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;If you run Google Kubernetes Engine (GKE), make sure that your current IAM
+user is a cluster-admin. This role is required to create RBAC objects. See
+the
+&lt;a href=&#34;https://cloud.google.com/kubernetes-engine/docs/how-to/role-based-access-control#iam-rolebinding-bootstrap&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GKE documentation&lt;/a&gt;
+for more information.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;First we need to create an object storage bucket for Velero to save backups in:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;BUCKET=&amp;lt;your-bucket-name&amp;gt;
+gsutil mb gs://$BUCKET/
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With GCP you can set Velero permissions
+&lt;a href=&#34;https://github.com/vmware-tanzu/velero-plugin-for-gcp#option-2-set-permissions-with-using-workload-identity-optional&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;using a service account&lt;/a&gt;
+or optionally
+&lt;a href=&#34;https://github.com/vmware-tanzu/velero-plugin-for-gcp#option-2-set-permissions-with-using-workload-identity-optional&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;using Workload Identity&lt;/a&gt;
+to set up Velero GCP permissions. This guide will use a service account.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Get the current GCP project:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;PROJECT_ID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;gcloud config get-value project&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$PROJECT_ID&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a service account for Velero:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gcloud iam service-accounts create velero &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --display-name &lt;span class=&#34;s2&#34;&gt;&amp;#34;Velero service account&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Tip: If you&amp;rsquo;ll be using Velero to back up multiple clusters with multiple
+GCS buckets, you may want to create a unique name per cluster instead of
+just &lt;code&gt;velero&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set &lt;code&gt;SERVICE_ACCOUNT_EMAIL&lt;/code&gt; to the email attached to your new service account:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;SERVICE_ACCOUNT_EMAIL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;gcloud iam service-accounts list &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;--filter&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;displayName:Velero service account&amp;#34;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;--format &lt;span class=&#34;s1&#34;&gt;&amp;#39;value(email)&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Attach the IAM policies Velero needs to interact with the object store bucket:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;ROLE_PERMISSIONS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=(&lt;/span&gt;
+    compute.disks.get
+    compute.disks.create
+    compute.disks.createSnapshot
+    compute.snapshots.get
+    compute.snapshots.create
+    compute.snapshots.useReadOnly
+    compute.snapshots.delete
+    compute.zones.get
+&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Create an IAM role, Velero Server, with the above role permissions&lt;/span&gt;
+gcloud iam roles create velero.server &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --project &lt;span class=&#34;nv&#34;&gt;$PROJECT_ID&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --title &lt;span class=&#34;s2&#34;&gt;&amp;#34;Velero Server&amp;#34;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --permissions &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;IFS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;${&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ROLE_PERMISSIONS&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[*]&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;
+
+gcloud projects add-iam-policy-binding &lt;span class=&#34;nv&#34;&gt;$PROJECT_ID&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --member serviceAccount:&lt;span class=&#34;nv&#34;&gt;$SERVICE_ACCOUNT_EMAIL&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --role projects/&lt;span class=&#34;nv&#34;&gt;$PROJECT_ID&lt;/span&gt;/roles/velero.server
+
+gsutil iam ch serviceAccount:&lt;span class=&#34;nv&#34;&gt;$SERVICE_ACCOUNT_EMAIL&lt;/span&gt;:objectAdmin gs://&lt;span class=&#34;si&#34;&gt;${&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;BUCKET&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a service account key. The following command will store it locally in a file called &lt;code&gt;credentials-velero&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gcloud iam service-accounts keys create credentials-velero &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --iam-account &lt;span class=&#34;nv&#34;&gt;$SERVICE_ACCOUNT_EMAIL&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;install-velero&#34;&gt;Install Velero&lt;/h3&gt;
+&lt;p&gt;OK, now it’s time to install Velero. We need to give &lt;code&gt;velero install&lt;/code&gt; the
+provider, provider plugin, storage bucket, and IAM credentials.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero install &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --provider gcp &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --plugins velero/velero-plugin-for-gcp:v1.1.0 &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --bucket &lt;span class=&#34;nv&#34;&gt;$BUCKET&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --secret-file ./credentials-velero
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It will then display the resources that are being created. If you’re interested
+in looking further, you can view Velero&amp;rsquo;s server-side components by running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n velero get all
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Velero also uses a number of CRDs (Custom Resource Definitions) to represents
+its own resources like backups, backups schedules, etc.&lt;/p&gt;
+&lt;h2 id=&#34;run-apps&#34;&gt;Run Apps&lt;/h2&gt;
+&lt;p&gt;As an example, we will deploy an instance of Ghost. Ghost is a personal blog,
+similar to WordPress. We will be using the
+&lt;a href=&#34;https://bitnami.com/stack/ghost/helm&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ghost Helm Chart&lt;/a&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a file containing configuration values for the Ghost Helm Chart. Ghost
+uses MariaDB for storage. For simplicity, we are going to hard-code in that
+file the database credentials, as well as the login credentials (so that we
+know these passwords). The &lt;code&gt;ghostPassword&lt;/code&gt; and &lt;code&gt;ghostEmail&lt;/code&gt; will be used to
+log into the admin account to create blogs.&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-warning&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Caution&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;These are sample, insecure passwords. Please don’t use these outside of
+a demo! Instead of a values YAML file, we could also use multiple &lt;code&gt;--set&lt;/code&gt;
+flags when invoking &lt;code&gt;helm install&lt;/code&gt; below.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Create a file called ghost-values.yaml in the current dir&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# And add the following variables&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# ghostPassword has a minimum of 10 characters&lt;/span&gt;
+
+cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; ghost-values.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;ghostUsername: admin
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;ghostPassword: &amp;#34;0123456789&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;ghostEmail: admin@example.com
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;mariadb:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    auth:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        rootPassword: &amp;#34;root_password&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        password: &amp;#34;db_password&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Add the &lt;code&gt;bitnami&lt;/code&gt; repository of Helm charts.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create the &lt;code&gt;ghost&lt;/code&gt; namespace and install the Helm chart.&lt;/p&gt;
+&lt;p&gt;For Helm 3:&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Tip for Helm 3.2.0 and later&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;As of Helm 3.2.0 you can add a &lt;code&gt;--create-namespace&lt;/code&gt; flag to the &lt;code&gt;helm&lt;/code&gt;
+command instead of using kubectl to create the namespace first.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create namespace ghost
+
+helm install ghost bitnami/ghost -n ghost &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --version 12.1.0 &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --values ./ghost-values.yaml 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see an error message telling you that you &amp;ldquo;did not provide an
+external host&amp;rdquo;; so we&amp;rsquo;re going to address that.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check if the load balancer is up and running. It should have an &lt;code&gt;EXTERNAL_IP&lt;/code&gt; listed.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# The -w flag is for watching changes. You need to do ctrl-c to exit.&lt;/span&gt;
+kubectl -n ghost get svc -w
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see a service for &lt;code&gt;ghost&lt;/code&gt; (the app)  and &lt;code&gt;ghost-mariadb&lt;/code&gt; (the database).&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl -n ghost get svc
+
+NAME            TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
+ghost           LoadBalancer   10.108.8.228   35.233.219.60   80:31603/TCP   2m2s
+ghost-mariadb   ClusterIP      10.108.8.42    &amp;lt;none&amp;gt;          3306/TCP       2m2s
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once it’s running, get the load balancer’s external IP and add it to our
+ghost-values.yaml and upgrade the Helm chart to get the deployment to start:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Set the APP_HOST to the ghost service&amp;#39;s EXTERNAL-IP. You could also copy-paste&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;APP_HOST&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;kubectl get svc --namespace ghost ghost &lt;span class=&#34;se&#34;&gt;\-&lt;/span&gt;-template &lt;span class=&#34;s2&#34;&gt;&amp;#34;{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Add ghostHost to ghost-values.yaml&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;ghostHost: &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$APP_HOST&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; ghost-values.yaml
+&lt;span class=&#34;c1&#34;&gt;# Check the file to see it got added and isn&amp;#39;t blank&lt;/span&gt;
+cat ghost-values.yaml
+
+&lt;span class=&#34;c1&#34;&gt;# To complete the Ghost deployment, we will run upgrade with the ghostHost&lt;/span&gt;
+helm upgrade ghost bitnami/ghost -n ghost &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --version 12.1.0 &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --values ./ghost-values.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Helm will show us our blog URL, and the admin URL that we will use in a
+minute to create some content. The IP address is the &lt;code&gt;EXTERNAL_IP&lt;/code&gt; of the
+load balancer.&lt;/p&gt;
+&lt;p&gt;So right now you should be seeing these resources. Your IP addresses will be
+different; and if the pods are not both &lt;code&gt;Running&lt;/code&gt; and &lt;code&gt;READY&lt;/code&gt; yet, give them
+a minute to come up.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n ghost get all
+
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/ghost-86b56c9d44-gk2f8   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          44m
+pod/ghost-mariadb-0          1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          50m
+
+NAME                    TYPE           CLUSTER-IP     EXTERNAL-IP     PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;        AGE
+service/ghost           LoadBalancer   10.108.8.228   35.233.219.60   80:31603/TCP   50m
+service/ghost-mariadb   ClusterIP      10.108.8.42    &amp;lt;none&amp;gt;          3306/TCP       50m
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/ghost   1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           44m
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/ghost-86b56c9d44   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       44m
+
+NAME                             READY   AGE
+statefulset.apps/ghost-mariadb   1/1     50m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now open your &lt;code&gt;Admin URL&lt;/code&gt; in a web browser. If it doesn&amp;rsquo;t load, double-check
+that the pods shown in the previous section show up as &lt;code&gt;1/1&lt;/code&gt; in the &lt;code&gt;READY&lt;/code&gt;
+column. Sign in the admin interface with the email and password that we
+entered earlier in the values file. You should now see the following screen,
+which will let us create a blog:
+&lt;img src=&#34;/images/guides/kubernetes/velero-gs/1-welcome-to-ghost.png&#34; alt=&#34;Ghost Admin Page&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Click on the &lt;code&gt;+&lt;/code&gt; next to Posts to create your first post. Enter a title and
+some content, then click Publish in the top right.
+&lt;img src=&#34;/images/guides/kubernetes/velero-gs/2-ghost-create-post.png&#34; alt=&#34;Ghost Publish Page&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The home page should now look like this:
+&lt;img src=&#34;/images/guides/kubernetes/velero-gs/3-ghost-home-page.png&#34; alt=&#34;Ghost Page With Post&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;backup&#34;&gt;Backup&lt;/h2&gt;
+&lt;p&gt;Now, let’s look into backups in case something happens to the blog. Backups are
+for Kubernetes resources and persistent volumes. You can back up your entire
+cluster, or optionally choose a namespace or label selector to back up.&lt;/p&gt;
+&lt;p&gt;They can be run one off or scheduled. It’s a good idea to have scheduled backups
+so you are certain you have a recent backup to easily fall back to. You can also
+create &lt;a href=&#34;https://velero.io/docs/v1.5/backup-hooks/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;backup hooks&lt;/a&gt; if you want to
+execute actions before or after a backup is made.&lt;/p&gt;
+&lt;p&gt;By default, the backup retention is 30 days, but you can change it with the &lt;code&gt;--ttl&lt;/code&gt; flag.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;[Optional] To see what all you can do with backups run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero backup -h
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Let’s start with the most basic option: creating a one off backup. It’s a
+good idea to give it a meaningful name so you remember what it was for unlike
+what is done here.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;BACKUP&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;gastly
+velero backup create &lt;span class=&#34;nv&#34;&gt;$BACKUP&lt;/span&gt; --include-namespaces ghost
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we wanted to do a backup with all namespaces we can remove the
+&lt;code&gt;--include-namespaces&lt;/code&gt; flag. And to include all namespaces except specific
+ones we could use &lt;code&gt;--exclude-namespaces&lt;/code&gt; with the namespace(s) we don&amp;rsquo;t
+want.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Let’s create a backup from a schedule.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;SCHEDULE&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;minute
+velero schedule create &lt;span class=&#34;nv&#34;&gt;$SCHEDULE&lt;/span&gt; --schedule&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;@every 1m&amp;#34;&lt;/span&gt; --include-namespaces ghost
+&lt;span class=&#34;c1&#34;&gt;# You could also use schedule=&amp;#34;*/1 * * * *&amp;#34;&lt;/span&gt;
+
+velero backup create minute --from-schedule &lt;span class=&#34;nv&#34;&gt;$SCHEDULE&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;See all of the backups created:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero backup get
+
+NAME                    STATUS            ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
+gastly                  Completed         &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;        &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          2021-01-28 00:19:44 -0800 PST   29d       default            &amp;lt;none&amp;gt;
+minute-20210128081949   Completed         &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;        &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          2021-01-28 00:19:49 -0800 PST   29d       default            &amp;lt;none&amp;gt;
+minute-20210128081849   Completed         &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;        &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          2021-01-28 00:18:49 -0800 PST   29d       default            &amp;lt;none&amp;gt;
+…
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[Optional] For both curiosity and debugging, it’s useful to do a &lt;code&gt;describe&lt;/code&gt;
+and &lt;code&gt;logs&lt;/code&gt; on your backups:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero backup describe &lt;span class=&#34;nv&#34;&gt;$BACKUP&lt;/span&gt;
+
+velero backup logs &lt;span class=&#34;nv&#34;&gt;$BACKUP&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;wreak-havoc&#34;&gt;🔥Wreak Havoc🔥&lt;/h2&gt;
+&lt;p&gt;Now that we have a happy cluster state and that most excellent blog you
+created&amp;hellip;let’s nuke Ghost.&lt;/p&gt;
+&lt;p&gt;Let’s say that &lt;em&gt;&lt;strong&gt;someone&lt;/strong&gt;&lt;/em&gt; (you) “accidentally” (definitely intentionally)
+deleted the Ghost Helm chart and the persistent volume claim (PVC) by running
+the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm delete --namespace ghost ghost
+kubectl -n ghost delete pvc data-ghost-mariadb-0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Try to connect to Ghost again. Shoot&amp;hellip; Now the blog site is down and so is that
+&lt;em&gt;&lt;strong&gt;super important&lt;/strong&gt;&lt;/em&gt; blog post you just made. What now?&lt;/p&gt;
+&lt;h2 id=&#34;restore&#34;&gt;Restore&lt;/h2&gt;
+&lt;p&gt;Well, it’s a good thing you have backups! Now it&amp;rsquo;s time to look into restoring
+from a backup.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;To see what all you can do with restore run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero restore -h
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Let’s now wait for all of the resources to be gone. First check the output of
+&lt;code&gt;get all&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n ghost get all
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And the Ghost and MariaDB persistent volumes claims (PVCs) as well:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get pvc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note: It might take a minute until everything is properly deleted; so you
+may run these commands above until they give you a (somewhat ominous)
+&lt;code&gt;No resources found&lt;/code&gt; output.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now to perform a restore:&lt;/p&gt;
+&lt;p&gt;To take a look at what backups you have you can run the following again:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero backup get
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To restore from the specific backup we created first:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero restore create --include-namespaces ghost --from-backup &lt;span class=&#34;nv&#34;&gt;$BACKUP&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;So the big questions are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Did all the resources come back up and therefore the Ghost site?&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Is the &lt;em&gt;super important&lt;/em&gt; blog back, or only the default blogs?&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Let’s find out. First let’s check to see if our resources are back and
+running.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n ghost get all
+
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/ghost-86b56c9d44-gk2f8   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          2m13s
+pod/ghost-mariadb-0          1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          2m13s
+
+NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP      PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;        AGE
+service/ghost           LoadBalancer   10.108.14.225   34.105.103.109   80:30353/TCP   2m12s
+service/ghost-mariadb   ClusterIP      10.108.5.14     &amp;lt;none&amp;gt;           3306/TCP       2m12s
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/ghost   1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           2m12s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/ghost-86b56c9d44   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       2m12s
+
+NAME                             READY   AGE
+statefulset.apps/ghost-mariadb   1/1     2m12s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Again, wait until all the pods above are &lt;code&gt;Running&lt;/code&gt; with counts of &lt;code&gt;1/1&lt;/code&gt; pods
+in &lt;code&gt;READY&lt;/code&gt; state.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now get the &lt;code&gt;EXTERNAL_IP&lt;/code&gt; from your service:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get svc --namespace ghost ghost --template &lt;span class=&#34;s2&#34;&gt;&amp;#34;{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&#34;aside aside-warning&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Double check your IP&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;Note: Your IP address may have changed from earlier. For the depth of this
+specific demo it doesn&amp;rsquo;t cause problems. However, to ensure all links work
+properly, update the &lt;code&gt;ghostHost&lt;/code&gt; in &lt;code&gt;ghost-values.yaml&lt;/code&gt; and run the
+&lt;a href=&#34;#run-apps&#34;&gt;previous &lt;code&gt;helm upgrade&lt;/code&gt;&lt;/a&gt; command again. If we were using
+&lt;a href=&#34;https://github.com/kubernetes-sigs/external-dns&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;external-dns&lt;/code&gt;&lt;/a&gt; and
+hostnames, it would automatically resolve itself.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now head to you the IP address in your browser and your blog should be up
+with the post you wrote!&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[Optional] For both curiosity and debugging, it’s useful to do a &lt;code&gt;describe&lt;/code&gt;
+and &lt;code&gt;logs&lt;/code&gt; on your restores:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero restore describe &amp;lt;restore-name&amp;gt;
+
+velero restore logs &amp;lt;restore-name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;As of Velero 1.5 &lt;a href=&#34;https://velero.io/docs/v1.5/restore-hooks/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Restore Hooks&lt;/a&gt; are
+also available.&lt;/p&gt;
+&lt;p&gt;For cluster migration (restoring from one cluster’s backup into another cluster)
+you can follow the
+&lt;a href=&#34;https://velero.io/docs/v1.5/migration-case/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cluster migration documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;cleanup&#34;&gt;Cleanup&lt;/h2&gt;
+&lt;p&gt;To delete the app resources, you can use &lt;code&gt;helm uninstall&lt;/code&gt; and then delete the
+namespace:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm uninstall --namespace ghost ghost
+kubectl delete ns ghost
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you would like to remove Velero from your cluster, you can use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl delete namespace/velero clusterrolebinding/velero
+kubectl delete crds -l &lt;span class=&#34;nv&#34;&gt;component&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;velero
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, if you&amp;rsquo;d like to remove the GCP resources that we created earlier:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Remove the velero service account&lt;/span&gt;
+gcloud iam service-accounts delete &lt;span class=&#34;nv&#34;&gt;$SERVICE_ACCOUNT_EMAIL&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Delete the velero role&lt;/span&gt;
+gcloud iam roles delete velero.server --project &lt;span class=&#34;nv&#34;&gt;$PROJECT_ID&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# We don&amp;#39;t need to delete the key or the policy binding, as they get removed automatically.&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Finally, remove the storage bucket.&lt;/span&gt;
+gsutil -m rm -r gs://&lt;span class=&#34;nv&#34;&gt;$BUCKET&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;learn-more&#34;&gt;Learn More&lt;/h2&gt;
+&lt;p&gt;Hopefully you found this guide helpful. Here are some other resources to help
+you learn more.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://velero.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://velero.io/docs/latest/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/vmware-tanzu/velero&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://velero.io/blog/Velero-is-an-Open-Source-Tool-to-Back-up-and-Migrate-Kubernetes-Clusters/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Introduction to Velero Blog&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://velero.io/docs/v1.5/contributions/minio/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Quick start evaluation install with Minio&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: KubeCon NA 2020: For the Modern App Developer</title>
+      
+      <link>/blog/kubecon-na-2020-for-the-modern-app-developer/</link>
+      <pubDate>Wed, 11 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/kubecon-na-2020-for-the-modern-app-developer/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;KubeCon North America&lt;/a&gt; is coming up soon! It will take place virtually November 17th-20th.&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&#34;https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/program/schedule/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;schedule&lt;/a&gt; is chock-full of very interesting talks,from introductory overviews to advanced deep dives. When I first saw it, I ended up copying down as many talks as possible to share here because they are all just so good. But I figured I should probably curate a bit, so below you will find a list of my top recommendations, broken down, for the most part, by their respective &lt;a href=&#34;https://github.com/kubernetes/community/blob/master/sig-list.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Special Interest Group (SIG)&lt;/a&gt; names.&lt;/p&gt;
+&lt;p&gt;Talks with a 🌱 next to them are introductory/deep dive talks, and each SIG section header links to its respective SIG page.&lt;/p&gt;
+&lt;h3 id=&#34;keynotes&#34;&gt;Keynotes&lt;/h3&gt;
+&lt;p&gt;If you can, definitely watch all of the keynotes. There is a &lt;a href=&#34;https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/register/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complimentary pass&lt;/a&gt;  just for the keynotes if you’re unable to attend the rest of the conference.&lt;/p&gt;
+&lt;h3 id=&#34;sponsored&#34;&gt;Sponsored&lt;/h3&gt;
+&lt;p&gt;If you’re interested in seeing what cool things different companies are working on and/or are interested in, check out the sponsored sessions on &lt;a href=&#34;https://kccncna20.sched.com/2020-11-17/overview/?iframe=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Day 1&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;api-machineryhttpsgithubcomkubernetescommunitytreemastersig-api-machinery&#34;&gt;&lt;a href=&#34;https://github.com/kubernetes/community/tree/master/sig-api-machinery&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;API Machinery&lt;/a&gt;&lt;/h3&gt;
+&lt;h5 id=&#34;day-2&#34;&gt;Day 2&lt;/h5&gt;
+&lt;p&gt;🌱 &lt;a href=&#34;https://kccncna20.sched.com/event/ekBb/admission-control-we-have-a-problem-ryan-jarvinen-red-hat?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Admission Control, We Have a Problem - Ryan Jarvinen, Red Hat&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This is an interactive session that will teach you how Admission Controllers play a critical role in securing Kubernetes APIs. You will be able to “implement basic input validation and testing of webhooks for the Admission Controller.”&lt;/p&gt;
+&lt;h5 id=&#34;day-4&#34;&gt;Day 4&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;https://kccncna20.sched.com/event/ekGp/into-the-deep-waters-of-api-machinery-federico-bongiovanni-daniel-smith-google-david-eads-stefan-schimanski-red-hat?iframe=yes&amp;amp;w=&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Into the Deep Waters of API Machinery - Federico Bongiovanni &amp;amp; Daniel Smith, Google, &amp;amp; David Eads, Stefan Schimanski, Red Hat&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;architecturehttpsgithubcomkubernetescommunityblobmastersig-architecturereadmemd&#34;&gt;&lt;a href=&#34;https://github.com/kubernetes/community/blob/master/sig-architecture/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Architecture&lt;/a&gt;&lt;/h3&gt;
+&lt;h5 id=&#34;day-4-1&#34;&gt;Day 4&lt;/h5&gt;
+&lt;p&gt;🌱 &lt;a href=&#34;https://kccncna20.sched.com/event/ekGs/sig-architecture-intro-and-update-john-belamaric-google-derek-carr-red-hat&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SIG Architecture Intro and Update - John Belamaric, Google &amp;amp; Derek Carr, Red Hat&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;autoscalinghttpsgithubcomkubernetescommunityblobmastersig-autoscalingreadmemd&#34;&gt;&lt;a href=&#34;https://github.com/kubernetes/community/blob/master/sig-autoscaling/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Autoscaling&lt;/a&gt;&lt;/h3&gt;
+&lt;h5 id=&#34;day-2-1&#34;&gt;Day 2&lt;/h5&gt;
+&lt;p&gt;🌱 &lt;a href=&#34;https://kccncna20.sched.com/event/ekGm/introduction-to-autoscaling-guy-templeton-skyscanner-joe-burnett-google?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Introduction to Autoscaling - Guy Templeton, Skyscanner &amp;amp; Joe Burnett, Google&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This talk covers different types of autoscaling, how they work, and why you should use them. Best practices and gotchas will also be discussed.&lt;/p&gt;
+&lt;h3 id=&#34;cluster-lifecyclehttpsgithubcomkubernetescommunityblobmastersig-cluster-lifecyclereadmemd&#34;&gt;&lt;a href=&#34;https://github.com/kubernetes/community/blob/master/sig-cluster-lifecycle/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cluster Lifecycle&lt;/a&gt;&lt;/h3&gt;
+&lt;h5 id=&#34;day-4-2&#34;&gt;Day 4&lt;/h5&gt;
+&lt;p&gt;🌱 &lt;a href=&#34;https://kccncna20.sched.com/event/ekH4/introduction-to-sig-cluster-lifecycle-lubomir-i-ivanov-vmware-justin-santa-barbara-google?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Introduction to SIG Cluster Lifecycle - Lubomir I. Ivanov, VMware &amp;amp; Justin Santa Barbara, Google&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;logging&#34;&gt;Logging&lt;/h3&gt;
+&lt;h5 id=&#34;day-3&#34;&gt;Day 3&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;https://kccncna20.sched.com/event/ekA9/kubernetes-and-logging-do-it-right-eduardo-silva-arm-treasure-data&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes and Logging: Do It Right - Eduardo Silva, Arm Treasure Data&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This talk dives into logging for distributed systems, specifically for Kubernetes environments, best practices, and available open-source tools.&lt;/p&gt;
+&lt;h3 id=&#34;networkhttpsgithubcomkubernetescommunityblobmastersig-networkreadmemd&#34;&gt;&lt;a href=&#34;https://github.com/kubernetes/community/blob/master/sig-network/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Network&lt;/a&gt;&lt;/h3&gt;
+&lt;h5 id=&#34;day-2-2&#34;&gt;Day 2&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;https://kccncna20.sched.com/event/ekGX/contour-a-high-performance-multitenant-ingress-controller-for-kubernetes-michael-michael-steve-sloka-nick-young-james-peach-vmware?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Contour, A High Performance Multitenant Ingress Controller for Kubernetes - Michael Michael, Steve Sloka, Nick Young, &amp;amp; James Peach, VMware&lt;/a&gt;&lt;/p&gt;
+&lt;h5 id=&#34;day-3-1&#34;&gt;Day 3&lt;/h5&gt;
+&lt;p&gt;🌱 &lt;a href=&#34;https://kccncna20.sched.com/event/ekHt/kubernetes-sig-network-intro-and-deep-dive-tim-hockin-bowei-du-google-rich-renner-sunder-networks?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes SIG-Network: Intro and Deep-Dive - Tim Hockin &amp;amp; Bowei Du, Google &amp;amp; Rich Renner, Sunder Networks&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;registry&#34;&gt;Registry&lt;/h3&gt;
+&lt;h5 id=&#34;day-1&#34;&gt;Day 1&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;https://kccncna20.sched.com/event/fGWK/simplify-application-deployment-at-the-edge-with-harbor-michael-michael-harbor?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Simplify Application Deployment at the Edge with Harbor - Michael Michael, Harbor&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;In order to operate Kubernetes at the Edge, a container registry is required. This is where Harbor comes in.&lt;/p&gt;
+&lt;h5 id=&#34;day-2-3&#34;&gt;Day 2&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;https://kccncna20.sched.com/event/ekI5/harbor-enterprise-cloud-native-artifact-registry-steven-zou-daniel-jiang-alex-xu-steven-ren-vmware?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Harbor- Enterprise Cloud Native Artifact Registry - Steven Zou, Daniel Jiang, Alex Xu, &amp;amp; Steven Ren, VMware&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This talk goes into detail about Project Harbor, a container registry, and its roadmap.&lt;/p&gt;
+&lt;h3 id=&#34;runtimehttpsgithubcomcncfsig-runtime&#34;&gt;&lt;a href=&#34;https://github.com/cncf/sig-runtime&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Runtime&lt;/a&gt;&lt;/h3&gt;
+&lt;h5 id=&#34;day-1-1&#34;&gt;Day 1&lt;/h5&gt;
+&lt;p&gt;🌱 &lt;a href=&#34;https://kccncna20.sched.com/event/ekGF/introduction-and-deep-dive-into-containerd-michael-crosby-derek-mcgowan-apple-phil-estes-ibm-wei-fu-alibaba?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Introduction and Deep Dive into containerd - Michael Crosby &amp;amp; Derek McGowan, Apple, Phil Estes, IBM, &amp;amp; Wei Fu, Alibaba&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This talk will be a combined intro to and deep dive into containerd, a container runtime.&lt;/p&gt;
+&lt;h5 id=&#34;day-3-2&#34;&gt;Day 3&lt;/h5&gt;
+&lt;p&gt;🌱 &lt;a href=&#34;https://kccncna20.sched.com/event/ekG6/intro-cncf-sig-runtime-ricardo-aravena-rakuten-renaud-gaubert-nvidia?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Intro: CNCF SIG-Runtime - Ricardo Aravena, Rakuten &amp;amp; Renaud Gaubert , NVIDIA&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;In this talk, there will be an overview of current projects and future technologies that fall into the SIG-Runtime scope.&lt;/p&gt;
+&lt;h3 id=&#34;securityhttpsgithubcomkubernetescommunityblobmastersig-securityreadmemd&#34;&gt;&lt;a href=&#34;https://github.com/kubernetes/community/blob/master/sig-security/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Security&lt;/a&gt;&lt;/h3&gt;
+&lt;h5 id=&#34;day-2-4&#34;&gt;Day 2&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;https://kccncna20.sched.com/event/ekI2/open-policy-agent-intro-patrick-east-styra-max-smythe-google?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Open Policy Agent Intro - Patrick East, Styra &amp;amp; Max Smythe, Google&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This talk will give an intro to Open Policy Agent (OPA), which provides policy-based control for cloud native environments. To see an instance of how OPA has been used, scroll down to Day 4.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://kccncna20.sched.com/event/ekGI/detecting-security-policies-violation-using-falco-a-practical-introduction-leonardo-grasso-sysdig?iframe=no&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Detecting Security Policies Violation Using Falco: A Practical Introduction - Leonardo Grasso, Sysdig&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This talk will provide an intro to and tutorial of Falco, a runtime security tool designed to detect anomalous activity and security breaches.&lt;/p&gt;
+&lt;h5 id=&#34;day-3-3&#34;&gt;Day 3&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;https://kccncna20.sched.com/event/ekG3/a-special-interest-in-cloud-native-security-emily-fox-national-security-agency-nsa-brandon-lum-ibm?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;A Special Interest in Cloud Native Security - Emily Fox, National Security Agency (NSA) &amp;amp; Brandon Lum, IBM&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This talk will be about SIG-Security efforts and projects.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/program/schedule/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes-native Security with Starboard - Liz Rice &amp;amp; Daniel Pacak, Aqua Security&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;“Starboard is an open source project that gathers security information from various different tools into Kubernetes CRDs, so users can manage &amp;amp; access security reports through familiar Kubernetes interfaces, like kubectl or Octant.” This talk will include multiple demos.&lt;/p&gt;
+&lt;h5 id=&#34;day-4-3&#34;&gt;Day 4&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;https://kccncna20.sched.com/event/ekEP/using-open-policy-agent-to-meet-evolving-policy-requirements-jeremy-rickard-vmware&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Using Open Policy Agent to Meet Evolving Policy Requirements - Jeremy Rickard, VMware&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This talk will cover concrete examples of how VMware has used Open Policy Agent (OPA) to implement evolving Kubernetes policy requirements and more.&lt;/p&gt;
+&lt;h3 id=&#34;storagehttpsgithubcomkubernetescommunityblobmastersig-storagereadmemd&#34;&gt;&lt;a href=&#34;https://github.com/kubernetes/community/blob/master/sig-storage/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Storage&lt;/a&gt;&lt;/h3&gt;
+&lt;h5 id=&#34;day-4-4&#34;&gt;Day 4&lt;/h5&gt;
+&lt;p&gt;🌱 &lt;a href=&#34;https://kccncna20.sched.com/event/ekHD/intro-deep-dive-kubernetes-sig-storage-xing-yang-vmware-michelle-au-google?iframe=yes&amp;amp;w=&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Intro &amp;amp; Deep Dive: Kubernetes SIG-Storage - Xing Yang, VMware &amp;amp; Michelle Au, Google&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;usabilityhttpsgithubcomkubernetescommunityblobmastersig-usabilityreadmemd&#34;&gt;&lt;a href=&#34;https://github.com/kubernetes/community/blob/master/sig-usability/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Usability&lt;/a&gt;&lt;/h3&gt;
+&lt;h5 id=&#34;day-3-4&#34;&gt;Day 3&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;https://kccncna20.sched.com/event/ekHY/kubernetes-putting-the-focus-on-upstream-usability-with-sig-usability-tasha-drew-vmware-gabby-moreno-cesar-ibm?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes: Putting the Focus on Upstream Usability with SIG Usability - Tasha Drew, VMware &amp;amp; Gabby Moreno Cesar, IBM&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This talk will focus on Kubernetes end users and how Kubernetes can help.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://kccncna20.sched.com/event/ek9o/five-hundred-twenty-five-thousand-six-hundred-k8s-clis-phillip-wittrock-gabbi-fisher-apple&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Five Hundred Twenty-five Thousand Six Hundred K8s CLI’s - Phillip Wittrock &amp;amp; Gabbi Fisher, Apple&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This talk will go into a number of very useful Kubernetes-related CLIs.&lt;/p&gt;
+&lt;h3 id=&#34;windowshttpsgithubcomkubernetescommunityblobmastersig-windowsreadmemd&#34;&gt;&lt;a href=&#34;https://github.com/kubernetes/community/blob/master/sig-windows/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Windows&lt;/a&gt;&lt;/h3&gt;
+&lt;h5 id=&#34;day-4-5&#34;&gt;Day 4&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;https://kccncna20.sched.com/event/ekFu/simplifying-windows-runtime-and-deployment-in-kubernetes-michael-michael-vmware-mark-rossetti-muzz-imam-microsoft-deep-debroy-docker?iframe=yes&amp;amp;w=100%25&amp;amp;sidebar=yes&amp;amp;bg=no&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Simplifying Windows Runtime and Deployment in Kubernetes - Michael Michael, VMware, Mark Rossetti &amp;amp; Muzz Imam, Microsoft, &amp;amp; Deep Debroy, Docker&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;When talking about containers, people often think about Linux. This talk will instead dive into Windows and Kubernetes.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Getting Started with Kubeapps</title>
+      
+      <link>/videos/kubeapps-gs/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/kubeapps-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

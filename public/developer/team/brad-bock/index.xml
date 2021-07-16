@@ -1,0 +1,44 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Brad Bock</title>
+    <link>/team/brad-bock/</link>
+    <description>Recent content in Brad Bock on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 05 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/team/brad-bock/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: What is Bitnami?</title>
+      
+      <link>/guides/containers/what-is-bitnami/</link>
+      <pubDate>Fri, 05 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/containers/what-is-bitnami/</guid>
+      <description>
+
+        
+        &lt;p&gt;Bitnami is an application packaging and publishing startup that was acquired by VMware in 2019. It is a leading provider of prepackaged open source software that runs natively in environments where the lion’s share of developers and other users want to build or deploy applications: in the major public clouds, on laptops, and on Kubernetes.&lt;/p&gt;
+&lt;h2 id=&#34;why-should-i-use-bitnami&#34;&gt;Why should I use Bitnami?&lt;/h2&gt;
+&lt;p&gt;With more than a decade of experience publishing the &lt;a href=&#34;https://bitnami.com/stacks&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Community Catalog&lt;/a&gt;, an extensive library of open source applications and app building blocks, Bitnami is famous for keeping all of its software up to date with the latest application versions, dependencies, and operating systems. Every application is prepackaged to work out of the box, with no need to finish configuration or setup on your own. Every Bitnami app is packaged with best practices, run through extensive automated tests, and certified to be up to date and working in its target platform.&lt;/p&gt;
+&lt;p&gt;Bitnami simplifies the management of multi-cloud, cross-platform environments not by trying to abstract differences away, but by providing functionally equivalent, platform-optimized application and infrastructure stacks for each of them. This enables a degree of standardization across platforms while allowing in-depth integration with vendor-specific features and services.&lt;/p&gt;
+&lt;p&gt;And importantly, &lt;strong&gt;all software in the Bitnami Community Catalog is free to use and open source.&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;where-can-i-find-bitnami-apps&#34;&gt;Where can I find Bitnami apps?&lt;/h2&gt;
+&lt;p&gt;A great place to start is &lt;a href=&#34;https://bitnami.com/stacks&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami.com&lt;/a&gt;, where you can browse a catalog of more than 180 apps packaged for multiple platforms. Clicking on any app in the library will take you to its individual page where you can find out how to deploy it on your laptop with a native installer, in the cloud as a platform-specific VM image, on Docker, or on Kubernetes.&lt;/p&gt;
+&lt;p&gt;You can also find Bitnami cloud images and containers in the cloud marketplaces for &lt;a href=&#34;https://aws.amazon.com/marketplace/search/results?x=29&amp;amp;y=22&amp;amp;searchTerms=bitnami&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;AWS&lt;/a&gt;, &lt;a href=&#34;https://azuremarketplace.microsoft.com/en-us/marketplace/apps?search=bitnami&amp;amp;page=1&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Microsoft Azure&lt;/a&gt;, and &lt;a href=&#34;https://console.cloud.google.com/marketplace/browse?q=bitnami&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Google Cloud&lt;/a&gt;; containers in &lt;a href=&#34;https://hub.docker.com/u/bitnami&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Hub&lt;/a&gt; and &lt;a href=&#34;https://gallery.ecr.aws/?searchTerm=bitnami&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;AWS ECR Public&lt;/a&gt;; and Bitnami Helm charts in the Bitnami chart repository.&lt;/p&gt;
+&lt;h2 id=&#34;check-out-bitnami-docs-and-community-sites&#34;&gt;Check out Bitnami docs and community sites&lt;/h2&gt;
+&lt;p&gt;Each Bitnami app has extensive documentation that makes it easy to get started. Check out &lt;a href=&#34;https://docs.bitnami.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Documentation&lt;/a&gt; for more information.&lt;/p&gt;
+&lt;p&gt;In addition to great content across many different marketplaces, Bitnami also has a large community—of more than 3 million developers! On the Bitnami Community page, Bitnami engineers and fellow developers help each other when they run into trouble, need ideas on how to use Bitnami stacks, or want to discuss topics like open source software.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

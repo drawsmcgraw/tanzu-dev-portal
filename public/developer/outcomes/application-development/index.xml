@@ -1,0 +1,901 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Foundations of Modern Application Development Practices</title>
+    <link>/outcomes/application-development/</link>
+    <description>Recent content in Foundations of Modern Application Development Practices on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/outcomes/application-development/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Outcomes: Balanced Teams</title>
+      
+      <link>/outcomes/application-development/balanced-teams/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development/balanced-teams/</guid>
+      <description>
+
+        
+        &lt;p&gt;Many teams today have chosen to follow an Agile approach to software development. Despite the proven benefits of such an approach, many of these teams still fail to realize their full potential.&lt;/p&gt;
+&lt;p&gt;One reason is that while these teams may place a priority on perfectly implementing their chosen Agile methodology, such as &lt;a href=&#34;https://en.wikipedia.org/wiki/Scrum_%28software_development%29&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Scrum&lt;/a&gt;, &lt;a href=&#34;https://en.wikipedia.org/wiki/Extreme_programming&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;XP&lt;/a&gt;, or &lt;a href=&#34;https://en.wikipedia.org/wiki/Kanban_%28development%29&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kanban&lt;/a&gt;, they neglect to consider the impacts to the human side of those methodologies. One of the most promising of these human practices is the balanced team.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/balanced-team.jpg&#34; alt=&#34;Balanced Team in a meeting room&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;what-you-will-learn&#34;&gt;What you will learn&lt;/h2&gt;
+&lt;p&gt;In this article, you will learn to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#definition&#34;&gt;Define balanced team for your team members&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#diagram&#34;&gt;Draw the balanced team diagram&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#benefits&#34;&gt;Identify the benefits of a balanced team&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;definition&#34;&gt;Define balanced team for your team members&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“A team management philosophy that has people with a variety of skills and perspectives that support each other towards a shared goal.” - &lt;em&gt;balancedteam.org&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The typical balanced team mix for product development is a product manager, product designer, and engineer(s) dedicated to a single product development effort. This is in contrast to another common team structure where roles some roles, such as product management and design, are shared across many product efforts.&lt;/p&gt;
+&lt;p&gt;When we work within the construct of a balanced team, we ensure that all these perspectives blend and inform each other so that we build products that are desirable, usable, feasible, and viable.&lt;/p&gt;
+&lt;p&gt;Our product development teams are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.idonethis.com/two-pizza-team/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Small enough to be fed by two pizzas&lt;/a&gt; as pioneered by Amazon&lt;/li&gt;
+&lt;li&gt;Multidisciplinary&lt;/li&gt;
+&lt;li&gt;Organized around goals established by the product sponsor(s).&lt;/li&gt;
+&lt;li&gt;Empowered to define and iterate on solutions that deliver against those goals.&lt;/li&gt;
+&lt;li&gt;Empowered to talk to customers, make product decisions, and push code to production.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;team-roles-and-responsibilities&#34;&gt;Team Roles and Responsibilities&lt;/h2&gt;
+&lt;p&gt;The following are the most common roles you will see on a balanced team for product development. However, your team’s roles may differ slightly depending on your product.&lt;/p&gt;
+
+
+
+
+
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Role&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Engineer&lt;/td&gt;
+&lt;td&gt;Engineers implement product functionality, working from a prioritized backlog of &lt;a href=&#34;https://en.wikipedia.org/wiki/User_story&#34;&gt;user stories&lt;/a&gt;. Engineers guide the implementation and help you understand the technical implications of product decisions. You will help them gain an understanding of what product success looks like. You will work together to validate your backlog’s prioritization.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Product Manager&lt;/td&gt;
+&lt;td&gt;Leads a team to discover and deliver a product that creates meaningful value for their company and users. They facilitate decision-making in service of shipping successful features. To do so, product managers need to clearly understand who your users are and what they need, what impact the business expects from the product, and who your stakeholders are. They also need to collaborate closely with your team.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Product Designer&lt;/td&gt;
+&lt;td&gt;Deliver value in the form of User Experience Design decisions. Their job is to deeply understand the users in order to define solutions that are desirable, useful, and usable. Product managers work closely with designers, pairing on user research to validate critical user and solution assumptions before adding development work to the backlog.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;diagram&#34;&gt;Draw the balanced team diagram&lt;/h2&gt;
+&lt;p&gt;At VMware Tanzu Labs, we assemble balanced software product development teams in order to ensure that the products we are building are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#desirable&#34;&gt;Desirable from a customer’s perspective.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#viable&#34;&gt;Viable from a business perspective.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#feasible&#34;&gt;Feasible from a technical perspective.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Each member of the balanced team represents one of these areas.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/balanced-teams.jpeg&#34; alt=&#34;Balanced Team Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;desirable&#34;&gt;Desirable: Does it solve our users’ problems?&lt;/h4&gt;
+&lt;p&gt;The product should be something that users want and that solves real problems. A designer’s primary question is, “How is the user affected?” More than anyone else on the team, designers help us answer these fundamental questions: “Is this an important problem to users?” and, “Does this design solve the problem?”&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Reflection:&lt;/strong&gt; if designers become too focused on user needs and cannot connect with business needs and technical feasibility, they will focus on solution ideas that cannot be implemented and/or will deliver no return on investment.&lt;/p&gt;
+&lt;h4 id=&#34;viable&#34;&gt;Viable: Will this help the business?&lt;/h4&gt;
+&lt;p&gt;The product has to support a sustainable business model. The product manager’s primary question is, “By solving these specific user problems with these specific solutions, are we creating valuable user and business outcomes?”&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Reflection:&lt;/strong&gt; if product managers become too focused on the business and cannot connect with users, they will likely focus on solutions that don’t solve any real needs and thus don’t get used.&lt;/p&gt;
+&lt;h4 id=&#34;feasible&#34;&gt;Feasible: How difficult is it to build?&lt;/h4&gt;
+&lt;p&gt;Product implementation has to be feasible and robust. Engineers’ primary question is, “What technical implementation will satisfy the project and product goals best?” Engineers help us debate the feasibility and merit of potential solutions while remaining mindful of technology constraints.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Reflection:&lt;/strong&gt; it doesn’t help for engineers to come up with feasible solutions that don’t solve problems for users, or to home in on solutions that are desirable and viable and yet not feasible. Engineers should offer alternative solutions that are more feasible (or cheaper) if they know them to be available.&lt;/p&gt;
+&lt;h2 id=&#34;benefits&#34;&gt;Identify four benefits of a balanced team&lt;/h2&gt;
+&lt;p&gt;When sitting next to each other, or sharing virtual space, team members constantly communicate and collaborate. Teams are focused on delivering customer value through working software in small, iterative releases, and are self-organizing in that they can adapt common tools and practices to what works best for all members. Communication among team members tends to be informal, favoring spontaneous conversation over lengthy meetings.&lt;/p&gt;
+&lt;p&gt;Balanced teams have a host of benefits, some top ones are:&lt;/p&gt;
+
+
+
+
+
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Benefit&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Consensus building&lt;/td&gt;
+&lt;td&gt;• Having a balanced team dedicated to a product and highly collaborative during product development allows for rapid context sharing and fewer meetings.&lt;br&gt;&lt;br&gt;• The different disciplines can break out of their siloed domains and create more room for compromise and collaboration.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Modularity of the team&lt;/td&gt;
+&lt;td&gt;Shared product knowledge on the team across disciplines allows the team to not get blocked when a team member isn’t present.&lt;br&gt;&lt;br&gt; • Creates more flexibility for team members to rotate to other teams and easily onboard new members.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Autonomy in decision making&lt;/td&gt;
+&lt;td&gt;• A shared sense of product ownership allows the team to feel confident in decision making, empowered to lead, able to ask another team member for help, and knows when to gather input from outside of the team.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Cross Domain Empowerment&lt;/td&gt;
+&lt;td&gt;• Having cross discipline balanced team members like a Product Designer and a Developer pair with each other to review UI implementations together allows for much less documentation like requirements and design specification. It also creates empathy and respect for other practitioners. Designers can more easily understand technical constraints the more time they spend with developers and can incorporate those learnings into future design concepts.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;in-this-article-you-learned-to&#34;&gt;In this article, you learned to:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#definition&#34;&gt;Define balanced team for your team members&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#diagram&#34;&gt;Draw the balanced team diagram&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#benefits&#34;&gt;Identify the benefits of a balanced team&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Want to learn more about balanced teams? Check out Becki Hyde, Product Manager at Tanzu Labs giving her talk &lt;a href=&#34;https://tanzu.vmware.com/content/videos/becki-hyde-making-magic-with-balanced-teams&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;“Making magic with Balanced Teams”&lt;/a&gt; at SpringOne.&lt;/li&gt;
+&lt;li&gt;Ready to dive into more fine grained details of what balanced teams are? Check out this VMware Tanzu Labs &lt;a href=&#34;https://tanzu.vmware.com/content/white-papers/how-to-build-better-software-with-balanced-teams&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Balanced Team Whitepaper&lt;/a&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;related-topics&#34;&gt;Related topics&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/agile&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Agile Software Development&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/videos/lean-product-development-by-michael-fisher&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Lean Product Development&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/campaigns/design&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;User Centered Design&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Team Rhythm</title>
+      
+      <link>/outcomes/application-development/team-rhythm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development/team-rhythm/</guid>
+      <description>
+
+        
+        &lt;p&gt;A healthy lean and agile team has a strong and consistent rhythm. Each week is punctuated by a small set of standing practices and meetings.&lt;/p&gt;
+&lt;p&gt;It is critical to establish a &lt;a href=&#34;https://en.wikipedia.org/wiki/Psychological_safety&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;psychologically safe&lt;/a&gt; work environment. Many of the following practices emphasize asking for help, volunteering to help others, explaining your reasoning, challenging the reasoning of others, and laying bare what you feel is and is not working well on the project. This will not happen within a &lt;em&gt;toxic&lt;/em&gt; work environment where honesty and vulnerability are punished, mocked, or reduce one’s standing in the organization.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/standup.jpg&#34; alt=&#34;Team Standup&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;what-you-will-learn&#34;&gt;What you will learn&lt;/h2&gt;
+&lt;p&gt;In this article, you will learn to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;List the daily meetings and describe your role in each one.&lt;/li&gt;
+&lt;li&gt;List the weekly meetings and describe your role in each one.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;list-daily-meetings-and-describe-your-role-in-each-one&#34;&gt;List daily meetings and describe your role in each one&lt;/h2&gt;
+&lt;p&gt;Too many meetings can be a time-sink, especially daily meetings. We recommend the following high-value meetings, and to limit them to about 15 minutes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/day-in-a-life.jpg&#34; alt=&#34;Day in a life&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;office-department-or-cross-team-stand-up&#34;&gt;Office, department, or cross-team stand-up&lt;/h3&gt;
+&lt;p&gt;Your team’s interesting discoveries might unblock other teams. The problem that is stumping you might have recently been solved by another team. Office, department, or other cross-team &lt;a href=&#34;https://en.wikipedia.org/wiki/Stand-up_meeting&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;stand-up meetings&lt;/a&gt; are an efficient way to share information quickly.&lt;/p&gt;
+&lt;p&gt;These gatherings do not have to only be about work. Office, department, and other cross-team stand-ups are an opportunity to build personal relationships by sharing social events, local happenings, or even trivia.&lt;/p&gt;
+&lt;p&gt;We commonly see daily stand-up meetings having four categories: new faces, help requests, interesting things, and events.&lt;/p&gt;
+&lt;p&gt;Your role as a &lt;strong&gt;Participant&lt;/strong&gt; when the stand-up moderator announces each topic:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Announce new teammates or guests.&lt;/li&gt;
+&lt;li&gt;Ask for help if you or your team need it.&lt;/li&gt;
+&lt;li&gt;Share interesting or notable things you’ve learned that could help other teams.&lt;/li&gt;
+&lt;li&gt;Announce and/or volunteer to participate in events.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;project-stand-up&#34;&gt;Project Stand-up&lt;/h3&gt;
+&lt;p&gt;The main purpose of the project stand-up is to check in on everyone’s progress, plan, and blockers. Another subtle but powerful purpose is to align everyone&amp;rsquo;s schedules, almost like synchronizing everyone&amp;rsquo;s clock.&lt;/p&gt;
+&lt;p&gt;Some teams prefer to have everyone (or each pair) report on what they did the previous day. Other teams omit the status report and adopt a format similar to the &lt;a href=&#34;#office-department-or-cross-team-stand-up&#34;&gt;office, department, or cross-team stand-up&lt;/a&gt;, choosing to discuss blockers and other topics impacting the project. Experiment with both formats.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Each week, have a different team member volunteer to facilitate the daily project stand-up. This reduces facilitation fatigue.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Your role as a &lt;strong&gt;Team Member&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Report on the previous workday&amp;rsquo;s progress as needed.&lt;/li&gt;
+&lt;li&gt;Report any interesting or project-impacting topics.&lt;/li&gt;
+&lt;li&gt;Understand blockers and their implications on the current priorities.&lt;/li&gt;
+&lt;li&gt;Remind everyone of outstanding team action items and upcoming milestones.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;list-the-weekly-meetings-and-describe-your-role-in-each-one&#34;&gt;List the weekly meetings and describe your role in each one&lt;/h2&gt;
+&lt;h3 id=&#34;iteration-planning-meeting&#34;&gt;Iteration Planning Meeting&lt;/h3&gt;
+&lt;p&gt;The Iteration Planning Meeting (IPM) is a regular meeting for the core team to understand and align on the work to be done. It is &lt;a href=&#34;https://tanzu.vmware.com/developer/practices/ipm/#sprint-planning-vs-iteration-planning&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;similar but different to SCRUM Sprint Planning&lt;/a&gt;,&lt;/p&gt;
+&lt;p&gt;Regular planning meetings help ensure the &lt;a href=&#34;https://en.wikipedia.org/wiki/Scrum_%28software_development%29#Product_backlog&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;product backlog&lt;/a&gt; is well-understood by all team members and always reflects the current priorities. By discussing and sizing product backlog items, the team may align on the delivery impact of the work to be done.&lt;/p&gt;
+&lt;p&gt;Your role as a &lt;strong&gt;Developer:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Consider the technical feasibility of the &lt;a href=&#34;https://en.wikipedia.org/wiki/User_story#:~:text=In%20software%20development%20and%20product,digitally%20in%20project%20management%20software.&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;user stories&lt;/a&gt; and raise any concerns.&lt;/li&gt;
+&lt;li&gt;Look for and suggest opportunities to break down large stories into smaller stories.&lt;/li&gt;
+&lt;li&gt;Ensure user stories describe the desired outcomes, and not the technical implementation.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/developer/practices/ipm/#estimation&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Estimate stories&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Your role as a &lt;strong&gt;Product Manager:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Communicate the user value and business value of each story.&lt;/li&gt;
+&lt;li&gt;Clarify any confusion and update stories.&lt;/li&gt;
+&lt;li&gt;Confirm the priority of stories with input from the developers.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Your role as a &lt;strong&gt;Product Designer:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Illustrate the user value associated with each story with supporting artifacts (prototypes, flow diagrams, personas, etc.)&lt;/li&gt;
+&lt;li&gt;Frame the supporting evidence (user research, testing results, etc.) for certain user flows&lt;/li&gt;
+&lt;li&gt;Clarify and walk through interaction patterns for certain user flows so it’s clear to the entire balanced team&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To learn more about IPMs and how to facilitate them, go &lt;a href=&#34;https://tanzu.vmware.com/developer/practices/ipm/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;sponsorstakeholder-update-and-demo&#34;&gt;Sponsor/Stakeholder Update and Demo&lt;/h3&gt;
+&lt;p&gt;It is extremely important to keep the product sponsors and stakeholders informed regarding the team’s progress. This helps avoid miscommunication and other forms of misalignment, especially if stakeholder-level priorities have changed.&lt;/p&gt;
+&lt;p&gt;We recommend covering the following topics during these updates:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Demo the current state of the product, especially new or changed functionality.&lt;/li&gt;
+&lt;li&gt;Discuss learnings from customers.&lt;/li&gt;
+&lt;li&gt;Raise awareness of blocking issues preventing the team from making progress.&lt;/li&gt;
+&lt;li&gt;Share updates on &lt;a href=&#34;https://en.wikipedia.org/wiki/Performance_indicator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Key Performance Indicators&lt;/a&gt; (KPIs).&lt;/li&gt;
+&lt;li&gt;Share what the team plans to work on next.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Your role as a &lt;strong&gt;Product Manager&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Prepare the agenda with your anchor and designer.&lt;/li&gt;
+&lt;li&gt;Use your product roadmap to explain what the team is working on and why.&lt;/li&gt;
+&lt;li&gt;Frame the demo in the context of the outcomes defined in the product roadmap.&lt;/li&gt;
+&lt;li&gt;Speak to the empirical data guiding the team’s decisions.&lt;/li&gt;
+&lt;li&gt;Speak to your assumptions, both those you have tested, and those you plan to test.&lt;/li&gt;
+&lt;li&gt;If blocked, explain what the team needs, why, and by when.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Your role as a &lt;strong&gt;Team Member&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Listen, participate, take notes, and answer questions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;retrospective&#34;&gt;Retrospective&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/3-column-retro/retro-1.png&#34; alt=&#34;3 Column Retrospective in Action&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Some feel that the Retrospective practice is the most important of all Agile practices as it embodies the principle of continuous improvement. Retrospectives are a way to identify how to improve teamwork by reflecting on what worked well, what could be improved, and what is on people’s minds.&lt;/p&gt;
+&lt;p&gt;Continuous reflection on how the team and project are performing allow us to learn and improve based on our past experience, constantly striving for better outcomes and to correct misalignment.&lt;/p&gt;
+&lt;p&gt;Teams typically host “the retro” on a weekly basis to celebrate the past week’s successes, discuss points of confusion, and reflect on challenges.&lt;/p&gt;
+&lt;p&gt;Your role as a &lt;strong&gt;Meeting Participant&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Openly and honestly share your experiences from the week.&lt;/li&gt;
+&lt;li&gt;Dig deeper on topics raised by others to understand root causes.&lt;/li&gt;
+&lt;li&gt;Identify action items to address issues raised.&lt;/li&gt;
+&lt;li&gt;Sign up for action items and be accountable for their completion.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To learn more about Retrospectives and how to facilitate them, go &lt;a href=&#34;https://tanzu.vmware.com/developer/practices/3-column-retro/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;in-this-article-you-learned-to&#34;&gt;In this article, you learned to:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;List the daily meetings and your role in each one.&lt;/li&gt;
+&lt;li&gt;List the weekly meetings and your role in each one.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.amazon.com/Agile-Estimating-Planning-Mike-Cohn/dp/0131479415&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Agile Estimating and Planning&lt;/a&gt; by Mike Cohn&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://wiki.c2.com/?YesterdaysWeather&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Yesterday’s Weather&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Planning_poker&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Planning Poker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Chapter 12 of &lt;a href=&#34;https://www.goodreads.com/book/show/67833.Extreme_Programming_Explained&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Extreme Programming Explained&lt;/a&gt; by Kent Beck, Cynthia Andres&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/[http:/www.extremeprogramming.org/rules/iterationplanning.html]%28http:/www.extremeprogramming.org/rules/iterationplanning.html%29&#34;&gt;ExtremeProgramming.org&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://pragprog.com/titles/dlret/agile-retrospectives/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Agile Retrospectives - Making Good Teams Great&lt;/a&gt;  by Esther Derby and Diana Larsen, Foreword by Ken Schwaber&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/blog/how-to-run-a-really-good-retrospective&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;How to Run a Really Good Retrospective&lt;/a&gt; - Blog Post by Nicola Rushton&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/videos/measure-success-in-agile-retrospectives-enrico-teotti&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Measure Success in Agile Retrospectives&lt;/a&gt; – Video by Enrico Teotti&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Product Validation</title>
+      
+      <link>/outcomes/application-development/product-validation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development/product-validation/</guid>
+      <description>
+
+        
+        &lt;p&gt;There are a lot of unknowns when building a new software system, including customer unknowns such as product/market fit, business unknowns such as addressable market size, and technical unknowns such as how feasible something is to build.&lt;/p&gt;
+&lt;p&gt;For decades, management practice has emphasized planning and control as a means of ensuring predictable outcomes, but building software has inherent complexities that make this management style too rigid. This rigidity is expressed in many ways, from organizations being slow to react to new information to teams not being empowered to act autonomously and react effectively to customer feedback.&lt;/p&gt;
+&lt;p&gt;One way to mitigate the risk of unknowns derailing a product or initiative is to follow the Build, Measure, Learn cycle detailed later in this article. Scientists and engineers have been using something similar known as the&lt;a href=&#34;https://en.wikipedia.org/wiki/Scientific_method&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt; scientific method for at least 200 years.&lt;/a&gt; Both methods use data to inform decisions and place an emphasis on facts over assumptions. You can learn more about the Build, Measure Learn cycle from the book, &lt;a href=&#34;http://theleanstartup.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;ldquo;Lean Startup&amp;rdquo;&lt;/a&gt; by Eric Ries. While the book and this article use startups in several examples, the principles of lean software product development are applicable to organizations of any size and age.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/Office-image.jpeg&#34; alt=&#34;VMware Office Image&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;what-you-will-learn&#34;&gt;What you will learn&lt;/h2&gt;
+&lt;p&gt;In this article, you will learn to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#assumptions&#34;&gt;Define assumptions and how to identify them.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#validation&#34;&gt;Recognize how validation can reduce risk in product development.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#cycle&#34;&gt;Describe the Build-Measure-Learn cycle, its importance, and how each step informs the other.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#hypothesis&#34;&gt;Define hypothesis, test, and validation criteria.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;assumptions&#34;&gt;Define assumptions and how to identify them&lt;/h2&gt;
+&lt;p&gt;Assumptions are things we believe to be true but are not verified by facts or evidence. Identifying assumptions early will help determine the questions we need to answer with research. If we do not identify and address our assumptions, we may make uninformed decisions about the product’s direction.&lt;/p&gt;
+&lt;p&gt;Assumptions introduce risk for several reasons:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Assumptions lead to &lt;a href=&#34;https://en.wikipedia.org/wiki/Lean_software_development#Eliminate_waste&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;waste&lt;/a&gt;, which is anything that does not add value for the end user. For example, building features that customers don’t actually need requires support for what’s built, and prevents the team from building those features that customers do need.&lt;/li&gt;
+&lt;li&gt;Assumptions are attractive and seem like facts. It’s easier to accept an assumption than it is to challenge it. For example, it’s easy to accept an assumption when it&amp;rsquo;s a commonly shared belief on your team.&lt;/li&gt;
+&lt;li&gt;Assumptions preclude learning from customers. A team that shares assumptions about customers will not see a need to connect with those customers to learn about their needs.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To identify assumptions, run an &lt;a href=&#34;https://tanzu.vmware.com/developer/practices/assumptions/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Assumptions Exercise&lt;/a&gt;. You can use the output from this exercise to generate ideas for tests to run that ensure we’re building the right product. The goal is to discover assumptions, then target the ones that pose the greatest risk to our business.&lt;/p&gt;
+&lt;p&gt;An Assumptions Exercise is a simple way to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Identify the assumptions.&lt;/li&gt;
+&lt;li&gt;Prioritize the assumptions that pose the greatest risk to the business.&lt;/li&gt;
+&lt;li&gt;Set up a conversation about what research the team needs to do to validate and de-risk the assumptions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;validation&#34;&gt;Recognize how validation can reduce risk in product development&lt;/h2&gt;
+&lt;p&gt;According to &lt;a href=&#34;https://hbswk.hbs.edu/item/clay-christensens-milkshake-marketing&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Harvard Business School&lt;/a&gt;, as many as 95 percent of product launches fail. Many of these failures can be attributed to flawed assumptions about user needs. You must validate assumptions about what customers really need and meet those needs with as little time, effort, and resources as possible.&lt;/p&gt;
+&lt;p&gt;Customer feedback is vital during product development. It ensures that we’re not building products that customers don&amp;rsquo;t want. The lean product development approach also borrows from the scientific method; it assumes we don&amp;rsquo;t know something to be true unless we gather the evidence to validate our belief.&lt;/p&gt;
+&lt;p&gt;By validating our product decisions early and continuously as we build a product, we receive two important signals. First, we get an indication that we’re on the right track &amp;ndash; that this product meets our customers needs. Second, we learn about flaws in our product so that we can change course before they become too deeply ingrained to be easily fixed.&lt;/p&gt;
+&lt;p&gt;it is especially important to get these signals early on in the development process; before we run out of money, before we put together a “big bang” product launch, or while we can still make changes cost-effectively. Validation reduces risk through explicit, focused learning cycles.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/Product-risk.jpeg&#34; alt=&#34;Risk Over Time Chart&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;cycle&#34;&gt;Describe the Build-Measure-Learn cycle, its importance, and how each step informs the other&lt;/h2&gt;
+&lt;p&gt;Eric Ries popularized Build-Measure-Learn as a way to identify and reduce risk, focus resources on the right work, continuously learn about our customers, and eventually build a successful product or business. This process won’t help a team succeed if it’s done once in the early days of a project. It must underpin the work the team does week-after-week. Eventually, as the team repeats the Build-Measure-Learn cycle, validated learning and a focus on outcomes will replace big ideas and a focus on output.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/Build-measure-learn.jpeg&#34; alt=&#34;Build Measure Learn Cycle&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Although the team’s activities happen in the build, measure, and learn order, planning actually works the other way around.&lt;/p&gt;
+&lt;p&gt;First, the team needs to discover what they must learn. Next, how to measure those learnings. Organizations which do not have a history of traditional metrics, such as revenue or market share, might rely on &lt;a href=&#34;https://www.ideou.com/blogs/inspiration/innovation-accounting-what-it-is-and-how-to-get-started&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;innovation accounting&lt;/a&gt;. More established organizations might have traditional metrics. Regardless, it is important for all organizations to focus on the &lt;em&gt;right&lt;/em&gt; metrics - those that impact the business. Too often, teams get stuck chasing &lt;a href=&#34;https://www.shortform.com/blog/vanity-metrics/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;vanity metrics&lt;/a&gt;, or metrics which look important on the surface, but which ultimately don’t explain performance of the business. Build-Measure-Learn helps teams at every stage focus on the right product initiatives that impact those metrics that matter to their customers and the business.&lt;/p&gt;
+&lt;p&gt;Finally, the team will figure out what must be built, based on this learning.&lt;/p&gt;
+&lt;h3 id=&#34;build&#34;&gt;Build&lt;/h3&gt;
+&lt;p&gt;In order to successfully run an experiment and learn from it, there needs to be something to test. For example, we can test working software. However, there are a number of lower fidelity - and lower cost - options available that the team can learn from. The team could opt to build a paper-prototype, marketing website, or a demo video and put it in front of a target audience to gain insight into how they use it.&lt;/p&gt;
+&lt;p&gt;The Build phase generally comes from questions like “what?” and “for whom?”&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What will we build?&lt;/li&gt;
+&lt;li&gt;Who is our target persona?&lt;/li&gt;
+&lt;li&gt;What part of this product are we most worried about?&lt;/li&gt;
+&lt;li&gt;What’s the smallest release that will support our business outcomes?&lt;/li&gt;
+&lt;li&gt;How can we get the most confidence for the least investment?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;measure&#34;&gt;Measure&lt;/h3&gt;
+&lt;p&gt;It’s not enough to say “we think customers will like this feature.” Instead, it’s important to anticipate (before you build) and assess (when you’re done) the impact that a feature or product has on the metrics that define your business when it is in the hands of real users.&lt;/p&gt;
+&lt;p&gt;Measures can generally be identified with questions like “why?” and “what will have changed?”&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What outcomes are we aiming for?&lt;/li&gt;
+&lt;li&gt;How can we measure our progress towards these outcomes?&lt;/li&gt;
+&lt;li&gt;What tracking needs to be in place so we can measure success?&lt;/li&gt;
+&lt;li&gt;How often / When will we measure?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;learn&#34;&gt;Learn&lt;/h3&gt;
+&lt;p&gt;Learn consists of questions like “What next?” and “How does this impact our plans?”&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What do we think we will learn?&lt;/li&gt;
+&lt;li&gt;What might lead us to decide to continue building on what we built here?&lt;/li&gt;
+&lt;li&gt;What might lead us to decide that we should scrap what we built and revisit the suitability of the team and the process, in driving towards our desired outcomes?&lt;/li&gt;
+&lt;li&gt;If our hypothesis is correct, what do we do next?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;By measuring the impact that a certain feature has on our business, we can determine where to invest our resources next.&lt;/p&gt;
+&lt;h2 id=&#34;hypothesis&#34;&gt;Define hypothesis, test, and validation criteria&lt;/h2&gt;
+&lt;p&gt;The &lt;strong&gt;hypothesis&lt;/strong&gt; is a falsifiable version of our &lt;em&gt;assumption&lt;/em&gt;. We &lt;em&gt;learn&lt;/em&gt; from the outcome of our hypothesis. Only test one variable or idea in each hypothesis. Otherwise, you won’t get reliable data because you won’t be able to tell which of the variables led to a particular outcome.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&amp;ldquo;We think X change/feature will impact Y metric in Z way for a certain group of users.&amp;rdquo;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The &lt;strong&gt;test&lt;/strong&gt; is how we intend to validate our hypothesis, proving it to be true or false. The test is the thing you will &lt;em&gt;build&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&amp;ldquo;To test this hypothesis we will put this feature/product/prototype in front of some segment of users.&amp;rdquo;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Test examples:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/developer/practices/lean-experiments/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;A/B test&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://read.realstartupbook.com/6-evaluative-product-experiment/paper-prototyping&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Paper Prototype&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/developer/practices/lean-experiments/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Concierge test&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/developer/practices/lean-experiments/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Front Door test/Smoke test&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The &lt;strong&gt;validation criteria&lt;/strong&gt; is the evidence that proves the hypothesis. This is what we &lt;em&gt;measure&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&amp;ldquo;We will know if we were successful if this business metric has moved by X% by the end of our test.&amp;rdquo;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Business metric examples:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://delighted.com/blog/nps-matters-product-management&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Net Promoter Score&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://read.realstartupbook.com/6-evaluative-product-experiment/usability-testing&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Usability test outcomes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Revenue per transaction&lt;/li&gt;
+&lt;li&gt;Signed letter of intent&lt;/li&gt;
+&lt;li&gt;New sales leads&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here is an example of a hypothesis, a test, and the validation criteria for a hypothetical video baby monitor app seeking to expand their market share.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;&amp;ldquo;We believe that allowing parents to share clips of their children with friends from the video monitor will lead to a significant usage of the share feature and exposure to new potential customers.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;&amp;ldquo;We will run an A/B test and deliver a Share feature to half of our “recording-happy” user segment for 16 weeks.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;&amp;ldquo;We will know if we were successful if we see an average of one clip shared per household,  per week in the test group.&amp;rdquo;&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This is a relatively low-risk test that will give them a lot of confidence as to whether their customer will benefit from the proposed feature.&lt;/p&gt;
+&lt;h2 id=&#34;in-this-article-you-learned-to&#34;&gt;In this article, you learned to:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#assumptions&#34;&gt;Define assumptions and how to identify them.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#validation&#34;&gt;Recognize how validation can reduce risk in product development.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#cycle&#34;&gt;Describe the Build-Measure-Learn cycle, its importance, and how each step informs the other.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#hypothesis&#34;&gt;Define hypothesis, test, and validation criteria.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;https://www.amazon.com/Lean-Startup-Entrepreneurs-Continuous-Innovation/dp/0307887898&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Lean Startup&lt;/a&gt;: How Today&amp;rsquo;s Entrepreneurs Use Continuous Innovation to Create Radically Successful Businesses&lt;/em&gt; by Eric Ries.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;https://www.amazon.com/Startup-Way-Companies-Entrepreneurial-Management/dp/1101903201/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Startup Way&lt;/a&gt;: How Modern Companies Use Entrepreneurial Management to Transform Culture and Drive Long-Term Growth&lt;/em&gt; by Eric Ries.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;https://www.amazon.com/Measure-What-Matters-audiobook/dp/B07BMJ4L1S/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Measure What Matters&lt;/a&gt;: OKRs: The Simple Idea that Drives 10x Growth&lt;/em&gt; by John Doerr.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;related-topics&#34;&gt;Related topics&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/agile&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Agile Software Development&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/videos/lean-product-development-by-michael-fisher&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Lean Product Development&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/campaigns/design&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;User Centered Design&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Pair Programming</title>
+      
+      <link>/outcomes/application-development/pair-programming/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development/pair-programming/</guid>
+      <description>
+
+        
+        &lt;p&gt;Lennon and McCartney. Penn and Teller. Venus and Serena.&lt;/p&gt;
+&lt;p&gt;Some of the greatest achievements in history were produced by pairs of great minds working side-by-side on the same task. Software is no exception.&lt;/p&gt;
+&lt;p&gt;At Tanzu Labs, we are known for being on the cutting edge of Agile software development—some might even say &lt;a href=&#34;https://en.wikipedia.org/wiki/Extreme_programming&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;extreme&lt;/a&gt;. One software development technique in which we believe deeply is pair programming.&lt;/p&gt;
+&lt;p&gt;Pair programming helps the team produce high quality software while also helping everyone on the development team have a broader understanding of the software. There are some challenges to pair programming but we’ve proven time again across hundreds of projects that the benefits far outweigh the costs.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/pair-programming.jpg&#34; alt=&#34;Pair Programming&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;what-you-will-learn&#34;&gt;What you will learn&lt;/h2&gt;
+&lt;p&gt;In this article, you will learn to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#define-pair-programming-and-remote-pair-programming&#34;&gt;Define pair programming and remote pair programming&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#list-at-least-five-potential-benefits-of-pair-programming&#34;&gt;List at least five potential benefits of pair programming&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#list-at-least-five-potential-challenges-of-pair-programming&#34;&gt;List at least five potential challenges of pair programming&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#describe-the-mechanics-of-the-drivernavigator-style-of-pair-programming&#34;&gt;Describe the mechanics of the driver/navigator style of pair programming&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;define-pair-programming-and-remote-pair-programming&#34;&gt;Define pair programming and remote pair programming&lt;/h2&gt;
+&lt;p&gt;Pair programming is a software development technique whereby two programmers work on the same problem, at the same time, on the same computer, with the goal of producing high quality software quickly.&lt;/p&gt;
+&lt;p&gt;Regarding “on the same computer,” we do not mean two people hunched over a tiny laptop. When co-located, we recommend setting up two large monitors, two sets of keyboards, two mice, and two sets of anything else the pair needs to work effectively together, such as a laptop docking station.&lt;/p&gt;
+&lt;p&gt;If the pair is not co-located, &lt;a href=&#34;https://tanzu.vmware.com/content/blog/5-tips-for-effective-remote-pair-programming-while-working-from-home&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;remote pair programming&lt;/a&gt; is a good alternative. Remote pair programming is pair programming with the help of commonly available collaboration software.&lt;/p&gt;
+&lt;h2 id=&#34;list-at-least-five-potential-benefits-of-pair-programming&#34;&gt;List at least five potential benefits of pair programming&lt;/h2&gt;
+&lt;p&gt;“Done” does not mean the developers have committed their code and lifted their fingers off their keyboards. For VMware Tanzu Labs, “done” means low-defect software delivered to users in production that does not need rework due to errors or missed requirements. Pair programming helps accomplish this mission in the following ways:&lt;/p&gt;
+&lt;h3 id=&#34;code-quality-benefits&#34;&gt;Code quality benefits&lt;/h3&gt;
+&lt;p&gt;The most beneficial outcome of pair programming is the quality of the code written by the team. As pairs switch (often daily), everyone has a chance to contribute  and refine the system they are developing. Benefits include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fewer bugs&lt;/li&gt;
+&lt;li&gt;Better system design&lt;/li&gt;
+&lt;li&gt;More understandable code&lt;/li&gt;
+&lt;li&gt;Wider code testing coverage&lt;/li&gt;
+&lt;li&gt;“Fresh eyes” to help expose hidden flaws&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;time-to-production-benefits&#34;&gt;Time-to-production benefits&lt;/h3&gt;
+&lt;p&gt;While pair programming does support shipping high quality code to production quickly, predictability is a more important benefit over speed. Radical swings in delivery velocity introduce risk into the development cycles — pair programming helps mitigate swings in delivery velocity in the following ways:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Intense focus on the task at hand&lt;/li&gt;
+&lt;li&gt;Less rework&lt;/li&gt;
+&lt;li&gt;More accurate implementation of requirements&lt;/li&gt;
+&lt;li&gt;Less time in QA&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;knowledge-sharing-benefits&#34;&gt;Knowledge sharing benefits&lt;/h3&gt;
+&lt;p&gt;While pair programming, not only are two people working on the same difficult problem together, they are also constantly teaching one another in the following ways:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;New team member onboarding&lt;/li&gt;
+&lt;li&gt;Junior developers learning from senior developers&lt;/li&gt;
+&lt;li&gt;Senior developers learning from junior developers — it’s true!&lt;/li&gt;
+&lt;li&gt;Tips and tricks sharing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;collective-ownership-benefits&#34;&gt;Collective ownership benefits&lt;/h3&gt;
+&lt;p&gt;Individual ownership of features, modules, and even entire systems is both common and tempting &amp;ndash; it&amp;rsquo;s comforting to know someone is responsible for something important. This pattern is also extremely risky since people switch jobs, have life events that make them unavailable, and other factors that impact delivery velocity. Pair programming mitigates these risks in the following ways:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Breaking down knowledge silos&lt;/li&gt;
+&lt;li&gt;Countering &amp;ldquo;hero&amp;rdquo; culture&lt;/li&gt;
+&lt;li&gt;Reduce the &lt;a href=&#34;https://en.wikipedia.org/wiki/Bus_factor&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;“bus factor” or “lottery factor”&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;team-building-benefits&#34;&gt;Team building benefits&lt;/h3&gt;
+&lt;p&gt;Pair programming isn’t all about the code — it’s also all about the people who write the code.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Shared pride of ownership of the code and product&lt;/li&gt;
+&lt;li&gt;Building empathy with one another&lt;/li&gt;
+&lt;li&gt;Interpersonal skills development&lt;/li&gt;
+&lt;li&gt;Social interaction&lt;/li&gt;
+&lt;li&gt;Happier, more motivated employees&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;list-at-least-five-potential-challenges-of-pair-programming&#34;&gt;List at least five potential challenges of pair programming&lt;/h2&gt;
+&lt;p&gt;The benefits of pair programming are clear, but those benefits don’t come cheaply. Pairing is hard. Without a doubt, the most difficult challenge of pair programming is &lt;strong&gt;&lt;em&gt;the willingness to give it an honest try&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Pair programming means not only sharing what we know, but also exposing how much we don’t know. For many people in the software industry this contradicts the rock-star-ninja-hacker-wizard image bestowed upon developers. Accepting that we all have areas of growth is important for successful pair programming, especially since you and your pair are in the same boat: both of you are sharing what you know and exposing what you don’t know at the same time. By complementing each other’s abilities, you become greater than the sum of both of your skills and experience.&lt;/p&gt;
+&lt;p&gt;Other challenges include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Being made fun of by others in the organization &amp;ndash; it happens!&lt;/li&gt;
+&lt;li&gt;Different code editor preferences and computer configuration&lt;/li&gt;
+&lt;li&gt;Differing schedules&lt;/li&gt;
+&lt;li&gt;Ergonomics, such as physical desk and office configurations&lt;/li&gt;
+&lt;li&gt;Falling behind on emails, chat threads, and other communication channels&lt;/li&gt;
+&lt;li&gt;For remote pair programming: infrastructure, tools, network speed, security restrictions&lt;/li&gt;
+&lt;li&gt;Individual cultural differences&lt;/li&gt;
+&lt;li&gt;Interruptions and distractions imposed by other responsibilities&lt;/li&gt;
+&lt;li&gt;Mental and physical exhaustion&lt;/li&gt;
+&lt;li&gt;Organizational resistance&lt;/li&gt;
+&lt;li&gt;Perception that it’s “twice the cost” a developers programming alone&lt;/li&gt;
+&lt;li&gt;Personality conflicts&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;describe-the-mechanics-of-the-drivernavigator-style-of-pair-programming&#34;&gt;Describe the mechanics of the driver/navigator style of pair programming&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://martinfowler.com/articles/on-pair-programming.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;While there are many pair programming styles&lt;/a&gt;, our experience shows most are a variation of the &lt;strong&gt;driver/navigator&lt;/strong&gt; style. At any given moment, the &lt;strong&gt;driver&lt;/strong&gt; has their fingers on the keyboard, coding and implementing the next logic statement. At the same time, the &lt;strong&gt;navigator&lt;/strong&gt; is looking back at what was just written, suggesting the next course of action, and strategically thinking further ahead. Research shows and our experience confirms that our brains have difficulty performing high-level strategizing and detailed execution at the same time, which is why two heads working together is better than one in complex problem-solving situations. Pairing addresses this conundrum by having one person for each role.&lt;/p&gt;
+&lt;p&gt;The pair should switch driver/navigator roles on a regular basis. Sometimes this happens organically to create a “balanced” pairing session. We do recommend a few different pair programming formats for those new to pair programming, for pairs finding their driver/navigator time to be unbalanced, or for those who want to introduce variety into their pairing sessions. More details about each of these are in the blog post &lt;em&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/blog/what-s-the-best-way-to-pair&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;What’s the Best Way to Pair?&lt;/a&gt;&lt;/em&gt; by Maya Rosecrance and Sarah Connor.&lt;/p&gt;
+&lt;h3 id=&#34;go-with-the-flow&#34;&gt;Go with the Flow&lt;/h3&gt;
+&lt;p&gt;Just go for it! Sit down, start pairing, and ride whatever driver/navigator pattern emerges. The pair should be disciplined about switching roles, and be cognisant of whether they are falling into an unbalanced driver/navigator pattern.&lt;/p&gt;
+&lt;h3 id=&#34;pomodoro&#34;&gt;Pomodoro&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Pomodoro_Technique&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Pomodoro&lt;/a&gt; is a dependable study technique where a timer is used to signal the switch between roles, taking breaks, or even switching pairs entirely. Typically, this is 25 minutes of work, followed by a 5-minute break.&lt;/p&gt;
+&lt;h3 id=&#34;tdd-ping-pong&#34;&gt;TDD Ping-Pong&lt;/h3&gt;
+&lt;p&gt;“Ping-Pong” pairing is a natural complement to &lt;a href=&#34;https://en.wikipedia.org/wiki/Test-driven_development&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Test Driven Development (TDD)&lt;/a&gt;&lt;strong&gt;.&lt;/strong&gt; The classic Ping Pong technique first has the driver write a failing test for some desired functionality that is not yet implemented. The pair switches roles, having the new driver implement the minimum necessary code in order to pass the test. That driver then writes the next failing test and the cycle continues, with each person equally sharing test-writing and functionality-implementation duties.&lt;/p&gt;
+&lt;h3 id=&#34;switch-roles-on-research&#34;&gt;Switch Roles on Research&lt;/h3&gt;
+&lt;p&gt;Switch roles any time the pair wants to research something further. This helps reduce the impulse to separate and research individually, which can sometimes evolve into an excuse to stop pairing entirely.&lt;/p&gt;
+&lt;h3 id=&#34;pairmateone-keyboard&#34;&gt;Pairmate/One-keyboard&lt;/h3&gt;
+&lt;p&gt;A small item like a stuffed animal or tchotchke can be used to signal who is navigating. The navigator holds the item to signal that they are not to touch the keyboard until that item is passed off (physically or virtually when remote) to the other. Alternatively, the item can be removed, and the pair shares a single keyboard or toggles remote-keyboard control as needed.&lt;/p&gt;
+&lt;h3 id=&#34;task-list&#34;&gt;Task List&lt;/h3&gt;
+&lt;p&gt;The pair decides on a set of tasks that need to be accomplished and switches after each is completed. Tasks can be created, modified, or deleted as the pair progresses. Ideally each takes about the same amount of time to complete.&lt;/p&gt;
+&lt;h2 id=&#34;in-this-article-you-learned-to&#34;&gt;In this article, you learned to:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Define pair programming and remote pair programming&lt;/li&gt;
+&lt;li&gt;List at least five potential benefits of pair programming&lt;/li&gt;
+&lt;li&gt;List at least five potential challenges of pair programming&lt;/li&gt;
+&lt;li&gt;Describe the mechanics of the driver/navigator style of pair programming&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Blog: &lt;a href=&#34;https://tanzu.vmware.com/content/blog/what-s-the-best-way-to-pair&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;What’s the Best Way to Pair?&lt;/a&gt; by Maya Rosecrance and Sarah Connor.&lt;/li&gt;
+&lt;li&gt;Blog: &lt;a href=&#34;https://tanzu.vmware.com/content/blog/5-tips-for-effective-remote-pair-programming-while-working-from-home&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;5 Tips for Effective Remote Pair Programming While Working from Home&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Video: &lt;a href=&#34;https://www.youtube.com/watch?v=RCDfBioUgts&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;I&amp;rsquo;ve Pair Programmed for 30,000 Hours: Ask Me Anything! — Joe Moore&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;related-topics-to-pair-programming&#34;&gt;Related topics to Pair Programming&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/agile&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Agile software development&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Test Driven Development&lt;/li&gt;
+&lt;li&gt;Automate who pairs with whom with &lt;a href=&#34;https://parrit.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Parrit&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Test Driven Development</title>
+      
+      <link>/outcomes/application-development/test-driven-development/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development/test-driven-development/</guid>
+      <description>
+
+        
+        &lt;p&gt;Test Driven Development (TDD) is a software development practice where a test case describing desired functionality is written before the production code. When that test is executed, it fails because the supporting functionality does not exist yet. After writing the minimum functionality to satisfy the test parameters, the code is &lt;a href=&#34;https://en.wikipedia.org/wiki/Code_refactoring&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;refactored&lt;/a&gt; to improve the design. This cycle is repeated until all requested functionality is implemented.
+These tests serve as a guide for development of the production code by acting as the first “client” or “user” for the system. In addition, the tests provide a regression suite for the completed code.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/go-fast-forever.png&#34; alt=&#34;Balanced Team Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;what-you-will-learn&#34;&gt;What you will learn&lt;/h2&gt;
+&lt;p&gt;In this article, you will learn to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#define-end-to-end-tests&#34;&gt;Define End-to-End Tests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#define-unit-tests&#34;&gt;Define Unit Tests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#define-integration-tests&#34;&gt;Define Integration Tests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#draw-a-testing-pyramid&#34;&gt;Draw a “testing pyramid” representing End-to-End, Integration and Unit Tests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#describe-how-tdd-allows-teams-to-go-fast-forever&#34;&gt;Describe how TDD allows teams to go fast “forever”&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;define-end-to-end-tests&#34;&gt;Define End-to-End Tests&lt;/h2&gt;
+&lt;p&gt;An End-to-End test exercises the system using the same interface that an end user would use.&lt;/p&gt;
+&lt;p&gt;For a web based application with an HTML user interface, these tests simulate user interactions via a web browser. They typically require a &lt;a href=&#34;https://en.wikipedia.org/wiki/Headless_browser&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;headless browser&lt;/a&gt; to be installed so that the computer running the tests can simulate browser based interactions. For an &lt;a href=&#34;https://en.wikipedia.org/wiki/API&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;API-based application&lt;/a&gt;, these tests use API calls to simulate how a client application interacts with the system.&lt;/p&gt;
+&lt;p&gt;End-to-End Tests are relatively slow to run because simulating a user’s interactions, such as clicking buttons, uploading images, or API network calls can be slow operations. However, End-to-End Tests can give a team confidence that no user-facing interactions are broken when code changes are made. When writing End-to-End Tests, covering the major, important user flows allows a high measure of confidence while minimizing the time it takes to run a test suite.&lt;/p&gt;
+&lt;h3 id=&#34;test-after-vs-test-driven&#34;&gt;Test-after vs. test-driven&lt;/h3&gt;
+&lt;p&gt;When writing an End-to-End Test after feature(s) have been implemented, the team risks reinforcing incorrect behavior. For example, in a website you might build a test that replicates an existing navigation path even though that navigation path is incorrect.&lt;/p&gt;
+&lt;p&gt;When test driving, you might first write a navigation test that runs “click link A, then button B, then confirmation C” in correspondence with a new &lt;a href=&#34;https://en.wikipedia.org/wiki/User_story#:~:text=In%20software%20development%20and%20product,digitally%20in%20project%20management%20software.&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;user story&lt;/a&gt; even though that navigation path does not yet exist. While implementing the functionality, run the tests regularly to verify the following one-by-one:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;First, the “click link A” test parameter fails because we haven’t implemented anything at all.&lt;/li&gt;
+&lt;li&gt;After implementing link A,  “click link A” passes, but “click button B” fails.&lt;/li&gt;
+&lt;li&gt;After implementing that requirement, only “click confirmation C” is failing.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;When everything passes, the user story is done.&lt;/p&gt;
+&lt;h2 id=&#34;define-unit-tests&#34;&gt;Define Unit Tests&lt;/h2&gt;
+&lt;p&gt;A Unit Test exercises a small part of the system that is isolated from the rest of the system. Sometimes it is a single class, file, or function, but it can also be a set of these that operate together through a single public interface.&lt;/p&gt;
+&lt;p&gt;Unit Tests are used as the primary design tool for inter-class interactions within a system. Because you are constantly running these tests to shape the system, you want to keep the feedback loops as quick as possible. By isolating these tests from the rest of the system and external dependencies like databases or network calls, they can run quickly for maximum speed of feedback.&lt;/p&gt;
+&lt;h3 id=&#34;test-after-vs-test-driven-1&#34;&gt;Test-after vs. test-driven&lt;/h3&gt;
+&lt;p&gt;As with End-to-End testing, writing tests after the production code is implemented risks reinforcing incorrect behavior. For example, you might observe that a function performing a complex calculation returns a value of “4200” and write that into your test validation, not realizing the correct calculation is &lt;em&gt;&lt;strong&gt;“-4200”.&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;With test-driving, you set up the expected value in your test, asserting the calculated value is “-4200”. This test fails because you have not implemented the calculation yet; but, you&amp;rsquo;ve already worked out what the value should be in your test. Using this, you can implement the function and have confidence its correct when the test passes.&lt;/p&gt;
+&lt;h2 id=&#34;define-integration-tests&#34;&gt;Define Integration Tests&lt;/h2&gt;
+&lt;p&gt;An Integration Test exercises a subset of the system. They differ from End-to-End Tests in that they do not have to simulate user interactions and they differ from Unit Tests in that they exercise groups of “units” in one test.&lt;/p&gt;
+&lt;p&gt;Integration Tests operate on smaller parts of the system than End-to-End Tests, thus running faster. They also test larger parts than unit tests, thus running slower than unit tests.&lt;/p&gt;
+&lt;p&gt;Because they are “smaller” than End-to-End Tests, they can be useful in tracking down bugs because they encompass a smaller part of the system. However, because they are “bigger” than a Unit Test, they do not allow for the fine grained design feedback that you get with unit tests.&lt;/p&gt;
+&lt;h2 id=&#34;draw-a-testing-pyramid&#34;&gt;Draw a “testing pyramid”&lt;/h2&gt;
+&lt;p&gt;As you’ve learned above, tests can be written at different levels of the system. At each level, there is a balance between speed of execution, the cost to maintain the test, and the confidence it brings to the correctness of the system.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/testing-pyramid.png&#34; alt=&#34;Balanced Team Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;End-to-End Tests: Fewest and most expensive.&lt;/strong&gt; End-to-End Tests are slower to run because they use simulated user interactions. They can also be fragile and susceptible to false-negatives because they rely on the quality and accuracy of user-simulation tools, such as web browser interaction tools, and other difficult to control factors, such as network latency.&lt;/p&gt;
+&lt;p&gt;In addition, changes to the user interface might require significant End-to-End Test rewrites even when the underlying functionality has not changed. These, and other related factors make End-to-End Tests “expensive” to maintain. You want to minimize the number of these to keep the test suite running quickly and minimize maintenance headaches while still covering the key flows of the system, either from a user interface or an API endpoint.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Unit Tests: Highest number and least expensive.&lt;/strong&gt; You want the most Unit Tests in your test suite because they are the key way to design highly cohesive, loosely coupled software. Because you have kept them running quickly, the number of tests should not adversely affect the running time of the test suite. Also, the isolated nature of unit tests means changes in one area of the system do not require changes to other areas, making maintenance of Unit Tests minimal.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Integration Tests: somewhere in the middle.&lt;/strong&gt; You want more Integration Tests than End-to-End Tests because they balance speed of execution and test maintenance with coverage of the system. However, too many Integration Tests can quickly slow down a test suite and make the feedback from the Unit Tests decrease in value.&lt;/p&gt;
+&lt;p&gt;A slow test suite is a signal that your testing pyramid might be “upside down” and you should focus more on Unit Tests to drive the design, and ensure the correctness of your software.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/inverted-testing-pyramid.png&#34; alt=&#34;Balanced Team Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;describe-how-tdd-allows-teams-to-go-fast-forever&#34;&gt;Describe how TDD allows teams to go fast “forever”&lt;/h2&gt;
+&lt;p&gt;TDD gives teams the confidence to refactor application code to keep it clean so that they can go fast forever.&lt;/p&gt;
+&lt;h3 id=&#34;going-fast-for-a-while&#34;&gt;Going fast for a while&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/speed-time-1.jpg&#34; alt=&#34;Sacrificing speed for sustainability curve&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;This diagram shows how a team just starting out can add functionality very quickly because they do not have a lot of code to work with. Unfortunately as time goes on and the codebase grows, the team can’t add functionality as quickly because the codebase starts to “resist” the addition of new functionality. This happens because the team has sacrificed long-term sustainability for short-term development speed. Eventually the rate of addition slows to a crawl.&lt;/p&gt;
+&lt;p&gt;Even small changes become increasingly complex due to highly coupled modules. Why?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Developers fear changing the system because changes have unknown side effects.&lt;/li&gt;
+&lt;li&gt;Knowledge of how and why the code works as it does decreases over time.&lt;/li&gt;
+&lt;li&gt;Changes to the system result in regressions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;going-fast-forever&#34;&gt;Going fast forever&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/speed-time-2.jpg&#34; alt=&#34;TDD Enables Steady State&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;In the second diagram, the codebase does not resist the addition of functionality as time goes on. Instead, it gets to a steady state of change velocity regardless of the length of time since the start of the project.&lt;/p&gt;
+&lt;p&gt;Changes are less complex, thanks in part to TDD helping enforce highly cohesive yet loosely coupled modules. Why?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Developers do not fear changes because the tests clearly reveal any side effects.&lt;/li&gt;
+&lt;li&gt;Knowledge of how and why the code works as it does is captured forever within the tests as “executable documentation”.&lt;/li&gt;
+&lt;li&gt;Changes that would result in regressions are exposed in test failures.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There is a cost to these benefits. The initial sprint of functionality does not go as fast as forgoing TDD. This cost is the investment in writing tests before production code and only writing enough production code to make the test pass before writing another test. These tests serve as the guardrails that give the team the confidence to continually refactor their code to keep it clean.&lt;/p&gt;
+&lt;h2 id=&#34;in-this-article-you-learned-to&#34;&gt;In this article, you learned to:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Define End to End tests&lt;/li&gt;
+&lt;li&gt;Define Unit Tests&lt;/li&gt;
+&lt;li&gt;Define Integration tests&lt;/li&gt;
+&lt;li&gt;Draw the “testing pyramid” representing End to End, Integration and Unit tests&lt;/li&gt;
+&lt;li&gt;Describe how TDD allows teams to go fast “forever”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://martinfowler.com/articles/practical-test-pyramid.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Practical Test Pyramid&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/blog/why-tdd&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Why TDD?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;related-topics&#34;&gt;Related topics&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/agile&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Agile Software Development&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Cloud Native Development</title>
+      
+      <link>/outcomes/application-development/cloud-native-development/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development/cloud-native-development/</guid>
+      <description>
+
+        
+        &lt;p&gt;Cloud Native is at the heart of modern application development endeavors. Used to depict engineering practices and state of the art applications, the term &amp;ldquo;cloud-native&amp;rdquo; is omnipresent and often misunderstood. There is a good chance that anyone you ask will provide a different definition.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/cloud-native-development.jpg&#34; alt=&#34;Cloud Native Development&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;what-you-will-learn&#34;&gt;What you will learn&lt;/h2&gt;
+&lt;p&gt;In this article, you will learn to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#meaning&#34;&gt;Define one meaning of cloud native&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#outcomes&#34;&gt;List three major outcomes of cloud native&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Explain the main cloud native concepts for the following:
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#app-archi&#34;&gt;application architecture&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#sw-life-cycle&#34;&gt;software life-cycle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#support-infra&#34;&gt;supporting infrastructure&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#culture&#34;&gt;team culture&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#factors&#34;&gt;Identify the twelve factors of cloud native applications&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;meaning&#34;&gt;Define one meaning of cloud native&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Cloud is not a place; it’s a way of doing IT” - Michael Dell&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;There are many definitions for cloud native. The definition we use in this article is an approach to building and running applications that exploit the advantages of the cloud computing delivery model. At its heart, cloud native is structuring teams, culture, and technology to utilize automation and architectures to manage complexity and unlock velocity.&lt;/p&gt;
+&lt;p&gt;Cloud native development, often referred to as modern application development, defines how applications are created and deployed. It does not define where the deployment occurs. For example, &lt;a href=&#34;https://www.vmware.com/topics/glossary/content/public-cloud&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;public cloud&lt;/a&gt;, &lt;a href=&#34;https://www.vmware.com/topics/glossary/content/private-cloud?SRC=WWW_US_GP_public-cloud_SiteLink&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;private cloud&lt;/a&gt;, &lt;a href=&#34;https://www.vmware.com/topics/glossary/content/hybrid-cloud?SRC=WWW_US_GP_public-cloud_SiteLink&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;hybrid cloud&lt;/a&gt;, &lt;a href=&#34;https://www.vmware.com/topics/glossary/content/multi-cloud?SRC=WWW_US_GP_private-cloud_SiteLink&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;multi-cloud&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;outcomes&#34;&gt;List three major outcomes of cloud native&lt;/h2&gt;
+&lt;p&gt;Organizations that adopt cloud native practices and technology generally report the following outcomes:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;More efficient and happier teams. Big problems are broken down into smaller pieces for more focused, efficient and responsive teams.&lt;/li&gt;
+&lt;li&gt;Higher degree of automation, more determinism, less drudgery and less manual work. Infrastructure is self-healing, self-managed, and available as self-service.&lt;/li&gt;
+&lt;li&gt;Increased non-functionalities for application landscape: improved reliability, portability, deep security, higher efficiency, and in-depth observability.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;concepts&#34;&gt;Explain the main cloud native concepts&lt;/h2&gt;
+&lt;p&gt;Cloud native concepts are numerous. The following ones are the most common. They are sorted by their context:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#app-archi&#34;&gt;application architecture&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#sw-life-cycle&#34;&gt;software life-cycle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#support-infra&#34;&gt;supporting infrastructure&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#culture&#34;&gt;team culture&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;app-archi&#34;&gt;Application architecture&lt;/h3&gt;
+
+
+
+
+
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Concept&lt;/th&gt;
+&lt;th&gt;Definition&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Twelve-factor application&lt;/td&gt;
+&lt;td&gt;A set of &lt;a href=&#34;https://12factor.net/&#34;&gt;twelve principles and practices&lt;/a&gt; that developers follow to construct applications optimized for modern cloud environments. Those twelve factors are often used to determine how well an application leverages cloud native technologies.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Microservice architecture&lt;/td&gt;
+&lt;td&gt;A software architectural style that functionally decomposes an application into a set of loosely coupled services. It is prevalent within companies craving greater agility and scalability. The microservices model is an alternative to traditional monolithic software consisting of tightly integrated modules that typically ship infrequently and scale as a single unit.  Microservices are not silver bullets, their drawbacks and benefits should be carefully weighed before use.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Cloud Native Patterns&lt;/td&gt;
+&lt;td&gt;A catalog of reusable solutions to recurring problems occurring in cloud native applications. Each pattern describes an architectural problem, its solution, and implied benefits, and drawbacks.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Domain-Driven Design&lt;/td&gt;
+&lt;td&gt;A software development philosophy that encourages thinking in business domains at each step of the process: discovery, architecture, and design. &lt;a href=&#34;https://github.com/ddd-crew/welcome-to-ddd&#34;&gt;Domain-Driven Design (DDD)&lt;/a&gt; comprises a variety of practices (for example, Event Storming) and concepts (for example, Bounded Context), while infusing a common &amp;ldquo;ubiquitous&amp;rdquo; language for better collaboration and alignment between business people and software engineers. DDD is not an all-or-nothing deal. You can apply the ideas from DDD as much or as little as you feel is beneficial to the project you&amp;rsquo;re working on.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;sw-life-cycle&#34;&gt;Application life-cycle&lt;/h3&gt;
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Concept&lt;/th&gt;
+&lt;th&gt;Definition&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;DevOps&lt;/td&gt;
+&lt;td&gt;A collaborative mindset consolidating practices, cultural philosophies, tools, and patterns designed to break down the organizational barriers between development and operations departments along application life-cycles. Breaking down silos empower organizations to:&lt;br/&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Deliver new features faster and more often in production.&lt;/li&gt;&lt;li&gt;Have a more reliable operating environment.&lt;/li&gt;&lt;li&gt;Improve communication and collaboration.&lt;/li&gt;&lt;/ul&gt;With an initial focus on software developers and operation engineers, DevOps has quickly evolved to include other departments and functions: security (DevSecOps), finance (FinOps), network (NetOps), and business.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;CI/CD&lt;/td&gt;
+&lt;td&gt;Combines the practices of continuous integration and either continuous delivery or continuous deployment. CI/CD bridges the gaps between development and operation activities and teams by enforcing automation in building, testing and deployment of applications. These automated and connected steps are often referred to as a (CI/CD) pipeline.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;support-infra&#34;&gt;Supporting infrastructure&lt;/h3&gt;
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Concept&lt;/th&gt;
+&lt;th&gt;Definition&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Container&lt;/td&gt;
+&lt;td&gt;A standard unit of software that packages code and all its dependencies so the application runs quickly and reliably from one computing environment to another. Containers are typically lighter weight than full systems. They make applications more atomic and portable across environments.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Container orchestrator&lt;/td&gt;
+&lt;td&gt;Automates container life-cycles from deployment and scaling, to more advanced management operations. While tools such as Docker create images and run containers, you also need tools to manage them. When operating at scale, a container orchestrator like   &lt;a href=&#34;https://kubernetes.io/&#34;&gt;Kubernetes&lt;/a&gt; is essential to manage common orchestrator tasks such as (anti) affinity, failover, health monitoring, networking, rolling upgrades, scaling, scheduling, and service discovery ..&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Service mesh&lt;/td&gt;
+&lt;td&gt;A dedicated infrastructure layer facilitating service-to-service communications between services or microservices, using a proxy.  &lt;a href=&#34;https://istio.io/&#34;&gt;Istio&lt;/a&gt;  is an example of a service mesh framework. It simplifies observability, traffic management, security, and policy.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Immutable infrastructure&lt;/td&gt;
+&lt;td&gt;An infrastructure paradigm in which servers are never modified after being deployed. If something needs to be changed, updated, or fixed, new servers built automatically with the appropriate changes are provisioned to replace the old ones. In a traditional mutable server infrastructure, servers are continually updated and modified in place.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;* as a Service&lt;/td&gt;
+&lt;td&gt;Infrastructure (IaaS), Container (CaaS), Platform (PaaS), Function (FaaS) or Software (SaaS) as a service are categories of cloud computing services. They provide APIs to manage on-demand life-cycles of the corresponding abstraction layers: virtualized infrastructures, containers, application platforms, functions or external software.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;culture&#34;&gt;Team culture&lt;/h3&gt;
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Concept&lt;/th&gt;
+&lt;th&gt;Definition&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Generative culture&lt;/td&gt;
+&lt;td&gt;As defined by professor and sociologist Ron Westrum, leaders in a generative company culture emphasize the importance of accomplishing the organization’s goals and missions on-time, rather than on personal gain or rules. New ideas are welcome. Members are proactive and focused on getting information to the right people by any means necessary. In essence, when it comes to cloud-native culture, what we are talking about is being generative.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Psychological safety&lt;/td&gt;
+&lt;td&gt;A state of well-being where team members feel safe to take risks and be vulnerable in front of each other. According to internal  &lt;a href=&#34;https://rework.withgoogle.com/blog/five-keys-to-a-successful-google-team/&#34;&gt;research &lt;/a&gt; by Google, psychological safety is the most important characteristic of high performing teams.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Permit to fail&lt;/td&gt;
+&lt;td&gt;Psychological safety gives teams permission to fail. The goal is to accept errors as part of the realm of possibility and use it to learn and improve. Failures and accidents are seen as opportunities to improve, not witch-hunts. Errors are subject to honest post-mortem, and risks are shared.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Lean experimentation&lt;/td&gt;
+&lt;td&gt;Lean experiments are a highly effective way to formulate and validate hypotheses about a software product. They are conducted purposely to fail, to gain deeper insights about possible future iterations of a product.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Play&lt;/td&gt;
+&lt;td&gt;Playing loosens boundaries while sky-rocketing team motivation and commitment. It could take the form of chaos engineering featuring &lt;a href=&#34;https://github.com/Netflix/chaosmonkey/&#34;&gt;Netflix’ Monkeys&lt;/a&gt;, a “Capture the Flag” security game, a wheel of misfortune disaster role-play exercise, or a &lt;a href=&#34;https://www.atlassian.com/blog/software-teams/what-is-chatops-adoption-guide&#34;&gt;ChatOps&lt;/a&gt; bot.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Growth mindset&lt;/td&gt;
+&lt;td&gt;Embraces learning while strengthening beliefs that you can control and improve abilities. It envisions challenges and failure as opportunities to grow personally and values constructive feedback. Especially in IT, where change is the only constant, perpetual learning is a growth mantra.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Learning organizations&lt;/td&gt;
+&lt;td&gt;A company that facilitates the learning of its members and continuously transforms itself. The core benefits offered by being a learning organization is a competitive advantage.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;factors&#34;&gt;Identify the twelve factors of cloud native applications&lt;/h2&gt;
+&lt;p&gt;Cloud native app development has centered around the twelve factors originally described by the team behind the Heroku platform. The  &lt;a href=&#34;https://12factor.net/&#34;&gt;eponymous website&lt;/a&gt;  provides a great understanding of how a cloud native application deals with things like logging, application state, and integration with external systems.&lt;/p&gt;
+&lt;p&gt;Sometimes it is enough to refactor and update an existing legacy application with only a handful of these factors in order to get it running on a cloud platform like Tanzu, gaining the operational benefits of the platform without the large investment of a far-reach modernization effort. Pay specific attention to externalizing configurations, converting integrations into backing services, keeping your processes stateless, and logging to standard input and output.&lt;/p&gt;
+&lt;p&gt;For more information on cloud native apps check out the free e-book &lt;a href=&#34;https://tanzu.vmware.com/content/blog/beyond-the-twelve-factor-app&#34;&gt;Beyond the 12-Factor App&lt;/a&gt;, by Kevin Hoffman. In it, he introduces three additional factors including API-first development, security, and telemetry not covered in the original set, but are often required for apps to run well in the cloud.&lt;/p&gt;
+&lt;h2 id=&#34;in-this-article-you-learned-to&#34;&gt;In this article, you learned to:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Define the meaning of cloud native&lt;/li&gt;
+&lt;li&gt;List three major outcomes of cloud native&lt;/li&gt;
+&lt;li&gt;Explain the main cloud native concepts&lt;/li&gt;
+&lt;li&gt;Identify the twelve factors of cloud native applications&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep learning&lt;/h2&gt;
+&lt;p&gt;To deepen your understanding, check out the following resources:&lt;/p&gt;
+&lt;h4 id=&#34;cloud-native&#34;&gt;Cloud Native&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/developer/guides/microservices/what-is-cloud-native/&#34;&gt;What is Cloud Native? &lt;/a&gt; - VMware Tanzu Developer Center article&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/white-papers/how-to-think-cloud-native&#34;&gt;How to think Cloud Native?&lt;/a&gt; - Whitepaper by Joe Beda&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cncf.io/&#34;&gt;Cloud Native Computing Foundation (CNCF) &lt;/a&gt; - Home page of an organization aiming to advance cloud native and container technology while aligning the tech industry around their evolution.
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/cncf/toc/blob/main/DEFINITION.md&#34;&gt;CNCF definition of “Cloud Native”&lt;/a&gt; - GitHub&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://raw.githubusercontent.com/cncf/trailmap/master/CNCF_TrailMap_latest.png&#34;&gt;CNCF Cloud-Native Trail Map&lt;/a&gt;  guidance for enterprises beginning their cloud-native journey - Image&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://youtu.be/I0p8MIezKkE&#34;&gt;Difference between Cloud and Cloud Native discussed by Kubernetes founders Craig McLuckie and Joe Beda&lt;/a&gt; - YouTube video&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;concepts&#34;&gt;Concepts&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/blog/beyond-the-twelve-factor-app&#34;&gt;Beyond the Twelve-Factor App&lt;/a&gt; - e-book&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/microservices&#34;&gt;Microservices: How to deliver scalable software, faster&lt;/a&gt; - VMware Tanzu article&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.manning.com/books/cloud-native-patterns&#34;&gt;Cloud Native Patterns by Cornelia Davis&lt;/a&gt; - Book&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/ddd-crew&#34;&gt;Domain-Driven Design Crew&lt;/a&gt; - GitHub hot spot for the DDD community&lt;/li&gt;
+&lt;/ul&gt;
+
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Distributed, Remote, and Asynchronous Work</title>
+      
+      <link>/outcomes/application-development/remote/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development/remote/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

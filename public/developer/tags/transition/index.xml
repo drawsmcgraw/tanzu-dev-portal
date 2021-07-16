@@ -1,0 +1,345 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Transition</title>
+    <link>/tags/transition/</link>
+    <description>Recent content in Transition on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 15 Jun 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/transition/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Practices: 2x2 Prioritization</title>
+      
+      <link>/practices/2x2/</link>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/2x2/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Preparation: As a group, agree on 2 relevant prioritization criteria.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Examples: Impact vs. Likeliness, Value vs. Complexity, Risk vs. Ease of Mitigation&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create 2 perpendicular intersecting axes and label each axis with one of the chosen criteria.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/2x2/2x2-empty.png&#34; alt=&#34;Empty two by two grid&#34;  /&gt;&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Label the axes such that the top-right quadrant represents the most important/highest-priority. This is a convention that will make it easier when using this practice repeatedly.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Start by selecting an option at random and place it near the center.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Choose another option and, as a group, position it relative to other options on the grid, vertically and horizontally.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Avoid placing any 2 options on the same row or column. Each option should be clearly placed in a unique horizontal and vertical position on each axis to avoid any ambiguity.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Repeat step 4 until every option is positioned on the grid. The highest priority options should be in the top-right quadrant.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If the options are weighted towards a particular half or quadrant, you can reposition the options so that roughly half are on either side of each axis. This will remove ambiguity and make it easier to make prioritization decisions.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/practices/2x2/2x2-populated.png&#34; alt=&#34;Populated two by two grid&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You know you are done when your group has decided on an option (or options) to focus on.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;If there are too many priority solutions in the top right quadrant, re-draw the axes within that quadrant to further separate the solutions. Remember that this is possible because the axes are relative, not absolute. Keep adjusting until you land somewhere manageable.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/2x2/2x2-regrid.png&#34; alt=&#34;Re-drawn two by two axis grid&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Too many options can make this practice more difficult and time consuming. If there are 20+ items, consider spending time removing options that are irrelevant to the criterion selected.
+Involve people who can evaluate against the chosen prioritization criteria (e.g. a Designer should speak to usability, while an engineer should speak to technical complexity).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Develop the prompt for the 2x2 before the X/Y axes. If the axes don’t resonate with the prompt, the group will struggle with placement and focus.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When choosing qualifiers for the X and Y axes, consider:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Choose a less debatable qualifier for the Y axis. A qualifier with a stronger yes/no statement will help people with initial placement and allow the group to disqualify items (get them below the X axis) with less debate.&lt;/li&gt;
+&lt;li&gt;You want debate to happen along the X axis, so choose a qualifier which leaves more room for debate.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/insight-prioritization&#34;&gt;Insight Prioritization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/problem-prioritization&#34;&gt;Problem Prioritization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/solution-prioritization&#34;&gt;Solution Prioritization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Stack Ranking (coming soon.)&lt;/p&gt;
+&lt;p&gt;Dump and Sort (coming soon.)&lt;/p&gt;
+&lt;p&gt;Affinity Mapping (coming soon.)&lt;/p&gt;
+&lt;h2 id=&#34;variations&#34;&gt;Variations&lt;/h2&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/example-2.jpg&#34; alt=&#34;Two by two chart plotting problems by frequency and intensity&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/example-3.jpg&#34; alt=&#34;A group of people discusses priority in front of a whiteboard with two by two chart on it&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/example-5.jpg&#34; alt=&#34;Two by two chart with top problems prioritized&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/solution-prioritization/example-6.jpg&#34; alt=&#34;Digital two by two with prioritized solutions&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.productplan.com/glossary/2x2-prioritization-matrix/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;2×2 Prioritization Matrix from ProductPlan&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: 3 Column Retrospective</title>
+      
+      <link>/practices/3-column-retro/</link>
+      <pubDate>Mon, 03 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/3-column-retro/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; For distributed teams, use &lt;a href=&#34;https://miro.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Miro&lt;/a&gt; or a similar &amp;ldquo;digital whiteboard&amp;rdquo; and adapt the in-person aspects to the digital world, such as drawing and using sticky notes.&lt;/p&gt;
+&lt;p&gt;There are many online tools that support team retrospectives. We&amp;rsquo;ve listed several in the &lt;a href=&#34;#variations&#34;&gt;&amp;ldquo;For Remote Teams&amp;rdquo; section&lt;/a&gt; below.&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Draw three columns on the whiteboard or digital workspace:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What went well (“I’m glad that”)&lt;/li&gt;
+&lt;li&gt;Questions (“I’m wondering about”)&lt;/li&gt;
+&lt;li&gt;Opportunities (“It wasn’t so great that”)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Give each person 10 minutes to add items under each column, 1 idea per card. There is no limit to how many cards people can add, and everyone should feel free to freely add items to voice their ideas and concerns.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Give members 5 minutes to vote on the cards they feel are most important to discuss.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Start on a column and begin discussing the highest voted card (facilitators may choose to start on ‘What went well’ to start the retro on a positive note, but it is up to the individual where to begin). Be sure to give the author of the card time to further elaborate what he/she wrote.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For items which require follow-ups, add a card to the ‘Action Items’ section/column, asking for volunteers to be accountable for each action.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Ask for volunteers in pairs, so that no one person is responsible for an action item by themselves.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Move to the next column and discuss the highest rated card.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Continue steps 5-7 until all cards have been covered, or only 5 minutes remain.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: End this part of the retrospective with a “What went well” item. This ensures the retrospective discussion ends on a positive note.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For the remaining 5 minutes, review the Action Items, making sure each item has a person or pair assigned.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h3&gt;
+&lt;p&gt;Success is when the core team has a shared understanding of:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The most important things that happened during   the week, Sprint, project planning iteration, or whichever time-span is the subject of the retrospective&lt;/li&gt;
+&lt;li&gt;The challenges they are currently facing&lt;/li&gt;
+&lt;li&gt;The actionable steps they will take to try and improve&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;If this is the first retrospective run with the team, provide background and set the expectation on what a retrospective entails.&lt;/li&gt;
+&lt;li&gt;Keep conversations constructive and respectful&lt;/li&gt;
+&lt;li&gt;Consider holding retros on Wednesday. This will provide a couple of benefits. First, the action items can be acted upon immediately (next day) as opposed the following Monday. This will better track progress amongst team members. Second, members tend to be more engaged mid-week compared to end-of-week, providing greater engagement from every individual.&lt;/li&gt;
+&lt;li&gt;To successfully manage action items, start with a verb, be specific, include an achievable target date, and ensure there’s at least one owner&lt;/li&gt;
+&lt;li&gt;It’s important to manage the action Items from each retro - there is no benefit in performing retrospectives if the team does not act upon it to improve team dynamics&lt;/li&gt;
+&lt;li&gt;While some may choose to run a retrospective every two weeks, a weekly cadence provides an optimal feedback loop frequency for the team to proactively improve team dynamics.&lt;/li&gt;
+&lt;li&gt;Timebox discussion on each card to ensure you can cover as many cards in the retrospective.&lt;/li&gt;
+&lt;li&gt;To better keep track of Action Items from previous retrospectives, consider creating a Kanban board (‘Backlog’, ‘In Progress’, ‘Done’) on a whiteboard visible to the entire team (or on a Miro board if it is done remotely)&lt;/li&gt;
+&lt;li&gt;If possible, create a different environment when running the retro so that members can actively disconnect from the daily work tasks and solely focus on the retrospective. This may include moving to a different floor or providing snacks to the team.&lt;/li&gt;
+&lt;li&gt;At the end of the retrospective, consider asking the team whether there was any card not discussed which any individual feels strongly about.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/futurespective&#34;&gt;&amp;ldquo;Sailboat&amp;rdquo; Futurespective&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;variations&#34;&gt;Variations&lt;/h2&gt;
+&lt;h4 id=&#34;for-remote-teams&#34;&gt;For Remote Teams&lt;/h4&gt;
+&lt;p&gt;There are many free retrospective tools available.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://miro.com/miroverse/atlassian-team-plays-retrospective/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Team Retrospective Miro Template&lt;/a&gt; from Atlassian&lt;/li&gt;
+&lt;li&gt;Trello Template - &lt;a href=&#34;https://trello.com/b/0DnfRtxv/template-glad-sad-mad&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Glad, Sad, Mad&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/pivotal/postfacto&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Postfacto&lt;/a&gt; - open source and deployable by you.&lt;/li&gt;
+&lt;li&gt;Spreadsheets - You can always make a simple 3-column retro board using Google Sheets or Excel.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/3-column-retro/retro-3.png&#34; alt=&#34;3 Column Retrospective in Action&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Sometimes it&amp;rsquo;s worth paying for something that&amp;rsquo;s being actively maintained and enhanced. Here are a few options.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Pricing&lt;/th&gt;
+&lt;th&gt;Notes&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://funretro.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Fun Retro&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;GBP £84/month for 6 teams (£14/team/month)&lt;/td&gt;
+&lt;td&gt;Established tool.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.teamretro.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;TeamRetro&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $90/month for 6 teams ($15/team/month)&lt;/td&gt;
+&lt;td&gt;Established and feature-rich tool.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.retrium.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Retrium&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $29/team/month&lt;/td&gt;
+&lt;td&gt;Established and feature-rich tool.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.scatterspoke.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ScatterSpoke&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $225/100 users/month ($2.25/user/month)&lt;/td&gt;
+&lt;td&gt;Established and feature-rich.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.neatro.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Neatro&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $17/team/month&lt;/td&gt;
+&lt;td&gt;Simple UI.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.parabol.co/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Parabol&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $6/user/month&lt;/td&gt;
+&lt;td&gt;Open-sourced. Established.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.goreflect.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;goReflect&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $2.67/user/month&lt;/td&gt;
+&lt;td&gt;Simple UI.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://reetro.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Reetro&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Free to sign up, used to have paid upgraded features.&lt;/td&gt;
+&lt;td&gt;Less established than other options.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;h4 id=&#34;example-using-postfacto&#34;&gt;Example using Postfacto&lt;/h4&gt;
+&lt;p&gt;There are many free retrospective tools available.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/3-column-retro/retro-1.png&#34; alt=&#34;3 Column Retrospective in Action&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;3-column-retro-with-fun-themes-using-miro&#34;&gt;3-Column Retro with fun themes using Miro&lt;/h4&gt;
+&lt;p&gt;Online tools like this allow for people to get more engaged with fun themes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/3-column-retro/retro-2.png&#34; alt=&#34;3 Column Retrospective in Miro&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://pragprog.com/titles/dlret/agile-retrospectives/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Agile Retrospectives - Making Good Teams Great&lt;/a&gt;  by Esther Derby and Diana Larsen, Foreword by Ken Schwaber&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/blog/how-to-run-a-really-good-retrospective&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;How to Run a Really Good Retrospective&lt;/a&gt; - Blog Post by Nicola Rushton&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/videos/measure-success-in-agile-retrospectives-enrico-teotti&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Measure Success in Agile Retrospectives&lt;/a&gt; – Video by Enrico Teotti&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: &#34;Sailboat&#34; Futurespective</title>
+      
+      <link>/practices/futurespective/</link>
+      <pubDate>Fri, 16 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/futurespective/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Write or reveal the following prompt for the group:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Imagine that it’s half a year from now and you just heard back from the users of your product that they are extremely happy with it. In short - it’s everything they expected, and more.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Ask the team to take 10 minutes to write down one idea per sticky note what that goal or vision would look like.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Take 5 minutes to discuss and vote on the top 1 goal members have ideated on.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write or reveal the following prompt for the group to consider:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Imagine the actions you have done to achieve the said goal or vision. Which practices did you use and how did you do them? How did you work together as a team, with your stakeholders, customers, and users? What have you tried that worked out well?”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Ask the team to take 10 minutes to write down these positive practices.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write or reveal the following prompt for the group:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Next, imagine the problems (anchors) that you had along the way and how you dealt with them.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Take 10 minutes for members to scribble down the problems and/or impediments the team has experienced in the imaginary past.&lt;/p&gt;
+&lt;p&gt;Ask the team to take 10 minutes to write down ways they dealt with the problems.&lt;/p&gt;
+&lt;p&gt;In other words, what can the team do today to mitigate or minimize problems that may occur in the future that could impede on achieving the goal or vision?&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You know you are done when the team has a group of positive practices and assigned actions upon at the end of the exercise.&lt;/p&gt;
+&lt;h2 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Use futurespective templates (Sailboat, racecar, etc.) to help the team better visualize the exercise&lt;/li&gt;
+&lt;li&gt;Some Futurespectives may have additional sections (example: risks that may occur which should be proactively dealt with) to further facilitate the conversation on how to achieve the goal or vision.&lt;/li&gt;
+&lt;li&gt;Consider discussing the difference between a retrospective and futurespective at the beginning to avoid any confusion during the exercise&lt;/li&gt;
+&lt;li&gt;Templates (public): &lt;a href=&#34;https://metroretro.io/templates/the-sailboat-retrospective&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Public Trello Board with many Retrospective types, including Futurespectives.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;variations&#34;&gt;Variations&lt;/h2&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/futurespective/example.png&#34; alt=&#34;Design Studio Example&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://metroretro.io/templates/the-speed-car-and-the-abyss&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Speed Car Futurespective Miro Template&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

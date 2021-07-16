@@ -1,0 +1,248 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – </title>
+    <link>/team/marc-zottner/</link>
+    <description>Recent content on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/team/marc-zottner/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Outcomes: Logging Requests and Responses in Spring Boot Applications</title>
+      
+      <link>/outcomes/application-observability/logging-request-response-boot/</link>
+      <pubDate>Tue, 25 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-observability/logging-request-response-boot/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Exposing Prometheus Metrics from Java</title>
+      
+      <link>/outcomes/application-observability/exposing-metrics-java-prometheus/</link>
+      <pubDate>Tue, 25 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-observability/exposing-metrics-java-prometheus/</guid>
+      <description>
+
+        
+        &lt;p&gt;The &lt;a href=&#34;https://micrometer.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Micrometer&lt;/a&gt; library is a popular way to expose
+application metrics to a service like Prometheus.&lt;/p&gt;
+&lt;h2 id=&#34;adding-dependencies&#34;&gt;Adding Dependencies&lt;/h2&gt;
+&lt;p&gt;To add the Micrometer dependency for Prometheus with Maven:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;io.micrometer&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;micrometer-registry-prometheus&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;${micrometer.version}&lt;span class=&#34;nt&#34;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you&amp;rsquo;re using Gradle instead:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gradle&#34; data-lang=&#34;gradle&#34;&gt;&lt;span class=&#34;n&#34;&gt;dependencies&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;io.micrometer:micrometer-registry-prometheus:latest.release&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Dependencies&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;See the
+&lt;a href=&#34;https://github.com/micrometer-metrics/micrometer/releases&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;releases page&lt;/a&gt; for
+the latest version.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;With the correct dependencies in place, you&amp;rsquo;re ready to expose metrics.&lt;/p&gt;
+&lt;h2 id=&#34;exposing-metrics&#34;&gt;Exposing Metrics&lt;/h2&gt;
+&lt;p&gt;For exposing application metrics, you have two options:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;if you&amp;rsquo;re writing a Java application without using a framework, you must
+expose the endpoint yourself&lt;/li&gt;
+&lt;li&gt;if you&amp;rsquo;re using Spring Boot, you can ad the
+&lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot Actuator&lt;/a&gt;
+dependency to your application&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;using-vanilla-java&#34;&gt;Using Vanilla Java&lt;/h3&gt;
+&lt;p&gt;The following example uses the JDK&amp;rsquo;s &lt;code&gt;com.sun.net.httpserver.HttpServer&lt;/code&gt; to
+expose a &lt;code&gt;/prometheus&lt;/code&gt; endpoint. The &lt;code&gt;PrometheusMeterRegistry&lt;/code&gt; contains a
+&lt;code&gt;scrape()&lt;/code&gt; function, which can supply the metric data to Prometheus. All you
+need to do is wire the function to an endpoint.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;n&#34;&gt;PrometheusMeterRegistry&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;prometheusRegistry&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;PrometheusMeterRegistry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;PrometheusConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;DEFAULT&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;HttpServer&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;server&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;HttpServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;create&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;InetSocketAddress&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;8080&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;createContext&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/prometheus&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;httpExchange&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;prometheusRegistry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;scrape&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;httpExchange&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;sendResponseHeaders&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;200&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getBytes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;length&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OutputStream&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;os&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;httpExchange&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getResponseBody&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;os&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;write&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getBytes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;});&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Thread&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;::&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;start&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;start&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IOException&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RuntimeException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;using-spring-boot&#34;&gt;Using Spring Boot&lt;/h3&gt;
+&lt;p&gt;First, update the scope and remove the version of the
+&lt;code&gt;micrometer-registry-prometheus&lt;/code&gt; dependency. Then add the
+&lt;code&gt;spring-boot-starter-actuator&lt;/code&gt; dependency to your project.&lt;/p&gt;
+&lt;p&gt;Maven:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;io.micrometer&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;micrometer-registry-prometheus&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;runtime&lt;span class=&#34;nt&#34;&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-actuator&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Gradle:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gradle&#34; data-lang=&#34;gradle&#34;&gt;&lt;span class=&#34;n&#34;&gt;dependencies&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;org.springframework.boot:spring-boot-starter-actuator&amp;#39;&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;runtimeOnly&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;io.micrometer:micrometer-registry-prometheus&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, enable the Prometheus actuator endpoint. At the time of writing, you must
+add &lt;code&gt;prometheus&lt;/code&gt; to the list of exposed Spring Boot Actuator endpoints. Your
+endpoint configuration might look like the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;management.endpoints.web.exposure.include: info, health, prometheus
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This exposes metrics at the &lt;code&gt;/actuator/prometheus&lt;/code&gt; endpoint.&lt;/p&gt;
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot Actuator: Production-ready Features&lt;/a&gt;
+— Spring Boot reference documentation about Actuator&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-endpoints-exposing-endpoints&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Exposing Actuator Endpoints&lt;/a&gt;
+— provides more information about exposing Spring Boot actuator endpoints&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Bootifying Java Applications</title>
+      
+      <link>/guides/spring/bootifying-java-apps/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/bootifying-java-apps/</guid>
+      <description>
+
+        
+        &lt;p&gt;Spring Boot is a convention-over-configuration solution to create standalone, production-grade Spring-based applications that you can &amp;ldquo;just run&amp;rdquo;. It is pre-configured with an opinionated view of the best configuration of the Spring platform, including third-party libraries, so that you can get started with minimum fuss. The Spring framework provides hundreds of features and modules, but knowing where to start and configure them can be challenging.&lt;/p&gt;
+&lt;p&gt;Not every existing Java application can be deployed and operated as a Spring Boot application without modification. In particular, Java applications that leverage Java EE APIs (see &lt;a href=&#34;https://github.com/javaee-samples&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;examples&lt;/a&gt;) or vendor-specific APIs may require some effort to migrate to Spring Boot.&lt;/p&gt;
+&lt;h2 id=&#34;guide&#34;&gt;Guide&lt;/h2&gt;
+&lt;p&gt;Bootification is the process of changing the code and configuration of an application to transform it into a full-fledged &lt;a href=&#34;https://spring.io/projects/spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot&lt;/a&gt; application. Several factors impact the bootification journey that your applications should follow. For example:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dependency and build management tools (i.e., Ant, Maven, Gradle)&lt;/li&gt;
+&lt;li&gt;Desired packaging (executable JAR/WAR or standalone WAR)&lt;/li&gt;
+&lt;li&gt;The acceptable amount of configuration refactoring (XML versus Java configuration)&lt;/li&gt;
+&lt;li&gt;Library version upgrade strategy&lt;/li&gt;
+&lt;li&gt;Nature of the application (frontend/backend/monolithic)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This step-by-step guide walks you through the process of transforming existing Java applications into first-class Spring Boot citizens.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/diagrams/spring-bootification-process.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;1-learn-about-spring-boot&#34;&gt;1. Learn about Spring Boot&lt;/h3&gt;
+&lt;p&gt;To learn more about what Spring Boot is and what you can do with it, see the official &lt;a href=&#34;https://spring.io/projects/spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot home page&lt;/a&gt; and &lt;a href=&#34;https://spring.io/guides#getting-started-guides&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started Guides&lt;/a&gt;. The &lt;a href=&#34;#references&#34;&gt;references&lt;/a&gt; section provides more learning resources.&lt;/p&gt;
+&lt;h3 id=&#34;2-setup-your-local-development-environment&#34;&gt;2. Setup your local development environment&lt;/h3&gt;
+&lt;p&gt;Spring Boot can be used with a classic Java development toolset or installed as a command-line tool. Either way, you need the &lt;a href=&#34;https://www.java.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Java SDK&lt;/a&gt; v1.8 or higher.&lt;/p&gt;
+&lt;p&gt;If you want to experiment with Spring Boot or are new to Java development, you might want to try the &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started.html#getting-started-installing-the-cli&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot CLI&lt;/a&gt; (Command Line Interface) first. Otherwise, follow the &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started.html#getting-started-installation-instructions-for-java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;traditional installation instructions&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For seamless integration and native support in your favorite coding environment, try the latest &lt;a href=&#34;https://spring.io/tools&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Tools&lt;/a&gt; distribution for Eclipse, Visual Studio Code, or Theia. Some &lt;a href=&#34;https://www.jetbrains.com/help/idea/spring-boot.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;plugins&lt;/a&gt; are also available for IntelliJ IDEA.&lt;/p&gt;
+&lt;h3 id=&#34;3-check-out-build-and-back-up-your-project&#34;&gt;3. Check out, build, and back up your project&lt;/h3&gt;
+&lt;p&gt;You can now check out your application from its source control system and make sure that you can build and run it without any change. Back up this project locally to be able to run the initial application at any later point in the process and validate its behavior.&lt;/p&gt;
+&lt;p&gt;Before changing anything in your application, you should also create a separate bootification branch within your version control system (e.g., Git). This way, you will be capable of tracking and viewing differences between the original application and the bootified one and rolling back your changes if necessary.&lt;/p&gt;
+&lt;h3 id=&#34;4-adjust-application-dependencies-packaging-and-code-structure&#34;&gt;4. Adjust application dependencies, packaging, and code structure&lt;/h3&gt;
+&lt;p&gt;Now it is time to update your application dependencies, packaging and create a Spring Boot application class.&lt;/p&gt;
+&lt;p&gt;If you want to use either Maven or Gradle, &lt;a href=&#34;http://start.spring.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Initializr&lt;/a&gt; is the recommended approach for generating a new Spring Boot application. Spring Initializr is like a shopping cart for all of the dependencies you might need for your application. It offers a fast way to pull in all of the dependencies you need for an application and does a lot of the setup for you. Just Navigate to &lt;a href=&#34;http://start.spring.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Initializr&lt;/a&gt;, fill in the metadata, add the dependencies relevant to your application, and generate the new project. Make sure to carefully pick the right Spring Boot starters for your application.&lt;/p&gt;
+&lt;p&gt;Initializr will automatically generate the main Spring Boot application class for you. Feel free to adjust it to your needs.&lt;/p&gt;
+&lt;p&gt;At this stage, make sure you understand Spring Boot auto-configuration and &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-auto-configuration.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;how to adjust it&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;5-optional-configure-remote-deployment&#34;&gt;5. (Optional) Configure remote deployment&lt;/h3&gt;
+&lt;p&gt;It typically makes sense to start working locally on your developer machine. Once you want to connect your application to external resources (e.g., database, messaging middleware, external services) or test it in a more realistic environment, deploying your Spring Boot application to a remote runtime environment or server is an excellent idea.&lt;/p&gt;
+&lt;p&gt;For this reason, from this point on you can consider deploying the application on &lt;a href=&#34;https://tanzu.vmware.com/application-service&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu Application Service&lt;/a&gt; (TAS) or a remote testing server. TAS is based on the Cloud Foundry open-source project. It is built to be the best runtime for Spring and Spring Boot applications, providing a lean, integrated, and efficient user experience. If you want to deploy your application there, follow the corresponding &amp;ldquo;&lt;a href=&#34;https://docs.cloudfoundry.org/buildpacks/java/getting-started-deploying-apps/gsg-spring.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;getting started&lt;/a&gt;&amp;rdquo; deployment guide.&lt;/p&gt;
+&lt;h3 id=&#34;6-prepare-your-application-to-work-with-spring-boot&#34;&gt;6. Prepare your application to work with Spring Boot&lt;/h3&gt;
+&lt;p&gt;Now, you can begin modifying your application code and configuration. From here on, you want to make as few changes as possible &amp;ndash; just enough to get your application running as a standalone Spring Boot application. We recommend that you do &lt;em&gt;not&lt;/em&gt; combine this work with any other changes to your application&amp;rsquo;s inner workings or business logic for better visibility.&lt;/p&gt;
+&lt;p&gt;The majority of the changes required to get your application running are tied to the usage of Java EE APIs. You will have to remove and replace dependencies to Java EE and the application server in use. (e.g., &lt;a href=&#34;https://javaee.github.io/glassfish/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GlassFish&lt;/a&gt;, &lt;a href=&#34;https://tomee.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache TomEE&lt;/a&gt;, &lt;a href=&#34;https://www.ibm.com/cloud/websphere-application-server&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;IBM WebSphere Application Server&lt;/a&gt;, &lt;a href=&#34;https://github.com/wildfly&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Red Hat JBoss Application Server / Wildfly&lt;/a&gt;, &lt;a href=&#34;https://www.oracle.com/middleware/technologies/weblogic.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Oracle WebLogic Server&lt;/a&gt;, &lt;a href=&#34;https://www.sap.com/germany/products/netweaver-platform.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SAP NetWeaver Application Server&lt;/a&gt;&amp;hellip;).&lt;/p&gt;
+&lt;p&gt;You will need to modify the application depending on the Java EE specification it currently uses: annotations, EJBs, JAX-WS, JAX-RS, JAXB, JMS, JSF, JPA&amp;hellip;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;NOTE: Expect detailed future guides covering what needs to be done for each specification.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;7-modify-and-deploy-your-application-iteratively-until-it-runs&#34;&gt;7. Modify and deploy your application iteratively until it runs&lt;/h3&gt;
+&lt;p&gt;After making the preparatory adjustments identified in the previous step, you can try to run your application. The chances are that the deployment will not work correctly the first time and that you will encounter problems while starting the application.&lt;/p&gt;
+&lt;p&gt;If it is not working as expected, keep a cool head. Examine the application log to understand the root cause of the &lt;em&gt;first&lt;/em&gt; issue that pops up. Start checking existing solutions documented as recipes in your local cookbook or on the Internet before digging deeper into the issue.&lt;/p&gt;
+&lt;p&gt;You might have to adjust log levels or further instrument and debug your Spring Boot application to gain deeper insights into what is wrong. Reaching out to a colleague or Spring Boot expert early can help you to adopt a different perspective, see the obvious, and save yourself time. If you spend significant time resolving an issue, document what you have done to help your peers in similar situations, and consider writing a cookbook article about it.&lt;/p&gt;
+&lt;p&gt;From here on, continue to progress step by step, making as few changes as possible, and fixing and documenting any issues encountered. It may take several iterations for your application to start without error and provide the same functionality as the one you started with.&lt;/p&gt;
+&lt;h3 id=&#34;8-optional-optimize-your-application-for-spring-boot&#34;&gt;8. (Optional) Optimize your application for Spring Boot&lt;/h3&gt;
+&lt;p&gt;At this point, your application should be running as a standalone Spring Boot application. Ensure that this stable state is properly persisted and flagged in your version control system, for example, using a tag or an additional branch.&lt;/p&gt;
+&lt;p&gt;Moving forward, you might want to consider additional optimizations to your codebase to transform your application into a first-class Spring Boot citizen. These may encompass some of the following topics:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Externalizing environment variables&lt;/li&gt;
+&lt;li&gt;Optimizing logging with Spring Boot&lt;/li&gt;
+&lt;li&gt;Configuring actuator endpoints&lt;/li&gt;
+&lt;li&gt;Externalizing and caching state&lt;/li&gt;
+&lt;li&gt;Moving from Maven to Gradle&lt;/li&gt;
+&lt;li&gt;Removing Spring XML configuration&lt;/li&gt;
+&lt;li&gt;Converting legacy classes to Spring stereotypes&lt;/li&gt;
+&lt;li&gt;Integrating with Spring Cloud Data Flow (SCDF)&lt;/li&gt;
+&lt;li&gt;Removing boilerplate code using &lt;a href=&#34;https://projectlombok.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Project Lombok&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Tidying up unused components and dependencies&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If any of the options are relevant to your application, perform them one at a time. Validate that your application is running appropriately after each change.&lt;/p&gt;
+&lt;h3 id=&#34;9-finalize-the-bootification-process&#34;&gt;9. Finalize the Bootification Process&lt;/h3&gt;
+&lt;p&gt;After your application is working and thoroughly tested, commit your code changes and put the application through the formal testing procedures along the (automated) path to production. You might have to collaborate with operations engineers to adjust your application&amp;rsquo;s configuration and CI/CD pipelines.&lt;/p&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;The Tanzu Developer Portal has a &lt;a href=&#34;/topics/spring/&#34;&gt;series of guides&lt;/a&gt; on topics related to Spring and Spring Boot development that can help you learn more and address a variety of needs.&lt;/p&gt;
+&lt;h3 id=&#34;references&#34;&gt;References&lt;/h3&gt;
+&lt;p&gt;In addition to the links included in the text, the list below provides additional useful guides and tutorials related to the topics discussed.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://spring.io/projects/spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot&lt;/a&gt; &amp;mdash; official landing page for Spring Boot&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot Reference Guide&lt;/a&gt; &amp;mdash; complete Spring Boot reference documentation&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://spring.io/guides&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Guides&lt;/a&gt; &amp;mdash; designed to get you productive as quickly as possible using the latest Spring project releases and techniques as recommended by the Spring team&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/howto-traditional-deployment.html#howto-convert-an-existing-application-to-spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Bootification Guide&lt;/a&gt; &amp;mdash; how to convert an existing application to Spring Boot&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.baeldung.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Baeldung | Java, Spring and Web Development tutorials&lt;/a&gt; &amp;mdash; useful tutorials, including many Spring and Spring Boot topics&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.mkyong.com/tutorials/spring-boot-tutorials/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Mkyong Spring Boot Tutorials&lt;/a&gt; &amp;mdash; tutorials covering many aspects of Spring Boot&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/spring/&#34;&gt;VMware Tanzu Developer Spring guides&lt;/a&gt; &amp;mdash; hands-on guides from the VMware Tanzu Developer site&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;videos&#34;&gt;Videos&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/user/SpringSourceDev&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Developer YouTube channel&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/spring-app-framework&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Accelerates Cloud-Native Java Application Development | Tanzu&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.safaribooksonline.com/library/view/building-microservices-with/9780134192468/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Building Microservices with Spring Boot LiveLessons (Video Training)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;books&#34;&gt;Books&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.amazon.com/dp/B01LPRN0Z8&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;em&gt;Learning Spring Boot 2.0&lt;/em&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.safaribooksonline.com/library/view/spring-boot-in/9781617292545/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;em&gt;Spring Boot in Action&lt;/em&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.safaribooksonline.com/library/view/cloud-native-java/9781449374631/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;em&gt;Cloud Native Java&lt;/em&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;tools&#34;&gt;Tools&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://start.spring.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Initializr&lt;/a&gt; &amp;mdash; generate a Spring Boot project with just what you need to start quickly&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/spring-projects/spring-boot/tree/master/spring-boot-project/spring-boot-starters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot Starters&lt;/a&gt; &amp;mdash; one-stop-shop for convenient dependency descriptors that include all of the Spring and related technology that you need in your application&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://spring.io/tools&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Tools&lt;/a&gt; &amp;mdash; next-generation Spring tooling for your favorite coding environment&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

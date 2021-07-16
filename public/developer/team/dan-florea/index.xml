@@ -1,0 +1,61 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – </title>
+    <link>/team/dan-florea/</link>
+    <description>Recent content on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/team/dan-florea/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Blog: Introducing the Tanzu Observability Slug Generator</title>
+      
+      <link>/blog/introducing-the-tanzu-observability-slug-generator/</link>
+      <pubDate>Thu, 15 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/introducing-the-tanzu-observability-slug-generator/</guid>
+      <description>
+
+        
+        &lt;p&gt;A great feature of &lt;a href=&#34;https://tanzu.vmware.com/observability&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Observability&lt;/a&gt; is that all context about the chart or dashboard that you are looking at is encoded in the URL, which makes it easy for you to share those links with your colleagues and to deep link into our product from other places such as wiki pages. A consequence of this is that the URL slug is rather involved. This is not a problem when the UI generates the URL, but it becomes very tedious when customers try to create the URL on their own in order to automate and embed Tanzu Observability charts and dashboards outside of the product itself.&lt;/p&gt;
+&lt;p&gt;To help customers take better advantage of Tanzu Observability charts and dashboards as well as allow easier automation and customization, we recently open sourced our Tanzu Observability URL slug generation code. This code lets you programmatically generate links to charts and dashboards that you can then embed wherever you like to give users an easy to find view of the metrics that matter to them.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-a-url-slug&#34;&gt;What is a URL Slug?&lt;/h2&gt;
+&lt;p&gt;If you are not familiar with a URL slug, it is the last part of a URL that comes after the domain name. For example:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.vmware.com/company.html&#34;&gt;https://www.vmware.com/company.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;In the URL above, “company.html” is referred to as the URL slug.&lt;/p&gt;
+&lt;p&gt;In some cases, the URL slug is relatively simple. In the case of a Tanzu Observability chart or dashboard, a lot of information is encoded in the slug which makes it difficult for humans to parse and even trickier to generate. For example, a Tanzu Observability slug might looks like the following:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(c:(b:1,id:chart,n:Chart,ne:!t,s:!((n:source,q:&#39;ts(metrics)&#39;,qb:!n,qbe:!f)),smp:off),g:(c:off,d:7200,g:auto,s:1373948820),t:customer)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Luckily, you do not have to parse URLs manually. But at times, it can be convenient to generate a Tanzu Observability dashboard or chart in code and this is where the open sourced library comes in.&lt;/p&gt;
+&lt;h2 id=&#34;where-to-find-the-code&#34;&gt;Where to Find the Code?&lt;/h2&gt;
+&lt;p&gt;The open sourced URL slug generation code can be found in the &lt;a href=&#34;https://github.com/vmware-tanzu/tanzu-observability-slug-generator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu GitHub organization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Note that previously open sourced code can be found under &lt;a href=&#34;https://github.com/wavefrontHQ&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Wavefront in GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;how-to-get-started&#34;&gt;How to Get Started&lt;/h2&gt;
+&lt;p&gt;Complete instructions to use the code can be found in the &lt;a href=&#34;https://github.com/vmware-tanzu/tanzu-observability-slug-generator/blob/main/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;README.md file in the GitHub directory&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The README file includes information about prerequisites for Maven and Gradle as well as instructions on how to create chart and dashboard slugs.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Generating Tanzu Observability URL slugs can be cumbersome and error prone. With the newly open sourced URL slug generation code, you can easily and automatically generate URL slugs and embed charts and dashboards in the pages that make the most sense for your business.&lt;/p&gt;
+&lt;h2 id=&#34;links&#34;&gt;Links&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/observability-trial&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Try Tanzu Observability and get started today&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you are a Spring developer, take a look at the &lt;a href=&#34;https://spring.io/guides/gs/tanzu-observability/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;guide for Tanzu Observability&lt;/a&gt; as well as our guide on &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/spring/spring-wavefront-gs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with Wavefront for Spring Boot&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/vmware-tanzu/tanzu-observability-slug-generator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Get started with generating URL slugs&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

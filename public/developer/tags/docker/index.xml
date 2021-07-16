@@ -1,0 +1,851 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Docker</title>
+    <link>/tags/docker/</link>
+    <description>Recent content in Docker on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 04 Mar 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Develop and Publish an ASP.NET Web Application using Bitnami Containers</title>
+      
+      <link>/guides/containers/develop-aspnet-application-bitnami-containers/</link>
+      <pubDate>Thu, 03 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/containers/develop-aspnet-application-bitnami-containers/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://www.docker.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker&lt;/a&gt; containers have become increasingly popular amongst developers on account of their ease of use, consistency and portability. For .NET developers looking to develop and publish applications using containers, Bitnami offers a number of options:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-dotnet-sdk&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s .NET SDK container&lt;/a&gt; provides the complete .NET SDK for application development;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-dotnet&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s .NET container&lt;/a&gt; provides the .NET runtime environment for application execution;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-aspnet-core&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s ASP.NET Core container&lt;/a&gt; provides the ASP.NET runtime environment for application execution.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All of these images are secure, optimized and up-to-date, enabling .NET developers to use them in daily development without being concerned about missing out on the latest language features and security fixes.&lt;/p&gt;
+&lt;p&gt;This guide gets you started with Bitnami&amp;rsquo;s .NET containers, by using them to create a sample ASP.NET Web application and publish it as a container image to Docker Hub.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and Prerequisites&lt;/h2&gt;
+&lt;p&gt;This guide focuses on creating a Docker image of a custom ASP.NET Web application using &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-aspnet-core&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s ASP.NET Core container image&lt;/a&gt;. In case you don&amp;rsquo;t have an ASP.NET Web application at hand, the first step of this guide shows you how to create one.&lt;/p&gt;
+&lt;p&gt;This guide makes the following assumptions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have a Docker environment installed and configured. &lt;a href=&#34;https://docs.docker.com/engine/installation/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about installing Docker&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Docker Hub account. &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Register for a free account&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a basic understanding of how containers work. Learn more about containers in &lt;a href=&#34;https://www.youtube.com/watch?v=Pb1bgI59dF0&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;our YouTube video&lt;/a&gt;, on &lt;a href=&#34;https://en.wikipedia.org/wiki/Operating-system-level_virtualization&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Wikipedia&lt;/a&gt; and on &lt;a href=&#34;http://www.zdnet.com/article/containers-fundamental-to-the-evolution-of-the-cloud/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ZDNet&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-1-create-or-obtain-the-application-source-code&#34;&gt;Step 1: Create or obtain the application source code&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you already have an ASP.NET Web application of your own, you can use that instead and skip to &lt;a href=&#34;#step-2-build-a-docker-image-of-the-application&#34;&gt;Step 2&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The first step is to create a sample ASP.NET Web application which generates a welcome message. If you don&amp;rsquo;t have .NET installed, an easy way to do this is with the .NET CLI from &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-dotnet-sdk&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s .NET SDK container image&lt;/a&gt;. This allows you to execute .NET CLI commands using the Bitnami .NET SDK container on your host, exactly as though you had the complete .NET SDK already installed. If you already have a .NET development environment, you can use that instead and skip the Docker commands below.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Create a working directory for the application on your local host and make it the current directory:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir myapp
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; myapp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use the following Docker commands to create and start a &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-dotnet-sdk&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami .NET SDK container&lt;/a&gt; on your host:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker create --rm -v &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;pwd&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;:/app --net&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;host&amp;#34;&lt;/span&gt; -t --name dotnetsdk bitnami/dotnet-sdk:latest
+docker start dotnetsdk
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;em&gt;-v&lt;/em&gt; argument to the first command tells Docker to mount the host&amp;rsquo;s current directory into the container&amp;rsquo;s &lt;em&gt;/app&lt;/em&gt; path, so that the effects of commands run in the container are seen on the host. The &lt;em&gt;&amp;ndash;net=&amp;ldquo;host&amp;rdquo;&lt;/em&gt; argument tells Docker to use the host&amp;rsquo;s network stack for the container, and the &lt;em&gt;&amp;ndash;rm&lt;/em&gt; argument removes the container once it exits. The container is named &lt;em&gt;dotnetsdk&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Once the container is running, connect to the container console with the command below. This will give you a command shell and allow you to use the .NET SDK tools available in the image for subsequent tasks.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it dotnetsdk bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install the ASP.NET Web application templates and then use the .NET CLI to create a skeleton ASP.NET Web application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;dotnet new -i /opt/bitnami/dotnet-sdk/templates/3.1.3/microsoft.dotnet.web.projecttemplates.3.1.3.1.2.nupkg
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /app
+dotnet new webapp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Modify the application&amp;rsquo;s default welcome page:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sed -i &lt;span class=&#34;s1&#34;&gt;&amp;#39;s/Welcome/Hello from Bitnami/g&amp;#39;&lt;/span&gt; Pages/Index.cshtml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Run the application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;dotnet run --urls&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;http://0.0.0.0:5000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will run the ASP.NET Web application on port 5000 and allow it to accept incoming connections from other hosts. To test it, browse to http://DOCKER-HOST-ADDRESS:5000/, where DOCKER-HOST-ADDRESS is the IP address of your host, and confirm that you see the modified welcome page shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/containers/bitnami/develop-aspnet-application-bitnami-containers/welcome.png&#34; alt=&#34;Default page&#34;  /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If the Docker host is a different machine, ensure that the host firewall is configured to allow access on port 5000.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once you have confirmed that the application works, proceed to publish it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;dotnet publish
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The published application will be stored in the &lt;em&gt;/app/bin/Debug/netcoreapp3.1/publish/&lt;/em&gt; directory.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Exit and stop the container.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker stop dotnetsdk
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-2-build-a-docker-image-of-the-application&#34;&gt;Step 2: Build a Docker image of the application&lt;/h2&gt;
+&lt;p&gt;Once you have a published, tested version of your application, you can proceed to build a Docker image for it.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Create a file named &lt;em&gt;Dockerfile&lt;/em&gt; in the application&amp;rsquo;s working directory and fill it with the following content:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;FROM bitnami/aspnet-core:latest
+COPY ./bin/Debug/netcoreapp3.1/publish/ /app/
+RUN useradd -r -u 1001 -g root nonroot
+RUN chown -R nonroot /app
+USER nonroot
+WORKDIR /app
+CMD [ &amp;quot;./app&amp;quot;, &amp;quot;--urls=http://0.0.0.0:5000&amp;quot; ]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This &lt;em&gt;Dockerfile&lt;/em&gt; uses the &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-aspnet-core&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami ASP.NET Core image&lt;/a&gt; as its starting point, because this image contains the ASP.NET framework and files needed to run an ASP.NET Web application.&lt;/p&gt;
+&lt;p&gt;This &lt;em&gt;Dockerfile&lt;/em&gt; begins by copying the published application files from the current directory to the container&amp;rsquo;s &lt;em&gt;/app&lt;/em&gt; directory. It also creates a non-root user account that the application will run under. For security reasons, it&amp;rsquo;s recommended to always run your application using a non-root user account. Finally, it starts the application on port 5000.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;By default, the Bitnami .NET SDK container runs as the &lt;em&gt;root&lt;/em&gt; user, and the files generated will be owned by &lt;em&gt;root&lt;/em&gt;. Change the ownership of the files to the current user so that Docker is able to read and process them.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ..
+sudo chown -R &lt;span class=&#34;nv&#34;&gt;$USER&lt;/span&gt;.&lt;span class=&#34;nv&#34;&gt;$USER&lt;/span&gt; myapp
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; myapp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Build the image using the command below. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker build -t DOCKER-USERNAME/myapp:1.0 .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result of this command is an image containing the application, the ASP.NET framework and all the related dependencies.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;step-3-test-and-publish-the-docker-image&#34;&gt;Step 3: Test and publish the Docker image&lt;/h1&gt;
+&lt;p&gt;Once you have the application image, you can test it and publish it as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Run the new Docker image in a container to test it with the &lt;em&gt;docker run&lt;/em&gt; command. Replace the DOCKER_USERNAME placeholder in the command with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -p 5000:5000 DOCKER_USERNAME/myapp:1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command runs the application in a container and maps port 5000 of the container to port 5000 on the Docker host. With this, a user can access the application by browsing to port 5000 of the host. To test it, browse to http://DOCKER-HOST-ADDRESS:5000/, where DOCKER-HOST-ADDRESS is the IP address of your host, and confirm that you see the application welcome page shown previously.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If the Docker host is a different machine, ensure that the host firewall is configured to allow access on port 5000.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to Docker Hub and publish the image. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker login
+docker push DOCKER-USERNAME/myapp:1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once published on Docker Hub, your image is publicly available by default.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-dotnet-sdk&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami .NET SDK container image&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-aspnet-core&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami ASP.NET Core container image&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ASP.NET documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Container Basics</title>
+      
+      <link>/workshops/lab-container-basics/</link>
+      <pubDate>Thu, 04 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-container-basics/</guid>
+      <description>
+
+        
+        &lt;p&gt;Containers are a lightweight form of OS-level virtualization. They enable a set of application processes to be run in their own isolated environment, without the need to run a full operating system. In this workshop, you’ll learn the basics of how to build container images and run them. We’ll be using the Docker tool.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Deploy a Custom Node.js Application using Bitnami Containers</title>
+      
+      <link>/guides/containers/deploy-custom-nodejs-app-bitnami-containers/</link>
+      <pubDate>Fri, 05 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/containers/deploy-custom-nodejs-app-bitnami-containers/</guid>
+      <description>
+
+        
+        &lt;p&gt;Developers like using containers for development because they are easy to use, portable, and require less maintenance overhead compared to bare metal or virtual machines. &lt;a href=&#34;https://www.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker&lt;/a&gt; is a popular choice, because it provides tools that make it simple for developers to build, run and publish applications in containers.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;ve seen Docker in action and then wondered &amp;ldquo;can I use this with my own application&amp;rdquo;, then you&amp;rsquo;re in the right place.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://bitnami.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&lt;/a&gt; makes it easy to create a Docker image of your own application using its production-ready &lt;a href=&#34;https://bitnami.com/containers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;container images&lt;/a&gt;. Once created, you can run and test your application with Docker, or publish it online so that others can find and use it. And, because Bitnami container images are always secure, optimized and up-to-date, you can rest assured that your application always has access to the latest language features and security fixes.&lt;/p&gt;
+&lt;p&gt;This guide walks you through the process of creating an optimized, secure Docker image of a custom application using a Bitnami base container, then testing it and publishing it online. It also guides you through the steps to follow when you update your application and need to rebuild and republish it for your users.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and Prerequisites&lt;/h2&gt;
+&lt;p&gt;This guide focuses on creating a secure and optimized Docker image of a custom Node.js application using Bitnami&amp;rsquo;s Node.js production image. In case you don&amp;rsquo;t have a Node.js application at hand, you can use &lt;a href=&#34;https://github.com/bitnami/tutorials/tree/master/simple-node-app&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this simple &amp;ldquo;Hello world&amp;rdquo; application&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This guide makes the following assumptions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have a Docker environment installed and configured. &lt;a href=&#34;https://docs.docker.com/engine/installation/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about installing Docker&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Docker Hub account. &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Register for a free account&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have Git installed and configured.&lt;/li&gt;
+&lt;li&gt;You have a basic understanding of how containers work. Learn more about containers in &lt;a href=&#34;https://www.youtube.com/watch?v=Pb1bgI59dF0&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;our YouTube video&lt;/a&gt;, on &lt;a href=&#34;https://en.wikipedia.org/wiki/Operating-system-level_virtualization&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Wikipedia&lt;/a&gt; and on &lt;a href=&#34;http://www.zdnet.com/article/containers-fundamental-to-the-evolution-of-the-cloud/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ZDNet&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-1-create-or-obtain-the-application-source-code&#34;&gt;Step 1: Create or obtain the application source code&lt;/h2&gt;
+&lt;p&gt;To begin the process, ensure that you have access to the application source code. If you don&amp;rsquo;t have an existing Node.js application, follow the steps below to create one:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Create a working directory for the application on your local host:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir myproject
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; myproject
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;em&gt;package.json&lt;/em&gt; file listing the dependencies for the project:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;simple-node-app&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;version&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;1.0.0&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;description&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Node.js on Docker&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;main&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;server.js&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;scripts&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;#34;start&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;node server.js&amp;#34;&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;dependencies&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;#34;express&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;^4.13&amp;#34;&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;em&gt;server.js&lt;/em&gt; file for the Express application which returns a &amp;ldquo;Hello world&amp;rdquo; message on access:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;use strict&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kr&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;express&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;require&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;express&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;// Constants
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kr&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;PORT&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;process&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;PORT&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;||&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;// App
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kr&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;app&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;express&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;res&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nx&#34;&gt;res&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Hello world\n&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+
+&lt;span class=&#34;nx&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;listen&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;PORT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Running on http://localhost:&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;PORT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-2-create-a-dockerfile&#34;&gt;Step 2: Create a Dockerfile&lt;/h2&gt;
+&lt;p&gt;A &lt;em&gt;Dockerfile&lt;/em&gt; is similar to a recipe: it contains all the ingredients needed to create a Docker image. Typically, each line represents a separate step and begins with an instruction keyword followed by a series of arguments. &lt;a href=&#34;https://docs.docker.com/engine/reference/builder&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about the &lt;em&gt;Dockerfile&lt;/em&gt; format&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the project directory, create a file named &lt;em&gt;Dockerfile&lt;/em&gt; and fill it with the following content:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;# First build stage
+FROM bitnami/node:12 as builder
+ENV NODE_ENV=&amp;#34;production&amp;#34;
+
+# Copy app&amp;#39;s source code to the /app directory
+COPY . /app
+
+# The application&amp;#39;s directory will be the working directory
+WORKDIR /app
+
+# Install Node.js dependencies defined in &amp;#39;/app/packages.json&amp;#39;
+RUN npm install
+
+# Second build stage
+FROM bitnami/node:12-prod
+ENV NODE_ENV=&amp;#34;production&amp;#34;
+
+# Copy the application code
+COPY --from=builder /app /app
+
+# Create a non-root user
+RUN useradd -r -u 1001 -g root nonroot
+RUN chown -R nonroot /app
+USER nonroot
+
+WORKDIR /app
+EXPOSE 3000
+
+# Start the application
+CMD [&amp;#34;npm&amp;#34;, &amp;#34;start&amp;#34;]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This &lt;em&gt;Dockerfile&lt;/em&gt; consists of two build stages:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The first stage uses the Bitnami Node.js 12.x development image to copy the application source and install the required application modules using &lt;em&gt;npm install&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;The second stage uses the Bitnami Node.js 12.x production image and creates a minimal Docker image that only consists of the application source, modules and Node.js runtime.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Bitnami&amp;rsquo;s Node.js production image is different from its Node.js development image, because the production image (tagged with the suffix &lt;em&gt;prod&lt;/em&gt;) is based on &lt;a href=&#34;https://github.com/bitnami/minideb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;minideb&lt;/a&gt; and does not include additional development dependencies. It is therefore lighter and smaller in size than the development image and is commonly used in multi-stage builds as the final target image.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;first-build-stage&#34;&gt;First build stage&lt;/h3&gt;
+&lt;p&gt;Let&amp;rsquo;s take a closer look at the steps in the first build stage:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;em&gt;FROM&lt;/em&gt; instruction kicks off the &lt;em&gt;Dockerfile&lt;/em&gt; and specifies the base image to use. Bitnami offers a number of container images for Docker which can be used as base images. Since the example application used in this guide is a Node.js application, &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js development container&lt;/a&gt; is the best choice for the base image.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;NODE_ENV&lt;/em&gt; environment variable is defined so that &lt;em&gt;npm install&lt;/em&gt; only installs the application modules that are required in production environments.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;COPY&lt;/em&gt; instruction copies the source code from the current directory on the host to the &lt;em&gt;/app&lt;/em&gt; directory in the image.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;RUN&lt;/em&gt; instruction executes a shell command. It&amp;rsquo;s used to run &lt;em&gt;npm install&lt;/em&gt; to install the application dependencies.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;WORKDIR&lt;/em&gt; instructions set the working directory for the image.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;second-build-stage&#34;&gt;Second build stage&lt;/h3&gt;
+&lt;p&gt;Here is what happens in the second build stage:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Since the target here is a minimal, secure image, the &lt;em&gt;FROM&lt;/em&gt; instruction specifies &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js production container&lt;/a&gt; as the base image. Bitnami production images can be identified by the suffix &lt;em&gt;prod&lt;/em&gt; in the image tag.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;COPY&lt;/em&gt; instruction copies the source code and installed dependencies from the first stage to the &lt;em&gt;/app&lt;/em&gt; directory in the image.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;RUN&lt;/em&gt; commands create a non-root user account that the application will run under. For security reasons, it&amp;rsquo;s recommended to always run your application using a non-root user account.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;CMD&lt;/em&gt; instruction specifies the command to run when the image starts. In this case, &lt;em&gt;npm start&lt;/em&gt; will start the application.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-3-build-the-docker-image&#34;&gt;Step 3: Build the Docker image&lt;/h2&gt;
+&lt;p&gt;Once the &lt;em&gt;Dockerfile&lt;/em&gt; is created, building a Docker image is as simple as calling the &lt;em&gt;docker build&lt;/em&gt; command. Execute the command below in the directory containing the &lt;em&gt;Dockerfile&lt;/em&gt;. Replace the DOCKER_USERNAME placeholder in the command below with your Docker account username. This Docker account username is necessary to avoid namespace errors when later pushing the image to your Docker Hub account.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker build -t DOCKER_USERNAME/my-node-app:0.1.0 .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;For successful execution of this and subsequent &lt;em&gt;docker&lt;/em&gt; commands, ensure that the user account you&amp;rsquo;re using belongs to the &lt;em&gt;docker&lt;/em&gt; group.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This will create an image named &lt;em&gt;my-node-app&lt;/em&gt;, tagged as version &lt;em&gt;0.1.0&lt;/em&gt;. This tag uniquely identifies a Docker image, allowing you to deploy a specific version of the application if needed.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s an example of what you should see during the build process:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/containers/bitnami/deploy-custom-nodejs-app-bitnami-containers/deploy-custom-nodejs-app-bitnami-containers-1.png&#34; alt=&#34;Image build process&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Once the build process is complete, use the &lt;em&gt;docker images&lt;/em&gt; command to verify that the image has been added to your local repository.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker images | grep my-node-app
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The version tag added during the &lt;em&gt;docker build&lt;/em&gt; command also appears in the output of &lt;em&gt;docker images&lt;/em&gt;.  Here&amp;rsquo;s an example of what you should see:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/containers/bitnami/deploy-custom-nodejs-app-bitnami-containers/deploy-custom-nodejs-app-bitnami-containers-2.png&#34; alt=&#34;Image in local Docker registry&#34;  /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Tagging image releases is a recommended practice. &lt;a href=&#34;https://docs.docker.com/engine/reference/commandline/tag/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about tags&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;step-4-test-the-docker-image&#34;&gt;Step 4: Test the Docker image&lt;/h2&gt;
+&lt;p&gt;Run your new Docker image in a container to test it with the &lt;em&gt;docker run&lt;/em&gt; command. Replace the DOCKER_USERNAME placeholder in the command with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker run -it -p 3000:3000 DOCKER_USERNAME/my-node-app:0.1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command runs the application in a container and makes port 3000 of the container accessible by binding it to port 3000 on the Docker host. With this, a user can access the application by browsing to port 3000 of the host.&lt;/p&gt;
+&lt;p&gt;Here is what you should see as the container starts:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/containers/bitnami/deploy-custom-nodejs-app-bitnami-containers/deploy-custom-nodejs-app-bitnami-containers-3.png&#34; alt=&#34;Container startup&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;To test the application, browse to &lt;em&gt;http://localhost:3000&lt;/em&gt; (if the Docker host is the same machine) or &lt;em&gt;http://SERVER-IP:3000&lt;/em&gt; (if the Docker host is a different machine) and you should see this:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/containers/bitnami/deploy-custom-nodejs-app-bitnami-containers/deploy-custom-nodejs-app-bitnami-containers-4.png&#34; alt=&#34;Application output&#34;  /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If the Docker host is a different machine, ensure that the host firewall is configured to allow access on port 3000.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The &lt;em&gt;-i&lt;/em&gt; and &lt;em&gt;-t&lt;/em&gt; options to &lt;em&gt;docker run&lt;/em&gt; allocate a terminal for the container process, while the &lt;em&gt;-p&lt;/em&gt; option specifies the container-host port binding. &lt;a href=&#34;https://docs.docker.com/engine/reference/run/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about the &lt;em&gt;docker run&lt;/em&gt; command and its options&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;step-5-publish-the-docker-image&#34;&gt;Step 5: Publish the Docker image&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This step requires a Docker Hub account. In case you don&amp;rsquo;t already have one, &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;sign up on the Docker website&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;At this point, you have built, tagged and tested a Docker image containing your application code. To share it with others, you can upload the image to a public registry. A number of such registries are available, including &lt;a href=&#34;https://cloud.google.com/container-registry/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Google Container Registry&lt;/a&gt;, &lt;a href=&#34;https://quay.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Quay&lt;/a&gt; and others, but this guide will use &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Hub&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To upload an image to Docker Hub, follow these steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Use the &lt;em&gt;docker login&lt;/em&gt; command to log in:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker login
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use the &lt;em&gt;docker push&lt;/em&gt; command to push the image to your Docker Hub account, as shown below. Replace the DOCKER_USERNAME placeholder in the tag name with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker push DOCKER_USERNAME/my-node-app:0.1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here&amp;rsquo;s what you should see:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/containers/bitnami/deploy-custom-nodejs-app-bitnami-containers/deploy-custom-nodejs-app-bitnami-containers-5.png&#34; alt=&#34;Image publishing process&#34;  /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Once published on Docker Hub, your image is publicly available by default.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check that the image has been successfully uploaded to Docker Hub by searching for it using the &lt;em&gt;docker search&lt;/em&gt; command, as shown below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker search DOCKER_USERNAME/my-node-app:0.1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Once published on Docker Hub, other users can download your application and try it for themselves.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You can also delete images from Docker Hub using the Docker website.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;handling-updates&#34;&gt;Handling Updates&lt;/h2&gt;
+&lt;p&gt;As you continue developing your application, you will inevitably want to release fresh Docker images. This might be to include new application features or bug fixes, or to use a new version of the base container that has the latest fixes. Doing this involves regenerating the application image and republishing it to the registry.&lt;/p&gt;
+&lt;p&gt;To illustrate the process, let&amp;rsquo;s perform a code change in the example application and then release a fresh Docker image with the updated code. Follow these steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Change to the directory containing the application source code.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Edit the &lt;em&gt;server.js&lt;/em&gt; file and substitute the string &amp;ldquo;Hello world&amp;rdquo; with &amp;ldquo;Hello Mom&amp;rdquo;. Save the file.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Rebuild the image, tagging it as version 0.2.0. Replace the DOCKER_USERNAME placeholder in this and subsequent commands with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker build -t DOCKER_USERNAME/my-node-app:0.2.0  .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Confirm that the image was successfully built and added to the local registry:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker images | grep my-node-app
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;/images/guides/containers/bitnami/deploy-custom-nodejs-app-bitnami-containers/deploy-custom-nodejs-app-bitnami-containers-6.png&#34; alt=&#34;Revised image in local Docker registry&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Test the new image:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker run -it -p 3000:3000 DOCKER_USERNAME/my-node-app:0.2.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here&amp;rsquo;s what you should see when you access the application through your Web browser:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/containers/bitnami/deploy-custom-nodejs-app-bitnami-containers/deploy-custom-nodejs-app-bitnami-containers-7.png&#34; alt=&#34;Application output&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Publish the new image to Docker Hub:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt; docker push DOCKER_USERNAME/my-node-app:0.2.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Follow these steps every time you want to update and republish your Docker image. If you are deploying the new image to a Kubernetes cluster, &lt;a href=&#34;https://docs.bitnami.com/tutorials/deploy-application-kubernetes-helm/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;read about rolling updates in our Kubernetes tutorial&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Node.js container image for Docker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://bitnami.com/containers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Other Bitnami container images for Docker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://hub.docker.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Hub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Deploy Locally a Spring Boot Application Using Bitnami Containers</title>
+      
+      <link>/guides/containers/deploy-locally-spring-boot-application-docker/</link>
+      <pubDate>Fri, 05 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/containers/deploy-locally-spring-boot-application-docker/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://bitnami.com/stacks/containers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami containers&lt;/a&gt; provide you with a ready-to-go environment for the development framework of your choice backed by Bitnami. By selecting a Bitnami container for local development, you can save a lot of time in coding as well as you benefit from having always the latest and more secure application image.&lt;/p&gt;
+&lt;p&gt;You can use Bitnami container images for directly deploying applications or as a base for creating your own customized images. The Bitnami Tomcat container image includes all dependencies and libraries you need to deploy an application. That way, you can get productive immediately and focus only on what you love: coding.&lt;/p&gt;
+&lt;p&gt;In this tutorial, you will learn how to use a &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-tomcat&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Tomcat container image&lt;/a&gt; as a framework for deploying locally a sample &lt;a href=&#34;https://spring.io/projects/spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot application&lt;/a&gt; that uses the &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-mariadb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami MariaDB container image&lt;/a&gt; as a database.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and Prerequisites&lt;/h2&gt;
+&lt;p&gt;This guide makes the following assumptions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have basic knowledge of &lt;a href=&#34;https://www.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker&lt;/a&gt; containers.&lt;/li&gt;
+&lt;li&gt;You have a Docker environment installed and configured. &lt;a href=&#34;https://docs.docker.com/install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about installing Docker&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Docker Hub account. &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Register for a free account&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have Apache Maven already installed. &lt;a href=&#34;https://maven.apache.org/install.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Refer to the official Apache Maven Project documentation&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have Curl already installed. &lt;a href=&#34;https://curl.haxx.se/dlwiz/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Download and install the latest version of Curl for your operating system&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following are the steps you will complete in this guide:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 1: Obtain the application source code&lt;/li&gt;
+&lt;li&gt;Step 2: Create a Dockerfile&lt;/li&gt;
+&lt;li&gt;Step 3: Build the Docker image&lt;/li&gt;
+&lt;li&gt;Step 4: Create a &lt;em&gt;docker-compose.yml&lt;/em&gt; file to configure application services&lt;/li&gt;
+&lt;li&gt;Step 5: Test the Docker image and your custom application&lt;/li&gt;
+&lt;li&gt;Step 6: Publish the Docker image&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-1-obtain-the-application-source-code&#34;&gt;Step 1: Obtain the application source code&lt;/h2&gt;
+&lt;p&gt;To begin the process, ensure that you have access to the application source code. This tutorial uses a sample &lt;a href=&#34;https://github.com/spring-guides/gs-accessing-data-mysql&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot application&lt;/a&gt; which has been modified to replace its database with the Bitnami MariaDB container image and to be packaged as a WAR file. To get the resulting package:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Clone the sample repository as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;git clone https://github.com/bitnami/tutorials.git
+cd tutorials/spring-boot-app
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will clone the sample repository. The &lt;em&gt;gs-mysql-data-0.1.0.war&lt;/em&gt; file is located in the &lt;em&gt;spring-boot-app&lt;/em&gt; subdirectory.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Learn more about the changes done in the application source code by checking check the &lt;a href=&#34;https://github.com/bitnami/tutorials/tree/master/spring-boot-app/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;repository README file&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-2-create-a-dockerfile&#34;&gt;Step 2: Create a Dockerfile&lt;/h2&gt;
+&lt;p&gt;A &lt;a href=&#34;https://docs.docker.com/engine/reference/builder/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;em&gt;Dockerfile&lt;/em&gt;&lt;/a&gt; is similar to a recipe: it contains all the ingredients needed to create a Docker image. Each line of the file represents a separate step and contains the instructions for the container to build the application.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;em&gt;Dockerfile&lt;/em&gt; in the sample &lt;em&gt;spring-boot-app&lt;/em&gt; repository to build your application with the Bitnami Tomcat container image providing the Tomcat infrastructure for the resulting application image. It should include the following content:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;FROM bitnami/tomcat:9.0
+COPY gs-mysql-data-0.1.0.war /opt/bitnami/tomcat/webapps_default/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This &lt;em&gt;Dockerfile&lt;/em&gt; consists of one stage with two instructions for using the infrastructure &lt;em&gt;bitnami/tomcat:9.0&lt;/em&gt; image and to copy the application source at build time:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The FROM instruction kicks off the Dockerfile and specifies the base image to use. In this case, &lt;em&gt;bitnami/tomcat:9.0&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;The COPY instruction copies the source code from the current directory on the host to the &lt;em&gt;/webapps_default&lt;/em&gt; directory in the image. Any WAR file copied into that directory will be automatically deployed by Tomcat at bootup time.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-3-build-the-docker-image&#34;&gt;Step 3: Build the Docker image&lt;/h2&gt;
+&lt;p&gt;Once the &lt;em&gt;Dockerfile&lt;/em&gt; is created, it is time to build the docker image only by executing the &lt;em&gt;docker build&lt;/em&gt; command. Execute the command below in the same directory where the &lt;em&gt;Dockerfile&lt;/em&gt; is located, in this case, in the &lt;em&gt;spring-boot-app&lt;/em&gt; directory of the cloned repository. Remember to replace the DOCKER_USERNAME placeholder with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker build -t DOCKER_USERNAME/spring-java-app .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will create an image named &lt;em&gt;spring-java-app&lt;/em&gt;. Here is an example of the output you should see during the build process:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/containers/bitnami/deploy-locally-spring-boot-application-docker/spring-java-app.png&#34; alt=&#34;Build the Docker image&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Once the build process is complete, use the &lt;em&gt;docker image&lt;/em&gt; command to verify that the image has been added to your local repository.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker image ls DOCKER_USERNAME/spring-java-app
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;step-4-create-a-docker-composeyml-file-to-configure-application-services&#34;&gt;Step 4: Create a &lt;em&gt;docker-compose.yml&lt;/em&gt; file to configure application services&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.docker.com/compose/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Compose&lt;/a&gt; is a tool for defining and running applications with multiple containers in Docker. The &lt;em&gt;docker-compose.yml&lt;/em&gt; file is used to define the configuration of your application&amp;rsquo;s services. It includes the specification of the application&amp;rsquo;s service dependencies such as databases, queues, caches, etc. After defining them in the &lt;em&gt;docker-compose.yml&lt;/em&gt; file you are able to create and start one or more containers with a single command: &lt;em&gt;docker-compose up&lt;/em&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Create a &lt;em&gt;docker-compose.yml&lt;/em&gt; file that contains the following content. Remember to replace the DOCKER_USERNAME placeholder with your Docker account username:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;version: &amp;#39;2&amp;#39;
+
+services:
+  mariadb:
+    image: &amp;#39;bitnami/mariadb:10.3&amp;#39;
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_DATABASE=db_example
+      - MARIADB_USER=springuser
+      - MARIADB_PASSWORD=ThePassword
+    myapp:
+    image: &amp;#39;DOCKER_USERNAME/spring-java-app&amp;#39;
+    environment:
+      - &amp;#39;SPRING_APPLICATION_JSON={&amp;#34;spring&amp;#34;: {&amp;#34;datasource&amp;#34;:{&amp;#34;url&amp;#34;: &amp;#34;jdbc:mysql://mariadb:3306/db_example&amp;#34;, &amp;#34;username&amp;#34;: &amp;#34;springuser&amp;#34;, &amp;#34;password&amp;#34;: &amp;#34;ThePassword&amp;#34;}}}&amp;#39;
+    depends_on:
+      - mariadb
+    ports:
+     - &amp;#39;8080:8080&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;The application environment variable set in this file allows you to use any MySQL database with any credentials at deployment time. This, makes your image secure for production environments.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The ALLOW_EMPTY_PASSWORD parameter is set as &amp;ldquo;yes&amp;rdquo; in this &lt;em&gt;docker-compose.yml&lt;/em&gt; file since the application is built for development purposes. That value is highly discouraged for production. Remember to secure your deployments by setting a password in production environments.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;step-5-test-the-docker-image-and-your-custom-application&#34;&gt;Step 5: Test the Docker image and your custom application&lt;/h2&gt;
+&lt;p&gt;Run your new Docker image in a container to test it with the &lt;em&gt;docker-compose up&lt;/em&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker-compose up
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will create all the containers and volumes both for your application and the database. Now, it is time to test if the application works fine by calling the API endpoint using &lt;em&gt;Curl&lt;/em&gt;. Follow these instructions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Open a new terminal in your local system and execute the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;curl &amp;#39;localhost:8080/gs-mysql-data-0.1.0/demo/all&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The output should be an empty array &amp;ldquo;[]&amp;rdquo; that means that there is no data present in the database.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Let&amp;rsquo;s insert some data in the database by executing:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;curl &amp;#39;localhost:8080/gs-mysql-data-0.1.0/demo/add?name=First&amp;amp;email=someemail@someemailprovider.com&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Query the application again to check if the data is present in the database:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;curl &amp;#39;localhost:8080/gs-mysql-data-0.1.0/demo/all&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, you should get an output similar to this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;[{&amp;#34;id&amp;#34;:1, &amp;#34;name&amp;#34;:&amp;#34;First&amp;#34;, &amp;#34;email&amp;#34;:&amp;#34;someemail@someemailprovider.com&amp;#34;}]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Congratulations! You have your Spring Boot application running locally and ready to use!&lt;/p&gt;
+&lt;h2 id=&#34;step-6-publish-the-docker-image&#34;&gt;Step 6: Publish the Docker image&lt;/h2&gt;
+&lt;p&gt;Now that your Docker image is built and contains your application code, you can upload it into a public registry. This tutorial uses &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Hub&lt;/a&gt;, but you can select one of your own choice such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://cloud.google.com/container-registry/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Google Container Registry&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://aws.amazon.com/ecr/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Amazon EC2 Container Registry&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://azure.microsoft.com/en-us/services/container-registry/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Azure container Registry&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://quay.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Quay&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To upload the image to Docker Hub, follow the steps below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to Docker Hub:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker login
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Push the image to your Docker Hub account. Replace the DOCKER_USERNAME placeholder with the username of your Docker Hub account and &lt;em&gt;my-custom-app:latest&lt;/em&gt; with the name and the version of your Docker image:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;docker push DOCKER_USERNAME/my-custom-app:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Confirm that you see the image in your Docker Hub repositories dashboard.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://spring.io/projects/spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot official site&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/tutorials&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami tutorials repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-tomcat&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Tomcat container image&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Hub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://bitnami.com/containers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami containers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.bitnami.com/tutorials/deploy-java-application-kubernetes-helm&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Deploy a Java application on Kubernetes with Helm&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Move a Custom Spring Boot Application to Production Using Bitnami Helm Charts</title>
+      
+      <link>/guides/containers/deploy-spring-boot-application-production-helm/</link>
+      <pubDate>Mon, 13 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/containers/deploy-spring-boot-application-production-helm/</guid>
+      <description>
+
+        
+        &lt;p&gt;Bitnami provides ready-to-run &lt;a href=&#34;https://github.com/bitnami/charts&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm charts&lt;/a&gt; that can be directly deployed on &lt;a href=&#34;https://kubernetes.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes&lt;/a&gt; and also infrastructure charts that can help you deploy your custom applications. That is the case of the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/tomcat&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Tomcat Helm chart&lt;/a&gt; that with some tweaks can be used to run Java applications in production easily.&lt;/p&gt;
+&lt;p&gt;This tutorial walks you through the process of deploying a Spring Boot container image on Kubernetes using the Bitnami Apache Tomcat Helm chart. It uses the resulting image created in the &lt;a href=&#34;../deploy-locally-spring-boot-application-docker&#34;&gt;Deploy locally a Spring Boot application using Bitnami containers&lt;/a&gt; guide as an example. While the Bitnami Tomcat Helm chart will be modified to get the application container from the DockerHub registry, create a secret to secure the application pod and connect it to a MariaDB pod.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and prerequisites&lt;/h2&gt;
+&lt;p&gt;This guide makes the following assumptions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have basic knowledge of &lt;a href=&#34;https://www.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker&lt;/a&gt; containers.&lt;/li&gt;
+&lt;li&gt;You have a Docker environment installed and configured. &lt;a href=&#34;https://docs.docker.com/install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about installing Docker&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Docker Hub account. &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Register for a free account&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a &lt;a href=&#34;https://docs.bitnami.com/tutorials/deploy-locally-spring-boot-application-docker/#step-6-publish-the-docker-image&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot container published&lt;/a&gt; in a container registry (this tutorial assumes that you are using &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Hub&lt;/a&gt;).&lt;/li&gt;
+&lt;li&gt;You have a &lt;a href=&#34;https://docs.bitnami.com/kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes cluster running&lt;/a&gt; in the platform of your choice. This tutorial uses &lt;a href=&#34;https://docs.bitnami.com/kubernetes/get-started-kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Minikube&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have the &lt;a href=&#34;https://docs.bitnami.com/kubernetes/get-started-kubernetes/#step-3-install-kubectl-command-line&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;em&gt;kubectl&lt;/em&gt; command line (&lt;em&gt;kubectl&lt;/em&gt; CLI)&lt;/a&gt; installed.&lt;/li&gt;
+&lt;li&gt;You have &lt;a href=&#34;https://docs.bitnami.com/kubernetes/get-started-kubernetes/#step-4-install-helm&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm v3.x&lt;/a&gt; installed.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following are the steps you will complete in this guide:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 1: Create the Helm chart&lt;/li&gt;
+&lt;li&gt;Step 2: Adapt the Helm chart to include the source code and database&lt;/li&gt;
+&lt;li&gt;Step 3: Create a secret to secure the deployment&lt;/li&gt;
+&lt;li&gt;Step 4: Deploy the example application in Kubernetes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Learn how to create a Spring Boot Docker container image in the &lt;a href=&#34;../deploy-locally-spring-boot-application-docker&#34;&gt;Deploy locally a Spring Boot application using Bitnami containers&lt;/a&gt; guide.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;step-1-create-the-helm-chart&#34;&gt;Step 1: Create the Helm chart&lt;/h2&gt;
+&lt;p&gt;Begin by creating the Helm chart for our application. In this case, the Bitnami Tomcat Helm chart will serve you as a starting point which you can modify to build your custom chart. To do so, execute the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;helm fetch bitnami/tomcat --untar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will create a folder in your local system that contains all the files required for deploying Tomcat in a Kubernetes cluster.&lt;/p&gt;
+&lt;h2 id=&#34;step-2-adapt-the-helm-chart-to-include-the-source-code-and-database&#34;&gt;Step 2: Adapt the Helm chart to include the source code and database&lt;/h2&gt;
+&lt;p&gt;The first step consists of adapting the current Bitnami Tomcat Helm chart to include the sample Spring Boot container image and MariaDB as a database. Then, connect both pods when deploying the resulting chart. Follow the instructions below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Change to the &lt;em&gt;tomcat&lt;/em&gt; directory and create a file named &lt;em&gt;requirements.yaml&lt;/em&gt; with the content below to include MariaDB as a dependency:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;dependencies:
+- name: mariadb
+  version: 5.x.x
+  repository: https://charts.helm.sh/stable/
+  condition: mariadb.enabled
+  tags:
+    - spring-java-app-database
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Edit the &lt;em&gt;values.yaml&lt;/em&gt; file and replace the default values with the following to include your image. Remember to replace the DOCKER_USERNAME placeholder with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;[...]
+image:
+   registry: docker.io
+   repository: DOCKER_USERNAME/spring-java-app
+   tag: latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Add the following lines at the end of the &lt;em&gt;values.yaml&lt;/em&gt; file to specify the database:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;[...]
+mariadb:
+   Whether to deploy a mariadb server to satisfy the applications database requirements. To use an external database set this to false and configure the externalDatabase parameters
+  enabled: true
+   Disable MariaDB replication
+  replication:
+    enabled: false
+   Create a database and a database user
+   ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.mdcreating-a-database-user-on-first-run
+
+  db:
+    name: db_example
+    user: springuser
+   If the password is not specified, mariadb will generates a random password
+
+  password: ThePassword
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Edit the &lt;em&gt;templates/_helpers.tpl&lt;/em&gt; and add the lines below to generate the name of the MariaDB service so the application will be able to connect to it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;{{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define &amp;#34;mariadb.fullname&amp;#34; -}}
+{{- printf &amp;#34;%s-%s&amp;#34; .Release.Name &amp;#34;mariadb&amp;#34; | trunc 63 | trimSuffix &amp;#34;-&amp;#34; -}}
+{{- end -}}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-3-create-a-secret-to-secure-the-deployment&#34;&gt;Step 3: Create a secret to secure the deployment&lt;/h2&gt;
+&lt;p&gt;The next step is to create a secret for the Spring Boot application that secures the connection between the application and the database. Follow these instructions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;In the &lt;em&gt;templates&lt;/em&gt; directory, create a file named &lt;em&gt;spring-secret.yaml&lt;/em&gt; that includes the following content:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template &amp;#34;tomcat.fullname&amp;#34; . }}-spring
+  labels:
+    app: {{ template &amp;#34;tomcat.fullname&amp;#34; . }}
+    chart: &amp;#34;{{ .Chart.Name }}-{{ .Chart.Version }}&amp;#34;
+    release: &amp;#34;{{ .Release.Name }}&amp;#34;
+    heritage: &amp;#34;{{ .Release.Service }}&amp;#34;
+type: Opaque
+data:
+  spring-db: {{ printf &amp;#34;{\&amp;#34;spring\&amp;#34;: {\&amp;#34;datasource\&amp;#34;:{\&amp;#34;url\&amp;#34;: \&amp;#34;jdbc:mysql://%s:3306/%s\&amp;#34;, \&amp;#34;username\&amp;#34;: \&amp;#34;%s\&amp;#34;, \&amp;#34;password\&amp;#34;: \&amp;#34;%s\&amp;#34;}}}&amp;#34; (include &amp;#34;mariadb.fullname&amp;#34; .) .Values.mariadb.db.name .Values.mariadb.db.user .Values.mariadb.db.password | b64enc }}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Edit the &lt;em&gt;templates/deployment.yaml&lt;/em&gt; file to add the lines below. These refer to the secret created in the step above:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;[...]
+- name: TOMCAT_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ template &amp;#34;tomcat.fullname&amp;#34; . }}
+      key: tomcat-password
+- name: SPRING_APPLICATION_JSON
+  valueFrom:
+    secretKeyRef:
+      name: {{ template &amp;#34;tomcat.fullname&amp;#34; . }}-spring
+      key: spring-db
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-4-deploy-the-example-application-in-kubernetes&#34;&gt;Step 4: Deploy the example application in Kubernetes&lt;/h2&gt;
+&lt;p&gt;Before deploying the resulting Helm chart, make sure that you can connect to your Kubernetes cluster by running this command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;kubectl cluster-info
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Execute the command below to install missing dependencies. In this case, it will install the database that we have indicated in the &lt;em&gt;requirements.yaml&lt;/em&gt; file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;helm dependency update .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Deploy the chart by executing the &lt;em&gt;helm install&lt;/em&gt; command. It is recommended to install it by passing a name using the &lt;em&gt;/&amp;ndash;n&lt;/em&gt; flag.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;helm install spring-java .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check that all pods are ready by executing the &lt;em&gt;kubectl get pods&lt;/em&gt; command. Take into account that the database pod takes more time to be deployed than the Tomcat pod, is possible that the &lt;em&gt;kubectl logs&lt;/em&gt; command show errors during that time.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;kubectl get pods -w
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see an output similar to this:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/containers/bitnami/deploy-spring-boot-application-production-helm/get-pods.png&#34; alt=&#34;Pod status&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;To test that the Spring Boot application has been successfully deployed it is necessary to make it accessible from your local system. To do so, port forward the Tomcat pod as shown below. Replace &lt;em&gt;svc/spring-java-tomcat&lt;/em&gt; with the name of the service that appears in your deployment:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;kubectl port-forward svc/spring-java-tomcat 8080:80
+Forwarding from 127.0.0.1:8080 -&amp;gt; 8080
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;To test if the application works fine, open a new terminal and insert some data in the database by executing:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;curl &amp;#39;localhost:8080/gs-mysql-data-0.1.0/demo/add?name=First&amp;amp;email=someemail@someemailprovider.com&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Query the application again to check if the data is present in the database:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;curl &amp;#39;localhost:8080/gs-mysql-data-0.1.0/demo/all&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should get an output similar to this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;[{&amp;#34;id&amp;#34;:1, &amp;#34;name&amp;#34;:&amp;#34;First&amp;#34;, &amp;#34;email&amp;#34;:&amp;#34;someemail@someemailprovider.com&amp;#34;}]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Congratulations! You have your Spring Boot application running in a Kubernetes production cluster and ready to use!&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://bitnami.com/kubernetes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Kubernetes projects&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;../deploy-locally-spring-boot-application-docker&#34;&gt;Deploy locally a Spring Boot application using Bitnami containers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.bitnami.com//kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Get started with Kubernetes guides&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.bitnami.com/tutorials/deploy-application-kubernetes-helm/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Deploy, Scale And Upgrade An Application On Kubernetes With Helm&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/tomcat&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Tomcat Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Helm charts&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Hub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://spring.io/projects/spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot official site&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/tutorials&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami tutorials repository&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Best Practices for Securing and Hardening Container Images</title>
+      
+      <link>/guides/containers/security-best-practices/</link>
+      <pubDate>Fri, 05 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/containers/security-best-practices/</guid>
+      <description>
+
+        
+        &lt;p&gt;When a container is built and/or used, it is important to ensure that the image is built by following best practices in terms of security, efficiency, performance, etc. This article will go over some of the key points Bitnami takes into account when publishing Bitnami containers. It covers image tagging, non-root configuration and arbitrary UIDs, the importance of reducing size and dependencies, and the release process, including CVE scanning and tests.&lt;/p&gt;
+&lt;h2 id=&#34;rolling-and-immutable-tags&#34;&gt;Rolling and immutable tags&lt;/h2&gt;
+&lt;p&gt;A Docker tag is a label used to uniquely identify a Docker image. It allows users to deploy a specific version of an image. A single image can have multiple tags associated with it.&lt;/p&gt;
+&lt;p&gt;Every time Bitnami publishes a new version of an image, the associated tags are also updated to make it easier for users to get the latest version.&lt;/p&gt;
+&lt;h3 id=&#34;rolling-tags&#34;&gt;Rolling tags&lt;/h3&gt;
+&lt;p&gt;Bitnami uses rolling tags (a tag that may not always point to the same image) for its Docker container images. To understand how this works, let&amp;rsquo;s use the Bitnami etcd container image tags as an example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;3, 3-debian-10, 3.4.13, 3.4.13-debian-10-r8, latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;The &lt;em&gt;latest&lt;/em&gt; tag always points to the latest revision of the etcd image.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;3&lt;/em&gt; tag is a rolling tag that always points to the latest revision of etcd 3.x.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;3.4.13&lt;/em&gt; tag is a rolling tag that points to the latest revision of etcd 3.4.13. It will be updated with different revisions or daily releases but only for etcd 3.4.13.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;3-debian-10&lt;/em&gt; tag points to the latest revision of etcd 3.x for Debian 10, in case there are other distros supported.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When Bitnami releases container images - typically to upgrade system packages - it fixes bugs or improves the system configuration and also updates container tags to point to the latest revision of the image. Therefore, the rolling tags shown above are dynamic; they will always point to the latest revision or daily release of the corresponding image.&lt;/p&gt;
+&lt;p&gt;Continuing with the example above, the &lt;em&gt;3.4.13&lt;/em&gt; tag might point to the etcd 3.4.13 revision 8 today, but it will refer to the etcd 3.4.13 revision 9 when Bitnami next updates the container image.&lt;/p&gt;
+&lt;p&gt;The suffix revision number (&lt;em&gt;rXX&lt;/em&gt;) is incremented every time that Bitnami releases an updated version of the image for the same version of the application. As explained in the next section, suffixed tags are also known as immutable tags.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Any tags that do not explicitly specify a distribution, such as &lt;em&gt;3&lt;/em&gt; or &lt;em&gt;3.4.13&lt;/em&gt;, should be assumed to refer to Debian 10.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;immutable-tags&#34;&gt;Immutable tags&lt;/h3&gt;
+&lt;p&gt;A static, or immutable, tag always points to the same image. This is useful when you depend on a specific revision of an image For example, if you use the tag &lt;em&gt;3.4.13-debian-10-r8&lt;/em&gt;, this tag will always refer to etcd &lt;em&gt;3.4.13 revision 8&lt;/em&gt;. The use of this tag ensures that users get the same image every time.&lt;/p&gt;
+&lt;h3 id=&#34;usage-recommendations&#34;&gt;Usage recommendations&lt;/h3&gt;
+&lt;p&gt;Which tag should you use and when? Follow these guidelines:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If you are using containers in a production environment (such as Kubernetes), use immutable tags. Bitnami uses immutable tags by default in the Bitnami Helm Charts. This ensures that your deployment won&amp;rsquo;t be affected if a new revision inadvertently breaks existing functionality.&lt;/li&gt;
+&lt;li&gt;If you are using containers for development, use rolling tags. This ensures that you are always using the latest version. Rolling tags also make it easier to use a specific version of a development tool (such as &lt;em&gt;bitnami/node:12&lt;/em&gt; for Node.js 12).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;root-and-non-root-containers&#34;&gt;Root and non-root containers&lt;/h2&gt;
+&lt;p&gt;There are two types of Bitnami container images: root and non-root. Non-root images add an extra layer of security and are generally recommended for production environments. However, because they run as a &lt;em&gt;non-root&lt;/em&gt; user, privileged tasks such as installing system packages, editing configuration files, creating system users and groups, and modifying network information, are typically off-limits.&lt;/p&gt;
+&lt;p&gt;This section gives you a quick introduction to non-root container images, explains possible issues you might face using them, and also shows how to modify them to work as root images.&lt;/p&gt;
+&lt;h3 id=&#34;non-root-containers&#34;&gt;Non-root containers&lt;/h3&gt;
+&lt;p&gt;By default, Docker containers are run as &lt;em&gt;root&lt;/em&gt; users. This means that you can do whatever you want in the container, such as install system packages, edit configuration files, bind privilege ports, adjust permissions, create system users and groups, or access networking information.&lt;/p&gt;
+&lt;p&gt;With a non-root container, you can&amp;rsquo;t do any of this. A non-root container must be configured only for its main purpose, for example, run the NGINX server.&lt;/p&gt;
+&lt;p&gt;A non-root container is a container in which the user executing the processes is not the &lt;em&gt;root&lt;/em&gt; user but an unprivileged user, like &lt;em&gt;1001&lt;/em&gt;. This is usually modified through the &lt;code&gt;USER&lt;/code&gt; instruction in the Dockerfile.&lt;/p&gt;
+&lt;h3 id=&#34;advantages-of-non-root-containers&#34;&gt;Advantages of non-root containers&lt;/h3&gt;
+&lt;p&gt;Non-root containers are recommended for the following reasons:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Security: Non-root containers are more secure. If there is a container engine security issue, running the container as an unprivileged user will prevent any malicious code from gaining elevated permissions on the container host. &lt;a href=&#34;https://docs.docker.com/engine/security/security/#other-kernel-security-features&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about Docker&amp;rsquo;s security features&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Platform restrictions: Some Kubernetes distributions (such as &lt;a href=&#34;https://www.openshift.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;OpenShift&lt;/a&gt;) run containers using random UUIDs. This approach is not compatible with root containers, which must always run with the &lt;em&gt;root&lt;/em&gt; user&amp;rsquo;s UUID. In such cases, root-only container images will simply not run and a non-root image is a must. &lt;a href=&#34;https://cookbook.openshift.org/users-and-role-based-access-control/why-do-my-applications-run-as-a-random-user-id.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about random UUIDs&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;disadvantages-of-non-root-containers&#34;&gt;Disadvantages of non-root containers&lt;/h3&gt;
+&lt;p&gt;Non-root containers also have some disadvantages when used for local development:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Write failures on mounted volumes: Docker mounts host volumes preserving the host UUID and GUID. This can lead to permission conflicts with non-root containers, as the user running the container may not have the appropriate privileges to write on the host volume.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write failures on persistent volumes in Kubernetes: Data persistence in Kubernetes is configured using persistent volumes. Kubernetes mounts these volumes with the &lt;em&gt;root&lt;/em&gt; user as the owner; therefore, non-root containers don&amp;rsquo;t have permissions to write to the persistent directory.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Issues with specific utilities or services: Some utilities (e.g. Git) or servers (e.g. PostgreSQL) run additional checks to find the user in the &lt;em&gt;/etc/passwd&lt;/em&gt; file. These checks will fail for non-root container images.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To learn more about these issues, as well as potential solutions for each, &lt;a href=&#34;https://engineering.bitnami.com/articles/running-non-root-containers-on-openshift.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;refer to our detailed blog post on this topic&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Bitnami non-root containers fix the above issues:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;For Kubernetes, Bitnami Helm charts use an &lt;em&gt;initContainer&lt;/em&gt; for changing the volume permissions properly. As the image runs as non-root by default, it is necessary to adjust the ownership of the persistent volume so that the container can write data to it.
+By default, the charts are configured to use Kubernetes Security Context to automatically change the ownership of the volume. However, this feature does not work in all Kubernetes distributions. As an alternative, the charts support using an &lt;em&gt;initContainer&lt;/em&gt; to change the ownership of the volume before mounting it in the final destination. &lt;a href=&#34;https://github.com/bitnami/charts/blob/9353a76a4ddda6bf1da78328496fb649c951e80d/bitnami/rabbitmq/templates/statefulset.yaml#L58&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;See an example of this in action from the Bitnami RabbitMQ chart&lt;/a&gt; you can see how this &lt;em&gt;initContainer&lt;/em&gt; is used.&lt;/li&gt;
+&lt;li&gt;For specific utilities, Bitnami ships the &lt;a href=&#34;https://packages.debian.org/sid/libnss-wrapper&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;em&gt;libnss-wrapper&lt;/em&gt; package&lt;/a&gt;, which defines custom user space files to ensure the software acts correctly. &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-postgresql/blob/master/12/debian-10/rootfs/opt/bitnami/scripts/libpostgresql.sh#L25&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;See an example of this in action from the Bitnami PostgreSQL image&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;use-non-root-containers-as-root-containers&#34;&gt;Use non-root containers as root containers&lt;/h3&gt;
+&lt;p&gt;If you wish to run a Bitnami non-root container image as a root container image, you can do it by adding the line &lt;code&gt;user: root&lt;/code&gt; right after the &lt;code&gt;image:&lt;/code&gt; directive in the container&amp;rsquo;s &lt;em&gt;docker-compose.yml&lt;/em&gt; file. After making this change, restart the container and it will run as the &lt;em&gt;root&lt;/em&gt; user with all privileges instead of an unprivileged user.&lt;/p&gt;
+&lt;p&gt;In Kubernetes, the user that executes the container can be customized by using &lt;a href=&#34;https://kubernetes.io/docs/tasks/configure-pod-container/security-context/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Security Context&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;use-arbitrary-uuids&#34;&gt;Use arbitrary UUIDs&lt;/h3&gt;
+&lt;p&gt;On some platforms like OpenShift, to support running containers with volumes mounted in a secure way, images must run as an arbitrary user ID. When those platforms mount volumes for a container, they configure the volume so it can only be written to by a particular user ID, and then run the image using that same user ID. This ensures the volume is only accessible to the appropriate container, but requires that the image is able to run as an arbitrary user ID.&lt;/p&gt;
+&lt;p&gt;That means a non-root container executing on a platform with this policy can&amp;rsquo;t assume anything about the UUID. These platforms change the default container user to an arbitrary UUID, but the GUID is unmodified and containers are executed as &lt;em&gt;XXX:root&lt;/em&gt; (where &lt;em&gt;XXX&lt;/em&gt; is the arbitrary UUID).&lt;/p&gt;
+&lt;p&gt;Bitnami images are configured with the proper permissions for the user and group in order to meet the requirements of these platforms. They do this by ensuring that the &lt;em&gt;XXX&lt;/em&gt; user belongs to the &lt;em&gt;root&lt;/em&gt; group and that the directories have the appropriate read, write and execution permissions.&lt;/p&gt;
+&lt;h2 id=&#34;execute-one-process-per-container&#34;&gt;Execute one process per container&lt;/h2&gt;
+&lt;p&gt;Each container should have only one concern. Decoupling applications into multiple containers makes it easier to scale horizontally and reuse containers. For instance, a web application stack might consist of three separate containers, each with its own unique image, to manage the web application, database, and an in-memory cache in a decoupled manner.&lt;/p&gt;
+&lt;p&gt;Although all Bitnami images follow this good practice there are cases where two or more processes need to be executed at the same time in the same image. One such case is that of the &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-postgresql-repmgr&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami PostgreSQL with Replication Manager Docker Image&lt;/a&gt; where, apart from the &lt;em&gt;postgres&lt;/em&gt; process, there is a separate process for the &lt;em&gt;repmgr&lt;/em&gt; daemon. There are also other cases where the application spawns additional processes on its own.&lt;/p&gt;
+&lt;p&gt;It is therefore important to take a decision about the number of processes per container keeping in mind the goal of keeping each container as clean and modular as possible.&lt;/p&gt;
+&lt;h2 id=&#34;performance-considerations&#34;&gt;Performance considerations&lt;/h2&gt;
+&lt;p&gt;As indirectly described in the previous section, it is important to follow the &amp;ldquo;Principle of least privilege&amp;rdquo; (POLP), an important concept in computer security. This refers to the practice of limiting access rights for users to the bare minimum permissions they need to perform their work.&lt;/p&gt;
+&lt;p&gt;In the same way, a good security practice is to install and maintain only the minimum necessary dependencies in a container image. It is also important to reduce the size of the images to improve the security, performance, efficiency, and maintainability of the containers.&lt;/p&gt;
+&lt;p&gt;Package installation in Bitnami images (also applicable to already-installed packages) is usually done using the &lt;code&gt;install_packages&lt;/code&gt; script. This tool was created to install system packages in a smart way for container environments. Apart from installing packages only with the required dependencies (no recommended packages or documentation), it also removes the cache and unnecessary package repositories.&lt;/p&gt;
+&lt;h2 id=&#34;daily-builds-and-release-process&#34;&gt;Daily builds and release process&lt;/h2&gt;
+&lt;p&gt;Bitnami automatically re-releases its container catalog every 24 hours. In terms of security, releasing the Bitnami containers on a daily basis ensures that the system packages and components bundled in the image are up-to-date from the package repositories.&lt;/p&gt;
+&lt;p&gt;As explained previously, this approach means that a new immutable tag is produced every day, increasing the revision number. At the same time, rolling tags are updated to point to this new immutable tag.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;For the Bitnami Community Catalog, the release frequency is set to 1 day. However, this can be modified by the customer in the &lt;a href=&#34;https://tanzu.vmware.com/application-catalog&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Application Catalog&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Apart from daily releases, there are other processes that can trigger a new release. For example, if there is a new version (major, minor, or patch) of the main component, Bitnami&amp;rsquo;s tracking system detects this new upstream release and trigger a new release of the Bitnami image, which uses the &lt;em&gt;-r0&lt;/em&gt; tag suffix.&lt;/p&gt;
+&lt;p&gt;Before a new image is released, antivirus scanners and other tests are executed. If these are unsuccessful, the release is blocked. These are discussed in the following sections&lt;/p&gt;
+&lt;h3 id=&#34;cve-and-virus-scanning&#34;&gt;CVE and virus scanning&lt;/h3&gt;
+&lt;p&gt;If you are running development containers to create a proof of concept or for production workloads, you will probably already be aware of CVEs that may affect the container&amp;rsquo;s operating system and packages. There are various tools/scanners to check containers for CVEs, such as &lt;a href=&#34;https://coreos.com/clair/docs/latest/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Clair&lt;/a&gt;, &lt;a href=&#34;https://github.com/anchore/anchore-engine&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Anchore&lt;/a&gt;, &lt;a href=&#34;http://github.com/theupdateframework/notary&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Notary&lt;/a&gt; and others.&lt;/p&gt;
+&lt;p&gt;There are two ways of ensuring the health of containers: using a virus scan or a CVE scan.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The virus scan is executed during the release process. The virus scan performed by Bitnami uses antivirus engines for scanning the files present in the container, stopping the release if a positive is detected.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;While the antivirus scan is a blocking step when releasing a container, the CVE scan is a tool executed periodically to trigger new releases. This tool analyzes the containers bundled by the Bitnami Helm charts. If it finds a CVE, it triggers the release of the affected container.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;verification-and-functional-testing&#34;&gt;Verification and functional testing&lt;/h3&gt;
+&lt;p&gt;During the release process, all containers are tested to work with all deployment technologies with which they are likely to be used:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Docker Compose, using several Docker Compose files to test different features like LDAP, cluster topologies, etc.&lt;/li&gt;
+&lt;li&gt;Helm charts, tested on different Kubernetes platforms such as GKE, AKS, IKS, TKG, etc., and under different scenarios.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Two types of tests are executed for each deployment method:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Verification tests: This type of testing involves inspecting a deployment to check certain properties. For example, checking if a particular file exists on the system and if it has the correct permissions.&lt;/li&gt;
+&lt;li&gt;Functional tests: This type of testing is used to verify that an application is behaving as expected from the user&amp;rsquo;s perspective. For example, if the application must be accessible using a web browser, functional testing uses a headless browser to interact with the application and perform common actions such as logging in and out and adding users.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;fips&#34;&gt;FIPS&lt;/h2&gt;
+&lt;p&gt;If customers require compliance with &lt;a href=&#34;https://csrc.nist.gov/publications/detail/fips/140/2/final&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;FIPS 140-2&lt;/a&gt;, Bitnami containers can ship a FIPS-enabled version of OpenSSL. In a FIPS-enabled kernel, OpenSSL (and the applications using it) will only use FIPS-approved encryption algorithms. In the case of applications that have a FIPS mode (such as Elasticsearch), this would be enabled as well.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;By implementing the above points in the Bitnami build and release process, Bitnami ensures that its container images are built following best practices in terms of security and performance and can be safely used on most platforms as part of production deployments.&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;p&gt;To learn more about the topics discussed in this guide, use the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.bitnami.com/tutorials/understand-rolling-tags-containers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Understand Bitnami&amp;rsquo;s rolling tags for container images&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.bitnami.com/tutorials/work-with-non-root-containers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Work with non-root containers for Bitnami applications&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://engineering.bitnami.com/articles/why-non-root-containers-are-important-for-security.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Why non-root containers are important for security&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://engineering.bitnami.com/articles/best-practices-writing-a-dockerfile.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Best practices writing a Dockerfile&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://engineering.bitnami.com/articles/how-bitnami-continuously-scans-container-images-to-fix-cve-reported-security-issues.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;How Bitnami continuously scans container images to fix CVE-reported security issues&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://engineering.bitnami.com/articles/running-non-root-containers-on-openshift.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Running non-root containers on OpenShift&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

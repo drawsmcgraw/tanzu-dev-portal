@@ -1,0 +1,1270 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – TGIK</title>
+    <link>/tv/tgik/</link>
+    <description>Recent content in TGIK on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/tv/tgik/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 159: Exploring Kuberhealthy</title>
+      
+      <link>/tv/tgik/159/</link>
+      <pubDate>Fri, 09 Jul 2021 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/159/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/159.jpg" width="640" />]]>
+        
+        &lt;p&gt;Notes: &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/159&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/159&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:04:47 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:07:20 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:25:28 - Looking at Kuberhealthy&lt;/li&gt;
+&lt;li&gt;00:28:59 - Installing Kuberhealthy&lt;/li&gt;
+&lt;li&gt;00:43:27 - Connecting to console&lt;/li&gt;
+&lt;li&gt;00:50:26 - Finding prom metrics (`/metrics&#39;)&lt;/li&gt;
+&lt;li&gt;00:55:15 - Exploring external checks&lt;/li&gt;
+&lt;li&gt;01:01:11 - Creating your own checks&lt;/li&gt;
+&lt;li&gt;01:03:28 - Continuing to debug cross-namespace checks&lt;/li&gt;
+&lt;li&gt;01:10:12 - Looking at HTTP Check&lt;/li&gt;
+&lt;li&gt;01:13:16 - Debugging and filing bug&lt;/li&gt;
+&lt;li&gt;01:48:22 - Wrapping up&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Come hang out with Joe Beda (@jbeda) as he explores something new in the Kubernetes ecosystem.  Hang out as we explore something NEW for the first time.&lt;/p&gt;
+&lt;p&gt;Continuing the CNCF sandbox series, this week we will be looking at kuberhealthy! (&lt;a href=&#34;https://github.com/kuberhealthy/kuberhealthy&#34;&gt;https://github.com/kuberhealthy/kuberhealthy&lt;/a&gt;)&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 158: Bare metal clusters with Cluster API Tinkerbell</title>
+      
+      <link>/tv/tgik/158/</link>
+      <pubDate>Fri, 25 Jun 2021 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/158/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/158.jpg" width="640" />]]>
+        
+        &lt;p&gt;Join Naadir Jeewa with guest Jason DeTiberus from Equinix Metal as we explore Cluster API Tinkerbell &lt;a href=&#34;https://tinkerbell.org/&#34;&gt;https://tinkerbell.org/&lt;/a&gt; for automated, declarative deployment of Kubernetes clusters on bare metal infrastructure.&lt;/p&gt;
+&lt;p&gt;Notes: &lt;a href=&#34;https://hackmd.io/@randomvariable/HJ1Kiql3O&#34;&gt;https://hackmd.io/@randomvariable/HJ1Kiql3O&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Photo by Callum Whale: &lt;a href=&#34;https://unsplash.com/photos/3pH7TxHU6gw&#34;&gt;https://unsplash.com/photos/3pH7TxHU6gw&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 157: Exploring kcp: apiserver without Kubernetes</title>
+      
+      <link>/tv/tgik/157/</link>
+      <pubDate>Fri, 11 Jun 2021 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/157/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/157.jpg" width="640" />]]>
+        
+        &lt;p&gt;Join Evan as we explore &lt;a href=&#34;https://github.com/kcp-dev/kcp,&#34;&gt;https://github.com/kcp-dev/kcp,&lt;/a&gt; a kubernetes apiserver without most of the built-in Kubernetes types. Learn a bit about the goals of the project, what it&amp;rsquo;s good for now, and what it might be good for in the future.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 156: Exploring upstream k8s containers and OS images w/ multi-arch</title>
+      
+      <link>/tv/tgik/156/</link>
+      <pubDate>Fri, 28 May 2021 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/156/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/156.jpg" width="640" />]]>
+        
+        &lt;p&gt;Join jay as we go through how upstream Kubernetes builds both container and OS images across the project. This includes recent work to address multi-arch scenarios.&lt;/p&gt;
+&lt;p&gt;00:03:00 - audio check
+00:05:00 - Week in review
+00:10:00 - Intro to multi OS containers, pause image, agnhost on kubernetes
+00:21:00 - Dockerfile for windows
+00:30:00 - peri&amp;rsquo;s blog post on buildx
+00:38:00 - speaking of manifest
+00:35:00 - deep dive into OCI and umoci
+00:45:00 - intro to OVAs on windows, VHDs, cluster api image-builder
+01:00:00 - nssm, systemctl, windows, linux
+01:25:00 - ricardo sais&amp;hellip;. Freebsd on k8s ?&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 155: Backstage</title>
+      
+      <link>/tv/tgik/155/</link>
+      <pubDate>Fri, 21 May 2021 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/155/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/155.jpg" width="640" />]]>
+        
+        &lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:03:20 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:20:17 - Starting with backstage&lt;/li&gt;
+&lt;li&gt;00:30:41 - Getting node env set up&lt;/li&gt;
+&lt;li&gt;00:32:20 - Creating the backstage app&lt;/li&gt;
+&lt;li&gt;00:35:54 - Exploring app structure&lt;/li&gt;
+&lt;li&gt;00:38:40 - Launching the app&lt;/li&gt;
+&lt;li&gt;00:46:38 - Configuring Auth&lt;/li&gt;
+&lt;li&gt;00:59:16 - Thinking about confused deputies&lt;/li&gt;
+&lt;li&gt;01:04:34 - Starting to explore catalog w/ Kubernetes&lt;/li&gt;
+&lt;li&gt;01:41:33 - Create new component from template&lt;/li&gt;
+&lt;li&gt;01:53:38 - Summing up&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The live chat replay got cut disabled somehow! Sorry about that!&lt;/p&gt;
+&lt;p&gt;Full notes at &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/blob/master/episodes/155/README.md&#34;&gt;https://github.com/vmware-tanzu/tgik/blob/master/episodes/155/README.md&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Come hang out with Joe Beda (@jbeda) as he explores something new in the Kubernetes ecosystem.  Hang out as we explore something NEW for the first time.&lt;/p&gt;
+&lt;p&gt;This week we will be looking at Backstage! (backstage.io)&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 154: Pixie</title>
+      
+      <link>/tv/tgik/154/</link>
+      <pubDate>Fri, 14 May 2021 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/154/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/154.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Evan Anderson as he takes a look at Pixie, a new monitoring project being donated by New Relic. Let&amp;rsquo;s dig in and figure out how Pixie relates to Prometheus and other monitoring technologies!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 153: KPNG and the ongoing Kube Proxy story</title>
+      
+      <link>/tv/tgik/153/</link>
+      <pubDate>Fri, 30 Apr 2021 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/153/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/153.jpg" width="640" />]]>
+        
+        &lt;p&gt;Join jay as we go through the kube-proxy backlog, and look at how it is evolving with KPNG, a solution to many of the existing issues around service loadbalancing&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 152: Cluster Testing with Sonobuoy</title>
+      
+      <link>/tv/tgik/152/</link>
+      <pubDate>Fri, 16 Apr 2021 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/152/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/152.jpg" width="640" />]]>
+        
+        &lt;p&gt;Evan Anderson and Gustavo Franco discuss using Sonobuoy to run your own cluster-level acceptance tests.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: # TGIK 151 - Cluster Diagnotics with Crashd</title>
+      
+      <link>/tv/tgik/151/</link>
+      <pubDate>Fri, 09 Apr 2021 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/151/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/151.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Vladimir Vivien (@VladimirVivien) and learn about cluster diagnostics using the Crashd open source project. We will go over the project and show how you can use Crashd&amp;rsquo;s Starlark-based language to automate cluster interaction when diagnosing problems.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 150: Production Kubernetes Book Discussion</title>
+      
+      <link>/tv/tgik/150/</link>
+      <pubDate>Fri, 26 Mar 2021 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/150/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/150.jpg" width="640" />]]>
+        
+        &lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:03:30 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:19:35 - Start of panel/interview&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Episode notes at &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/150/README.md&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/150/README.md&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This week we are trying something new on TGIK! Joe is inviting the authors of &amp;ldquo;Production Kubernetes&amp;rdquo; on to talk about the book.  Come, hang out and ask questions.  Let&amp;rsquo;s see how many of Josh, Rich, Alex and John we can get to join us.&lt;/p&gt;
+&lt;p&gt;You can get a FREE (in exchange for email) copy here: &lt;a href=&#34;https://tanzu.vmware.com/content/ebooks/production-kubernetes&#34;&gt;https://tanzu.vmware.com/content/ebooks/production-kubernetes&lt;/a&gt;.
+You can also buy a paper copy book: &lt;a href=&#34;https://www.amazon.com/Production-Kubernetes-Successful-Application-Platforms/dp/1492092304&#34;&gt;https://www.amazon.com/Production-Kubernetes-Successful-Application-Platforms/dp/1492092304&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 149: GitOps with Flux v2</title>
+      
+      <link>/tv/tgik/149/</link>
+      <pubDate>Fri, 19 Mar 2021 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/149/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/149.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Evan Anderson (@e_k_anderson) and learn about the v2 API of the newest CNCF incubating project, Flux. We&amp;rsquo;ll compare v1 and v2 of Flux, and see how it can help tame cluster chaos.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 148: Gateway APIs feat. Contour</title>
+      
+      <link>/tv/tgik/148/</link>
+      <pubDate>Fri, 12 Mar 2021 21:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/148/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/148.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Josh Rosso (@joshrosso) and learn about the new Gateway APIs in Kubernetes. In learning about these APIs, we&amp;rsquo;ll test out a new cut of Contour that implements a subset of them.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 147: CoreDNS</title>
+      
+      <link>/tv/tgik/147/</link>
+      <pubDate>Fri, 05 Mar 2021 21:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/147/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/147.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Luke Short (@ekultails) and learn about CoreDNS. Luke works with a lot of customers directly to make Kubernetes work for them. Over the past week he has been going down a deep rabbit hole around CoreDNS and will share those experiences and learnings with you! Come along for the ride!&lt;/p&gt;
+&lt;p&gt;Show notes: &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/147&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/147&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Timestamps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:00:40 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:06:03 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:24:55 - Katacoda Kubernetes Playground&lt;/li&gt;
+&lt;li&gt;00:26:33 - CoreDNS Introduction&lt;/li&gt;
+&lt;li&gt;00:30:56 - CoreDNS Plugins&lt;/li&gt;
+&lt;li&gt;00:32:38 - CoreDNS Internal Plugin: File&lt;/li&gt;
+&lt;li&gt;00:34:28 - CoreDNS DNS Records&lt;/li&gt;
+&lt;li&gt;00:37:19 - Story time! Luke&amp;rsquo;s first container was a DNS server&lt;/li&gt;
+&lt;li&gt;00:38:44 - Kubernetes at Scale: &lt;a href=&#34;https://openai.com/blog/scaling-kubernetes-to-7500-nodes/&#34;&gt;https://openai.com/blog/scaling-kubernetes-to-7500-nodes/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;00:39:34 - Chat - What DNS servers do you use?&lt;/li&gt;
+&lt;li&gt;00:41:38 - CoreDNS Pods on Kubernetes&lt;/li&gt;
+&lt;li&gt;00:43:57 - Luke making spelling mistakes :-)
+&lt;ul&gt;
+&lt;li&gt;Luke thought he was being trolled by him resizing the window. Sometimes that will move the cursor around in the Kubernetes Playground in unpredictable ways.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;00:45:10 - Moving to Luke&amp;rsquo;s home Kubernetes cluster
+&lt;ul&gt;
+&lt;li&gt;Configuring CoreDNS in Kubernetes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;00:49:28 - Load balancing with DNS&lt;/li&gt;
+&lt;li&gt;00:51:48 - View all CoreDNS plugins
+&lt;ul&gt;
+&lt;li&gt;Preview the &amp;ldquo;records&amp;rdquo; and &amp;ldquo;unbound&amp;rdquo; plugins&lt;/li&gt;
+&lt;li&gt;Authoritative vs recursive&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;00:54:32 - CoreDNS external plugins require recompilation&lt;/li&gt;
+&lt;li&gt;00:55:55 coredns-unbound project&lt;/li&gt;
+&lt;li&gt;00:56:24 Public container registries&lt;/li&gt;
+&lt;li&gt;00:59:29 How to compile CoreDNS with plugins&lt;/li&gt;
+&lt;li&gt;01:01:22 CoreDNS demo of customizing Corefile on Kubernetes&lt;/li&gt;
+&lt;li&gt;01:21:18 CoreDNS demo of adding customized DNS records&lt;/li&gt;
+&lt;li&gt;01:40:09 Documentation for customizing CoreDNS in Kubernetes&lt;/li&gt;
+&lt;li&gt;01:43:29 Outro&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 146: Crossplane</title>
+      
+      <link>/tv/tgik/146/</link>
+      <pubDate>Fri, 26 Feb 2021 21:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/146/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/146.jpg" width="640" />]]>
+        
+        &lt;p&gt;Full notes up at &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/146&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/146&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:00:25 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:03:36 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:11:11 - Welcome to Crossplane&lt;/li&gt;
+&lt;li&gt;00:13:40 - Brief OAM digression&lt;/li&gt;
+&lt;li&gt;00:18:50 - Crossplane install&lt;/li&gt;
+&lt;li&gt;00:24:20 - Install Crossplane kubectl extension&lt;/li&gt;
+&lt;li&gt;00:29:50 - Exploring Crossplane RBAC-manager&lt;/li&gt;
+&lt;li&gt;00:34:45 - Installing the AWS provider&lt;/li&gt;
+&lt;li&gt;00:43:30 - Diving into Crossplane packaging&lt;/li&gt;
+&lt;li&gt;00:46:00 - Mention of dependency confusion attacks: &lt;a href=&#34;https://medium.com/@alex.birsan/dependency-confusion-4a5d60fec610&#34;&gt;https://medium.com/@alex.birsan/dependency-confusion-4a5d60fec610&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;00:49:25 - Using &lt;a href=&#34;https://github.com/wagoodman/dive&#34;&gt;https://github.com/wagoodman/dive&lt;/a&gt; to view package contents&lt;/li&gt;
+&lt;li&gt;00:50:20 - Creating a PostgreSQL instance&lt;/li&gt;
+&lt;li&gt;00:56:20 - Diving in to how a PostgreSQL db backed by RDS is represented in Crossplane&lt;/li&gt;
+&lt;li&gt;01:02:40 - Resource parameters, patches and resource sizing&lt;/li&gt;
+&lt;li&gt;01:09:00 - Trying to figure out how to say &amp;ldquo;database with 8GB RAM&amp;rdquo; at different cloud providers&lt;/li&gt;
+&lt;li&gt;01:13:00 - Investigating patch options&lt;/li&gt;
+&lt;li&gt;01:16:10 - Got the RDS instance running!&lt;/li&gt;
+&lt;li&gt;01:19:20 - Crossplane resource category list&lt;/li&gt;
+&lt;li&gt;01:23:00 - Discussion about cluster-level Crossplane Providers and Compositions (vs namespace level)&lt;/li&gt;
+&lt;li&gt;01:25:10 - Dependencies / building your own Compositions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Come hang out with Evan Anderson (@e_k_anderson) and learn about Crossplane as he does so. Evan&amp;rsquo;s familiar with Kubernetes and operators, but what can he build with Crossplane?&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 145: Duck Typing in Kubernetes</title>
+      
+      <link>/tv/tgik/145/</link>
+      <pubDate>Fri, 05 Feb 2021 21:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/145/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/145.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Scott Nichols (@n3wscott) as we explore the wild world of duck typing in Kubernetes! We will look around the ecosystem to find duck type examples and learn how to leverage duck typing to do novel control plane tricks!&lt;/p&gt;
+&lt;p&gt;Show notes available at &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/blob/master/episodes/145/README.md&#34;&gt;https://github.com/vmware-tanzu/tgik/blob/master/episodes/145/README.md&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 144: Exploring The State of K8s on Windows</title>
+      
+      <link>/tv/tgik/144/</link>
+      <pubDate>Fri, 29 Jan 2021 21:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/144/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/144.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Jay Vyas (jayunit100) and hack around w/ windows and various CNI providers in EKS, VSphere, and beyond.  We&amp;rsquo;ll also look at what running containerd in windows looks like, and go through the basics of  &amp;ldquo;omg, im so used to linux, how do i do this stuff in windows?&#39; for those of you in the K8s community that are just getting started with Kubernetes on Windows !&lt;/p&gt;
+&lt;p&gt;Show notes available at &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/blob/master/episodes/144/README.md&#34;&gt;https://github.com/vmware-tanzu/tgik/blob/master/episodes/144/README.md&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK and introductions&lt;/li&gt;
+&lt;li&gt;00:00:10 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:15:18 - Looking at how NetworkPolicy Truth tables work on unsupported clusters&lt;/li&gt;
+&lt;li&gt;00:32:29 - Viewing working NetworkPolicies in Windows with Calico 3.16&lt;/li&gt;
+&lt;li&gt;00:45:01 - Lookint at CAPI on Windows&lt;/li&gt;
+&lt;li&gt;00:55:40 - How CNIs are installed with post-kubeadm/preBootstrap commands on Windows&lt;/li&gt;
+&lt;li&gt;01:02:15 - How runtimeClasses, taints, nodeSelectors work together to schedule Windows pods&lt;/li&gt;
+&lt;li&gt;01:13:53 - How Cluster API works on NSX for windows with VSphere and NSX as the network plane&lt;/li&gt;
+&lt;li&gt;01:15:34 - How to use hub.docker.com to lookup windows images matching your OS&lt;/li&gt;
+&lt;li&gt;01:19:07 - Looking at CSI Proxy, briefly&lt;/li&gt;
+&lt;li&gt;01:26:45 - The most interesting problem in containerd and windows networking : The CNI ADD Codepath!&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 143: Cluster API Update</title>
+      
+      <link>/tv/tgik/143/</link>
+      <pubDate>Fri, 22 Jan 2021 21:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/143/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/143.jpg" width="640" />]]>
+        
+        &lt;p&gt;Show notes available at &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/blob/master/episodes/143/README.md&#34;&gt;https://github.com/vmware-tanzu/tgik/blob/master/episodes/143/README.md&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:03:20 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:11:20 - ClusterResourceSet&lt;/li&gt;
+&lt;li&gt;00:12:05 - &lt;code&gt;ktx&lt;/code&gt; sidebar&lt;/li&gt;
+&lt;li&gt;00:12:35 - Back to ClusterResourceSet&lt;/li&gt;
+&lt;li&gt;00:33:05 - KubeadmControlPlane&lt;/li&gt;
+&lt;li&gt;00:40:34 - &lt;code&gt;clusterctl get kubeconfig&lt;/code&gt; sidebar&lt;/li&gt;
+&lt;li&gt;00:42:16 - MachineHealthCheck&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Come hang out with Scott Lowe as he takes a look at the latest iteration of Cluster API. In this episode we&amp;rsquo;ll explore new features found in the most recent versions of Cluster API and see how they work!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 142: Carvel</title>
+      
+      <link>/tv/tgik/142/</link>
+      <pubDate>Fri, 15 Jan 2021 21:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/142/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/142.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Josh Rosso as he explores the Carvel toolset! In this episode we&amp;rsquo;ll explore the various pieces that compose this packaging and deployment solution!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 141: CDK8s</title>
+      
+      <link>/tv/tgik/141/</link>
+      <pubDate>Fri, 08 Jan 2021 21:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/141/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/141.jpg" width="640" />]]>
+        
+        &lt;p&gt;Show notes up at &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/blob/master/episodes/141/README.md&#34;&gt;https://github.com/vmware-tanzu/tgik/blob/master/episodes/141/README.md&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:00:09 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:04:28 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:18:56 - Intro to CDK8s&lt;/li&gt;
+&lt;li&gt;00:26:34 - Installing CDK8s&lt;/li&gt;
+&lt;li&gt;00:31:12 - &lt;code&gt;cdk8s init&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;00:37:59 - First program and run&lt;/li&gt;
+&lt;li&gt;00:46:04 - Creating reusable components&lt;/li&gt;
+&lt;li&gt;00:56:38 - cdk8s+&lt;/li&gt;
+&lt;li&gt;00:59:34 - Sidebar: language preferences and ops vs. dev&lt;/li&gt;
+&lt;li&gt;01:01:04 - Return to cdk8s+&lt;/li&gt;
+&lt;li&gt;01:14:49 - CRDs&lt;/li&gt;
+&lt;li&gt;01:21:05 - Wrapping up&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Come hang out with Joe as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Joe talking about the things he knows. Some of this will be Joe exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+&lt;p&gt;This week we are going to explore CDK8s (&lt;a href=&#34;https://cdk8s.io/)&#34;&gt;https://cdk8s.io/)&lt;/a&gt;. This is the Cloud Development Kit for Kubernetes made by our friends over at AWS.  It is a set of libraries (primarily typescript) for generating Kubernetes config/yaml.  Joe doesn&amp;rsquo;t know typescript so this should be fun&amp;hellip;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 140: A tour of Kubernetes 1.20</title>
+      
+      <link>/tv/tgik/140/</link>
+      <pubDate>Fri, 18 Dec 2020 21:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/140/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/140.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Jorge Castro and friends as we look at what&amp;rsquo;s new in Kubernetes 1.20&lt;/p&gt;
+&lt;p&gt;00:00:00 - Welcome to TGIK!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 139: Running Telco workloads on Kubernetes</title>
+      
+      <link>/tv/tgik/139/</link>
+      <pubDate>Fri, 20 Nov 2020 21:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/139/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/139.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Olive Power as we look into Running Telco workloads on Kubernetes.&lt;/p&gt;
+&lt;p&gt;00:00:00 - Welcome to TGIK!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 138: Harbor</title>
+      
+      <link>/tv/tgik/138/</link>
+      <pubDate>Fri, 30 Oct 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/138/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/138.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Tiffany Jernigan and Paul Czarkowski as they explore Harbor! As usually we&amp;rsquo;ll talk about what&amp;rsquo;s going on in the cloud native space, then transition to Harbor..&lt;/p&gt;
+&lt;p&gt;00:00:00 - Welcome to TGIK!
+00:03:40 - Week in Review
+00:21:00 - Installing Harbor
+00:38:51 - Harbor Achitecture
+00:44:29 - Vulnerability Scanning
+00:48:30 - Creating a new Project / Repository
+00:50:23 - Create robot account &amp;amp; kubernetes pull secret
+01:07:20 - Uploading and Sharing Helm Charts
+01:23:43 - Proxying through to dockerhub
+01:35:55 - Replicating from another Harbor
+01:50:00 - Wrapup&lt;/p&gt;
+&lt;p&gt;tanzu/tgik/tree/master/episodes/138&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 137: Waypoint</title>
+      
+      <link>/tv/tgik/137/</link>
+      <pubDate>Fri, 23 Oct 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/137/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/137.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Josh Rosso as he digs into HashiCorp&amp;rsquo;s new Waypoint project! As usually we&amp;rsquo;ll talk about what&amp;rsquo;s going on in the cloud native space, then transition to playing with Waypoint.&lt;/p&gt;
+&lt;p&gt;00:00:00 - Welcome to TGIK!
+00:03:53 - Week in Review
+00:18:30 - Waypoint &amp;amp; k8s Abstractions
+00:35:01 - Installing Waypoint and Doing a Deployment
+01:01:21 - Installing Metal LB to enable Waypoint server
+01:14:20 - Using Waypoint Server and doing more deploys!
+01:49:11 - Wrap-up and Goodbye!&lt;/p&gt;
+&lt;p&gt;github: &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/137&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/137&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 136: Open Service Mesh</title>
+      
+      <link>/tv/tgik/136/</link>
+      <pubDate>Fri, 16 Oct 2020 21:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/136/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/136.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Josh Rosso as he digs into the Open Service Mesh Project (OSM). OSM is a service mesh built around the SMI (service mesh interface) specification. As usual, we&amp;rsquo;ll hack, break things, and maybe learn some stuff!&lt;/p&gt;
+&lt;p&gt;00:00:00 - Welcome to TGIK!
+00:02:48 - Week in Review
+00:31:00 - SMI and OSM Overview
+00:39:46 - OSM Deployment
+00:57:35 - App Traffic Policy &amp;amp; Config
+01:30:14 - Observability
+01:54:56 - Goodbye!&lt;/p&gt;
+&lt;p&gt;github: &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/136&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/136&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 135: Antrea CNI</title>
+      
+      <link>/tv/tgik/135/</link>
+      <pubDate>Fri, 09 Oct 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/135/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/135.jpg" width="640" />]]>
+        
+        &lt;p&gt;Full notes up at &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/135&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/135&lt;/a&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:04:46 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:17:06 - Starting with Antrea&lt;/li&gt;
+&lt;li&gt;00:18:26 - CNI vs. Service Mesh&lt;/li&gt;
+&lt;li&gt;00:23:04 - Why Antrea?&lt;/li&gt;
+&lt;li&gt;00:28:01 - Launching a cluster&lt;/li&gt;
+&lt;li&gt;00:41:00 - Installing Antrea&lt;/li&gt;
+&lt;li&gt;00:49:59 - Installing a sample app&lt;/li&gt;
+&lt;li&gt;00:54:38 - Feature gates&lt;/li&gt;
+&lt;li&gt;01:04:27 - Debugging bad config&lt;/li&gt;
+&lt;li&gt;01:10:25 - Setting up Traceflow&lt;/li&gt;
+&lt;li&gt;01:27:02 - Prometheus exports&lt;/li&gt;
+&lt;li&gt;01:35:30 - Antrea Architecture&lt;/li&gt;
+&lt;li&gt;01:41:34 - &lt;code&gt;route -n&lt;/code&gt; in a node&lt;/li&gt;
+&lt;li&gt;01:48:28 - Wrap up and Thank You!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Come hang out with Joe as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Joe talking about the things he knows. Some of this will be Joe exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+&lt;p&gt;This week we are going to explore Antrea. This is an open source CNI implementation that is built on &amp;ldquo;Open vSwitch&amp;rdquo; and focus on stability and a lot of visibility tools.  I&amp;rsquo;m kind of a networking noob so this should be&amp;hellip; entertaining!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 134: CSI</title>
+      
+      <link>/tv/tgik/134/</link>
+      <pubDate>Fri, 02 Oct 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/134/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/134.jpg" width="640" />]]>
+        
+        &lt;p&gt;Join Josh Rosso as he explores some cool stuff in the Kubernetes space! We&amp;rsquo;ll start the episode out covering what&amp;rsquo;s new in the cloud native space then get into some exploration! In this episode we&amp;rsquo;ll be digging into provisioning storage for our workloads. We&amp;rsquo;ll dig into CSI, which enables us to plugin drivers that can interact with underlying providers.&lt;/p&gt;
+&lt;p&gt;github.com: &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/134&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/134&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;00:00:00 - Welcome to TGIK!
+00:04:19 - Week in Review
+00:19:57 - Local Provisioning and Primitives
+01:00:11 - Intro to CSI
+01:15:22 - Installing and Using a CSI Drive
+01:51:21 - Goodbye!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 133: Hierarchical Namespaces</title>
+      
+      <link>/tv/tgik/133/</link>
+      <pubDate>Fri, 25 Sep 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/133/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/133.jpg" width="640" />]]>
+        
+        &lt;p&gt;Join Josh Rosso as he explores some cool stuff in the Kubernetes space! We&amp;rsquo;ll start the episode out covering what&amp;rsquo;s new in the cloud native space then get into some exploration! In this episode we&amp;rsquo;ll be digging into hierarchical namespaces. A new controller available in the Kubernetes ecosystem to help further clusters abilities to support multi-tenancy.&lt;/p&gt;
+&lt;p&gt;episode directory: &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/133&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/133&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt; - 00:00:00 - Welcome to TGIK!&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:04:37 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:15:11 - Hierarchical Namespace Overview&lt;/li&gt;
+&lt;li&gt;00:30:05 - Installing HNC and the Plugin&lt;/li&gt;
+&lt;li&gt;00:40:53 - Creating Namespaces&lt;/li&gt;
+&lt;li&gt;00:54:38 - Synchronizing Objects&lt;/li&gt;
+&lt;li&gt;01:15:32 - Experiments with NS Ownership and more!&lt;/li&gt;
+&lt;li&gt;01:31:53 - Advanced Resource Quota Propagation Ideas&lt;/li&gt;
+&lt;li&gt;01:37:05 - Wrap Up&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 132: Sealed Secrets</title>
+      
+      <link>/tv/tgik/132/</link>
+      <pubDate>Fri, 18 Sep 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/132/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/132.jpg" width="640" />]]>
+        
+        &lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:04:31 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:23:15 - Sealed Secret Overview &amp;amp; Install&lt;/li&gt;
+&lt;li&gt;00:37:21 - Sealing a Secret&lt;/li&gt;
+&lt;li&gt;00:52:49 - Retrieving the Public Key&lt;/li&gt;
+&lt;li&gt;00:55:28 - Exploring SealedSecret Scope&lt;/li&gt;
+&lt;li&gt;01:00:00 - Rotation: Secrets and Keys&lt;/li&gt;
+&lt;li&gt;01:15:37 - Multi-Cluster Sealed Secrets&lt;/li&gt;
+&lt;li&gt;01:30:28 - Wrap-up&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Show notes up at &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/blob/master/episodes/132/README.md&#34;&gt;https://github.com/vmware-tanzu/tgik/blob/master/episodes/132/README.md&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Come hang out with Joe as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Joe talking about the things he knows. Some of this will be Joe exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+&lt;p&gt;This week we are going to do a deep(er) dive on Sealed Secrets (&lt;a href=&#34;https://github.com/bitnami-labs/sealed-secrets)&#34;&gt;https://github.com/bitnami-labs/sealed-secrets)&lt;/a&gt;.  This is a way to encrypt secrets in a way where you can check them in and manage them with the rest of your gitops-ish workflow.  In this deeper dive where we plan to peek under the cover and look at some of the day 2 things like key rotation.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 131: No mo&#39; yolo with Validating Admission Controllers</title>
+      
+      <link>/tv/tgik/131/</link>
+      <pubDate>Fri, 11 Sep 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/131/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/131.jpg" width="640" />]]>
+        
+        &lt;p&gt;Join Cora Iberkleid and Paul Czarkowski in creating a ValidatingAdmissionWebhook controller to understand the basics of using Kubernetes webhooks and custom admission controllers to improve governance over the resources in your cluster.&lt;/p&gt;
+&lt;p&gt;Admission controllers act as gatekeepers that intercept requests to the Kubernetes API. They can accept, reject, or change a request, thereby ensuring that resources meet any criteria you need to enforce. Want to make sure containers have the right resource limits? The LimitRanger admission controller is your friend.  Need to inject config into pods? Look no further than the PodPreset admission controller. Want to do something entirely customized? The MutatingAdmissionWebhook and ValidatingAdmissionWebhook admission controllers are here for you. We&amp;rsquo;ll play with this last one in the next session of TGI Kubernetes.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:04:27 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:19:50 - What are Admission Controllers?&lt;/li&gt;
+&lt;li&gt;00:30:57 - Validating Admission Controller webhook&lt;/li&gt;
+&lt;li&gt;01:14:29 - Mutating Admission Controller webhook&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Episode GitHub URL: &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/131&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/131&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 130: Behind the scenes of TGIK</title>
+      
+      <link>/tv/tgik/130/</link>
+      <pubDate>Fri, 28 Aug 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/130/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/130.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Duffie Cooley and Josh Rosso as they walk us through some of the tricks and tools for streaming content like TGIK. Some of this will be them talking about the things they know. Some of this will be exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 129: Honking and Hacking with Ian Coldwater!</title>
+      
+      <link>/tv/tgik/129/</link>
+      <pubDate>Fri, 21 Aug 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/129/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/129.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Duffie Cooley and Ian Coldwater as they do a bit of hands on hacking of Kubernetes and security related topics. Some of this will be them talking about the things they know. Some of this will be exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 128: RBAC tooling!</title>
+      
+      <link>/tv/tgik/0128/</link>
+      <pubDate>Fri, 14 Aug 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/0128/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0128.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Duffie Cooley as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Duffie talking about the things he knows. Some of this will be Duffie exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 127: GitOps with Steve Wade</title>
+      
+      <link>/tv/tgik/0127/</link>
+      <pubDate>Fri, 07 Aug 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/0127/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0127.jpg" width="640" />]]>
+        
+        &lt;p&gt;This will be the first tgik presented wiht a guest! Welcome Steve Wade as we explore gitops and Steve&amp;rsquo;s direct experience around it.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 126: Vertical Pod Autoscaling</title>
+      
+      <link>/tv/tgik/0126/</link>
+      <pubDate>Fri, 31 Jul 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/0126/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0126.jpg" width="640" />]]>
+        
+        &lt;p&gt;Episode notes at &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/126&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/126&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:02:50 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:20:17 - Autoscaling overview&lt;/li&gt;
+&lt;li&gt;00:31:33 - Metrics Server&lt;/li&gt;
+&lt;li&gt;00:32:08 - Aside on Java and VPC&lt;/li&gt;
+&lt;li&gt;00:33:25 - Back to Metrics Server&lt;/li&gt;
+&lt;li&gt;00:43:40 - Fixing Metrics Server on Kind&lt;/li&gt;
+&lt;li&gt;00:45:40 - Aside on kapp&lt;/li&gt;
+&lt;li&gt;00:48:27 - Back to Metrics Server&lt;/li&gt;
+&lt;li&gt;00:52:03 - Installing Vertical Pod Autoscaler&lt;/li&gt;
+&lt;li&gt;01:01:58 - Activating VPA for a deployment&lt;/li&gt;
+&lt;li&gt;01:14:22 - Description of automatic update flow&lt;/li&gt;
+&lt;li&gt;01:25:48 - Exploring OOM reaction&lt;/li&gt;
+&lt;li&gt;01:41:02 - Installing/exploring Goldilocks&lt;/li&gt;
+&lt;li&gt;01:55:22 - Wrapping up! Thank you!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Come hang out with Joe as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Joe talking about the things he knows. Some of this will be Joe exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+&lt;p&gt;This week we are covering Vertical Pod Autoscaling (&lt;a href=&#34;https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler&#34;&gt;https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler&lt;/a&gt;) and the Metrics Server (&lt;a href=&#34;https://github.com/kubernetes-sigs/metrics-server)&#34;&gt;https://github.com/kubernetes-sigs/metrics-server)&lt;/a&gt;. This is a way to automatically set and adjust limits on pods.  This is a new area for Joe so come explore and learn with him!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 125: OpenTelemetry</title>
+      
+      <link>/tv/tgik/0125/</link>
+      <pubDate>Fri, 24 Jul 2020 20:00:00 +0000</pubDate>
+      
+      <guid>/tv/tgik/0125/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0125.jpg" width="640" />]]>
+        
+        &lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:03:39 - Kubernetes News&lt;/li&gt;
+&lt;li&gt;00:13:06 - Telemetry Primer&lt;/li&gt;
+&lt;li&gt;00:23:32 - Deploying Jaeger&lt;/li&gt;
+&lt;li&gt;00:50:44 - Setting Up an Instrumented App&lt;/li&gt;
+&lt;li&gt;01:12:24 - Side-car injection&lt;/li&gt;
+&lt;li&gt;01:28:24 - Viewing Tracing in Jaeger&lt;/li&gt;
+&lt;li&gt;01:38:20 - Code Instrumentation Preview&lt;/li&gt;
+&lt;li&gt;01:45:24 - Wrap-up&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;GitHub: &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/124&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/124&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Come hang out with Josh Rosso as he explores the world of OpenTelemetry. In this episode we&amp;rsquo;ll explore the project and how we can increase traceability within our cloud native applications. Bring your telescope!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 124: KUDO</title>
+      
+      <link>/tv/tgik/0124/</link>
+      <pubDate>Fri, 17 Jul 2020 21:41:37 +0000</pubDate>
+      
+      <guid>/tv/tgik/0124/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0124.jpg" width="640" />]]>
+        
+        &lt;p&gt;Show notes: &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/blob/master/episodes/124/README.md&#34;&gt;https://github.com/vmware-tanzu/tgik/blob/master/episodes/124/README.md&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:03:50 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:23:21 - Start talking about KUDO&lt;/li&gt;
+&lt;li&gt;00:24:50 - Comparison to other projects&lt;/li&gt;
+&lt;li&gt;00:26:13 - Operators defined and KUDO overview&lt;/li&gt;
+&lt;li&gt;00:33:06 - Limitations of KUDO and some future plans&lt;/li&gt;
+&lt;li&gt;00:35:16 - Using KUDO with Zookeeper operator&lt;/li&gt;
+&lt;li&gt;00:35:44 - Install KUDO commandline&lt;/li&gt;
+&lt;li&gt;00:36:07 - kubectl kudo init&lt;/li&gt;
+&lt;li&gt;00:46:24 - Install zookeeper&lt;/li&gt;
+&lt;li&gt;00:50:37 - Run validation task (and hit a bug!)&lt;/li&gt;
+&lt;li&gt;01:00:17 - Noodling on how backup/recovery would integrate&lt;/li&gt;
+&lt;li&gt;01:02:25 - Operator index and publishing operators&lt;/li&gt;
+&lt;li&gt;01:07:30 - Looking at zookeeper operator&lt;/li&gt;
+&lt;li&gt;01:13:15 - Compared to Helm, templating options, gitops?&lt;/li&gt;
+&lt;li&gt;01:17:28 - Validation as Job&lt;/li&gt;
+&lt;li&gt;01:19:03 - Exploring other Operators&lt;/li&gt;
+&lt;li&gt;01:22:32 - Different Task types&lt;/li&gt;
+&lt;li&gt;01:26:33 - Testing with Kuttl&lt;/li&gt;
+&lt;li&gt;01:31:05 - Final thoughts and goodbye&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Come hang out with Joe as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Joe talking about the things he knows. Some of this will be Joe exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+&lt;p&gt;This week we are covering KUDO (&lt;a href=&#34;https://kudo.dev/)&#34;&gt;https://kudo.dev/)&lt;/a&gt;.  KUDO is the Kubernetes Universal Declarative Operator.  It is a structured toolkit for creating operators.  Lots of interesting ideas and examples to dig into.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 123: Grokking Kubernetes: DNS Part 2</title>
+      
+      <link>/tv/tgik/0123/</link>
+      <pubDate>Fri, 10 Jul 2020 22:25:43 +0000</pubDate>
+      
+      <guid>/tv/tgik/0123/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0123.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Duffie Cooley as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Duffie talking about the things he knows. Some of this will be Duffie exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 122: Grokking Kubernetes: DNS</title>
+      
+      <link>/tv/tgik/0122/</link>
+      <pubDate>Fri, 26 Jun 2020 22:08:46 +0000</pubDate>
+      
+      <guid>/tv/tgik/0122/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0122.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Duffie Cooley as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Duffie talking about the things he knows. Some of this will be Duffie exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 121: Starboard</title>
+      
+      <link>/tv/tgik/0121/</link>
+      <pubDate>Fri, 19 Jun 2020 21:51:34 +0000</pubDate>
+      
+      <guid>/tv/tgik/0121/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0121.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Duffie Cooley as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Duffie talking about the things he knows. Some of this will be Duffie exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 120: CSI and Secrets!</title>
+      
+      <link>/tv/tgik/0120/</link>
+      <pubDate>Fri, 29 May 2020 22:12:51 +0000</pubDate>
+      
+      <guid>/tv/tgik/0120/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0120.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Duffie Cooley as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Duffie talking about the things he knows. Some of this will be Duffie exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 119: Gatekeeper and OPA</title>
+      
+      <link>/tv/tgik/0119/</link>
+      <pubDate>Fri, 22 May 2020 21:53:02 +0000</pubDate>
+      
+      <guid>/tv/tgik/0119/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0119.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Josh Rosso as he continues our previous exploration around the OPA ecosystem with a focus on Gatekeeper!&lt;/p&gt;
+&lt;p&gt;00:00:00 - Welcome to TGIK!
+00:02:41 - Week in Review
+00:09:50 - Admission Controller Overview
+00:22:41 - OPA and Rego Overview
+00:33:31 - Gatekeeper
+01:43:16 - Wrap Up&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/119&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/119&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 118: kubectl plugins and Krew</title>
+      
+      <link>/tv/tgik/0118/</link>
+      <pubDate>Fri, 15 May 2020 22:15:18 +0000</pubDate>
+      
+      <guid>/tv/tgik/0118/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0118.jpg" width="640" />]]>
+        
+        &lt;p&gt;UPDATE: Change of plans! Joe had a meeting conflict pop up last minute so Duffie is going to jump in and get started on this topic.  We will be experimenting to see if Joe can join live as soon as he is done with his meeting.&lt;/p&gt;
+&lt;p&gt;Come hang out with Joe Beda as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Joe talking about the things he knows. Some of this will be Joe exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+&lt;p&gt;This week we&#39;ll be digging into kubectl plugins and how they work.  We&#39;ll look at Krew, the plugin manager and try to find time to look into some (audience) favorite plugins.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 117: Grokking Kubernetes : Etcd</title>
+      
+      <link>/tv/tgik/0117/</link>
+      <pubDate>Fri, 08 May 2020 22:47:45 +0000</pubDate>
+      
+      <guid>/tv/tgik/0117/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0117.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Duffie Cooley as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Duffie talking about the things he knows. Some of this will be Duffie exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 116: Deploying an app take 2</title>
+      
+      <link>/tv/tgik/0116/</link>
+      <pubDate>Fri, 01 May 2020 21:48:22 +0000</pubDate>
+      
+      <guid>/tv/tgik/0116/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0116.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Bryan Liles as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Bryan talking about the things he knows. Some of this will be Bryan exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 115: Deploying an app</title>
+      
+      <link>/tv/tgik/0115/</link>
+      <pubDate>Sat, 25 Apr 2020 09:33:20 +0000</pubDate>
+      
+      <guid>/tv/tgik/0115/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0115.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Bryan Liles as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Bryan talking about the things he knows. Some of this will be Bryan exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 114: Grokking Kubernetes: Scheduling Workloads.</title>
+      
+      <link>/tv/tgik/0114/</link>
+      <pubDate>Fri, 17 Apr 2020 22:20:14 +0000</pubDate>
+      
+      <guid>/tv/tgik/0114/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0114.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Duffie Cooley as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Duffie talking about the things he knows. Some of this will be Duffie exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+&lt;p&gt;This week we are back on the Grokking Series to talk about how and what workload scheduling can do for us.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 113: Kubernetes Secrets Take 3</title>
+      
+      <link>/tv/tgik/0113/</link>
+      <pubDate>Sat, 11 Apr 2020 10:03:09 +0000</pubDate>
+      
+      <guid>/tv/tgik/0113/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0113.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Josh Rosso as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Josh talking about the things he knows. Some of this will be Josh exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+&lt;p&gt;This week we&#39;ll be digging back into Secrets and that ecosystem! We&#39;ll There is quiite a bit of change in the way that secrets can integrate with Kubernetes and Josh is going to explore some of them.&lt;/p&gt;
+&lt;p&gt;Episode Directory (GitHub): &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/tree/master/episodes/113&#34;&gt;https://github.com/vmware-tanzu/tgik/tree/master/episodes/113&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Table of Contents:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:04:41 - Week in Review&lt;/li&gt;
+&lt;li&gt;00:23:01 - Episode Overview&lt;/li&gt;
+&lt;li&gt;00:23:33 - Default Secret Behavior&lt;/li&gt;
+&lt;li&gt;00:41:06 - Encryption at Rest&lt;/li&gt;
+&lt;li&gt;00:58:41 - External Provider Trade-Offs&lt;/li&gt;
+&lt;li&gt;01:05:31 - Integration with Secrets: App Level vs Platform Level&lt;/li&gt;
+&lt;li&gt;01:09:02 - Vault Secret Injection via Agent&lt;/li&gt;
+&lt;li&gt;01:39:31 - Sealed Secrets&lt;/li&gt;
+&lt;li&gt;01:46:09 - CSI Secret Driver&lt;/li&gt;
+&lt;li&gt;01:51:46 - Wrap-Up&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 112: Deep dive into Admission Controllers</title>
+      
+      <link>/tv/tgik/0112/</link>
+      <pubDate>Fri, 03 Apr 2020 22:07:17 +0000</pubDate>
+      
+      <guid>/tv/tgik/0112/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0112.jpg" width="640" />]]>
+        
+        &lt;p&gt;Episode notes at &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/blob/master/episodes/112/README.md&#34;&gt;https://github.com/vmware-tanzu/tgik/blob/master/episodes/112/README.md&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;00:19:07 - Start digging into Admission Controllers&lt;/li&gt;
+&lt;li&gt;00:28:47 - Start looking at code&lt;/li&gt;
+&lt;li&gt;00:32:53 - Start trying to use ko for deploy&lt;/li&gt;
+&lt;li&gt;00:47:04 - Give up on ko and use a plain old Dockerfile&lt;/li&gt;
+&lt;li&gt;00:50:33 - Get deployment with TLS&lt;/li&gt;
+&lt;li&gt;01:10:46 - Configure webhook admission controller&lt;/li&gt;
+&lt;li&gt;01:19:35 - Start testing admission controller&lt;/li&gt;
+&lt;li&gt;01:21:51 - why isn&#39;t stuff logging?&lt;/li&gt;
+&lt;li&gt;01:29:12 - Working! Playing with admission controller&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Come hang out with Joe Beda as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Joe talking about the things he knows. Some of this will be Joe exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+&lt;p&gt;This week we&#39;ll be digging into webhook admission controllers! We&#39;ll dive into the code and code up a new one (based on the upstream test image) install it and see how it works.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 111: CloudEvents and Argo Events</title>
+      
+      <link>/tv/tgik/0111/</link>
+      <pubDate>Fri, 27 Mar 2020 21:49:30 +0000</pubDate>
+      
+      <guid>/tv/tgik/0111/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0111.jpg" width="640" />]]>
+        
+        &lt;p&gt;Show notes: &lt;a href=&#34;https://github.com/vmware-tanzu/tgik/blob/master/episodes/111/README.md&#34;&gt;https://github.com/vmware-tanzu/tgik/blob/master/episodes/111/README.md&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;00:00:00 - Welcome to TGIK!&lt;/li&gt;
+&lt;li&gt;8:00 Sysdig Kubernetes 1.18 blog post&lt;/li&gt;
+&lt;li&gt;10:51 CNCF CNCF Webinar kubernetes-1,18 from the release team!&lt;/li&gt;
+&lt;li&gt;13:00 Digitial Ocean Kubernetes tutorials in diffferent languages&lt;/li&gt;
+&lt;li&gt;18:35 The start of the CloudEvents and Argo Events discussion&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Come hang out with Joe Beda as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Joe talking about the things he knows. Some of this will be Joe exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+&lt;p&gt;This week we&#39;ll be looking at CloudEvents (&lt;a href=&#34;https://cloudevents.io/&#34;&gt;https://cloudevents.io/&lt;/a&gt;) and Argo Events (&lt;a href=&#34;https://argoproj.github.io/projects/argo-events)&#34;&gt;https://argoproj.github.io/projects/argo-events)&lt;/a&gt;.  These projects help to shape/transform/deliver/launch stuff based on events.  Let&#39;s learn together!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>TGIK: TGI Kubernetes 110: Cluster-api v3</title>
+      
+      <link>/tv/tgik/0110/</link>
+      <pubDate>Fri, 20 Mar 2020 22:16:44 +0000</pubDate>
+      
+      <guid>/tv/tgik/0110/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tgik/0110.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hang out with Duffie Cooley as he does a bit of hands on hacking of Kubernetes and related topics. Some of this will be Duffie talking about the things he knows. Some of this will be Duffie exploring something new with the audience. Come join the fun, ask questions, comment, and participate in the live chat!&lt;/p&gt;
+&lt;p&gt;cluster-api version 3!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

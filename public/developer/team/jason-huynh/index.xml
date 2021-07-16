@@ -1,0 +1,365 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Jason Huynh</title>
+    <link>/team/jason-huynh/</link>
+    <description>Recent content in Jason Huynh on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 24 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/team/jason-huynh/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Data: Publishing Apache Geode Metrics to Wavefront</title>
+      
+      <link>/data/tanzu-gemfire/blog/apache-geode-metrics-wavefront/</link>
+      <pubDate>Tue, 24 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/blog/apache-geode-metrics-wavefront/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;Micrometer support was added to Apache Geode in version 1.10. Micrometer is a popular metrics gathering library and has integrations with numerous monitoring products. In this particular case, Micrometer provides a simple way to create a Micrometer registry for &lt;a href=&#34;https://www.wavefront.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Wavefront&lt;/a&gt; and we’ll plug this registry into an implementation of Apache Geode’s MetricsPublishingService. This will allow our Apache Geode Cluster to publish metrics to Wavefront.&lt;/p&gt;
+&lt;h2 id=&#34;download-the-jar&#34;&gt;Download the jar&lt;/h2&gt;
+&lt;p&gt;Download the &lt;a href=&#34;https://bintray.com/jasonhuynh/jhuynh1-maven/download_file?file_path=com%2Fgithub%2Fjhuynh1%2Fgeode%2Fwavefront%2Fgeode-wavefront-publisher%2F1.0%2Fgeode-wavefront-publisher-1.0-all.jar&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;geode-wavefront-publisher&lt;/a&gt; jar into a known location.&lt;/p&gt;
+&lt;h2 id=&#34;start-up-the-apache-geode-cluster&#34;&gt;Start up the Apache Geode Cluster&lt;/h2&gt;
+&lt;p&gt;Now we are ready to start a locator, we will supply the configurable values with our GFSH command. For the wavefront-source parameter, we will use “apache.geode” so we can identify the stats when searching for them in Wavefront.
+The default for the geode-wavefront-prefix is “wavefront” but we can configure this to whatever we choose. In this case I’ll use “wavefront.geode.jhuynh” to further distinguish my stats from others.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;start locator --name=locator --classpath=/User/jhuynh/geode-wavefront-publisher-1.0-all.jar --J=-Dgeode-wavefront-api-token=fa954bae-69e4--4925–9a1b-2d001a306166  --J=-Dgeode-wavefront-prefix=wavefront.geode.jhuynh --J=-Dgeode-wavefront-source=apache.geode
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Start the server, again we will supply the configurable values with our GFSH command&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;start server --name=server --classpath=/User/jhuynh/geode-wavefront-publisher-1.0-all.jar --J=-Dgeode-wavefront-api-token=fa954bae-69e4–4925–9a1b-2d001a306166 --J=-Dgeode-wavefront-prefix=wavefront.geode.jhuynh --J=-Dgeode-wavefront-source=apache.geode
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Everything is up and running and pushing Apache Geode specific metrics into Wavefront!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/apache-geode-metrics-wavefront/apache-geode-metrics-log.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Log output from Apache Geode server log&lt;/p&gt;
+&lt;p&gt;Let’s create a region, do a put and check the metrics in the Wavefront UI.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gfsh&amp;gt;create region --name=SomeRegion --type=PARTITION
+Member | Status | Message
+------ | ------ | ----------------------------------------
+server | OK     | Region &amp;quot;/SomeRegion&amp;quot; created on &amp;quot;server&amp;quot;
+Cluster configuration for group &#39;cluster&#39; is updated.
+gfsh&amp;gt;put --key=&amp;quot;hello&amp;quot; --value=&amp;quot;world&amp;quot; --region=SomeRegion
+Result      : true
+Key Class   : java.lang.String
+Key         : hello
+Value Class : java.lang.String
+Old Value   : null
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now we can go to Wavefront and see some of the Apache Geode provided metrics!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/apache-geode-metrics-wavefront/apache-geode-metrics-wavefront.png&#34; alt=&#34;img&#34;  /&gt;
+&lt;/br&gt;Apache Geode Metrics showing up in Wavefront!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/apache-geode-metrics-wavefront/apache-geode-metrics-region.png&#34; alt=&#34;img&#34;  /&gt;
+We see the metric for the entry we put into SomeRegion&lt;/p&gt;
+&lt;p&gt;We’ll now go into detail to see how this was implemented so you can build your own or build a new MetricsPublishingService that connects to a different Micrometer supported platform.&lt;/p&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;p&gt;We create a Java project that uses gradle as it’s build tool. We’ll also include a few imports in the build.gradle, the first being the Wavefront registry.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;‘&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;io&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;micrometer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;micrometer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;nl&#34;&gt;wavefront:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;latest&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;release&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;’&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And we’ll also import Apache Geode and for logging we’ll pull in log4j2&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;group:&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;‘&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;org&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;apache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;logging&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;log4j&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;’&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;name:&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;‘&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;log4j&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;’&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;version:&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;‘&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;2.13&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;’&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;ext:&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;‘&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;pom&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;’&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;group:&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;‘&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;org&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;apache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;geode&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;’&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;name:&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;‘&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;geode&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;core&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;’&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;version:&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;‘&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;1.1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;creating-a-wavefront-registry&#34;&gt;Creating a Wavefront registry&lt;/h2&gt;
+&lt;p&gt;Below is the entire source for the Wavefront Registry. We create a WaveConfigObject, where we could have hard coded our values for api token, prefix and source. However, we tried to build this to be more generic and make it configurable when starting up the Geode Cluster. We end up using system properties that can be supplied via parameters in GFSH. There are other alternatives but this was one of the simplest. This allows anyone to simply get a prebuilt jar and be able to use it for their own deployments.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;MeterRegistry&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;createWavefrontRegistry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;WavefrontConfig&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;config&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;WavefrontConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;prefix&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getProperty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;geode-wavefront-prefix&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;wavefront.geode&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;apiToken&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getProperty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;geode-wavefront-api-token&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getProperty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;geode-wavefront-source&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;apache.geode&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+        &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;uri&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;https://vmware.wavefront.com&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+        &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+        &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;apiToken&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;//This is the key you can generate from your Wavefront account
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;apiToken&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+        &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+        &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;//Accept rest of Wavefront defaults by returning null
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+        &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+        &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;prefix&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;prefix&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+        &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+        &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;source&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;source&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;};&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;WavefrontMeterRegistry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;config&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Clock&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;SYSTEM&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;wait-whats-my-api-token-key&#34;&gt;Wait, what’s my API token Key?&lt;/h2&gt;
+&lt;p&gt;The API Token Key is provided by Wavefront. If you have access to Wavefront, you can generate your token key from your account.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/apache-geode-metrics-wavefront/apache-geode-metrics-api-token.png&#34; alt=&#34;img&#34;  /&gt;
+&lt;/br&gt; Generating an api token key&lt;/p&gt;
+&lt;h2 id=&#34;implementing-a-metricsservicepublisher&#34;&gt;Implementing a MetricsServicePublisher&lt;/h2&gt;
+&lt;p&gt;The MetricsServicePublisher is pretty straightforward for this case. Below is the entire class, omitting the createWavefrontRegistry() method that we already covered.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;GeodeWavefrontPublisher&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;implements&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;MetricsPublishingService&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Logger&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;LoggerFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getLogger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GeodeWavefrontPublisher&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;volatile&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;MeterRegistry&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+    &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;start&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MetricsSession&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;session&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Starting geode-wavefront-publisher&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;createWavefrontRegistry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+
+        &lt;span class=&#34;c1&#34;&gt;// add the Wavefront registry as a sub-registry to the cache&amp;#39;s composite registry
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;session&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;addSubregistry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;stop&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MetricsSession&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;session&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Stopping geode-wavefront-publisher&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;session&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;removeSubregistry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the start method, we create the wavefront registry and add that as a subregistry to our MetricsSession object&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;createWavefrontRegistry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;session&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;addSubregistry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;On stop we will unregister the meter.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;n&#34;&gt;session&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;removeSubregistry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;what-else-do-we-need&#34;&gt;What else do we need?&lt;/h2&gt;
+&lt;p&gt;We create a file called &lt;em&gt;org.apache.geode.metrics.MetricsPublishingService&lt;/em&gt; and place it in &lt;em&gt;META-INF/services&lt;/em&gt; in the resource directory. The contents of this file is the path to our publisher. For this implementation it will be &lt;em&gt;com.github.jhuynh1.geode.wavefront.GeodeWavefrontPublisher&lt;/em&gt;. This allows Geode to discover and use the publisher when the jar is included at start up.&lt;/p&gt;
+&lt;h2 id=&#34;creating-an-ubershadow-jar&#34;&gt;Creating an “uber”/shadow jar&lt;/h2&gt;
+&lt;p&gt;We’ll be using the GFSH command line interface to include our publisher jar when starting up the cluster. To simplify the number of jars needed to be included on the classpath, we can build an “uber” jar which will include the required Micrometer Wavefront dependencies with our jar. The alternative obviously would have been to include all the jars independently on the classpath.
+Modify the build to use the shadow plugin and allow it to build an “uber” jar.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;‘&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;com&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;github&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;johnrengelman&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;shadow&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;’&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;version&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;‘&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;5.2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this particular case, we know we’ll only need to add the micrometer-wavefront-registry along with our code. We don’t need to package up Apache Geode since we will be deploying this jar onto a Geode cluster. There are probably better ways to do this, but I just created a new configuration that we’ll explicitly call out which dependencies to include&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;n&#34;&gt;configurations&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;uberImplementation&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;shadowJar&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;project&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;configurations&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;uberImplementation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;canBeResolved&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;configurations&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;project&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;configurations&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;uberImplementation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And in the dependencies we end up duplicating a dependency to indicate one is for implementation and the other specifically for the uber jar&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;n&#34;&gt;dependencies&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;implementation&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;io.micrometer:micrometer-registry-wavefront:latest.release&amp;#39;&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;uberImplementation&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;io.micrometer:micrometer-registry-wavefront:latest.release&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To build the “uber” jar use the following command&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./gradlew shadowJar
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/apache-geode-metrics-wavefront/apache-geode-metrics-directory.png&#34; alt=&#34;img&#34;  /&gt;
+&lt;/br&gt;The contents will be in the build/libs directory&lt;/p&gt;
+&lt;p&gt;That’s all there is to it. If you haven’t already, just follow the instructions on Build and Deploy and you’ll be able to deploy your own implementation the same way.&lt;/p&gt;
+&lt;h2 id=&#34;grab-the-complete-source&#34;&gt;Grab the complete source&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/jhuynh1/geode-wavefront-publisher.git
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;what-else&#34;&gt;What Else?&lt;/h2&gt;
+&lt;p&gt;Also available is a &lt;a href=&#34;https://www.youtube.com/watch?v=BDZh-FLkDTg&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;video walkthrough&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Join the &lt;a href=&#34;https://geode.apache.org/community/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode Community&lt;/a&gt;!&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://cwiki.apache.org/confluence/display/GEODE/How&amp;#43;to&amp;#43;add&amp;#43;a&amp;#43;Meter&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;How to add more metrics to Apache Geodes implementation&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Create and share your own MetricsPublishingService on the &lt;a href=&#34;https://geode.apache.org/community/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;user list&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/data/tanzu-gemfire/blog/apache-geode-apache-kafka&#34;&gt;Ingest, Store and Search JSON data with Apache Kafka and Apache Geode&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Ingest, Store and Search JSON data with Apache Kafka and Apache Geode</title>
+      
+      <link>/data/tanzu-gemfire/blog/apache-geode-apache-kafka/</link>
+      <pubDate>Tue, 03 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/blog/apache-geode-apache-kafka/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Apache Kafka is a popular solution for ingesting from various data sources and into Kafka topics. For use cases that require key look-ups or querying, traversing the topic for specific keys or devising a strategy for partitioning can be done. However, Kafka also provides the capability to sink, or offload, the data to other systems via Kafka Connect. The &lt;a href=&#34;https://github.com/apache/geode-kafka-connector&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;geode-kafka-connector&lt;/a&gt; implements the Kafka Connect APIs and allows data to be pushed into Apache Geode, where key look-ups and querying are better suited.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; is a consistent, low latency in memory data store. For use cases where we want fast, consistent key look-ups, sinking data to Apache Geode makes a lot of sense. Apache Geode also allows secondary indexes to be built on the data, to be used by queries. The geode-kafka-connector provides a &lt;a href=&#34;https://github.com/apache/geode-kafka-connector/blob/d6651f1ed78c09a533f478ded239a52cd2ffaca3/src/main/java/org/apache/geode/kafka/converter/JsonPdxConverter.java#L27&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JsonPdxConverter&lt;/a&gt; that we will be using. This allows JSON objects to be converted into PDX (&lt;a href=&#34;https://geode.apache.org/docs/guide/111/developing/data_serialization/gemfire_pdx_serialization.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Portable Data eXchange, an Apache Geode serialization format&lt;/a&gt;), so that we can query any field and drill down into nested JSON Objects.&lt;/p&gt;
+&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;We’ll be ingesting JSON data from a rest endpoint into a Kafka topic. We will sink the data into an Apache Geode region using the geode-kafka-connector and execute queries against the data. Secondary indexes will also be created to allow faster and more efficient query lookups.
+&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/apache-geode-apache-kafka/diagrams/geode-kafka.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;(1) Ingest JSON, (2) Connector pulls JSON data from topic, (3) geode-kafka-connector converts to PDX and pushes to Apache Geode, (4) Query is executed in GFSH, (5) Results are returned&lt;/p&gt;
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://geode.apache.org/releases/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode installed&lt;/a&gt; or use the &lt;a href=&#34;https://hub.docker.com/r/apachegeode/geode/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;docker image&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://kafka.apache.org/downloads&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Kafka installed&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Download or build a &lt;a href=&#34;https://github.com/apache/geode-kafka-connector&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;geode-kafka-connector jar&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Download the source for an example ingest web service: &lt;a href=&#34;https://github.com/jhuynh1/spring-kafka-JSON-ingest&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;https://github.com/jhuynh1/spring-kafka-JSON-ingest&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;start-apache-geode-cluster&#34;&gt;Start Apache Geode Cluster&lt;/h2&gt;
+&lt;p&gt;Execute gfsh from your Apache Geode Installation and start a locator and a server:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./gfsh 
+ start locator --name=locator1
+ start server --name=server1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/apache-geode-apache-kafka/geode-kafka-gfsh.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;gfsh output after creating locator and server&lt;/p&gt;
+&lt;p&gt;Create the region we want the data to end up in:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;create region --name=’Events’ --type=PARTITION`
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/apache-geode-apache-kafka/geode-kafka-gfsh-createregion.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;gfsh output after creating region&lt;/p&gt;
+&lt;h2 id=&#34;start-apache-kafka&#34;&gt;Start Apache Kafka&lt;/h2&gt;
+&lt;p&gt;We will follow the instructions from the Apache Kafka Quickstart. In the Apache Kafka install, run each command in a new terminal.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;bin/zookeeper-server-start.sh config/zookeeper.properties
+bin/kafka-server-start.sh config/server.properties
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;create-a-topic-named-test&#34;&gt;Create a topic named ‘test’&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;creating-the-sink-connector&#34;&gt;Creating the Sink Connector&lt;/h2&gt;
+&lt;p&gt;We’ll now create a sink connector to flow data from Kafka to Geode. We will also configure the key and value converters. For the value converter we will explicitly use the JsonPdxConverter supplied by the geode-kafka-connector. For the key, we will use a String converter, where the example webapp will just populate with an arbitrary value.&lt;/p&gt;
+&lt;h3 id=&#34;configure-connect-geode-sinkproperties&#34;&gt;Configure connect-geode-sink.properties&lt;/h3&gt;
+&lt;p&gt;Create a file called connect-geode-sink.properties with the following properties and place this file in the config directory of Apache Kafka. Notice we use the JsonPdxConverter for our value converter. We can also map any topics to any number of regions.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;name=geode-kafka-sink
+connector.class=GeodeKafkaSink
+tasks.max=1
+key.converter=org.apache.kafka.connect.storage.StringConverter
+value.converter=org.apache.geode.kafka.converter.JsonPdxConverter
+topic-to-regions=[test:Events]
+locators=localHost[10334]
+topics=test
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;modify-configconnect-standaloneproperties&#34;&gt;Modify config/connect-standalone.properties&lt;/h3&gt;
+&lt;p&gt;Modify config/connect-standalone.properties to point Kafka to where the plugin is installed. For example:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;plugin.path=/path/to/geode-kafka-connector/target/
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;run-the-sink-connector&#34;&gt;Run the Sink Connector&lt;/h2&gt;
+&lt;p&gt;Now we are ready to run the sink connector, execute the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;bin/connect-standalone.sh config/connect-standalone.properties config/connect-geode-sink.properties
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;start-up-the-ingest-web-service&#34;&gt;Start up the Ingest Web Service&lt;/h2&gt;
+&lt;p&gt;For ingesting data, we will use a simple Spring Boot application that exposes a rest endpoint that can be called to ingest JSON data (GitHub Events) and push the data into a Kafka topic.
+Here is the relevant lines of code, we generate an arbitrary key in this example and place each JSON document as an event on the topic.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@GetMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;/ingest/github/{topic}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;ingestGithub&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RestTemplate&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;restTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nd&#34;&gt;@PathVariable&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;topic&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;//We didn&amp;#39;t model our json and will just pass them in as strings
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;events&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;restTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getForObject&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;githubEventsUrl&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Object&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;events&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;kafkaTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;topic&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;currentTimeMillis&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;:&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;hashCode&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;events&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The web-service source is located at &lt;a href=&#34;https://github.com/jhuynh1/spring-kafka-JSON-ingest&#34;&gt;https://github.com/jhuynh1/spring-kafka-JSON-ingest&lt;/a&gt; and can be run either with ./gradlew bootRun or if you have a built jar, run the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;java -jar restful-webservice-0.0.1-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;ingest-data&#34;&gt;Ingest Data&lt;/h2&gt;
+&lt;p&gt;Hit the rest endpoint (note: if your topic wasn’t named test, you can simply change the topic name in the url)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl localhost:8080/ingest/github/test
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;query-the-json-data-in-apache-geode&#34;&gt;Query the JSON data in Apache Geode!&lt;/h2&gt;
+&lt;p&gt;Revisit gfsh and set a gfsh environment variable so we can see values with large fields.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;set variable --name=APP_RESULT_VIEWER --value=external`
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now we will query the events region. We’ll first display all the events we ingested.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;query --query=”select * from /Events”
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/apache-geode-apache-kafka/geode-kafka-region-events.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Events made it into the region and we are able to query for them!&lt;/p&gt;
+&lt;h3 id=&#34;query-nested-fields&#34;&gt;Query nested fields&lt;/h3&gt;
+&lt;p&gt;We can also issue a query on any of the JSON fields and nested fields as well. In this example we are actually going to drill down into a nested JSON field. We will find any event where the action field in the payload object is ‘opened’&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;query --query=”select * from /Events where payload.action=’opened’”
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/apache-geode-apache-kafka/geode-kafka-field-lookup.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;We are able to do a nested field lookup and filter for specific results&lt;/p&gt;
+&lt;h3 id=&#34;creating-a-secondary-index&#34;&gt;Creating a secondary index&lt;/h3&gt;
+&lt;p&gt;If there is are fields we plan on querying often or need faster performance on, we can create indexes on those fields. For this example we could create one on payload.action&lt;/p&gt;
+&lt;h2 id=&#34;what-next&#34;&gt;What next?&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Learn more about &lt;a href=&#34;https://geode.apache.org/docs/guide/111/developing/querying_basics/query_basics.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;OQL querying&lt;/a&gt; or &lt;a href=&#34;https://geode.apache.org/docs/guide/15/developing/data_serialization/gemfire_pdx_serialization.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;PDX serialization&lt;/a&gt; in Apache Geode&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check out the other features in &lt;a href=&#34;https://github.com/apache/geode-kafka-connector&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;geode-kafka-connector&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.pymma.com/index.php/blogs/data-analytic-apache-geode-a-successful-alternative-to-kafka-spark-and-storm&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Read how Apache Geode was used to simplify architecture and operations&lt;/a&gt;
+Join the &lt;a href=&#34;https://geode.apache.org/community/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode Community&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Apache Geode as a Remote Gradle Build Cache</title>
+      
+      <link>/data/tanzu-gemfire/blog/remote-gradle-build-cache/</link>
+      <pubDate>Thu, 06 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/blog/remote-gradle-build-cache/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Gradle task output can be cached locally but also remotely. The idea of a remote cache is to share commonly built task outputs across remote builds to improve build times. With a few steps, we can use Apache Geode as a remote cache for Gradle.&lt;/p&gt;
+&lt;h2 id=&#34;whats-apache-geode&#34;&gt;What’s Apache Geode?&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; is a fault tolerant, highly concurrent and scalable in-memory data grid that can be used in many ways, including as a cache. A &lt;em&gt;region&lt;/em&gt; is a data structure, similar to a distributed map, that we will use to store the task output. Regions provide extra features such as LRU eviction, that can be used to improve our solution in the future. As data grows, we can add more nodes to the cluster and with a simple rebalance command, the data will be evenly distributed across all the nodes.&lt;/p&gt;
+&lt;h2 id=&#34;how&#34;&gt;How?&lt;/h2&gt;
+&lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
+&lt;p&gt;Assuming you have Apache Geode installed. For help, see the &lt;a href=&#34;https://geode.apache.org/docs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;User Guide&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;start-apache-geode-cluster&#34;&gt;Start Apache Geode Cluster&lt;/h3&gt;
+&lt;p&gt;First we start a one locator and one server cluster.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1. ./gfsh 
+2. start locator --name=locator1
+3. start server --name=server1 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Create the region where we will store the Gradle artifacts&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;4. create region --name=&#39;gradleRegionName&#39; 
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;using-the-geode-gradle-build-cachehttpsgithubcomjhuynh1geode-gradle-build-cache&#34;&gt;Using the &lt;a href=&#34;https://github.com/jhuynh1/geode-gradle-build-cache&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Geode Gradle Build Cache&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Change your project&amp;rsquo;s settings.gradle to include the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;n&#34;&gt;buildscript&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;repositories&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+       &lt;span class=&#34;n&#34;&gt;maven&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+         &lt;span class=&#34;n&#34;&gt;url&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;https://dl.bintray.com/jasonhuynh/jhuynh1-maven/&amp;#34;&lt;/span&gt;
+       &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+       &lt;span class=&#34;n&#34;&gt;jcenter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+     &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+     &lt;span class=&#34;n&#34;&gt;dependencies&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+       &lt;span class=&#34;n&#34;&gt;classpath&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;com.github.jhuynh1.geode.gradle.build.cache:geode-gradle-build-cache:0.1&amp;#39;&lt;/span&gt;
+     &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+ &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+ 
+ &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.github.jhuynh1.geode.gradle.build.cache.GeodeGradleBuildCache&lt;/span&gt;
+ &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.github.jhuynh1.geode.gradle.build.cache.GeodeGradleBuildCacheServiceFactory&lt;/span&gt;
+ 
+ &lt;span class=&#34;n&#34;&gt;buildCache&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;local&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+     &lt;span class=&#34;c1&#34;&gt;//this is set to false to hilite usage of remote cache
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;//this setting will impact your performance
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;     &lt;span class=&#34;n&#34;&gt;enabled&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt; 
+   &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+   &lt;span class=&#34;c1&#34;&gt;// Register custom build cache implementation
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;   &lt;span class=&#34;n&#34;&gt;registerBuildCacheService&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GeodeGradleBuildCache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GeodeGradleBuildCacheServiceFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+ 
+   &lt;span class=&#34;n&#34;&gt;remote&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GeodeGradleBuildCache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+     &lt;span class=&#34;n&#34;&gt;enabled&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt; 
+     &lt;span class=&#34;c1&#34;&gt;//this is set to allow pushing to the remote cache
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;//the type of system will probably affect this setting (ci vs dev)
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;     &lt;span class=&#34;n&#34;&gt;push&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;
+     &lt;span class=&#34;c1&#34;&gt;//optional settings.  The defaults are listed below
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;//locatorHost = &amp;#39;localhost&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;//locatorPort = 10334
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;//gradleRegionName = &amp;#39;gradleRegionName&amp;#39;
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;   &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+ &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Run a build with &lt;code&gt;--build-cache&lt;/code&gt; or add &lt;code&gt;org.gradle.caching=true&lt;/code&gt; to gradle.properties.&lt;/p&gt;
+&lt;h3 id=&#34;remote-and-local-cache&#34;&gt;Remote and Local Cache&lt;/h3&gt;
+&lt;p&gt;There are different ways to configure the remote and local cache relationship in Gradle to get optimal performance. These settings were not configured to get the best performance but to show the usage of the remote cache. More resources can be found online for creating ci and developer specific configurations. More info &lt;a href=&#34;https://docs.gradle.org/current/userguide/build_cache.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;what-next&#34;&gt;What next?&lt;/h2&gt;
+&lt;p&gt;The code for the Geode Gradle Build Cache can be found &lt;a href=&#34;https://github.com/jhuynh1/geode-gradle-build-cache&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;. There are many improvements and features someone could add, some ideas that come to mind:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Store meta data or statistics about our build and use that to determine when to actually cache or force a miss to have it build locally.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;We could add a continuous query to alert us when certain files or certain file sizes are uploaded.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Maybe we have remote teams that span WAN sites, we could replicate the region across a wan and have multiples sites and teams sharing artifacts.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;want-to-learn-more-about-apache-geode&#34;&gt;Want to learn more about Apache Geode?&lt;/h2&gt;
+&lt;p&gt;More &lt;a href=&#34;https://github.com/apache/geode-examples&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;tutorials/examples&lt;/a&gt; of Apache Geode &lt;/br&gt;
+Please reach out to the &lt;a href=&#34;https://geode.apache.org/community/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode Community&lt;/a&gt;!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

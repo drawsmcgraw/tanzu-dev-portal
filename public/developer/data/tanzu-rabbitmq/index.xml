@@ -1,0 +1,33 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Tanzu RabbitMQ</title>
+    <link>/data/tanzu-rabbitmq/</link>
+    <description>Recent content in Tanzu RabbitMQ on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/data/tanzu-rabbitmq/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Data: Walk through VMware Tanzu RabbitMQ for Kubernetes</title>
+      
+      <link>/data/tanzu-rabbitmq/videos/vmware-tanzu-rabbitmq-for-k8s/</link>
+      <pubDate>Wed, 07 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-rabbitmq/videos/vmware-tanzu-rabbitmq-for-k8s/</guid>
+      <description>
+
+        
+        &lt;p&gt;VMware&amp;rsquo;s Yaron Parasol and Chunyi Lyu walk through VMware Tanzu RabbitMQ for Kubernetes. A custom Kubernetes cluster operator makes it easy to run Tanzu RabbitMQ on any certified Kubernetes distribution, including all of the VMware Tanzu Editions.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

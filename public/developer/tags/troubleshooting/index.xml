@@ -1,0 +1,203 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Troubleshooting</title>
+    <link>/tags/troubleshooting/</link>
+    <description>Recent content in Troubleshooting on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 09 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/troubleshooting/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Troubleshooting Applications on Kubernetes</title>
+      
+      <link>/guides/kubernetes/dev-workflow-troubleshooting/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/dev-workflow-troubleshooting/</guid>
+      <description>
+
+        
+        &lt;p&gt;This guide lists common commands and approaches to troubleshoot applications on
+Kubernetes. In this guide we assume that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You are familiar with &lt;code&gt;kubectl&lt;/code&gt;, the Kubernetes command-line client.&lt;/li&gt;
+&lt;li&gt;You have access to the Kubernetes cluster you want to troubleshoot&lt;/li&gt;
+&lt;li&gt;You are familiar with the common Kubernetes resources, such as Deployments,
+Services, Pods, etc.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Below is a list covering some common issues and how to troubleshoot them in a Kubernetes environment.&lt;/p&gt;
+&lt;h2 id=&#34;pods-showing-crashloopbackoff-status&#34;&gt;Pods showing &amp;lsquo;CrashLoopBackOff&amp;rsquo; status&lt;/h2&gt;
+&lt;p&gt;This usually indicates an issue with the application. Use the &lt;code&gt;kubectl logs&lt;/code&gt;
+command to get logs from the pod.&lt;/p&gt;
+&lt;p&gt;If the pod has multiple containers, you first have to find the container that is
+crashing.&lt;/p&gt;
+&lt;p&gt;Use the &lt;code&gt;kubectl describe&lt;/code&gt; command on the pod to figure out which container is
+crashing. The following example shows the list of containers in the &lt;code&gt;kubectl describe&lt;/code&gt; output. Notice how the &lt;code&gt;bad&lt;/code&gt; container&amp;rsquo;s last state is &lt;code&gt;Terminated&lt;/code&gt;.
+This is the container that keeps crashing.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;Containers:
+  bad:
+    Container ID:  containerd://dd42e41890e04253915445...
+    Image:         busybox
+    Image ID:      docker.io/library/busybox@sha256:83...
+    Port:          &amp;lt;none&amp;gt;
+    Host Port:     &amp;lt;none&amp;gt;
+    Args:
+      sleep
+      &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Completed
+      Exit Code:    &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+      Started:      Mon, &lt;span class=&#34;m&#34;&gt;18&lt;/span&gt; May &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt; 10:47:03 -0400
+      Finished:     Mon, &lt;span class=&#34;m&#34;&gt;18&lt;/span&gt; May &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt; 10:47:04 -0400
+    Ready:          False
+    Restart Count:  &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;
+    Environment:    &amp;lt;none&amp;gt;
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from 
+      default-token-dfl9d &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;ro&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  good:
+    Container ID:   containerd://8a8ce59842cce4d8c98f...
+    Image:          nginx
+    Image ID:       docker.io/library/nginx@sha256:30...
+    Port:           &amp;lt;none&amp;gt;
+    Host Port:      &amp;lt;none&amp;gt;
+    State:          Running
+      Started:      Mon, &lt;span class=&#34;m&#34;&gt;18&lt;/span&gt; May &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt; 10:46:14 -0400
+    Ready:          True
+    Restart Count:  &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+    Environment:    &amp;lt;none&amp;gt;
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from 
+      default-token-dfl9d &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;ro&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;services-are-unreachable-or-not-available&#34;&gt;Services are unreachable or not available&lt;/h2&gt;
+&lt;p&gt;As a sanity check, it is always useful to verify that the service has endpoints.&lt;/p&gt;
+&lt;p&gt;Use the &lt;code&gt;kubectl get endpoints&lt;/code&gt; command to verify that a service has at least
+one endpoint:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl get endpoints example
+NAME      ENDPOINTS                       AGE
+example   10.244.0.21:80,10.244.0.22:80   27s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If the service does not have endpoints, verify the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The service&amp;rsquo;s pod selector matches the labels on the desired pods.&lt;/li&gt;
+&lt;li&gt;The pods backing the service are passing their readiness probe.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For more in depth troubleshooting, you can utilize a dnsutil pod described &lt;a href=&#34;https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;pods-showing-pending-status&#34;&gt;Pods showing &amp;lsquo;Pending&amp;rsquo; status&lt;/h2&gt;
+&lt;p&gt;If the pod is stuck in Pending state, this means that the pod cannot be
+scheduled to a node. The most common cause of this issue is that there is no
+node with enough resources to satisfy the pod&amp;rsquo;s resource requests.&lt;/p&gt;
+&lt;p&gt;To diagnose this issue, use &lt;code&gt;kubectl describe&lt;/code&gt; and look at the events at the
+bottom of the output. The following is an example that shows what to look for:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl describe pod example
+&lt;span class=&#34;c1&#34;&gt;### Output truncated for brevity&lt;/span&gt;
+Events:
+  Type     Reason            Age                From               Message
+  ----     ------            ----               ----               -------
+  Warning  FailedScheduling  17s &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;x2 over 17s&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;  default-scheduler  0/1 nodes are available: &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; Insufficient memory.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;pods-showing-containercreating-status&#34;&gt;Pods showing &amp;lsquo;ContainerCreating&amp;rsquo; status&lt;/h2&gt;
+&lt;p&gt;The most common causes for this issue are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Missing configmaps referenced in volume mounts&lt;/li&gt;
+&lt;li&gt;Missing secrets referenced in volume mounts&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To diagnose this issue, use &lt;code&gt;kubectl describe&lt;/code&gt; on the pod and look at the events
+at the bottom of the output. The following is an example that shows what to look
+for:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl describe pod example
+&lt;span class=&#34;c1&#34;&gt;### Output truncated for brevity&lt;/span&gt;
+Events:
+  Type     Reason       Age               From                         Message
+  ----     ------       ----              ----                         -------
+  Normal   Scheduled    10s               default-scheduler            Successfully assigned kube-system/example-796885bff7-cf7nc to kind-control-plane
+  Warning  FailedMount  3s &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;x5 over 10s&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;  kubelet, kind-control-plane  MountVolume.SetUp failed &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; volume &lt;span class=&#34;s2&#34;&gt;&amp;#34;foo&amp;#34;&lt;/span&gt; : secret &lt;span class=&#34;s2&#34;&gt;&amp;#34;foo&amp;#34;&lt;/span&gt; not found
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;pods-showing-errimagepull-pod-status&#34;&gt;Pods showing &amp;lsquo;ErrImagePull&amp;rsquo; Pod status&lt;/h2&gt;
+&lt;p&gt;The &lt;code&gt;ErrImagePull&lt;/code&gt; condition means that the node is unable to pull the container
+image from the container image registry (e.g. Harbor). Some potential causes of
+this issue:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The registry is unavailable or inaccessible from the node&lt;/li&gt;
+&lt;li&gt;The container image does not exist in the registry&lt;/li&gt;
+&lt;li&gt;The container image specified in the deployment manifest is incorrect&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Use the &lt;code&gt;kubectl describe&lt;/code&gt; command on the pod to troubleshoot this issue. The
+events section at the bottom of the output should have useful context. The
+following example shows what to look for:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl describe pod example
+&lt;span class=&#34;c1&#34;&gt;### Output truncated for brevity&lt;/span&gt;
+Events:
+  Type     Reason     Age   From                         Message
+  ----     ------     ----  ----                         -------
+  Normal   Scheduled  11s   default-scheduler            Successfully assigned kube-system/example-7cc7c59cbb-4h6cv to kind-control-plane
+  Normal   Pulling    11s   kubelet, kind-control-plane  Pulling image &lt;span class=&#34;s2&#34;&gt;&amp;#34;non-existent&amp;#34;&lt;/span&gt;
+  Warning  Failed     10s   kubelet, kind-control-plane  Failed to pull image &lt;span class=&#34;s2&#34;&gt;&amp;#34;non-existent&amp;#34;&lt;/span&gt;: rpc error: &lt;span class=&#34;nv&#34;&gt;code&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; Unknown &lt;span class=&#34;nv&#34;&gt;desc&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; failed to pull and unpack image &lt;span class=&#34;s2&#34;&gt;&amp;#34;docker.io/library/non-existent:latest&amp;#34;&lt;/span&gt;: failed to resolve reference &lt;span class=&#34;s2&#34;&gt;&amp;#34;docker.io/library/non-existent:latest&amp;#34;&lt;/span&gt;: pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+  Warning  Failed     10s   kubelet, kind-control-plane  Error: ErrImagePull
+  Normal   BackOff    10s   kubelet, kind-control-plane  Back-off pulling image &lt;span class=&#34;s2&#34;&gt;&amp;#34;non-existent&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;useful-commands&#34;&gt;Useful Commands&lt;/h2&gt;
+&lt;p&gt;This section lists commands that are useful in day-to-day interactions with
+Kubernetes:&lt;/p&gt;
+&lt;h3 id=&#34;listing-resources&#34;&gt;Listing resources&lt;/h3&gt;
+&lt;p&gt;Use the &lt;code&gt;kubectl get&lt;/code&gt; command to list resources of one or more types:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get deployments,pods
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Specify the &lt;code&gt;wide&lt;/code&gt; output format for additional information:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get pods -o wide
+NAME                     READY   STATUS              RESTARTS   AGE   IP           NODE                 NOMINATED NODE   READINESS GATES
+cassandra-0              0/1     ContainerCreating   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          47s   &amp;lt;none&amp;gt;       kind-control-plane   &amp;lt;none&amp;gt;           &amp;lt;none&amp;gt;
+redis-5c7c978f78-wlbkn   1/1     Running             &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          27s   10.244.0.6   kind-control-plane   &amp;lt;none&amp;gt;           &amp;lt;none&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Use the &lt;code&gt;--show-labels&lt;/code&gt; to display the labels of resources&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get pods --show-labels
+NAME                     READY   STATUS              RESTARTS   AGE   LABELS
+cassandra-0              0/1     ContainerCreating   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          98s   &lt;span class=&#34;nv&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;cassandra,chart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;cassandra-5.4.2,controller-revision-hash&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;cassandra-6d7b4575f6,heritage&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Helm,release&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;cassandra,statefulset.kubernetes.io/pod-name&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;cassandra-0
+redis-5c7c978f78-wlbkn   1/1     Running             &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          78s   pod-template-hash&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;5c7c978f78,run&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;redis
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Use the &lt;code&gt;yaml&lt;/code&gt; output format if you want to get the entire YAML definition of a
+resource:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n bow get deployment vendor-abstraction -o yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;getting-application-logs&#34;&gt;Getting application logs&lt;/h3&gt;
+&lt;p&gt;Use the &lt;code&gt;kubectl logs&lt;/code&gt; command to get application logs.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n bow logs &amp;lt;pod name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To specify the container within the pod using the &lt;code&gt;-c&lt;/code&gt; flag:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n bow logs vendor-abstraction -c tag-blink-servce
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Use the &lt;code&gt;-f&lt;/code&gt; or &lt;code&gt;--follow&lt;/code&gt; flag to follow/tail the logs.&lt;/p&gt;
+&lt;h3 id=&#34;forward-local-ports-into-a-pod&#34;&gt;Forward local ports into a Pod&lt;/h3&gt;
+&lt;p&gt;You can open forward local ports into the pod&amp;rsquo;s network using &lt;code&gt;kubectl port-forward&lt;/code&gt;. With this command, you essentially open a network tunnel into the
+pod.&lt;/p&gt;
+&lt;p&gt;For example, if you have a pod that listens on port 9090, you can forward your
+local machines 8080 into the pod&amp;rsquo;s port 9090 using the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n bow port-forward zuul-gateway 8080:9090
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once this command is running, you can access the pod&amp;rsquo;s 9090 port via
+&lt;code&gt;localhost:8080&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;exec-into-a-running-pod&#34;&gt;Exec into a running Pod&lt;/h3&gt;
+&lt;p&gt;You can run commands within the context of your pod using &lt;code&gt;kubectl exec&lt;/code&gt;. &lt;strong&gt;Do
+not use this to configure or modify application behavior at run time.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;For example, to run &lt;code&gt;ps -ef&lt;/code&gt; in a container, you would run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it example-pod -- ps -ef
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;
+Keep in mind that the container must have the binary you are trying to execute
+(&lt;code&gt;ps&lt;/code&gt; in the above example). Otherwise, you will get an error.&lt;/p&gt;
+&lt;p&gt;Use &lt;a href=&#34;https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ephemeral Containers (alpha)&lt;/a&gt; if the binary is not available.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;get-the-documentation-of-a-specific-resource-kind&#34;&gt;Get the documentation of a specific resource kind&lt;/h3&gt;
+&lt;p&gt;You can get the documentation of a specific resource kind (e.g. &lt;code&gt;Deployment&lt;/code&gt; or
+&lt;code&gt;Pod&lt;/code&gt;) using &lt;code&gt;kubectl explain&lt;/code&gt;. This command will fetch the API documentation of
+the resource and display it in the terminal.&lt;/p&gt;
+&lt;p&gt;For example, to get the &lt;code&gt;Pod&lt;/code&gt; documentation:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl explain pod
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can drill into specific fields within the resource. For example, to the get
+pod&amp;rsquo;s &lt;code&gt;spec&lt;/code&gt; field documentation:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl explain pod.spec
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      </description>
+    </item>
+    
+  </channel>
+</rss>

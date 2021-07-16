@@ -1,0 +1,949 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – </title>
+    <link>/team/ivan-tarin/</link>
+    <description>Recent content on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/team/ivan-tarin/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Getting Started with kpack to Automate Builds using Cloud Native Buildpacks</title>
+      
+      <link>/guides/containers/cnb-gs-kpack/</link>
+      <pubDate>Thu, 16 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/containers/cnb-gs-kpack/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://github.com/pivotal/kpack&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;kpack&lt;/code&gt;&lt;/a&gt; is a Kubernetes-native build service that builds container images on Kubernetes using &lt;a href=&#34;../cnb-what-is&#34;&gt;Cloud Native Buildpacks&lt;/a&gt;. It takes source code repositories (like GitHub), builds the code into a container image, and uploads it to the container registry of your choice.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;There are a few things you need to do before getting started with &lt;code&gt;kpack&lt;/code&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Have access to a Kubernetes cluster. If you don&amp;rsquo;t, you can use local options like &lt;a href=&#34;https://hub.docker.com/search?type=edition&amp;amp;offering=community&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Desktop&lt;/a&gt; or &lt;a href=&#34;https://github.com/kubernetes/minikube&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Minikube&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check out &lt;a href=&#34;https://kube.academy/courses/getting-started&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with Kubernetes&lt;/a&gt; on KubeAcademy, particularly if you&amp;rsquo;ve never worked with Kubernetes before.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Optionally &lt;a href=&#34;https://github.com/wercker/stern/releases&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;install &lt;code&gt;stern&lt;/code&gt;&lt;/a&gt;, a tool that makes it easy to tail the logs during builds.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Command to install with Homebrew on Mac OS &lt;code&gt;brew install stern&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have the &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl CLI&lt;/a&gt; to interact with your cluster.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Command to install with Homebrew on Mac OS &lt;code&gt;brew install kubectl&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Accessible Docker V2 Registry, &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;DockerHub&lt;/a&gt; will suffice it is free and creating an account is easy.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Follow the documentation for &lt;a href=&#34;https://github.com/pivotal/kpack/blob/master/docs/install.md/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;installing &lt;code&gt;kpack&lt;/code&gt;&lt;/a&gt; in your Kubernetes cluster.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;initial-kpack-configuration&#34;&gt;Initial &lt;code&gt;kpack&lt;/code&gt; Configuration&lt;/h2&gt;
+&lt;p&gt;Among the things you will need before you get started are a code repository with compatible code (I&amp;rsquo;m using Spring Java in this case) and a container registry (I&amp;rsquo;m using Google GCR).&lt;/p&gt;
+&lt;p&gt;To make sure your &lt;code&gt;kpack&lt;/code&gt; environment is ready after following the install instructions above, run.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get pods --namespace kpack --watch
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;using-kpack&#34;&gt;Using &lt;code&gt;kpack&lt;/code&gt;&lt;/h2&gt;
+&lt;h3 id=&#34;set-up-container-registry-secret&#34;&gt;Set Up Container Registry Secret&lt;/h3&gt;
+&lt;p&gt;The first thing you need to do is tell &lt;code&gt;kpack&lt;/code&gt; how to access the container registry to upload the completed images when they&amp;rsquo;re done.&lt;/p&gt;
+&lt;p&gt;You&amp;rsquo;ll need a secret with credentials to access GCR, so you&amp;rsquo;ll create a manifest like this and apply it with &lt;code&gt;kubectl apply -f&lt;/code&gt;.&lt;/p&gt;
+
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	gcr-registry-credentials.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;Save and apply your secret&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f gcr-registry-credentials.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Secret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr-registry-credentials&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;annotations&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kpack.io/docker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;us.gcr.io&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kubernetes.io/basic-auth&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;stringData&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;_json_key&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    {
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;        &amp;lt;GCP JSON Credentials Go Here&amp;gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    }&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	dockerhub-registry-credentials.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;Save and apply your secret&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f dockerhub-registry-credentials.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Secret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dockerhub-registry-credentials&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;annotations&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kpack.io/docker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;https://index.docker.io/v1/&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kubernetes.io/basic-auth&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;stringData&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;lt;username&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;lt;password&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;For more details see the &lt;a href=&#34;https://github.com/pivotal/kpack/blob/master/docs/secrets.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;kpack&lt;/code&gt; secrets documentation.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Also note the annotation of &lt;code&gt;kpack.io/docker&lt;/code&gt;; it tells &lt;code&gt;kpack&lt;/code&gt; which registries to use these credentials for. In the case of &lt;code&gt;gcr-registry-credentials.yaml&lt;/code&gt;, any image tagged for &lt;code&gt;us.gcr.io.&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;set-up-container-registry-service-account&#34;&gt;Set Up Container Registry Service Account&lt;/h3&gt;
+&lt;p&gt;Now you need a service account referencing those credentials in your secret. The manifest is pretty simple:&lt;/p&gt;
+
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	gcr-registry-service-account.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;Apply your new service account.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f gcr-registry-credentials.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ServiceAccount&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr-registry-service-account&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secrets&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr-registry-credentials&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;imagePullSecrets&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr-registry-credentials&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	dockerhub-service-account.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;Apply your new service account.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f dockerhub-registry-credentials.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ServiceAccount&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dockerhub-service-account&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secrets&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dockerhub-registry-credentials&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;imagePullSecrets&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dockerhub-registry-credentials&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;create-your-store&#34;&gt;Create your Store&lt;/h3&gt;
+&lt;p&gt;A store is a repository of &lt;a href=&#34;http://buildpacks.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;buildpacks&lt;/a&gt; packaged into &lt;a href=&#34;https://buildpacks.io/docs/buildpack-author-guide/package-a-buildpack/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;buildpackages&lt;/a&gt; that kpack uses to build images.
+You can add more languages by including more buildpacks you create or from &lt;a href=&#34;https://github.com/paketo-buildpacks&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Paketo Buildpacks&lt;/a&gt; we have only included a few bellow.&lt;/p&gt;
+&lt;p&gt;The store will be referenced by a builder resource.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f store.yaml 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	store.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kpack.io/v1alpha1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterStore&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;sources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/java&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/graalvm&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/java-azure&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/nodejs&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/dotnet-core&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/go&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/php&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;apply-a-cluster-stack&#34;&gt;Apply a Cluster Stack&lt;/h3&gt;
+&lt;p&gt;A &lt;a href=&#34;https://buildpacks.io/docs/concepts/components/stack/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;stack&lt;/a&gt; provides the buildpack lifecycle with build-time and run-time environments in the form of images.&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&#34;https://github.com/buildpacks/pack&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pack CLI&lt;/a&gt; command: &lt;code&gt;pack suggest-stacks&lt;/code&gt; will display a list of recommended stacks that can be used. We recommend starting with the &lt;code&gt;io.buildpacks.stacks.bionic&lt;/code&gt; base stack.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f stack.yaml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	stack.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kpack.io/v1alpha1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterStack&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;base&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;io.buildpacks.stacks.bionic&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;buildImage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;paketobuildpacks/build:base-cnb&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;runImage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;paketobuildpacks/run:base-cnb&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;apply-a-builder&#34;&gt;Apply a Builder&lt;/h3&gt;
+&lt;p&gt;A builder is an image that bundles all the bits and information on how to build your apps, like&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A buildpack&lt;/li&gt;
+&lt;li&gt;An implementation of the lifecycle&lt;/li&gt;
+&lt;li&gt;A build-time environment that platforms may use to execute the lifecycle&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;kpack will push the builder image to your registry.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f builder.yaml 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	builder.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;ul&gt;
+&lt;li&gt;Change &lt;code&gt;spec.serviceAccount&lt;/code&gt; to your service account&amp;rsquo;s name.&lt;/li&gt;
+&lt;li&gt;Change &lt;code&gt;spec.tag&lt;/code&gt; to your registry address appending &lt;code&gt;/builder&lt;/code&gt; or a name of your choosing to hold your builder.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kpack.io/v1alpha1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Builder&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;my-builder&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;serviceAccount&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dockerhub-registry-service-account&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;tag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;index.docker.io/&amp;lt;docker-hub-repo&amp;gt;/&amp;lt;builder&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;stack&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;base&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterStack&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;store&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterStore&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/java&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/java-azure&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/graalvm&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/nodejs&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/dotnet-core&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/go&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/php&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;create-an-image-configuration&#34;&gt;Create an Image Configuration&lt;/h3&gt;
+&lt;p&gt;Now you&amp;rsquo;re all ready to start building images and pushing them to your registry. To create a manifest that builds containers off the application code on GitHub:&lt;/p&gt;
+
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	gcr-image.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;Applying your image yaml will enable automation to build your new image.
+This build will take a few minutes and will be subsequently faster each time you run as it has a cache.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f gcr-image.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Change &lt;code&gt;spec.tag&lt;/code&gt; to your registry address appending &lt;code&gt;/app&lt;/code&gt; or a name of your choosing to hold your app.&lt;/li&gt;
+&lt;li&gt;Change &lt;code&gt;spec.serviceAccount&lt;/code&gt; to your service account&amp;rsquo;s name.&lt;/li&gt;
+&lt;li&gt;At &lt;code&gt;spec.source.git.url&lt;/code&gt; is the source code repo being used to build the app.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;spec.source.git.revision&lt;/code&gt; is the commit tag used to build, a change here will trigger a new build!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;build.pivotal.io/v1alpha1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Image&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;petclinic-image&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;tag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;us.gcr.io/&amp;lt;project&amp;gt;/&amp;lt;spring-petclinic&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;serviceAccount&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr-registry-service-account&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Builder&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;source&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;git&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;https://github.com/spring-projects/spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;revision&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;82cb521d636b282340378d80a6307a08e3d4a4c4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	dockerhub-image.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;Applying your image yaml will enable automation to build your new image.
+This build will take a few minutes and will be subsequently faster each time you run as it has a cache.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f dockerhub-image.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Change &lt;code&gt;spec.tag&lt;/code&gt; to your registry address appending &lt;code&gt;/app&lt;/code&gt; or a name of your choosing to hold your app.&lt;/li&gt;
+&lt;li&gt;Change &lt;code&gt;spec.serviceAccount&lt;/code&gt; to your service account&amp;rsquo;s name.&lt;/li&gt;
+&lt;li&gt;At &lt;code&gt;spec.source.git.url&lt;/code&gt; is the source code being used to build the app.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;spec.source.git.revision&lt;/code&gt; is the commit used to build, a change here will trigger a new build!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kpack.io/v1alpha1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Image&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;petclinic-image&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;tag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;index.docker.io/&amp;lt;docker-hub-repo&amp;gt;/app&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;serviceAccount&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dockerhub-service-account&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;my-builder&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Builder&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;source&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;git&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;https://github.com/spring-projects/spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;revision&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;82cb521d636b282340378d80a6307a08e3d4a4c4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can see the GitHub URL, and that you&amp;rsquo;re building off master. Also, you configured the desired image tag (including the registry) and included the service account and builders you created. Once you apply this manifest, it will begin building.&lt;/p&gt;
+&lt;p&gt;By running &lt;code&gt;kubectl get images&lt;/code&gt; you should see the image created but not complete:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;NAME              LATESTIMAGE   READY
+petclinic-image                 Unknown
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;watching-the-build&#34;&gt;Watching the Build&lt;/h3&gt;
+&lt;p&gt;If you run a &lt;code&gt;kubectl get pods&lt;/code&gt;, you&amp;rsquo;ll see a pod created (with a series of init containers) to build the image.&lt;/p&gt;
+&lt;p&gt;Since it includes six different containers, it&amp;rsquo;s hard to use &lt;code&gt;kubectl logs&lt;/code&gt; because you have to know which container to specify at which stage. It&amp;rsquo;s much easier to use the &lt;code&gt;stern&lt;/code&gt; tool mentioned at the beginning.&lt;/p&gt;
+&lt;p&gt;The pod that is created has a name that starts with &lt;code&gt;image-name-build&lt;/code&gt;; so in this case, &lt;code&gt;petclinic-image-build.&lt;/code&gt; The command to run to see the logs is &lt;code&gt;stern petclinic-image-build,&lt;/code&gt; and you&amp;rsquo;ll see all the logs pass by during the build and upload.&lt;/p&gt;
+&lt;p&gt;Once it&amp;rsquo;s complete you can recheck the image with &lt;code&gt;kubectl get images&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;NAME LATESTIMAGE                                                                                                        READY
+petclinic-image   us.gcr.io/pgtm-tbritten/spring-petclinic@sha256:&amp;lt;sha hash&amp;gt;   True
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can now run &lt;code&gt;docker pull us.gcr.io/&amp;lt;project&amp;gt;/&amp;lt;spring-petclinic&amp;gt;&lt;/code&gt; to download the completed image. Or you can create a Kubernetes manifest to run the image.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;As mentioned in the previous section on image configuration, the &lt;code&gt;spec.source.git.revision&lt;/code&gt; is the commit used to build, try changing it to trigger a new build!&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;bonus---deploy-your-app-to-kubernetes&#34;&gt;Bonus - Deploy your app to Kubernetes&lt;/h3&gt;
+&lt;p&gt;kpack is best used in conjunction with a CI/CD tool, but if you want to deploy your app to Kubernetes now you can very easily.&lt;/p&gt;
+&lt;p&gt;You will reuse your secret with your registry and pull from the repository that holds the container image.  You created this repo in the &lt;em&gt;Create an Image Configuration&lt;/em&gt; section and can be found at  &lt;code&gt;spec.tag&lt;/code&gt; place it after &lt;code&gt;--image=$DH_USERNAME/app&lt;/code&gt; .&lt;/p&gt;
+&lt;p&gt;Create a deployment with the image kpack made with your source code&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create deployment kpack-demo --image=&amp;lt;registry-name&amp;gt;/&amp;lt;app-repo&amp;gt;      
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To verify deployment&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get deployments                                          
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Expose the Pod to the public internet using the kubectl expose command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl expose deployment kpack-demo --type=LoadBalancer --port=8080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;--type=LoadBalancer&lt;/code&gt; flag exposes your Service outside of the cluster.
+The application code inside the image &lt;code&gt;k8s.gcr.io/echoserver&lt;/code&gt; only listens on TCP port 8080.&lt;/p&gt;
+&lt;p&gt;To verify your service&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get services                
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;On cloud providers that support load balancers, an external IP address would be provisioned to access the Service.&lt;/p&gt;
+&lt;p&gt;On minikube, the LoadBalancer type makes the Service accessible using:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;minikube service kpack-demo                                         
+&lt;/code&gt;&lt;/pre&gt;
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with Cloud Foundry for Kubernetes</title>
+      
+      <link>/guides/kubernetes/cf4k8s-gs/</link>
+      <pubDate>Wed, 29 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/cf4k8s-gs/</guid>
+      <description>
+
+        
+        &lt;blockquote&gt;
+&lt;p&gt;Updated October 2020: CF CLI version 7+ and 6 CPU availability now required, removed metrics server install, new values added to the install yaml eliminate steps from before, and new Kubernetes rendering file. Overall this simplifies installation from previous iterations.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/cloudfoundry/cf-for-k8s.git&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CF-for-k8s&lt;/a&gt; brings Cloud Foundry to Kubernetes.&lt;/p&gt;
+&lt;p&gt;Cloud Foundry is an open-source, multi-cloud application platform as a service governed by the Cloud Foundry Foundation, a 501 organization.&lt;/p&gt;
+&lt;p&gt;Using Cloud Foundry developers only have to focus on writing and delivering code as CF takes care of the rest. Developers enter &lt;code&gt;cf push&lt;/code&gt; into the command line and their app will be deployed immediately receiving an endpoint. The CF platform will take care of containerizing the source code into a working app with the required dependencies, can be configured to bind to a database, connect to a market place and much more.&lt;/p&gt;
+&lt;p&gt;The cf-for-k8s platform adds a higher level of abstraction to Kubernetes by removing the sharp learning curve required for teams, developers don&amp;rsquo;t have to know Kubernetes they only have to &lt;code&gt;cf push&lt;/code&gt;. Kubernetes adds new possibilities to Cloud Foundry opening up the massive Kubernetes ecosystem.&lt;/p&gt;
+&lt;p&gt;In this guide you&amp;rsquo;ll deploy Cloud Foundry on Kubernetes locally.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before you begin&lt;/h2&gt;
+&lt;h3 id=&#34;machine-requirements&#34;&gt;Machine Requirements&lt;/h3&gt;
+&lt;p&gt;Currently cf-for-k8s supports Kubernetes 1.15.x or 1.16.x, the config yaml file we are using to make our kind cluster will make a cluster with the following requirements, see that your computer can handle them:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;have a minimum of 1 node&lt;/li&gt;
+&lt;li&gt;have a minimum of 6 CPU, 8GB memory per node&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;tools-required&#34;&gt;Tools required&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You will need a few tools before beginning and once set up installation usually takes 10 minutes or less.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;CF CLI version requirement changed to version 7+&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.cloudfoundry.org/cf-cli/install-go-cli.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Foundry CLI&lt;/a&gt; (version 7+) to talk to Cloud Foundry&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew install cloudfoundry/tap/cf-cli
+# verify install 
+cf version
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You will need &lt;code&gt;kubectl&lt;/code&gt; to interact with your cluster &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl install instructions&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew install kubectl
+# verify install 
+kubectl version --client
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;KinD (Kubernetes in Docker) to instantiate your local cluster &lt;a href=&#34;https://kind.sigs.k8s.io/docs/user/quick-start/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kind install instructions&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew install kind
+# verify install 
+kind version
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://bosh.io/docs/cli-v2-install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bosh CLI&lt;/a&gt; the &lt;code&gt;./hack/generate-values.sh&lt;/code&gt; script will use the Bosh CLI to generate certificates, keys, and passwords in the file &lt;code&gt;./cf-install-values.yml&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew install cloudfoundry/tap/bosh-cli
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://k14s.io/#install&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kapp&lt;/a&gt; (v0.21.0+) will aid you to deploy cf-for-k8s to your cluster&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew tap k14s/tap
+brew install ytt kapp
+kapp --version
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://k14s.io/#install&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ytt&lt;/a&gt; (v0.26.0+) will help create templates to deploy cf-for-k8s&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac you should have this installed from the above command, to verify:
+&lt;pre&gt;&lt;code&gt;ytt version
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;DockerHub&lt;/a&gt; is the image registry used in this guide please make an account if you don&amp;rsquo;t have one they are free and quickly made.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;clone-the-cf-for-k8s-repo&#34;&gt;Clone the CF for K8s repo&lt;/h2&gt;
+&lt;p&gt;Clone the repo to preferred location and cd into it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/cloudfoundry/cf-for-k8s.git &amp;amp;&amp;amp; cd cf-for-k8s
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;setup-your-local-k8s-cluster-with-kind&#34;&gt;Setup your local k8s cluster with KinD&lt;/h2&gt;
+&lt;p&gt;Create your cluster using the config yaml from the cf-for-k8s repo obtained above.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kind create cluster --config=./deploy/kind/cluster.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Point your kubeconfig to your new cluster.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl cluster-info --context kind-kind
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;generate-the-yaml-used-to-deploy-cf-for-k8s&#34;&gt;Generate the yaml used to deploy CF for k8s&lt;/h2&gt;
+&lt;p&gt;In this script you use &lt;code&gt;vcap.me&lt;/code&gt; as your CF domain with the flag &lt;code&gt;-d&lt;/code&gt;, this way you can avoid configuring DNS for a domain.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;./hack/generate-values.sh&lt;/code&gt; script will generate certificates, keys, passwords, and configuration needed to deploy into `./cf-install-values.yml&#39;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./hack/generate-values.sh -d vcap.me &amp;gt; ./cf-install-values.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Append the app_registry credentials to your DockerHub registry to the bottom of the &lt;code&gt;./cf-install-values.yml&lt;/code&gt; replacing with your information. You can copy/paste  or use the following command.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The repeated username is a requirement for DockerHub, this setting changes with some container registries. Also, don&amp;rsquo;t forget to add the quotes.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;To use another container registry follow the &lt;a href=&#34;https://github.com/cloudfoundry/cf-for-k8s/blob/master/docs/deploy.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;instructions under step 3&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;cat &amp;gt;&amp;gt; cf-install-values.yml &amp;lt;&amp;lt; EOL
+app_registry:
+  hostname: https://index.docker.io/v1/
+  repository_prefix: &amp;quot;&amp;lt;DockerHub-username&amp;gt;&amp;quot;
+  username: &amp;quot;&amp;lt;DockerHub-username&amp;gt;&amp;quot;
+  password: &amp;quot;&amp;lt;DockerHub-password&amp;gt;&amp;quot;
+EOL
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;There are a few more lines to add to your cf-install-values.yml, like adding a metrics server because KinD doesn&amp;rsquo;t come with one.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat &amp;gt;&amp;gt; cf-install-values.yml &amp;lt;&amp;lt; EOL
+add_metrics_server_components: true
+enable_automount_service_account_token: true
+metrics_server_prefer_internal_kubelet_address: true
+remove_resource_requirements: true
+use_first_party_jwt_tokens: true
+
+load_balancer:
+  enable: false
+EOL
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, use cf-install-values.yml to render the final Kubernetes template to raw Kubernetes configuration.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ytt -f config -f ./cf-install-values.yml &amp;gt; ./cf-for-k8s-rendered.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;deploy-cf-for-k8s&#34;&gt;Deploy CF for k8s&lt;/h2&gt;
+&lt;p&gt;You are ready to deploy cf-for-k8s using the &lt;code&gt;./cf-for-k8s-rendered.yml&lt;/code&gt; file created above. Once you deploy it should take around 10 minutes to finish.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The deployment has a timer and will exit with a timeout error if it takes too long. Assuming all previous steps were followed correctly enter the deployment command again to finish if it exits early.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;kapp deploy -a cf -f ./cf-for-k8s-rendered.yml -y
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;validate-the-deployment&#34;&gt;Validate the deployment&lt;/h2&gt;
+&lt;p&gt;Target your CF CLI to point to the new CF instance.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf api --skip-ssl-validation https://api.vcap.me
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Set the CF_ADMIN_PASSWORD environment variable to the CF administrative password, stored in the cf_admin_password key in the configuration-values/deployment-values.yml file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;CF_ADMIN_PASSWORD=&amp;quot;$(bosh interpolate ./cf-install-values.yml --path /cf_admin_password)&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Log into the installation as the admin user.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf auth admin &amp;quot;$CF_ADMIN_PASSWORD&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Enable Docker&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf enable-feature-flag diego_docker
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;A powerful feature provided by CF is multi-tenancy, where you can create a space for a team, an app or whatever your workflow requires.&lt;/p&gt;
+&lt;p&gt;Create and target an organization and space.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf create-org test-org
+cf create-space -o test-org test-space
+cf target -o test-org -s test-space
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;deploy-an-application-with-cf-push&#34;&gt;Deploy an application with &lt;code&gt;cf push&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;At last you can push the included sample &lt;code&gt;test-node-app&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf push test-node-app -p ./tests/smoke/assets/test-node-app
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;Or you can push any app you wish just cd into the directory and push the app with the following command.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf push APP-NAME
+&lt;/code&gt;&lt;/pre&gt;&lt;/blockquote&gt;
+&lt;p&gt;Once your app stages you can find it in Cloud Foundry with this command.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf apps
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The output in the terminal should look something as follows.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Getting apps in org test-org / space test-space as admin...
+OK
+
+name            requested state   instances   memory   disk   urls
+test-node-app   started           1/1         1G       1G     test-node-app.vcap.me
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To see the pods that have applications on your Cloud Foundry instance look in the &lt;code&gt;cf-workloads&lt;/code&gt; namespace.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get pods -n cf-workloads
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can now play with cf for k8s and deploy other apps and observe how it affects the Kubernetes infrastructure. Try other cf commands like &lt;code&gt;cf delete test-node-app&lt;/code&gt; and see what changes, enjoy you new cf for k8s instance.&lt;/p&gt;
+&lt;h2 id=&#34;delete-the-cf-for-k8s-deployment&#34;&gt;Delete the cf-for-k8s deployment&lt;/h2&gt;
+&lt;p&gt;You can delete the cf-for-k8s deployment from your cluster by running the following command.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kapp delete -a cf
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;delete-your-kind-cluster&#34;&gt;Delete your Kind cluster&lt;/h2&gt;
+&lt;p&gt;To delete your KinD cluster.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kind delete cluster
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;next-steps&#34;&gt;Next Steps&lt;/h2&gt;
+&lt;p&gt;Learn more about Cloud Foundry with the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/cloudfoundry/cf-for-k8s.git&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cf-for-k8s GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cloudfoundry.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cloudfoundry.org&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://katacoda.com/cloudfoundry-tutorials/scenarios/trycf&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Online CF Tutorial&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: Highlights of the SpringOne 2020 Self-Paced Workshops---and Their New Home</title>
+      
+      <link>/blog/highlights-of-the-springone-2020-self-paced-workshops-and-their-new-home/</link>
+      <pubDate>Thu, 17 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/highlights-of-the-springone-2020-self-paced-workshops-and-their-new-home/</guid>
+      <description>
+
+        
+        &lt;p&gt;SpringOne 2020 just wrapped, and the self-paced workshops were a complete success! Moreover, all of your requests to continue providing these workshops beyond the conference have been heard. Their future home will be the &lt;a href=&#34;https://tanzu.vmware.com/developer/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Developer Center&lt;/a&gt;. &lt;em&gt;UPDATE: These workshops are available to &lt;a href=&#34;/workshops&#34;&gt;try out now&lt;/a&gt;!&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/workshops-and-training.png&#34; alt=&#34;SpringOne 2020 Workshops and Training&#34;  title=&#34;SpringOne2020&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;For those that missed SpringOne 2020, we’ll quickly recap what the workshops focused on and what they accomplished. Feel free to jump around if you need to; the recap is meant to be a quick read with plenty of pictures.&lt;/p&gt;
+&lt;p&gt;A total of 10 self-paced workshops covering a range of open source technology—from CI/CD with Tekton, several Spring technologies, and infrastructure technology like Kubernetes, Octant, and Carvel—were available at SpringOne 2020:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Kubernetes Fundamentals&lt;/li&gt;
+&lt;li&gt;Container Basics&lt;/li&gt;
+&lt;li&gt;Getting Started with Octant&lt;/li&gt;
+&lt;li&gt;Getting Started with Spring Boot on Kubernetes&lt;/li&gt;
+&lt;li&gt;Spring Boot Probes on Kubernetes&lt;/li&gt;
+&lt;li&gt;Spring Boot Skaffold on Kubernetes&lt;/li&gt;
+&lt;li&gt;Spring Microservices&lt;/li&gt;
+&lt;li&gt;Getting Started with Spring Cloud Gateway&lt;/li&gt;
+&lt;li&gt;Getting Started with Carvel (formerly k14s)&lt;/li&gt;
+&lt;li&gt;Tekton Fundamentals&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Each of these workshops has an environment prepared and ready, which is quite refreshing when you are accustomed to spending 15-30 minutes setting up to follow a tutorial. The workshop environment is also native to the technology being used. For example, you can interact with actual Kubernetes clusters in a Kubernetes workshop or work in a real Java 11 environment in Spring workshops. Finally, all the tools you need are built into the workshop, such as an IDE or Kubernetes tools like Octant to name a few.&lt;/p&gt;
+&lt;p&gt;In this screenshot from Getting Started with Spring Boot on Kubernetes, you can see the code editor utilized in it and some of the other workshops.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/code-editor.png&#34; alt=&#34;SpringOne2020 code editor example&#34;  title=&#34;SpringOne2020 code editor example&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;In Getting Started with Octant, you use the open-source Kubernetes tool Octant to inspect your Kubernetes cluster. Many developers use &lt;a href=&#34;https://octant.dev/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Octant&lt;/a&gt; to reveal the objects running in their Kubernetes clusters.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/octant-redact.png&#34; alt=&#34;SpringOne2020 Octant example&#34;  title=&#34;SpringOne2020 octant example&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;kubernetes-fundamentals&#34;&gt;Kubernetes Fundamentals&lt;/h2&gt;
+&lt;p&gt;We designed the workshops so you can mouse-click to automate manual steps that are prone to error. For example, you can click to execute terminal commands, create files, precisely insert lines of code, and more. We also designed them to eliminate errors, like small typos that can interrupt your learning progress. Our goal was to enable you to focus on learning theory and any related concepts rather than on procedural steps you can review later, like commands and code blocks.&lt;/p&gt;
+&lt;p&gt;The screenshot below from the Kubernetes Fundamentals workshop provides an example of the click automation capability we provided. In the instructions on the left, you click the command &lt;code&gt;kubectl apply -f database/&lt;/code&gt; which is then executed in the appropriate terminal on the right.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/creating-resc-underline.png&#34; alt=&#34;SpringOne2020 click automation example&#34;  title=&#34;SpringOne2020 click automation example&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The Kubernetes Fundamentals workshop, a hands-on introduction to using Kubernetes, was by far the most popular workshop at SpringOne 2020. It not only provides you with a real Kubernetes cluster to interact with, but access to the Kubernetes Dashboard!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/kubernetes-dashboard.png&#34; alt=&#34;SpringOne2020 Kubernetes dashboard example&#34;  title=&#34;SpringOne2020 Kubernetes dashboard example&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;By the second step, you are already deploying a blog application to your Kubernetes cluster!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/kubernetes-blog.png&#34; alt=&#34;SpringOne2020 Kubernetes blog example&#34;  title=&#34;SpringOne2020 Kubernetes blog example&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Kubernetes Fundamentals covers many other concepts, such as service networking and exposing those services, as well as linking a database, persistent volumes, and even application health. You’ll even learn best practices for deployments with ReplicaSets.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/replica-redact.png&#34; alt=&#34;SpringOne2020 Kubernetes ReplicaSet example&#34;  title=&#34;SpringOne2020 Kubernetes ReplicaSet example&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;container-basics&#34;&gt;Container Basics&lt;/h2&gt;
+&lt;p&gt;The Container Basics workshop, while introductory, goes into details that are typically omitted from container tutorials, like how to inspect layers.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/inspect-layers.png&#34; alt=&#34;SpringOne2020 container inspect layers example&#34;  title=&#34;SpringOne2020 container inspect layers example&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;getting-started-with-spring-boot-on-kubernetes&#34;&gt;Getting Started with Spring Boot on Kubernetes&lt;/h2&gt;
+&lt;p&gt;It wouldn’t be a Spring conference without at least a few Spring workshops. Of those we offered at Spring 2020, Getting Started with Spring Boot on Kubernetes was the most heavily attended. It shows you how to build a Spring Boot application with no fuss&amp;ndash;—and no YAML—&amp;ndash;in a handful of steps. Leave it to Spring to make Kubernetes easy!&lt;/p&gt;
+&lt;p&gt;You might recognize the terminal art in the following screenshot; it is of a Spring application being built.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/spring-jar-redact.png&#34; alt=&#34;SpringOne2020 Spring Boot Kubernetes build&#34;  title=&#34;SpringOne2020 Spring Boot Kubernetes build&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Once the Spring Boot application is built, you deploy it to Kubernetes from your very own image registry!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/deploy-2-k8s.png&#34; alt=&#34;SpringOne2020 Spring Boot Kubernetes deploy&#34;  title=&#34;SpringOne2020 Spring Boot Kubernetes deploy&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;There were so many amazing workshops from SpringOne. New and hot technologies like &lt;a href=&#34;https://k14s.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Carvel&lt;/a&gt; and &lt;a href=&#34;https://cloud.google.com/tekton&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tekton&lt;/a&gt; stood out as they are gaining traction in the industry.&lt;/p&gt;
+&lt;p&gt;All of the Spring Boot Kubernetes workshops where surprisingly painless and quick to run through. After Getting Started with Spring Boot on Kubernetes, Spring Boot Skaffold on Kubernetes is my favorite. With &lt;a href=&#34;https://skaffold.dev/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Skaffold&lt;/a&gt; Kubernetes development becomes dynamic, eliminating tedious commands and overall speeding up your work.&lt;/p&gt;
+&lt;p&gt;For those brand new to Spring or &lt;a href=&#34;https://spring.io/microservices&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Microservices&lt;/a&gt;, the Spring Microservices workshop is a good introduction that could be completed in 10 minutes or less due to the magic of the Spring Framework.&lt;/p&gt;
+&lt;p&gt;Using very similar code to the Spring Microservices workshop in Getting Started with Spring Cloud Gateway you build your own &lt;a href=&#34;https://spring.io/projects/spring-cloud-gateway&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;API Gateway&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Here is a full rundown of the self-paced workshops featured at SpringOne 2020:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/workshops-1.png&#34; alt=&#34;SpringOne2020 workshops list 1&#34;  title=&#34;SpringOne2020 workshops list&#34; /&gt;
+&lt;img src=&#34;/images/blogs/springone2020-workshops/workshops-2.png&#34; alt=&#34;SpringOne2020 workshops list 2&#34;  title=&#34;SpringOne2020 workshops list&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;self-paced-workshops-are-coming-to-tanzu-developer-center&#34;&gt;Self-Paced Workshops Are Coming to Tanzu Developer Center!&lt;/h2&gt;
+&lt;p&gt;Now that SpringOne 2020 has come and gone, the SpringOne self-paced workshops are being moved to their new home at &lt;a href=&#34;https://tanzu.vmware.com/developer/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Developer Center&lt;/a&gt;! It is a perfect fit. As its name implies, &lt;a href=&#34;https://tanzu.vmware.com/developer/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Developer Center&lt;/a&gt; is developer-focused (no marketing jargon allowed); its sole purpose is to train developers and enable them on their journey forward. The &lt;a href=&#34;https://tanzu.vmware.com/developer/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Developer Center&lt;/a&gt; already has blogs, videos, an integrated community, and a learning portal, and features weekly live streams and recordings via &lt;a href=&#34;/tv/&#34;&gt;Tanzu.TV&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Not only are you getting the workshops from SpringOne 2020, but more workshops are being made as we speak!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/springone2020-workshops/overview.png&#34; alt=&#34;SpringOne2020 workshops end&#34;  title=&#34;SpringOne2020 workshops end&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;To be notified as soon as the workshops are made available, &lt;a href=&#34;/community/&#34;&gt;subscribe to Tanzu Developer Newsletter.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;UPDATE: These workshops are available to &lt;a href=&#34;/workshops&#34;&gt;try out now&lt;/a&gt;!&lt;/em&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: A Container Is a Linux Namespace and Networking Basics</title>
+      
+      <link>/blog/a-container-is-a-linux-namespace-and-networking-basics/</link>
+      <pubDate>Mon, 29 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/a-container-is-a-linux-namespace-and-networking-basics/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;img src=&#34;/images/blogs/container-net-basics/freddy-g-1i1zPbkQJNg-unsplash.jpg&#34; alt=&#34;open source image @freddygthatsme see sources
+&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Understanding the way containers communicate will make your life easier in many ways. Technologies like Kubernetes and Docker abstract away details that make containers special, but can also abstract away intuition and understanding. Without that knowledge, challenges arise—educated problem-solving adds confidence to decision-making!&lt;/p&gt;
+&lt;p&gt;In this post, we will demystify containers and cover some networking basics by explaining how to create two rudimentary containers and connecting them with a virtual network so they can talk to each other. The host machine, which is the machine where the network lives, views this network as if it were completely external. So, we will connect the network to the host. We’ve also included a bonus section about connecting the network to the internet so your containers can reach Google. You do not need a Linux machine to run through the exercises.&lt;/p&gt;
+&lt;h2 id=&#34;containers-and-networks-what-are-they&#34;&gt;Containers and Networks: What Are They?&lt;/h2&gt;
+&lt;p&gt;A container can be considered synonymous with a Linux network namespace. Keep this in mind. Essentially, a container &lt;strong&gt;is&lt;/strong&gt; a namespace.&lt;/p&gt;
+&lt;p&gt;Each container runtime uses a namespace differently. For example, containers in &lt;a href=&#34;https://docs.docker.com/get-started/overview/#the-underlying-technology&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker&lt;/a&gt; get their own namespace, while in CoreOS’ &lt;a href=&#34;https://coreos.com/rkt/docs/latest/networking/overview.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;rkt&lt;/a&gt;, groups of containers share namespaces, each of which is called a pod.&lt;/p&gt;
+&lt;p&gt;Containers are based on Linux networking, and so insights learned in either can be applied to both. You can apply these concepts to anything with Linux, including containers, VMs, computers, servers, the cloud, IoT, Raspberry Pi, and supercomputers.&lt;/p&gt;
+&lt;p&gt;When you think of networking, you might think of applications communicating over HTTP, but actually a network refers more generally to a group of objects that communicate with each other by way of their unique addresses. The point is that networking refers to things communicating with things, and not necessarily an application or a container — it could be any device.&lt;/p&gt;
+&lt;p&gt;One way to connect two containers is to create a virtual network. One way to do this is by creating two namespaces and two virtual ethernet cables. Each cable should be attached to a namespace on one side, and on the opposite end be united by a bridge, to complete the network.&lt;/p&gt;
+&lt;p&gt;Now that we have defined containers are Linux namespaces, let’s see how the two  go together like pb and jelly.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;view-interfaces-on-your-host&#34;&gt;View Interfaces on Your Host&lt;/h3&gt;
+&lt;p&gt;If you do not have access to a Linux operating system or don’t want to use what is available, you can install Multipass to easily spin up a virtual machine (VM). It’s a decent solution for what we are doing. A lot of the commands below have sudo prepending them due to Multipass.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://multipass.run/docs/installing-on-macos&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Multipass MacOS Install&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://multipass.run/docs/installing-on-linux&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Multipass MacOS Install&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://multipass.run/docs/installing-on-windows&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Multipass Windows Install&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To install using Homebrew:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+brew cask install multipass
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now spin up a VM with the name ‘linux-vm’ with Ubuntu using the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+multipass launch -n linux-vm
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To list the VMs in Multipass, use the command &lt;code&gt;multipass list&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To enter into a shell in your VM, use the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+multipass shell linux-vm
+
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h3 id=&#34;view-interfaces-on-your-host-1&#34;&gt;View Interfaces on Your Host&lt;/h3&gt;
+&lt;p&gt;To see the interfaces on your host, enter:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+ip link list
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This should print out the devices that are available; any networking device that has a driver loaded can be classified as an available device. In the output, you might see devices like &lt;code&gt;lo&lt;/code&gt; and &lt;code&gt;enp0s2&lt;/code&gt;. The &lt;code&gt;ip link&lt;/code&gt; command will also output two lines for each device, the link status, and the characteristics.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/container-net-basics/screenshot-ip-output.png&#34; alt=&#34;screenshot of output
+&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;create-your-namespaces&#34;&gt;Create Your Namespaces&lt;/h3&gt;
+&lt;p&gt;A network namespace is another copy of the network stack, with its own routes, firewall rules, and network devices. A process inherits its network namespace from its parent by default.&lt;/p&gt;
+&lt;p&gt;Let’s create two network namespaces: &lt;code&gt;pb&lt;/code&gt; and &lt;code&gt;jelly&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip netns add pb
+
+sudo ip netns add jelly
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once they are added you can view them with &lt;code&gt;ip netns list&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;You now have a very simple container that can’t do much at the moment. To get more functionality you can connect the namespaces using a veth device.&lt;/p&gt;
+&lt;h3 id=&#34;create-a-virtual-ethernet-cable-for-each-namespace&#34;&gt;Create a Virtual Ethernet Cable for Each Namespace&lt;/h3&gt;
+&lt;p&gt;A veth device is a virtual ethernet device that you can think of as a real ethernet cable connecting two other devices. Virtual ethernet devices act as tunnels between network namespaces. They create a bridge to a physical network device in another namespace. Virtual ethernets can also be used as standalone network devices as well.&lt;/p&gt;
+&lt;p&gt;Veth devices are always created in interconnected pairs where packets transmitted on one device in the pair are immediately received on another device. When either device is down, the link state of the pair is down as well.&lt;/p&gt;
+&lt;p&gt;In our example, we are creating two veth pairs. The jelly namespace will connect to the veth-jelly end of the cable, and the other cable end should attach to a bridge that will create the network for our namespaces. We create the same cable and connect it to the bridge on the pb side.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/container-net-basics/containers.png&#34; alt=&#34;pb&amp;amp;amp;jelly diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;To create both veth pairs, use the command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip link add veth-pb type veth peer name bread-pb-veth
+
+sudo ip link add veth-jelly type veth peer name bread-j-veth
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now when you look at the devices you will see your veth pairs on the host network.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+ip link list
+
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;attach-the-veth-cables-to-their-respective-namespaces&#34;&gt;Attach the Veth Cables to Their Respective Namespaces&lt;/h3&gt;
+&lt;p&gt;Now that we have a veth pair in the host namespace, let&amp;rsquo;s move the jelly and pb sides of the cables out into the jelly and pb namespaces.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip link set veth-pb netns pb
+
+sudo ip link set veth-jelly netns jelly
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you check &lt;code&gt;ip link list&lt;/code&gt; you will no longer find &lt;code&gt;veth-pb&lt;/code&gt; and &lt;code&gt;veth-jelly&lt;/code&gt; since they aren’t in the host namespace.&lt;/p&gt;
+&lt;p&gt;To see the ends of the cable you created, run the &lt;code&gt;ip link&lt;/code&gt; command within the namespaces:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip netns exec jelly \
+
+ip link
+
+sudo ip netns exec pb \
+
+ip link
+
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;assign-ip-addresses-to-each-namespace&#34;&gt;Assign IP Addresses to Each Namespace&lt;/h3&gt;
+&lt;p&gt;Since we keep using &lt;code&gt;ip&lt;/code&gt; commands, you might be wondering what the IPv4 addresses are. Let&amp;rsquo;s quickly retrace our steps to make sense of it all.&lt;/p&gt;
+&lt;p&gt;You began by creating two namespaces, then a virtual ethernet cable. Then you connected the devices to the cable.&lt;/p&gt;
+&lt;p&gt;Now, in order to create an IP address for the jelly namespace, use the &lt;code&gt;ip address add&lt;/code&gt; command for the device jelly:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip netns exec jelly \
+
+ip address add 192.168.0.55/24 dev veth-jelly
+
+sudo ip netns exec jelly \
+
+ip link set veth-jelly up
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Similarly, assign an address to pb as well:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip netns exec pb \
+
+ip address add 192.168.0.56/24 dev veth-pb
+
+sudo ip netns exec pb \
+
+ip link set veth-pb up
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Check the interfaces in the namespaces. Verify if they are correct with the upcoming command. You are looking for the interfaces that you created:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;veth-pb&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;veth-jelly&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Make sure they have the IP addresses that you set.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip netns exec jelly \
+
+ip addr
+
+sudo ip netns exec pb \
+
+ip addr
+
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;bridge-the-gap-between-namespaces&#34;&gt;Bridge the Gap Between Namespaces&lt;/h3&gt;
+&lt;p&gt;You now have both the IPs and interfaces set, but you can’t establish communication with them.  That’s because there’s no interface in the default namespace that can send the traffic to those namespaces, and we didn’t configure addresses to the other side of the veth pairs or configure a bridge device. But with the creation of the bridge device, we’ll be able to provide the necessary routing to properly form the network.&lt;/p&gt;
+&lt;p&gt;So now, create your bridge. I called mine brd1, for the bread needed for our pb and jelly sandwich.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip link add name brd1 type bridge
+
+# set the interface
+
+sudo ip link set brd1 up
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To check if the device was created, execute &lt;code&gt;ip link&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;With your bridge device set, it&amp;rsquo;s time to connect the bridge side of the veth cable to the bridge.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip link set bread-pb-veth up
+
+sudo ip link set bread-j-veth up
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can add the bread veth interfaces to the bridge by setting the bridge device as their master.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip link set bread-pb-veth master brd1
+
+sudo ip link set bread-j-veth master brd1
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To verify:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+bridge link show brd1
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Try pinging pb’s IP 192.168.0.56 from the jelly namespace. Use &lt;code&gt;ctrl + C&lt;/code&gt; to exit.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip netns exec jelly \
+
+ping 192.168.0.56
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You have now united pb and jelly, the two “containers” you created.&lt;/p&gt;
+&lt;h2 id=&#34;bonus-connect-your-containers-to-the-host-and-the-internet&#34;&gt;Bonus: Connect Your Containers to the Host and the Internet&lt;/h2&gt;
+&lt;p&gt;If you try to &lt;code&gt;ping 192.168.0.56&lt;/code&gt; from the host it won&amp;rsquo;t work because the namespace doesn&amp;rsquo;t have visibility to the global scope. As far as the namespaces are concerned, they are isolated on their own machine.&lt;/p&gt;
+&lt;p&gt;In order to access the namespaces directly from the host namespace, set the address of the bridge device bread&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip addr add 192.168.0.60/24 brd + dev brd1
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now you can ping the namespaces directly from the host!&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+ping 192.168.0.56
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you try to reach the internet from one of the namespaces, however, it will not work.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+ip netns exec pb \
+
+ping 8.8.8.8
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The connection to the internet doesn&amp;rsquo;t work because we haven&amp;rsquo;t set a default gateway. The default gateway is the node you send every network packet that doesn&amp;rsquo;t have an explicit route. Without a default gateway, your network doesn&amp;rsquo;t know what to do with the packets it receives.&lt;/p&gt;
+&lt;p&gt;First, add a default gateway to the bridge:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip -all netns exec \
+
+        ip route add default via 192.168.0.60
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now check how the routing table looks inside your namespaces:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip netns exec jelly \
+
+        ip route
+
+sudo ip netns exec pb \
+
+        ip route
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can now connect to the internet, but can&amp;rsquo;t send or receive packets. To receive packets, configure Network Address Translation (NAT) with Masquerade. Masquerading allows machines to invisibly access the Internet via the Masquerade gateway, whereas a NAT can hide private addresses from the internet.&lt;/p&gt;
+&lt;p&gt;Lets add a new &lt;code&gt;iptables&lt;/code&gt; rule in the POSTROUTING chain of the NAT table to receive packets.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+  sudo iptables \
+
+                -t nat \
+
+                -A POSTROUTING \
+
+                -s 192.168.0.60/24 \
+
+                -j MASQUERADE 
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Here is a breakdown of the above flag:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;-t marks the table commands should be directed to&lt;/li&gt;
+&lt;li&gt;-A specifies that we&amp;rsquo;re appending a rule to the chain&lt;/li&gt;
+&lt;li&gt;-s specifies the source address&lt;/li&gt;
+&lt;li&gt;-j is the action being performed&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Now enable packet forwarding with IPv4 ip forwarding:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo sysctl -w net.ipv4.ip_forward=1
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And now try to reach the internet from one of your namespaces:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+sudo ip netns exec jelly \
+
+ping 8.8.8.8
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You should now have complete connectivity. The host can direct traffic to a namespace, and therefore microservices within, and vice-versa. And applications in the namespace can now communicate with each other and access the internet.&lt;/p&gt;
+&lt;p&gt;You were able to create two containers and a virtual network from scratch! You have gained a more intuitive and intimate understanding of containers and Linux networking concepts, tools, and commands. Creating a container was as easy as one command &lt;code&gt; ip netns add pb&lt;/code&gt; to create your namespace.&lt;/p&gt;
+&lt;p&gt;Keep a lookout on the VMware Tanzu Developer website for upcoming articles and guides on containers and be sure to visit the &lt;a href=&#34;/topics/containers/&#34;&gt;container section&lt;/a&gt;. A great resource to learn more about container networking is &lt;a href=&#34;https://github.com/containernetworking/cni&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;the Container Network Interface&lt;/a&gt;, where you can learn how the community is standardizing container networking standards. And if you are inspired you can contribute or create your own plugin!&lt;/p&gt;
+&lt;h2 id=&#34;tldr-or-troubleshooting-help&#34;&gt;TL;DR or Troubleshooting help&lt;/h2&gt;
+&lt;p&gt;If you just want to run a script and check the status after or get stuck check out this &lt;a href=&#34;https://github.com/everythingeverywhere/networking-basics&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;script&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;sources&#34;&gt;Sources:&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://unsplash.com/photos/1i1zPbkQJNg&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Image from @freddygthatsme&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/containernetworking/cni/blob/master/SPEC.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CNI Spec&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://ops.tips/blog/using-network-namespaces-and-bridge-to-isolate-servers/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Using network namespaces and a virtual switch to isolate servers&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.opencloudblog.com/?p=66&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Linux Switching – Interconnecting Namespaces&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.man7.org/linux/man-pages&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Linux man pages online&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://rancher.com/learning-paths/introduction-to-container-networking/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Intro to Container Networking&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Getting Started with Cloud Foundry for Kubernetes</title>
+      
+      <link>/videos/cf-for-k8s-gs/</link>
+      <pubDate>Wed, 13 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/cf-for-k8s-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

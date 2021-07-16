@@ -1,0 +1,332 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Hands-On Workshops</title>
+    <link>/workshops/</link>
+    <description>Recent content in Hands-On Workshops on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/workshops/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Workshops: Building and Deploying a Cloud Native Application</title>
+      
+      <link>/workshops/cnd-deploy-practices/</link>
+      <pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/cnd-deploy-practices/</guid>
+      <description>
+
+        
+        &lt;p&gt;This is a workshop for developers and application operators
+new to cloud native concepts who wish to learn the basics of
+building and deploying a web application to a container
+orchestration platform.&lt;/p&gt;
+&lt;p&gt;In this workshop you will be presented:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The essence of &lt;em&gt;Cloud Native&lt;/em&gt; in a modern technology
+and practices context&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Why &lt;em&gt;Cloud Native&lt;/em&gt; practices are important to you,
+your employers and your customers&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You will also:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Build a simple blocking web application.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Containerize it for running on a container orchestration platform.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Deploy the application to a container orchestration platform.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Access your application in the public internet as an end-user.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Monitor the state of your application on the platform.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This workshop is the first in a series of workshops that explore
+cloud-native development and application operations practices.&lt;/p&gt;
+&lt;p&gt;The workshop also provides foundational background for other Tanzu
+Developer Center Spring, Spring Boot or Kubernetes content.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Container Basics</title>
+      
+      <link>/workshops/lab-container-basics/</link>
+      <pubDate>Thu, 04 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-container-basics/</guid>
+      <description>
+
+        
+        &lt;p&gt;Containers are a lightweight form of OS-level virtualization. They enable a set of application processes to be run in their own isolated environment, without the need to run a full operating system. In this workshop, you’ll learn the basics of how to build container images and run them. We’ll be using the Docker tool.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: SpringOne Tour DevOps</title>
+      
+      <link>/workshops/lab-springone-tour-devops/</link>
+      <pubDate>Fri, 09 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-springone-tour-devops/</guid>
+      <description>
+
+        
+        &lt;p&gt;During this workshop you will automate the testing and deployment of a Spring Boot app and its backing database to Kubernetes, including:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Run the app locally to understand its behavior&lt;/li&gt;
+&lt;li&gt;Review embedded testing
+&lt;ul&gt;
+&lt;li&gt;Unit testing&lt;/li&gt;
+&lt;li&gt;Integration testing for APIs using contracts&lt;/li&gt;
+&lt;li&gt;Integration testing for databases using Flyway and Testcontainers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Automate testing using GitHub Actions&lt;/li&gt;
+&lt;li&gt;Automate container builds using kpack&lt;/li&gt;
+&lt;li&gt;Automate deployment to Kubernetes using GitOps and ArgoCD&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Spring Booternetes</title>
+      
+      <link>/workshops/lab-spring-booternetes/</link>
+      <pubDate>Tue, 11 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-spring-booternetes/</guid>
+      <description>
+
+        
+        &lt;p&gt;During this workshop you will move an application comprising 4 Spring Boot apps to Kubernetes, including:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Test the app locally using Spring Cloud Config Server and Eureka to understand its behavior&lt;/li&gt;
+&lt;li&gt;Replatform the apps to Kubernetes using Spring Cloud Kubernetes (without Spring Cloud Config Server and Eureka)&lt;/li&gt;
+&lt;li&gt;Replatform the apps to Kubernetes without using Spring Cloud Kubernetes&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Configuring a Cloud Native Application</title>
+      
+      <link>/workshops/cnd-config-practices/</link>
+      <pubDate>Thu, 22 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/cnd-config-practices/</guid>
+      <description>
+
+        
+        &lt;p&gt;This is a workshop for developers and application operators
+new to cloud native concepts who wish to learn the basics of
+handling environmental configuration separately from a web application
+codebase using modern orchestration platform tools.&lt;/p&gt;
+&lt;p&gt;After completing the workshop, you will be able to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Explain configuration requirements of Cloud Native applications&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Explain configuration options available to Cloud Native applications&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Explain the concept of &lt;em&gt;Configuration Drift&lt;/em&gt;,
+why it can be a problem,
+and how to avoid it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This workshop is the second in a series of workshops that explore
+cloud-native development and application operations practices.&lt;/p&gt;
+&lt;p&gt;The workshop also provides foundational background for other Tanzu
+Developer Center Spring, Spring Boot or Kubernetes content.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Spring on Kubernetes</title>
+      
+      <link>/workshops/spring-on-kubernetes/</link>
+      <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/spring-on-kubernetes/</guid>
+      <description>
+
+        
+        &lt;p&gt;During this workshop you will learn the finer details of how to create, build, run, and debug a basic Spring Boot app on
+Kubernetes by doing the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Create a basic Spring Boot app&lt;/li&gt;
+&lt;li&gt;Build a Docker image for the app&lt;/li&gt;
+&lt;li&gt;Push the image to a Docker registry&lt;/li&gt;
+&lt;li&gt;Deploy and run the app on Kubernetes&lt;/li&gt;
+&lt;li&gt;Test the app using port-forwarding and ingress&lt;/li&gt;
+&lt;li&gt;Use skaffold to iterate easily as you work on your app&lt;/li&gt;
+&lt;li&gt;Use kustomize to manage configurations across environments&lt;/li&gt;
+&lt;li&gt;Externalize application configuration using ConfigMaps&lt;/li&gt;
+&lt;li&gt;Use service discovery for app-to-app communication&lt;/li&gt;
+&lt;li&gt;Deploy the Spring PetClinic App with MySQL&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Getting Started with Carvel (formerly k14s)</title>
+      
+      <link>/workshops/lab-getting-started-with-carvel/</link>
+      <pubDate>Thu, 04 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-getting-started-with-carvel/</guid>
+      <description>
+
+        
+        &lt;p&gt;Carvel&amp;rsquo;s GitHub contains several tools we created as a result of working with complex, multi-purpose tools like Helm. We believe that working with simple, single-purpose tools that easily interoperate with one another results in a better, workflow compared to the all-in-one approach chosen by Helm. We have found this approach to be easier to understand and debug.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Getting Started with Octant</title>
+      
+      <link>/workshops/lab-getting-started-with-octant/</link>
+      <pubDate>Thu, 04 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-getting-started-with-octant/</guid>
+      <description>
+
+        
+        &lt;p&gt;Octant is an open source, developer-centric web interface for Kubernetes that lets you inspect a Kubernetes cluster and its applications. It provides an alternative to the de facto Kubernetes dashboard typically available with a Kubernetes cluster. Whereas the Kubernetes dashboard would be hosted in the cluster, Octant is deployed to your own local desktop machine. Octant works with your local Kubernetes client configuration, meaning you can use it with whatever Kubernetes cluster you’re working with.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Getting Started with Spring Cloud Gateway</title>
+      
+      <link>/workshops/lab-spring-gateway/</link>
+      <pubDate>Thu, 04 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-spring-gateway/</guid>
+      <description>
+
+        
+        &lt;p&gt;This workshop walks you through getting started with the Spring Cloud Gateway. The Spring Cloud Gateway is a library for building an API Gateway on top of Spring MVC. Spring Cloud Gateway aims to provide a simple, yet effective way to route to APIs and provide cross cutting concerns to them such as: security, monitoring/metrics, and resiliency.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Kubernetes Fundamentals</title>
+      
+      <link>/workshops/lab-k8s-fundamentals/</link>
+      <pubDate>Thu, 04 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-k8s-fundamentals/</guid>
+      <description>
+
+        
+        &lt;p&gt;This workshop is intended to give you a quick, hands-on introduction to using Kubernetes. In the process, you’ll learn about some of the fundamental concepts of Kubernetes when deploying applications to it. The focus will be on what a developer would need to know to use the platform. It’s not a workshop on how to run the Kubernetes platform.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Spring Boot Probes on Kubernetes</title>
+      
+      <link>/workshops/lab-spring-boot-k8s-probes/</link>
+      <pubDate>Thu, 04 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-spring-boot-k8s-probes/</guid>
+      <description>
+
+        
+        &lt;p&gt;This lab shows you how to add liveness and readiness probes to a Spring Boot application in Kubernetes. This lab will cover the following tasks:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Add some endpoints to a Spring Boot application and build and push a Docker image&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Configure the probes in a few lines of YAML&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Deploy the image as a container in Kubernetes&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Spring Boot Skaffold on Kubernetes</title>
+      
+      <link>/workshops/lab-spring-boot-k8s-skaffold/</link>
+      <pubDate>Thu, 04 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-spring-boot-k8s-skaffold/</guid>
+      <description>
+
+        
+        &lt;p&gt;This lab shows you how to work with Skaffold to reduce the toil of developing and pushing applications to Kubernetes. To do this we need to do two things:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Configure the Skaffold tool in a few lines of YAML&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Deploy the image as a container in Kubernetes&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Spring Microservices</title>
+      
+      <link>/workshops/lab-microservice/</link>
+      <pubDate>Thu, 04 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-microservice/</guid>
+      <description>
+
+        
+        &lt;p&gt;In this short workshop you will build a simple microservice with Spring. Spring Boot’s many purpose-built features make it easy to build and run your microservices in production at scale. And don’t forget, no microservice architecture is complete without Spring Cloud—easing administration and boosting your fault-tolerance.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

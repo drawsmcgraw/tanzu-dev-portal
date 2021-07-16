@@ -1,0 +1,33 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Cloud Native Buildpacks</title>
+    <link>/tags/cloud-native-buildpacks/</link>
+    <description>Recent content in Cloud Native Buildpacks on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 09 Jun 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/cloud-native-buildpacks/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Videos: Simplify Building Containers w/ Cloud Native Buildpacks</title>
+      
+      <link>/videos/cloudnativebuildpacks-lightboard/</link>
+      <pubDate>Wed, 09 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/cloudnativebuildpacks-lightboard/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,546 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Cloud Native Application Development with Spring</title>
+    <link>/outcomes/cloud-native-development/</link>
+    <description>Recent content in Cloud Native Application Development with Spring on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/outcomes/cloud-native-development/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Outcomes: Things to Unlearn</title>
+      
+      <link>/outcomes/cloud-native-development/general__unlearn/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/general__unlearn/</guid>
+      <description>
+
+        
+        &lt;p&gt;Every company and team is different, and we have all spent a lot of time learning software development practices that can be detrimental to developing distributed cloud native systems.&lt;/p&gt;
+&lt;p&gt;The list is not exhaustive, but starting to reflect on these anti-patterns will help you better understand how we work together.&lt;/p&gt;
+&lt;h2 id=&#34;do-not-not-repeat-yourself&#34;&gt;Do Not, Not Repeat Yourself&lt;/h2&gt;
+&lt;p&gt;As software engineers, we interiorize that duplicating code is a bad thing. The &amp;ldquo;&lt;a href=&#34;https://en.wikipedia.org/wiki/Don%27t_repeat_yourself&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Don&amp;rsquo;t Repeat Yourself&lt;/a&gt;&amp;rdquo; (DRY) mantra led us to build shared libraries and shared data models to help keep things in a single place. In reality, the reliance on shared libraries and shared models can slow releases down because development teams have to align with all the other teams that also use the shared libraries and models. The teams managing the shared libraries often become gatekeepers to new functionality, resulting in everyone getting the lowest common denominator that works with all consumers. This creates a problem because it is rare that all consumers have the same needs.&lt;/p&gt;
+&lt;p&gt;In the course of our projects, we use &lt;a href=&#34;https://github.com/ddd-crew/welcome-to-ddd&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Domain-Driven Design&lt;/a&gt; (DDD) principles to put a boundary around the services that should share things, have explicit external APIs and break away from common shared models.&lt;/p&gt;
+&lt;h2 id=&#34;design-at-the-last-responsible-moment&#34;&gt;Design at the Last Responsible Moment&lt;/h2&gt;
+&lt;p&gt;Some companies are incredibly risk-averse and want everything right the first time. The problem is that no practice can ensure such a thing. Just the opposite. We guarantee that you&amp;rsquo;ll learn something that you have never considered or planned before your app was added to production.&lt;/p&gt;
+&lt;p&gt;That said, no planning guarantees that will be no surprises. So instead, we work in small iterations on thin slices of your app, getting them in front of users slice by slice. This provides the feedback loops we need to know if we are building the best thing for the company without months of up-front design work. We balance design and architecture by moving quickly, evolving the architecture as we learn new things.&lt;/p&gt;
+&lt;h2 id=&#34;no-superheroes&#34;&gt;No Superheroes&lt;/h2&gt;
+&lt;p&gt;We all want to be indispensable to our teams; able to do everything and solve any problem. In reality, it is not healthy for you, productive for your team, or smart for your company.
+The way we work during a project actively encourages us to spread our individual knowledge to upskill our teammates. We identify people and processes that are bottlenecks to find ways to move fast and get everyone working sustainably. This might take some getting used to, but everything from our day-to-day pair programming, to our short-time-boxed project structure, aims to get your team self-sufficient and let everyone go home at the end of the day and take time off.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Twelve-Factor Apps</title>
+      
+      <link>/outcomes/cloud-native-development/general__twelve-factor-apps/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/general__twelve-factor-apps/</guid>
+      <description>
+
+        
+        &lt;p&gt;Cloud native app development centers around the twelve factors initially described by the team behind the Heroku platform. The website &lt;a href=&#34;https://12factor.net/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;https://12factor.net&lt;/a&gt; provides a great understanding of how a cloud native application deals with aspects like logging, application state, and integration with external systems.&lt;/p&gt;
+&lt;p&gt;Sometimes, you only need a handful of these factors to get it running on a cloud platform like VMware Tanzu Application Service (TAS) to refactor and update an existing legacy application. This allows for the operational benefits of the platform without the large investment of a far-reaching modernization effort. Not every application should become its better self. For the sake of effectiveness, we align the extent of modernization efforts with their concrete business benefits.&lt;/p&gt;
+&lt;p&gt;Pay specific attention to these factors:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://12factor.net/config&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;externalizing config&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://12factor.net/backing-services&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;converting integrations into backing services&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://12factor.net/processes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;keeping your processes stateless&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://12factor.net/logs&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;logging to standard input and output&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For more information on cloud native apps, check out the free book by Kevin Hoffman, &lt;a href=&#34;https://content.pivotal.io/ebooks/beyond-the-12-factor-app&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Beyond the Twelve-Factor App&lt;/a&gt;. In it, he introduces three additional factors including API-first development, security, and telemetry not covered in the original set, but often required for apps to run well in the cloud.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Read about the twelve factors at &lt;a href=&#34;https://12factor.net/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;https://12factor.net&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;additional-resources&#34;&gt;Additional resources&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Read the &lt;a href=&#34;https://content.pivotal.io/ebooks/beyond-the-12-factor-app&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Beyond the Twelve-Factor App&lt;/a&gt; book.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Development Environment and Tools</title>
+      
+      <link>/outcomes/cloud-native-development/general__dev_env_tools/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/general__dev_env_tools/</guid>
+      <description>
+
+        
+        &lt;p&gt;As software engineers, we work with the tools of our trade the whole time. Still, it&amp;rsquo;s always a good idea to take some time to brush up on a few things before starting our next project.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Java 8 basics&lt;/strong&gt; such as &lt;a href=&#34;https://howtodoinjava.com/java-8-tutorial/#lambda&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;lambdas&lt;/a&gt;, the &lt;a href=&#34;https://howtodoinjava.com/java-8-tutorial/#stream&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;streams API&lt;/a&gt;, updated &lt;a href=&#34;https://howtodoinjava.com/java-8-tutorial/#date-time&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Date/Time libraries&lt;/a&gt;, &lt;a href=&#34;https://howtodoinjava.com/java8/default-methods-in-java-8/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;default methods&lt;/a&gt;, and &lt;a href=&#34;https://howtodoinjava.com/java8/java-8-optionals-complete-reference/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Optional&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Your company’s modern &lt;strong&gt;build tool&lt;/strong&gt; of choice (&lt;a href=&#34;https://maven.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Maven&lt;/a&gt; or &lt;a href=&#34;https://gradle.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Gradle&lt;/a&gt;). We lean on this for both dependency management as well as building our deployable application artifacts.&lt;/li&gt;
+&lt;li&gt;Distributed source control with &lt;strong&gt;Git&lt;/strong&gt;. You should be comfortable with the &lt;a href=&#34;https://www.atlassian.com/git/tutorials&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;basic commands&lt;/a&gt; on the command line, including clone, fetch/merge/pull, add/rm, commit, and push.&lt;/li&gt;
+&lt;li&gt;Your &lt;strong&gt;IDE&lt;/strong&gt; of choice. For example, &lt;a href=&#34;https://www.eclipse.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Eclipse&lt;/a&gt; with the &lt;a href=&#34;https://spring.io/tools&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Tools Suite&lt;/a&gt; or &lt;a href=&#34;https://www.jetbrains.com/idea/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JetBrains IntelliJ IDEA&lt;/a&gt;. While we want our application and its build process to be decoupled from its development environment, you are going to use it every day during your project. It pays to get familiar with common actions. You should be comfortable with the basics of creating and importing new projects, standard code navigation, and generic refactoring commands. You should also be familiar with how to run tests within your favorite IDE, as you will do that a lot.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Review the applicable &lt;a href=&#34;https://howtodoinjava.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;tutorial(s)&lt;/a&gt; from Java 8 through your current version of Java.&lt;/li&gt;
+&lt;li&gt;Run through the &lt;a href=&#34;https://www.atlassian.com/git/tutorials&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Git tutorials&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;If you are using Apache Maven for the build process, familiarize yourself with the &lt;a href=&#34;https://www.baeldung.com/maven&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Baeldung tutorial&lt;/a&gt; and &lt;a href=&#34;https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Maven in 5 Minutes guide&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;If you are using Gradle for the build process, run through the &lt;a href=&#34;https://gradle.org/guides&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Gradle guides&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;If you develop in the IntelliJ IDE, install the &lt;a href=&#34;https://plugins.jetbrains.com/plugin/8554-ide-features-trainer&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;learn plugin&lt;/a&gt; and run through the interactive tutorials within the application.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Spring Ecosystem</title>
+      
+      <link>/outcomes/cloud-native-development/general__spring_ecosystem/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/general__spring_ecosystem/</guid>
+      <description>
+
+        
+        &lt;p&gt;We rely heavily on the &lt;a href=&#34;https://spring.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;open-source ecosystem of Spring projects&lt;/a&gt; to replace vendor- or container-specific technologies or proprietary solutions for Java-based applications. There are many specific tools and frameworks under that banner. For development projects, we leverage two prerequisite frameworks providing us a lightweight core with standard functionalities: &lt;a href=&#34;https://spring.io/projects/spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot&lt;/a&gt; and &lt;a href=&#34;http://projects.spring.io/spring-cloud/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;spring-boot&#34;&gt;Spring Boot&lt;/h2&gt;
+&lt;p&gt;Spring Boot provides a &amp;ldquo;convention over configuration&amp;rdquo; foundation for Spring-based applications. Follow &lt;a href=&#34;https://spring.io/guides/gs/spring-boot/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this guide&lt;/a&gt; to build a simple, RESTful web service using Spring Boot and minimal configuration.&lt;/p&gt;
+&lt;h2 id=&#34;spring-cloud&#34;&gt;Spring Cloud&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://projects.spring.io/spring-cloud/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud&lt;/a&gt; provides a set of abstractions and integrations that enable best practice cloud native behavior. Later, we will cover the actual implementation details for common tasks like externalizing configuration in a &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/reference/html/#_spring_cloud_config_server&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Config Server&lt;/a&gt;, using service discovery, API gateways, and other route services.&lt;/p&gt;
+&lt;p&gt;To better understand what you have in your tool belt before we get started, take some time to become familiar with the basic concepts of each framework, found in the introductions of the following documentation.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://cloud.spring.io/spring-cloud-static/spring-cloud.html#_cloud_native_applications&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 1: Cloud Native Applications&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cloud.spring.io/spring-cloud-static/spring-cloud.html#_spring_cloud_config&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 2: Spring Cloud Config&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cloud.spring.io/spring-cloud-static/spring-cloud.html#_spring_cloud_netflix&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 3: Spring Cloud Netflix&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cloud.spring.io/spring-cloud-static/spring-cloud.html#_spring_cloud_stream&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 4: Spring Cloud Stream&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Use &lt;a href=&#34;https://spring.io/guides/gs/spring-boot/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this guide&lt;/a&gt; to build a simple RESTful web service using Spring Boot and minimal configuration.&lt;/li&gt;
+&lt;li&gt;Read through the introductions for the most common Spring Cloud components.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Test-Driven Development</title>
+      
+      <link>/outcomes/cloud-native-development/general__tdd/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/general__tdd/</guid>
+      <description>
+
+        
+        &lt;p&gt;Testing is crucial to cloud native application development. It is our primary (and sometimes only) way to build confidence that we can push to production at any given time.&lt;/p&gt;
+&lt;h2 id=&#34;test-types&#34;&gt;Test Types&lt;/h2&gt;
+&lt;p&gt;In many traditional organizations with independent, quality assurance and testing teams, software engineers may only leverage unit tests. As a &lt;a href=&#34;/outcomes/application-development/balanced-teams/&#34;&gt;balanced team&lt;/a&gt; with complete ownership of releases, we write and own an extensive spectrum of tests for our app. These include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Unit Tests&lt;/li&gt;
+&lt;li&gt;Integration Tests&lt;/li&gt;
+&lt;li&gt;Contract Tests&lt;/li&gt;
+&lt;li&gt;Behavior Tests&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;While we may use some additional layers such as end-to-end tests or automated UI tests, these are the most expensive to run. We look to build confidence with the other leaner test layers when possible.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Read what &lt;a href=&#34;https://martinfowler.com/bliki/TestPyramid.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Martin Fowler&lt;/a&gt; and &lt;a href=&#34;https://martinfowler.com/articles/practical-test-pyramid.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;his team&lt;/a&gt; have to say on the test pyramid, and how it provides a solid foundation for answering questions such as &amp;ldquo;at which layer should I test this functionality?&amp;rdquo;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Read &lt;a href=&#34;https://spring.io/blog/2016/04/15/testing-improvements-in-spring-boot-1-4&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this article&lt;/a&gt; to learn more on testing various slices of your Spring Boot application.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Read through the &lt;a href=&#34;https://cloud.spring.io/spring-cloud-contract/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Quick Start Guide&lt;/a&gt; on Consumer-Driven Contract testing with Spring Cloud Contract.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Read &lt;a href=&#34;https://docs.cucumber.io/bdd/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;an introduction&lt;/a&gt; to behavior-driven development (BDD) and run through &lt;a href=&#34;https://docs.cucumber.io/guides/10-minute-tutorial/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;the basic tutorial&lt;/a&gt; on using Cucumber in a Java project.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;the-basics-of-test-driven-development&#34;&gt;The Basics of Test Driven Development&lt;/h2&gt;
+&lt;p&gt;Now that you know the tools you have to test your application, it&amp;rsquo;s time to learn how to use those tools in your development project.&lt;/p&gt;
+&lt;p&gt;VMware Tanzu develops software using the test-driven development methodology of writing tests to describe our intended behavior. First, we write tests, see our tests fail, build the functionality to make our tests pass, and clean up any technical debt created during the process. This approach is often referred to as the &amp;ldquo;red-green-refactor&amp;rdquo; loop.
+The best way to learn about test-driven development is to do some of it! Pairing with an experienced software engineer will give you lots of practice. Or, if you prefer to do it yourself, you can prepare by reading &lt;a href=&#34;https://medium.com/@marlenac/learning-tdd-with-katas-3f499cb9c492&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this article on TDD exercises&lt;/a&gt; and running through some of the &lt;a href=&#34;https://github.com/testdouble/contributing-tests/wiki/Greeting-Kata&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;first requirements for the Greeting exercise&lt;/a&gt; in your IDE.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Read linked articles on the test pyramid and specific kinds of testing.&lt;/li&gt;
+&lt;li&gt;Run through at least three requirements from the Greeting exercise.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;additional-resources&#34;&gt;Additional resources&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Review the &lt;a href=&#34;/outcomes/application-development/test-driven-development/&#34;&gt;foundaments of Test Driven Development&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Using Tanzu Application Service (TAS)</title>
+      
+      <link>/outcomes/cloud-native-development/general__using_tas/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/general__using_tas/</guid>
+      <description>
+
+        
+        &lt;p&gt;VMware &lt;a href=&#34;https://tanzu.vmware.com/application-service&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Application Service&lt;/a&gt; (TAS), formerly Pivotal Cloud Foundry (PCF), is a modern application platform that provides a best-in-class developer experience. It is based on Cloud Foundry, an open-source cloud app platform providing a choice of clouds, developer frameworks, and app services.&lt;/p&gt;
+&lt;p&gt;Even if you spend most of your time working on software code, it is essential to know how to use the TAS platform to deploy applications. Even more so, it is imperative to understand how to work with your own TAS environment. Every TAS installation operates the same way, but there are many ways to interact with it. Your company may have its own process for getting an account, organizations, spaces, and apps up and running.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s important to push the application to the platform as early as possible in order to get quick feedback on what is working and what is not. The primary ways to work with the platform are the Command Line Interface (CLI) and the apps manager web application.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Note: At the time of writing, VMware is still transitioning from Cloud Foundry to Tanzu tools and nomenclature. In this article you should expect to see a mix of Cloud Foundry and TAS references, such as the &lt;code&gt;cf&lt;/code&gt; command line interface.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;command-line-interface&#34;&gt;Command Line Interface&lt;/h2&gt;
+&lt;p&gt;The platform provides an API for you to interact with it. The simplest way to work with the API is through the command-line tools provided by the &lt;a href=&#34;https://www.cloudfoundry.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Foundry&lt;/a&gt; project.&lt;/p&gt;
+&lt;p&gt;Note: Run through the &lt;a href=&#34;https://katacoda.com/cloudfoundry-tutorials/scenarios/trycf&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Try Cloud Foundry&lt;/a&gt; tutorial to set up your local command-line tools and get a local TAS test environment as a bonus. You&amp;rsquo;ll get a local test environment up and running, then push a demo app running through the common CLI commands.&lt;/p&gt;
+&lt;h2 id=&#34;apps-manager&#34;&gt;Apps Manager&lt;/h2&gt;
+&lt;p&gt;TAS, VMware&amp;rsquo;s enterprise-class distribution of Cloud Foundry, has many useful features to help companies provide easy access to their platform users. For software development teams, the primary application is Apps Manager. For more information, go to the Apps Manager &lt;a href=&#34;https://docs.pivotal.io/application-service/2-11/console/dev-console.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Find the URL for your development or sandbox TAS Apps Manager and try logging into it. Once you can access it, try pushing the same demo app from the TAS Dev tutorial above your company org and space.&lt;/p&gt;
+&lt;h2 id=&#34;tas-and-cloud-foundry-concepts&#34;&gt;TAS and Cloud Foundry Concepts&lt;/h2&gt;
+&lt;p&gt;You may have already run into terms and concepts like &amp;ldquo;organizations&amp;rdquo;, &amp;ldquo;spaces&amp;rdquo;, and &amp;ldquo;instances&amp;rdquo; in the above exercises.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Read &lt;a href=&#34;https://docs.pivotal.io/application-service/2-11/concepts/overview.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this overview of TAS for VMs&lt;/a&gt; for a birds-eye view of how the platform works.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Run through the &lt;a href=&#34;https://katacoda.com/cloudfoundry-tutorials/scenarios/trycf&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Try Cloud Foundry&lt;/a&gt; tutorial.&lt;/li&gt;
+&lt;li&gt;Get access to your company&amp;rsquo;s Apps Manager and push your application to your Company&amp;rsquo;s TAS environment.&lt;/li&gt;
+&lt;li&gt;Read through the &lt;a href=&#34;https://docs.pivotal.io/application-service/2-11/concepts/overview.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;overview of TAS for VMs&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Continuous Integration and Delivery</title>
+      
+      <link>/outcomes/cloud-native-development/general__ci_cd/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/general__ci_cd/</guid>
+      <description>
+
+        
+        &lt;p&gt;Automate everything. Any time we have manual processes or required intervention, we have friction in the machinery that allows us to release fast at a moment’s notice. There are many tools to support continuous build, integration, and delivery of software, and your company may already have selected the tools to use. This is usually the &lt;a href=&#34;https://www.jenkins.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Jenkins&lt;/a&gt; or &lt;a href=&#34;https://concourse-ci.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Concourse CI&lt;/a&gt; platforms but can include &lt;a href=&#34;https://www.atlassian.com/software/bamboo&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Atlassian Bamboo&lt;/a&gt;, or cloud build provides such as &lt;a href=&#34;https://circleci.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CircleCI&lt;/a&gt;, &lt;a href=&#34;https://travis-ci.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;TravisCI&lt;/a&gt;, or &lt;a href=&#34;https://docs.oracle.com/en/cloud/iaas-classic/wercker-cloud/index.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Oracle Container Pipelines&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;While we can work with many of these tools, Concourse provides one of the purest abstractions of declarative pipelines and is our preferred tool when there is no solution in place. It is beneficial to run through the &lt;a href=&#34;https://github.com/concourse/concourse/wiki/Tutorials&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learning Concourse tutorial&lt;/a&gt; to understand the core tenets of building with pipelines checked into your source control along with your application. Even if you end up building your applications with Jenkins or another tool, Concourse’s core concepts are great for discussing the various challenges and solutions to continuous software delivery.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Run through the &lt;a href=&#34;https://github.com/concourse/concourse/wiki/Tutorials&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learning Concourse tutorial&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;additional-resources&#34;&gt;Additional resources&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Review the &lt;a href=&#34;/outcomes/secure-software-supply-chain/what-is-ci-cd/&#34;&gt;Introduction of Secure Software Supply Chains&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Logging</title>
+      
+      <link>/outcomes/cloud-native-development/specific__logging/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/specific__logging/</guid>
+      <description>
+
+        
+        &lt;p&gt;Logging is straightforward. You&amp;rsquo;ve likely already spent time comprehensively thinking about logging solutions and frameworks. The good news is you are probably where you need to be in your understanding of logging.&lt;/p&gt;
+&lt;p&gt;The twelve-factor app indicates that apps should write all standard and error log information to the standard console output, and let the cloud platform route all that knowledge to the correct central repository.&lt;/p&gt;
+&lt;p&gt;Almost every common logging framework provides a console that makes it easy to switch away from local rolling files, and let the platform do the work for you.&lt;/p&gt;
+&lt;p&gt;If your application relies heavily on a vendor-specific or custom logging framework, look into enabling console output in these environments.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Configuration</title>
+      
+      <link>/outcomes/cloud-native-development/specific__configuration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/specific__configuration/</guid>
+      <description>
+
+        
+        &lt;p&gt;Even quite trivial applications have some form of configuration, such as how to connect to its data sources, how to change behavior based on the target deployment environment, or how to log. There are plenty of ways to configure your application.&lt;/p&gt;
+&lt;p&gt;For example, you can configure your application through:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;XML files on your server cluster.&lt;/li&gt;
+&lt;li&gt;Properties files embedded in your application deployable artifact.&lt;/li&gt;
+&lt;li&gt;Hardcoded variables in your application. (No shame here. We have all done this! We typically refactor away from this to make your deployments more agile and cloud-friendly.)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The trick to making an application deploy and change in the cloud super quick is to externalize the configuration from that app and make it part of the environment in which it runs. The simplest way to do this is to read the configuration from environment variables directly, as this induces a change of behavior without having to recompile or change the application deployable itself.&lt;/p&gt;
+&lt;p&gt;We do this in two phases.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Phase 1: We pull out and standardize app configuration into Spring Boot&amp;rsquo;s &lt;code&gt;application.yml&lt;/code&gt; file. If you are new to YAML syntax, CircleCI provides a quick read on &lt;a href=&#34;https://circleci.com/blog/what-is-yaml-a-beginner-s-guide/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;the basic building blocks of the format&lt;/a&gt;. It is a lot like JSON, but uses indentation to reduce duplication, and provides more readable files. While moving configuration to a YAML file externalizes it from the code, it still gets packaged up and deployed along with your app.&lt;/li&gt;
+&lt;li&gt;Phase 2: Externalizing application configuration moves these application files to their own repository and exposes them using Spring Cloud&amp;rsquo;s config server. You already read some of the basics here when you looked at Spring Cloud, but feel free to explore the config server section further, if modernizing your application&amp;rsquo;s configuration is going to be crucial to getting it ready for TAS.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Brush up on YAML syntax with the &lt;a href=&#34;https://circleci.com/blog/what-is-yaml-a-beginner-s-guide/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CircleCI guide&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Read the introduction to &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Externalizing Configuration with Spring Boot&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;additional-resources&#34;&gt;Additional resources&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Refer to the &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Externalizing Configuration&lt;/a&gt; documentation to get an understanding of the many ways Boot exposes configuration to your application.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Caching</title>
+      
+      <link>/outcomes/cloud-native-development/specific__caching/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/specific__caching/</guid>
+      <description>
+
+        
+        &lt;p&gt;Caching is available in many forms, ranging from large vendor-specific externalized clusters to caching libraries that cache in-memory within the application itself. There are so many choices, including (sorted alphabetically): &lt;a href=&#34;https://github.com/ben-manes/caffeine&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Caffeine&lt;/a&gt;, &lt;a href=&#34;https://www.ehcache.org&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ehcache&lt;/a&gt;, &lt;a href=&#34;https://tanzu.vmware.com/gemfire&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GemFire&lt;/a&gt;, &lt;a href=&#34;https://hazelcast.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Hazelcast&lt;/a&gt;, &lt;a href=&#34;https://infinispan.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Infinispan&lt;/a&gt;, &lt;a href=&#34;https://commons.apache.org/proper/commons-jcs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Java Caching System (JCS)&lt;/a&gt;, &lt;a href=&#34;https://www.baeldung.com/jcache&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JCache&lt;/a&gt;, &lt;a href=&#34;https://github.com/alibaba/jetcache&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JetCache&lt;/a&gt;, &lt;a href=&#34;https://memcached.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Memcached&lt;/a&gt;, &lt;a href=&#34;https://redis.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Redis&lt;/a&gt;, &lt;a href=&#34;https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#cache&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cache&lt;/a&gt;, and many more.&lt;/p&gt;
+&lt;p&gt;While moving to a platform such as Tanzu Application Services (TAS) or Kubernetes, caching&amp;rsquo;s most prominent interaction is with the elastic and ephemeral nature of the application deployment. Application deployments can come and go at random, and scale from zero to hundreds of instances. It conditions the way applications cache data to become truly stateless.&lt;/p&gt;
+&lt;p&gt;If your app does not currently use a dedicated caching layer, we might introduce an external cache to turn the application stateless. Caching can be an easy way to share a simple state between app instances, centralizing a global application state or session data in a cloud native ecosystem.&lt;/p&gt;
+&lt;p&gt;In cases where the caching solution assumes it has only one client (read and write) or cannot handle multiple clients, we could consider moving to &lt;a href=&#34;https://redis.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Redis&lt;/a&gt; and &lt;a href=&#34;https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#cache&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Caching&lt;/a&gt; to scale efficiently.&lt;/p&gt;
+&lt;p&gt;If your app already interacts with a caching layer, refer to the &lt;a href=&#34;https://spring.io/guides/gs/caching/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Caching Data with Spring&lt;/a&gt; guide to get an idea of how you could use Spring Boot&amp;rsquo;s abstraction layer.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Read the &lt;a href=&#34;https://spring.io/guides/gs/caching/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Caching Data with Spring&lt;/a&gt; guide.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Data Access</title>
+      
+      <link>/outcomes/cloud-native-development/specific__data_access/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/specific__data_access/</guid>
+      <description>
+
+        
+        &lt;p&gt;Your app may use manually-configured JDBC drivers, ORM solutions such as &lt;a href=&#34;https://en.wikipedia.org/wiki/Jakarta_Persistence&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JPA&lt;/a&gt;, &lt;a href=&#34;http://hibernate.org/orm/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Hibernate&lt;/a&gt;, &lt;a href=&#34;https://mybatis.org/mybatis-3/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MyBatis&lt;/a&gt;, &lt;a href=&#34;https://www.eclipse.org/eclipselink/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;EclipseLink&lt;/a&gt;, or &lt;a href=&#34;https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JNDI&lt;/a&gt; to lookup database connections provided by the containing web server. To improve integration with the Spring and Spring Boot ecosystems for all these, we look into migrating connections to a Spring &lt;code&gt;DataSource&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Read the section on &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/howto.html#howto.data-access.configure-custom-datasource&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;configuring Spring Boot data sources&lt;/a&gt; to see how you can configure these with YAML or Java configuration beans.&lt;/p&gt;
+&lt;p&gt;Connecting to the database is only one part of the traditional data access layer of an application. There is usually a whole range of data services and frameworks that present an API query and database update. This might involve your ORM of choice mapping Java POJOs to SQL queries, or it might be a facade on top of hand-crafted stored procedures.&lt;/p&gt;
+&lt;p&gt;For apps that do not require significant refactoring, we change just enough of this data layer so that it plays well with Spring &lt;code&gt;DataSource&lt;/code&gt; beans. For broader modernization efforts, we recommend refactoring this layer using Spring Data to drastically reduce the code length (and test surface area the team is responsible for). To learn more about what Spring Data can do for you that a manually-built data layer cannot, see the &lt;a href=&#34;https://spring.io/guides/gs/accessing-data-jpa/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Accessing Data with JPA&lt;/a&gt; guide.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Read the &lt;a href=&#34;https://spring.io/guides/gs/accessing-data-jpa/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Accessing Data with JPA&lt;/a&gt; guide.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Enterprise Integration</title>
+      
+      <link>/outcomes/cloud-native-development/specific__integration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/specific__integration/</guid>
+      <description>
+
+        
+        &lt;p&gt;Enterprise integration middleware are software systems that offer services to link and integrate separate applications. They cover many use cases and domains like transaction processing, distributed computing, message broker, data access systems, or Enterprise Service Buses (ESB).&lt;/p&gt;
+&lt;p&gt;Enterprise Service Buses provide an orchestration layer for the many moving parts of an application portfolio. Aimed at enabling separation of concerns through a service orientated architecture along with a feature-rich stack of integrations, this well-intentioned technology often becomes a monolith layer with apps tightly coupled to a specific ESB implementation and difficult-to-test paths through the whole system.&lt;/p&gt;
+&lt;p&gt;Replacing an ESB is less common in a &lt;a href=&#34;https://tanzu.vmware.com/replatforming&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;replatforming project&lt;/a&gt; unless you are explicitly trying to replatform away from a given vendor. When this occurs, Spring provides &lt;a href=&#34;https://spring.io/projects/spring-integration&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Integration&lt;/a&gt; a mature lower-level library of common integration patterns and adapters. Spring integration is a large, complex library to understand. Working through the bits that are important to solve your problems is key to find the right tools for the job. Read the &lt;a href=&#34;https://spring.io/guides/gs/integration/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Integrating Data&lt;/a&gt; guide for an idea of how the project fits into the overall Spring ecosystem.&lt;/p&gt;
+&lt;p&gt;Another, newer option builds on top of &lt;a href=&#34;https://spring.io/projects/spring-integration&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Integration&lt;/a&gt; and &lt;a href=&#34;https://spring.io/projects/spring-cloud-stream&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Stream&lt;/a&gt; to provide a high-level abstraction for weaving multiple microservices and batch processes together. As it provides more extensive functionalities and covers a range of data processing use cases, &lt;a href=&#34;https://spring.io/projects/spring-cloud-dataflow&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Data Flow&lt;/a&gt; is often the best choice to replace an ESB. However, it is more complex to get running and requires additional components to manage the state of your pipelines. Read &lt;a href=&#34;https://www.baeldung.com/spring-cloud-data-flow-stream-processing&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this Baeldung guide&lt;/a&gt; to understand how it addresses similar use cases but differs in its execution from Spring Integration.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Read the &lt;a href=&#34;https://spring.io/guides/gs/integration/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Integrating Data&lt;/a&gt; guide to getting some experience with Spring integration.&lt;/li&gt;
+&lt;li&gt;Read the &lt;a href=&#34;https://www.baeldung.com/spring-cloud-data-flow-stream-processing&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Baeldung guide to Spring Cloud Data Flow&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: API Gateway</title>
+      
+      <link>/outcomes/cloud-native-development/specific__api_gateway/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/specific__api_gateway/</guid>
+      <description>
+
+        
+        &lt;p&gt;An API gateway provides a way to route all traffic to one service before it reaches a different one. This allows you to create a central service that provides cross-cutting functionality like authentication and authorization, policy enforcement, or data transformation. The API gateway also provides an aggregation service that collects and transforms data from lower-level services into something needed by a particular client (for example, a bandwidth-constrained mobile app).&lt;/p&gt;
+&lt;p&gt;When combined with TAS &lt;a href=&#34;https://docs.pivotal.io/application-service/2-11/services/route-services.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;route services&lt;/a&gt;, an API gateway is a powerful way to add layered functionality across many of your apps. As you break up apps into individual microservices, the power increases and you gain the benefit of centrally implemented functionalities while leveraging the benefits of decoupled independent systems.&lt;/p&gt;
+&lt;p&gt;There are many commercial and open-source options for this - the former includes Apigee and the public cloud IaaS native solutions. The latter includes options such as &lt;a href=&#34;https://github.com/Netflix/zuul&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Netflix Zuul&lt;/a&gt; and &lt;a href=&#34;https://spring.io/projects/spring-cloud-gateway&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Gateway&lt;/a&gt; (SCG). Unless your company uses a different commercial option, we use Spring Cloud Gateway as the default implementation framework for integration use cases.&lt;/p&gt;
+&lt;p&gt;Go to the &lt;a href=&#34;https://spring.io/guides/gs/gateway/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Building a Gateway&lt;/a&gt; guide to learn how to craft your first API gateway with SCG.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Read the &lt;a href=&#34;https://spring.io/guides/gs/gateway/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Building a Gateway&lt;/a&gt; guide.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Batch Processing</title>
+      
+      <link>/outcomes/cloud-native-development/specific__batch_processing/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/specific__batch_processing/</guid>
+      <description>
+
+        
+        &lt;p&gt;The Java ecosystem provides a variety of libraries and standards to help you define and launch batch processes: &lt;a href=&#34;https://www.baeldung.com/java-ee-7-batch-processing&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Java EE batch processing&lt;/a&gt;, &lt;a href=&#34;http://www.quartz-scheduler.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Quartz Job Scheduler&lt;/a&gt;, &lt;a href=&#34;https://github.com/jmrozanec/cron-utils&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cron Utils&lt;/a&gt;, &lt;a href=&#34;https://github.com/j-easy/easy-batch&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Easy Batch&lt;/a&gt; &amp;hellip;&lt;/p&gt;
+&lt;p&gt;If you are only using Spring, there are many ways to easily schedule and run batch jobs.&lt;/p&gt;
+&lt;p&gt;For simple, scheduled activity tightly coupled to the app itself &lt;a href=&#34;https://spring.io/guides/gs/scheduling-tasks/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Scheduler&lt;/a&gt;, provides the simplest solution to set up a method for performing periodic work.&lt;/p&gt;
+&lt;p&gt;If a job requires more control, or is going to benefit from having its own atomic deployable unit, we look to &lt;a href=&#34;https://spring.io/projects/spring-batch&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Batch&lt;/a&gt; and &lt;a href=&#34;https://spring.io/projects/spring-cloud-task&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Task&lt;/a&gt; (SCT) to work at a higher level of abstraction. Both work great with &lt;a href=&#34;https://spring.io/projects/spring-cloud-dataflow&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Data Flow&lt;/a&gt; (SCDF). As we gradually move towards a higher level of abstraction, we&amp;rsquo;re going to introduce multiple batch jobs that require oversight and orchestration.&lt;/p&gt;
+&lt;p&gt;Refer to Spring Cloud Task&amp;rsquo;s &lt;a href=&#34;https://docs.spring.io/spring-cloud-task/docs/current/reference/htmlsingle/#getting-started&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started&lt;/a&gt; guide for details on how to manage multiple jobs as part of an application; and to become familiar with Task and SCDF so that you can join the discussion within your project.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Read the &lt;a href=&#34;https://spring.io/guides/gs/scheduling-tasks/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Scheduler guide&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Read the &lt;a href=&#34;https://docs.spring.io/spring-cloud-task/docs/current/reference/htmlsingle/#getting-started&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Task Getting Started guide&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: File Access</title>
+      
+      <link>/outcomes/cloud-native-development/specific__file_access/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/specific__file_access/</guid>
+      <description>
+
+        
+        &lt;p&gt;Applications running in VMware Tanzu Application Service live inside a temporary container with an ephemeral virtual machine. This means items are not permanently kept by the file system. This is good because dependencies on shared file access can induce unintentional shared state and coupling. Most of the time, we aim to refactor an application away from any dependence on the underlying filesystem, passing shared data around via web service calls, publish/subscribe events, or shared caches and databases.&lt;/p&gt;
+&lt;p&gt;However, if file access is required (as an integration pattern with an external tool or team outside of your control), TAS provides &amp;ldquo;volume services&amp;rdquo; to map network folders to the twelve-factor concept of bound services. The &lt;a href=&#34;https://docs.pivotal.io/application-service/2-11/devguide/services/using-vol-services.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;volume services documentation&lt;/a&gt; provides an overview, and a demo app for you to review to ensure volume services are available to you in your TAS environment.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Read the &lt;a href=&#34;https://docs.pivotal.io/application-service/2-11/devguide/services/using-vol-services.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;example to use an external file system&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Messaging</title>
+      
+      <link>/outcomes/cloud-native-development/specific__messaging/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/specific__messaging/</guid>
+      <description>
+
+        
+        &lt;p&gt;Event-driven applications are a natural fit for microservices as they reduce the coupling between services even further and allow for the whole system to move from central orchestration to distributed asynchronous choreography.&lt;/p&gt;
+&lt;p&gt;If your application currently uses a messaging solution such as &lt;a href=&#34;https://www.rabbitmq.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;RabbitMQ&lt;/a&gt;, &lt;a href=&#34;https://activemq.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache ActiveMQ&lt;/a&gt;, &lt;a href=&#34;https://kafka.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Kafka&lt;/a&gt;, or &lt;a href=&#34;https://www.ibm.com/products/mq&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;IBM MQ&lt;/a&gt;, the first step is to update your application to connect to these services using Spring beans that are similar to working with database connections. We also simplify the messaging aspects of the application codebase using &lt;a href=&#34;https://spring.io/projects/spring-cloud-stream&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Stream&lt;/a&gt; (SCS) whenever possible.&lt;/p&gt;
+&lt;p&gt;Even if your application currently does not use some form of pub/sub, we often aim to modernize towards asynchronous communication between your microservices using Spring Cloud Stream and RabbitMQ. With the RabbitMQ tile available in TAS, it is straightforward to introduce a messaging layer of communication. There are many benefits for doing it this way.&lt;/p&gt;
+&lt;p&gt;Read the &lt;a href=&#34;https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#spring-cloud-stream-overview-introducing&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Introduction&lt;/a&gt; and &lt;a href=&#34;https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#spring-cloud-stream-overview-introducing&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Quick Start&lt;/a&gt; guide for SCS to get a feel for working with the library.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Read the &lt;a href=&#34;https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#spring-cloud-stream-overview-introducing&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Introduction&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Read the &lt;a href=&#34;https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#spring-cloud-stream-overview-introducing&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Quick Start&lt;/a&gt; guide for Spring Cloud Stream.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: User Interfaces</title>
+      
+      <link>/outcomes/cloud-native-development/specific__user_interfaces/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/specific__user_interfaces/</guid>
+      <description>
+
+        
+        &lt;p&gt;Traditional Java Enterprise Edition (EE) web applications evolved through many model-view-controller technology stacks, including templating engines such as Java Server Pages (JSP), Java Server Faces (JSF), Apache Struts, or Portlets. Each of these stacks tried to tackle the separation between server-based business logic and the views themselves while attempting to break up the UI into modular components. The modular components are tightly coupled to an underlying heavyweight server environment. Applications that use these view technologies are often prime candidates for more extensive modernization efforts, as they tend to crystalize in monolithic web applications with many functions and layers.&lt;/p&gt;
+&lt;p&gt;Depending on the current state of the application and the amount of refactoring the team wants to take on, we suggest porting the existing JSP or similar view templates over to deploy an application in a TAS Tomcat container. This provides a simple and non-intrusive way to get one of these technologies running on the platform.&lt;/p&gt;
+&lt;p&gt;Regarding other technologies such as Portlets or thick-client desktop applications, we typically peel out the underlying business logic into web services and access them through a new set of user interfaces. Modern web application development has moved towards frameworks such as React and Angular leveraging JavaScript to call back-end services. Your company may already be looking into building full-stack &lt;a href=&#34;/outcomes/application-development/balanced-teams/&#34;&gt;balanced teams&lt;/a&gt; developing a new generation of front-ends.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;List and evaluate the user interface and view technologies your applications use now.&lt;/li&gt;
+&lt;li&gt;Have a team conversation on your vision, teaming, and technologies for future user experiences.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Telemetry</title>
+      
+      <link>/outcomes/cloud-native-development/specific__telemetry/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/specific__telemetry/</guid>
+      <description>
+
+        
+        &lt;p&gt;Telemetry is one of the additional three factors introduced in &lt;a href=&#34;https://content.pivotal.io/ebooks/beyond-the-12-factor-app&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Beyond the Twelve-Factor App&lt;/a&gt;. Developing your application is only the first aspect of a cloud native developer&amp;rsquo;s job. Feedback from real users hitting your app deployed in production is where you can learn and improve your app.&lt;/p&gt;
+&lt;p&gt;Spring Boot provides an assortment of automatic health monitoring and metrics through the &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Actuator&lt;/a&gt; and &lt;a href=&#34;https://micrometer.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Micrometer&lt;/a&gt; projects.&lt;/p&gt;
+&lt;p&gt;When you add these to your Spring Boot app, you get automatic embedded monitoring and reporting in the application, along with many extension points for adding custom health indicators and other metrics. Read the &lt;a href=&#34;https://spring.io/guides/gs/actuator-service/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Actuator guide to build a RESTful web service&lt;/a&gt;, or add actuators to one of the applications you have already crafted as part of this guide.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Read the &lt;a href=&#34;https://spring.io/guides/gs/actuator-service/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot Actuator&lt;/a&gt; guide.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Security</title>
+      
+      <link>/outcomes/cloud-native-development/specific__security/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/cloud-native-development/specific__security/</guid>
+      <description>
+
+        
+        &lt;p&gt;Security in a distributed system can be a daunting task since you cannot rely on a large centralized security module on a monolithic web server. Spring Boot provides the Spring Security package to offer a general abstraction layer for configuring your application security without relying on the specific container or deployment environment.&lt;/p&gt;
+&lt;p&gt;We typically wire up security for newly created or modernized services using this module. The Spring team has a great &lt;a href=&#34;https://spring.io/guides/gs/securing-web/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;guide to securing web applications&lt;/a&gt; to walk you through the basic configuration via Java beans and the domain-specific language.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s a good idea to complete this exercise to be comfortable applying the technology to your applications. You&amp;rsquo;ll learn the specifics of more advanced configurations over time. In the meantime, this exercise will help you recognize the get-go basics.&lt;/p&gt;
+&lt;h4 id=&#34;homework&#34;&gt;Homework&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Read the &lt;a href=&#34;https://spring.io/guides/gs/securing-web/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Securing Web Services&lt;/a&gt; guide.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,148 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – ASP.NET</title>
+    <link>/tags/asp.net/</link>
+    <description>Recent content in ASP.NET on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 03 Sep 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/asp.net/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Develop and Publish an ASP.NET Web Application using Bitnami Containers</title>
+      
+      <link>/guides/containers/develop-aspnet-application-bitnami-containers/</link>
+      <pubDate>Thu, 03 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/containers/develop-aspnet-application-bitnami-containers/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://www.docker.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker&lt;/a&gt; containers have become increasingly popular amongst developers on account of their ease of use, consistency and portability. For .NET developers looking to develop and publish applications using containers, Bitnami offers a number of options:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-dotnet-sdk&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s .NET SDK container&lt;/a&gt; provides the complete .NET SDK for application development;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-dotnet&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s .NET container&lt;/a&gt; provides the .NET runtime environment for application execution;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-aspnet-core&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s ASP.NET Core container&lt;/a&gt; provides the ASP.NET runtime environment for application execution.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All of these images are secure, optimized and up-to-date, enabling .NET developers to use them in daily development without being concerned about missing out on the latest language features and security fixes.&lt;/p&gt;
+&lt;p&gt;This guide gets you started with Bitnami&amp;rsquo;s .NET containers, by using them to create a sample ASP.NET Web application and publish it as a container image to Docker Hub.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and Prerequisites&lt;/h2&gt;
+&lt;p&gt;This guide focuses on creating a Docker image of a custom ASP.NET Web application using &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-aspnet-core&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s ASP.NET Core container image&lt;/a&gt;. In case you don&amp;rsquo;t have an ASP.NET Web application at hand, the first step of this guide shows you how to create one.&lt;/p&gt;
+&lt;p&gt;This guide makes the following assumptions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have a Docker environment installed and configured. &lt;a href=&#34;https://docs.docker.com/engine/installation/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about installing Docker&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Docker Hub account. &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Register for a free account&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a basic understanding of how containers work. Learn more about containers in &lt;a href=&#34;https://www.youtube.com/watch?v=Pb1bgI59dF0&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;our YouTube video&lt;/a&gt;, on &lt;a href=&#34;https://en.wikipedia.org/wiki/Operating-system-level_virtualization&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Wikipedia&lt;/a&gt; and on &lt;a href=&#34;http://www.zdnet.com/article/containers-fundamental-to-the-evolution-of-the-cloud/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ZDNet&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-1-create-or-obtain-the-application-source-code&#34;&gt;Step 1: Create or obtain the application source code&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you already have an ASP.NET Web application of your own, you can use that instead and skip to &lt;a href=&#34;#step-2-build-a-docker-image-of-the-application&#34;&gt;Step 2&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The first step is to create a sample ASP.NET Web application which generates a welcome message. If you don&amp;rsquo;t have .NET installed, an easy way to do this is with the .NET CLI from &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-dotnet-sdk&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s .NET SDK container image&lt;/a&gt;. This allows you to execute .NET CLI commands using the Bitnami .NET SDK container on your host, exactly as though you had the complete .NET SDK already installed. If you already have a .NET development environment, you can use that instead and skip the Docker commands below.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Create a working directory for the application on your local host and make it the current directory:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir myapp
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; myapp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use the following Docker commands to create and start a &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-dotnet-sdk&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami .NET SDK container&lt;/a&gt; on your host:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker create --rm -v &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;pwd&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;:/app --net&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;host&amp;#34;&lt;/span&gt; -t --name dotnetsdk bitnami/dotnet-sdk:latest
+docker start dotnetsdk
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;em&gt;-v&lt;/em&gt; argument to the first command tells Docker to mount the host&amp;rsquo;s current directory into the container&amp;rsquo;s &lt;em&gt;/app&lt;/em&gt; path, so that the effects of commands run in the container are seen on the host. The &lt;em&gt;&amp;ndash;net=&amp;ldquo;host&amp;rdquo;&lt;/em&gt; argument tells Docker to use the host&amp;rsquo;s network stack for the container, and the &lt;em&gt;&amp;ndash;rm&lt;/em&gt; argument removes the container once it exits. The container is named &lt;em&gt;dotnetsdk&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Once the container is running, connect to the container console with the command below. This will give you a command shell and allow you to use the .NET SDK tools available in the image for subsequent tasks.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it dotnetsdk bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install the ASP.NET Web application templates and then use the .NET CLI to create a skeleton ASP.NET Web application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;dotnet new -i /opt/bitnami/dotnet-sdk/templates/3.1.3/microsoft.dotnet.web.projecttemplates.3.1.3.1.2.nupkg
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /app
+dotnet new webapp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Modify the application&amp;rsquo;s default welcome page:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sed -i &lt;span class=&#34;s1&#34;&gt;&amp;#39;s/Welcome/Hello from Bitnami/g&amp;#39;&lt;/span&gt; Pages/Index.cshtml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Run the application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;dotnet run --urls&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;http://0.0.0.0:5000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will run the ASP.NET Web application on port 5000 and allow it to accept incoming connections from other hosts. To test it, browse to http://DOCKER-HOST-ADDRESS:5000/, where DOCKER-HOST-ADDRESS is the IP address of your host, and confirm that you see the modified welcome page shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/containers/bitnami/develop-aspnet-application-bitnami-containers/welcome.png&#34; alt=&#34;Default page&#34;  /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If the Docker host is a different machine, ensure that the host firewall is configured to allow access on port 5000.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once you have confirmed that the application works, proceed to publish it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;dotnet publish
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The published application will be stored in the &lt;em&gt;/app/bin/Debug/netcoreapp3.1/publish/&lt;/em&gt; directory.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Exit and stop the container.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker stop dotnetsdk
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-2-build-a-docker-image-of-the-application&#34;&gt;Step 2: Build a Docker image of the application&lt;/h2&gt;
+&lt;p&gt;Once you have a published, tested version of your application, you can proceed to build a Docker image for it.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Create a file named &lt;em&gt;Dockerfile&lt;/em&gt; in the application&amp;rsquo;s working directory and fill it with the following content:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;FROM bitnami/aspnet-core:latest
+COPY ./bin/Debug/netcoreapp3.1/publish/ /app/
+RUN useradd -r -u 1001 -g root nonroot
+RUN chown -R nonroot /app
+USER nonroot
+WORKDIR /app
+CMD [ &amp;quot;./app&amp;quot;, &amp;quot;--urls=http://0.0.0.0:5000&amp;quot; ]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This &lt;em&gt;Dockerfile&lt;/em&gt; uses the &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-aspnet-core&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami ASP.NET Core image&lt;/a&gt; as its starting point, because this image contains the ASP.NET framework and files needed to run an ASP.NET Web application.&lt;/p&gt;
+&lt;p&gt;This &lt;em&gt;Dockerfile&lt;/em&gt; begins by copying the published application files from the current directory to the container&amp;rsquo;s &lt;em&gt;/app&lt;/em&gt; directory. It also creates a non-root user account that the application will run under. For security reasons, it&amp;rsquo;s recommended to always run your application using a non-root user account. Finally, it starts the application on port 5000.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;By default, the Bitnami .NET SDK container runs as the &lt;em&gt;root&lt;/em&gt; user, and the files generated will be owned by &lt;em&gt;root&lt;/em&gt;. Change the ownership of the files to the current user so that Docker is able to read and process them.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ..
+sudo chown -R &lt;span class=&#34;nv&#34;&gt;$USER&lt;/span&gt;.&lt;span class=&#34;nv&#34;&gt;$USER&lt;/span&gt; myapp
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; myapp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Build the image using the command below. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker build -t DOCKER-USERNAME/myapp:1.0 .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result of this command is an image containing the application, the ASP.NET framework and all the related dependencies.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;step-3-test-and-publish-the-docker-image&#34;&gt;Step 3: Test and publish the Docker image&lt;/h1&gt;
+&lt;p&gt;Once you have the application image, you can test it and publish it as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Run the new Docker image in a container to test it with the &lt;em&gt;docker run&lt;/em&gt; command. Replace the DOCKER_USERNAME placeholder in the command with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -p 5000:5000 DOCKER_USERNAME/myapp:1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command runs the application in a container and maps port 5000 of the container to port 5000 on the Docker host. With this, a user can access the application by browsing to port 5000 of the host. To test it, browse to http://DOCKER-HOST-ADDRESS:5000/, where DOCKER-HOST-ADDRESS is the IP address of your host, and confirm that you see the application welcome page shown previously.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If the Docker host is a different machine, ensure that the host firewall is configured to allow access on port 5000.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to Docker Hub and publish the image. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker login
+docker push DOCKER-USERNAME/myapp:1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once published on Docker Hub, your image is publicly available by default.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-dotnet-sdk&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami .NET SDK container image&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-aspnet-core&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami ASP.NET Core container image&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ASP.NET documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

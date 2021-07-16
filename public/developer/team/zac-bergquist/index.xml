@@ -1,0 +1,226 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Zac Bergquist</title>
+    <link>/team/zac-bergquist/</link>
+    <description>Recent content in Zac Bergquist on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 06 May 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/team/zac-bergquist/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Outcomes: Monitoring SLIs and SLOs</title>
+      
+      <link>/outcomes/application-observability/monitoring-slis-and-slos/</link>
+      <pubDate>Wed, 21 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-observability/monitoring-slis-and-slos/</guid>
+      <description>
+
+        
+        &lt;p&gt;Service Level Indicators (SLIs) and Service Level Objectives (SLOs) are two of
+the most important concepts in Site Reliability Engineering (SRE), and are key
+to establishing an observability culture. It all starts with identifying the
+right SLIs. Think about the key features and workflows that your users care most
+about, and choose a small number (think three to five per service) of SLIs that
+represent the availability of these features. For example, if you are running an
+eCommerce service you may choose to measure the percentage of &amp;ldquo;add to shopping
+cart&amp;rdquo; operations that succeed. Next, choose an appropriate objective for each of
+these indicators. Avoid spending too much time debating the initial SLO - your
+first attempt will almost certainly need adjustment. A good rule of thumb is to
+start with an initial SLO much lower than you think you’ll need, and fine-tune
+this number as necessary.&lt;/p&gt;
+&lt;p&gt;Once you’ve identified the SLIs and SLOs for your service you need to start
+measuring them. SLIs are typically measured over a rolling window so that the
+effects of an availability-impacting incident “stay with you” for some amount of
+time, before rolling out of the window. This approach helps teams to adjust
+their behavior in order to avoid multiple incidents occurring in a short amount
+of time, which leads to unhappy users. Since many services have different usage
+and traffic patterns on weekends, we recommend a 28-day rolling window - which
+ensures you’ll always have four weekends in the window.&lt;/p&gt;
+&lt;h2 id=&#34;measurement&#34;&gt;Measurement&lt;/h2&gt;
+&lt;p&gt;In this guide we’ll cover two simple frameworks for structuring your metrics in
+a way that facilitates this type of monitoring. While these two approaches might
+not work for every scenario, we’ve found that the majority of SLIs can be
+measured in this way.&lt;/p&gt;
+&lt;p&gt;The first approach uses a single gauge metric. A gauge is a metric whose value
+can increase or decrease over time, but in this approach we limit the value of
+the gauge to 1 (last probe was successful) or 0 (last probe was unsuccessful).
+Prometheus’ &lt;a href=&#34;https://prometheus.io/docs/concepts/jobs_instances/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;up&lt;/code&gt;&lt;/a&gt; time
+series works in this way.&lt;/p&gt;
+&lt;p&gt;The second approach uses two counter metrics. A counter is a metric whose value
+only increases with time (think total number of page views or total number of
+error responses). In this approach, the first counter represents the total
+number of probe attempts, and the second counter represents the total number of
+successful (or unsuccessful) probes.&lt;/p&gt;
+&lt;p&gt;The examples that follow will use
+&lt;a href=&#34;https://tanzu.vmware.com/observability&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Observability by Wavefront&lt;/a&gt; for
+the storage and visualization of this data, but the concepts can be applied to
+any system that can store and display time-series data.&lt;/p&gt;
+&lt;h2 id=&#34;monitoring-slis-with-a-gauge-metric&#34;&gt;Monitoring SLIs with a gauge metric&lt;/h2&gt;
+&lt;p&gt;This approach exposes a single metric that is either 1 or 0 at all times. For
+example, a probe could periodically test an application feature and set the
+value of the metric to 1 if the operation succeeded, or 0 otherwise.&lt;/p&gt;
+&lt;p&gt;The raw metric may look like this:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/app-observability/raw-gauge.png&#34; alt=&#34;Raw Gauge Metric&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;In this example, the probe was successful for all times except for a 2 hour
+block on March 2, a 1 hour block on March 30, and a 10 minute block on April 1.&lt;/p&gt;
+&lt;p&gt;If our SLO is the percentage of attempts that succeeded over our time window,
+then we need to determine both the total number of attempts in that window and
+the number of them that were successful. For the total number of attempts, we
+simply count the number of samples in the window (all 0 and 1 values). Since the
+value of the metric is always 1 when the operation is successful, we can simply
+sum all the samples in the window to get a value that represents the number of
+probes that were successful.&lt;/p&gt;
+&lt;p&gt;We can use the &lt;code&gt;mcount&lt;/code&gt; and &lt;code&gt;msum&lt;/code&gt;
+&lt;a href=&#34;https://docs.wavefront.com/query_language_reference.html#moving-window-time-functions&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;moving window functions&lt;/a&gt;
+to build the queries. For a metric named &lt;code&gt;gauge.up&lt;/code&gt;, we would have the following
+queries:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Attempts: &lt;code&gt;mcount(28d, ts(&amp;quot;guage.up&amp;quot;))&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Successes: &lt;code&gt;msum(28d, ts(&amp;quot;gauge.up&amp;quot;))&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;With this in place, the current SLO attainment is simply the ratio of
+successful attempts to total attempts. We can also plot the target SLO to make
+it easier to gauge how we’re doing at a glance.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/app-observability/availability-gauge.png&#34; alt=&#34;Availability with Gauge&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Here we can see the 2 hour outage on March 2 took our availability from 100%
+down to 99.7% (still above our 99.5% SLO). The impact of the outage remains for
+28 days, and the
+&lt;a href=&#34;https://tanzu.vmware.com/content/blog/thinking-in-error-budgets-how-pivotal-s-cloud-ops-team-used-service-level-objectives-and-other-modern-sre-practices-to-improve-outcomes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;error budget&lt;/a&gt;
+is recovered on March 30, bringing the availability over the window back to
+100%. This is short-lived, as the subsequent outages on March 30 and April 1
+consume additional error budget, which will be reclaimed 28 days in the future.&lt;/p&gt;
+&lt;h2 id=&#34;monitoring-slis-with-two-counter-metrics&#34;&gt;Monitoring SLIs with two counter metrics&lt;/h2&gt;
+&lt;p&gt;An alternative way to measure this type of data is to use two separate (but
+related) counters. The first counter represents the total number of attempts,
+and is incremented every time a probe is performed. The second counter is the
+number of successful attempts and is incremented only when the probe succeeds.
+If all is going well, these two counters increase at the same rate. When the
+system is unhealthy and some operations are failing, the total attempts counter
+will increase faster than the successful attempts counter. The tricky thing
+about counters is that they map “wrap” or reset due to a process restart or the
+maximum integer value exceeded. For example, here’s a counter showing the total
+number of attempts for the same sample:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/app-observability/counter-wrap.png&#34; alt=&#34;Counter Wrap&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;In this example, a counter reset occurred sometime around March 1. A naive query
+that simply looks at a counter value prior to March 1 and again after March 1
+may think that the total number of attempts decreased. For this reason, it is
+important to use query functions that can handle counter resets. In Wavefront
+Query Language, the &lt;a href=&#34;https://docs.wavefront.com/ts_ratediff.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;ratediff&lt;/code&gt;&lt;/a&gt;
+function can be used to find out how much a value has increased from one sample
+to the next, even in the face of counter resets. We combine this with the moving
+sum of those increases over our 28 day window to get the total number of
+attempts (or successes). For counters named &lt;code&gt;probe.attempts.total&lt;/code&gt; and
+&lt;code&gt;probe.successes.total&lt;/code&gt; we would have the following queries:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Attempts: &lt;code&gt;msum(28d, ratediff(ts(&amp;quot;probe.attempts.total&amp;quot;)))&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Successes: &lt;code&gt;msum(28d, ratediff(ts(&amp;quot;probe.successes.total&amp;quot;)))&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/app-observability/availability-counters.png&#34; alt=&#34;Availability with Counters&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;As you can see, this produces an availability graph with the same shape as the
+gauge example.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Detecting Abnormal Behavior with Tanzu Observability</title>
+      
+      <link>/outcomes/application-observability/automation-abnormal-behavior-detection/</link>
+      <pubDate>Thu, 06 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-observability/automation-abnormal-behavior-detection/</guid>
+      <description>
+
+        
+        &lt;p&gt;As more and more sources of metrics become available for monitoring, the problem
+shifts from whether or not right metrics are available to whether we can possibly
+manage all of this data. Today&amp;rsquo;s systems consist of many servers, virtual
+machines, containers, and microservices, and it is becoming challenging to keep
+up with the increasing number of charts and dashboards that accompany these
+sources.&lt;/p&gt;
+&lt;p&gt;One approach to managing this situation is to delegate some of the monitoring work
+to machines. Anomoly detection is an emerging solution that can be used to detect
+abnormal behavior without requiring humans to define and maintain the set of conditions
+that are deemed abnormal.&lt;/p&gt;
+&lt;h2 id=&#34;detecting-anomolies-with-standard-deviation&#34;&gt;Detecting Anomolies with Standard Deviation&lt;/h2&gt;
+&lt;p&gt;The most popular way to detect abnormal patterns in a set of data is to
+calculate how much the current value of a metric deviates from prior values. For
+example, suppose we query for the idle CPU for a particular service:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ts(cpu.usage.idle, not cpu=cpu-total)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This query produces the following graph:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/app-observability/anomoly-cpu-metric.png&#34; alt=&#34;CPU Idle Metric&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Next, we form a query to calculate how much the current value of the metric differs from the
+standard deviation over some time window (1 day in this example):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;data = ts(cpu.usage.idle, not cpu=cpu-total)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;deviation = (${data} - mavg(1d, ${data})) / sqrt(mvar(1d, ${data}))&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/app-observability/anomoly-stdev.png&#34; alt=&#34;Metric with Standard Deviation&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;In this image, the original metric is faded out, and the highlighted metric
+shows how much the current value differs from standard. During normal operation,
+This value mostly hovers around 0, as there is a very small amount of deviation.
+Note that this holds true even though the underlying metric moves from
+approximately 98.2 to 99.6 - we only see a major change in the deviation during
+the transition.&lt;/p&gt;
+&lt;p&gt;This approach leaves plenty of room for improvement. The query is long and
+difficult to understand. Additionally, the user must explicitly set the
+condition under which an alert will be fired. For example, we can see that two
+alerts are generated if we alert when the absolute value of the deviation is
+greater than 1.5, indicated by the red vertical slices in the following diagram:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/app-observability/anomoly-stdev-alerts.png&#34; alt=&#34;Alerting with Standard Deviation&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;As you can see, setting the alert threshold correctly takes some adjustment.
+With a value of 1.5, the alert was not sensitive enough to detect the anomolies
+at the beginning and end of the graph depicted here.&lt;/p&gt;
+&lt;h2 id=&#34;detecting-anomolies-with-the-anomalous-function&#34;&gt;Detecting Anomolies with the Anomalous Function&lt;/h2&gt;
+&lt;p&gt;Wavefront Query Language (WQL) includes an
+&lt;a href=&#34;https://docs.wavefront.com/ts_anomalous.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;anomalous&lt;/code&gt;&lt;/a&gt; function that can be
+used to simplify this process. The syntax of the function is:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;anomalous(testWindow, confidence, expression)
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;testWindow&lt;/code&gt; is the length of the moving time window to check for anomalous points.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;confidence&lt;/code&gt; is a number from 0.0 to 1.0 that expresses the confidence factor
+for determining the range of expected values.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Using this knowledge, we can improve upon our previous query:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;interpolate(anomalous(1h, 0.99, ts(cpu.usage.idle, not cpu=cpu-total)))
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This query returns the percentage of anomalous points in the last one hour with
+a confidence of 99% By default, it predicts the expected values of the metric
+using the actual values over the past day. This behavior can be customized with
+additional optional parameters.&lt;/p&gt;
+&lt;p&gt;The results of this query show a spike that lines up with each anomoly in the
+underlying data.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/app-observability/anomoly-anomalous.png&#34; alt=&#34;Anomalous Function Example&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Anomaly detection can be a convenient way to apply alerting logic to a large
+number of metrics without investing large amounts of time understanding each
+individual metric and defining what normal operation looks like. This is
+especially useful in cases where:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;large amounts of trial and error are required to determine when an alert
+should be raised&lt;/li&gt;
+&lt;li&gt;you need to apply alerts to a system where there are a many metrics and you
+have limited knowledge about how they should behave&lt;/li&gt;
+&lt;li&gt;the definition of &amp;ldquo;normal&amp;rdquo; changes over time&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As with any technology, this solution shouldn&amp;rsquo;t be used in all cases, as the
+results will vary with the query parameters and patterns in the data. If you are
+intimately familiar with the underlying data and the conditions which should
+trigger an alert, you will likely find better results building your own query.
+Anomoly detection is a promising technology that deserves a place in your
+observability toolkit.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

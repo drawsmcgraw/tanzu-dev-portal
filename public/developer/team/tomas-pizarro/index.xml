@@ -1,0 +1,119 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Tomas Pizarro</title>
+    <link>/team/tomas-pizarro/</link>
+    <description>Recent content in Tomas Pizarro on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 15 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/team/tomas-pizarro/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Customize GitLab&#39;s Default Auto DevOps Pipeline with Bitnami&#39;s Helm Charts</title>
+      
+      <link>/guides/ci-cd/gitlab-customize-default/</link>
+      <pubDate>Wed, 15 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/ci-cd/gitlab-customize-default/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://bitnami.com/stack/gitlab&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s GitLab CE stack&lt;/a&gt; is a popular solution for agile development teams, providing a secure and fully-functional GitLab instance for software development and deployment. GitLab CE includes a Continuous Integration and Delivery (CI/CD) system that can build, test, and deploy software updates as well as a private registry for Docker containers.&lt;/p&gt;
+&lt;p&gt;Bitnami also provides &lt;a href=&#34;https://github.com/bitnami/charts&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm charts&lt;/a&gt; for common applications. These charts make it easy to run applications on Kubernetes and are secure, up-to-date and built in conformance with current best practices. By combining these Helm charts with GitLab&amp;rsquo;s CI/CD system, developers can quickly create custom deployment pipelines on Kubernetes infrastructure for development, testing and production scenarios.&lt;/p&gt;
+&lt;p&gt;This guide shows you how to integrate Bitnami&amp;rsquo;s Helm charts with GitLab&amp;rsquo;s Auto DevOps pipeline and create custom deployments on Kubernetes. With this configuration, every change to the application code in GitLab is automatically built as a Docker container and deployed to the Kubernetes cluster using &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js Helm chart&lt;/a&gt;. Bitnami&amp;rsquo;s Helm charts support a number of additional parameters to ease this integration, including the ability to configure each deployment such that it is available at a public IP address for review and test.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and prerequisites&lt;/h2&gt;
+&lt;p&gt;This guide assumes that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;You have deployed the &lt;a href=&#34;https://bitnami.com/stack/gitlab&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami GitLab CE stack&lt;/a&gt; on a cloud server, connected it with your Kubernetes cluster and configured a default Auto DevOps pipeline for your application. For more information on how to complete these tasks, refer to our &lt;a href=&#34;https://docs.bitnami.com/tutorials/create-ci-cd-pipeline-gitlab-kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;detailed tutorial on creating a CI/CD pipeline with GitLab and Kubernetes&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Your application is a Node.js application and the application code is hosted in a GitLab repository. &lt;a href=&#34;https://docs.bitnami.com/tutorials/create-ci-cd-pipeline-gitlab-kubernetes/#step-6-commit-test-and-repeat&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Obtain the sample application&amp;rsquo;s code and the Dockerfile to build it&lt;/a&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Other programming languages or frameworks will require a different chart, but the broad steps to configure and integrate a custom Helm chart with GitLab&amp;rsquo;s Auto DevOps will remain the same.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You have &lt;a href=&#34;https://git-scm.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Git&lt;/a&gt; and &lt;a href=&#34;https://docs.bitnami.com/kubernetes/get-started-kubernetes#step-3-install-kubectl-command-line&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;em&gt;kubectl&lt;/em&gt;&lt;/a&gt; installed and configured to work with your GitLab CE installation and Kubernetes cluster respectively.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-1-replace-the-default-auto-devops-helm-chart-with-a-custom-chart&#34;&gt;Step 1: Replace the default Auto DevOps Helm chart with a custom chart&lt;/h2&gt;
+&lt;p&gt;GitLab configures the Auto DevOps pipeline with a default Helm chart, but it&amp;rsquo;s possible to override this with a custom chart by either adding a chart to your code repository or, for charts hosted externally, by setting various pipeline variables that tell GitLab how to obtain the chart. In this tutorial, since the assumption is that you&amp;rsquo;re using a Node.js application, the latter approach will be followed and GitLab will be configured to use the Bitnami Node.js chart from the Bitnami chart repository.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Navigate to the project&amp;rsquo;s &amp;ldquo;Settings -&amp;gt; CI/CD&amp;rdquo; page.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the &amp;ldquo;Variables&amp;rdquo; section, add the following variables and values:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;AUTO_DEVOPS_CHART=bitnami/node
+AUTO_DEVOPS_CHART_REPOSITORY=https://charts.bitnami.com/bitnami
+AUTO_DEVOPS_CHART_REPOSITORY_NAME=bitnami
+HELM_RELEASE_NAME=myproject
+HELM_UPGRADE_EXTRA_ARGS=--set fullnameOverride=myproject --set service.type=LoadBalancer --set getAppFromExternalRepository=false --set applicationPort=5000 --set image.pullSecrets={gitlab-registry} --set image.registry=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click &amp;ldquo;Save variables&amp;rdquo;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-customize-default/set-variables.png&#34; alt=&#34;GitLab Auto DevOps configuration&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Here is a quick explanation of what these variables do:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;em&gt;AUTO_DEVOPS_CHART&lt;/em&gt; variable sets the name of the custom chart to use, while the &lt;em&gt;AUTO_DEVOPS_CHART_REPOSITORY&lt;/em&gt; and &lt;em&gt;AUTO_DEVOPS_CHART_REPOSITORY_NAME&lt;/em&gt; variables define the chart repository URL and chart repository name respectively.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;HELM_RELEASE_NAME&lt;/em&gt; variable sets the Helm release name.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;HELM_UPGRADE_EXTRA_ARGS&lt;/em&gt; variable sets the list of arguments to be passed to the custom chart (this varies per chart).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For the Bitnami Node.js chart, the parameters passed via the &lt;em&gt;HELM_UPGRADE_EXTRA_ARGS&lt;/em&gt; command are as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;em&gt;fullnameOverride&lt;/em&gt; parameter configures the deployment name. It must be set to the same value as the &lt;em&gt;HELM_RELEASE_NAME&lt;/em&gt; variable, or else Auto DevOps will fail to recognize the deployment and mark the pipeline as failed.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;service.type&lt;/em&gt; parameter configures the deployment to be available at a public load balancer IP address so that it can be easily reviewed or tested.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;getAppFromExternalRepository&lt;/em&gt; parameter is set to &lt;em&gt;false&lt;/em&gt; because the application is already included in the generated container image and does not need to be downloaded from an external source.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;applicationPort&lt;/em&gt; parameter exposes the application on port 5000, which is the port configured for the application in the &lt;em&gt;Dockerfile&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;image.registry&lt;/em&gt; parameter is set to an empty value, because GitLab already provides its own image registry.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;image.pullSecrets&lt;/em&gt; parameter specifies the secret holding the GitLab registry credentials. The secret is already created by Auto DevOps.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can also view the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the chart&lt;/a&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Using a LoadBalancer service type will typically assign a static IP address for the deployment. Depending on your cloud provider&amp;rsquo;s policies, you may incur additional charges for this static IP address.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;step-2-commit-code-and-test-the-pipeline&#34;&gt;Step 2: Commit code and test the pipeline&lt;/h2&gt;
+&lt;p&gt;At this point, you are ready to commit some code to the project and have GitLab test and deploy it using the Bitnami Helm chart. This tutorial assumes that you have a simple &amp;ldquo;Hello, world&amp;rdquo; application in Node.js, together with a Dockerfile to build it. If you don&amp;rsquo;t, you can &lt;a href=&#34;https://docs.bitnami.com/tutorials/create-ci-cd-pipeline-gitlab-kubernetes/#step-6-commit-test-and-repeat&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;obtain the sample application&amp;rsquo;s code and a Dockerfile to build it&lt;/a&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Commit a change to the application - for example, update the message &amp;ldquo;Hello world&amp;rdquo; in the &lt;em&gt;server.js&lt;/em&gt; file to &amp;ldquo;Yahoo world&amp;rdquo; - and push the change to GitLab:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;sed -i &amp;#39;s/Hello world/Yahoo world/g&amp;#39; server.js
+git add .
+git commit -m &amp;#34;Modified message text&amp;#34;
+git push origin master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Pushing this commit should automatically trigger the Auto DevOps pipeline in GitLab.&lt;/p&gt;
+&lt;p&gt;In the first stage, GitLab will attempt to build a container image containing the application code using the provided Dockerfile. The container will be pushed to the internal GitLab registry. Here&amp;rsquo;s an example of the output you should see in this first stage:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-customize-default/pipeline-build.png&#34; alt=&#34;GitLab pipeline build output&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Once the container image has been built and pushed, the second stage of the pipeline will attempt to deploy it to Kubernetes for review using Bitnami&amp;rsquo;s Node.js Helm chart. If successful, the stage output will display the commands you must run to obtain the load balancer IP address which you can browse to in order to see the application in action. Here&amp;rsquo;s an example of the output you should see in this second stage:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-customize-default/pipeline-deploy.png&#34; alt=&#34;GitLab pipeline deployment output&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;If you run the commands shown in the output, you should see the load balancer IP address, as shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-customize-default/service.png&#34; alt=&#34;Service IP address&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Browse to the service IP address listed in the output and you should see the output of the Node.js application, as shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-customize-default/example-1.png&#34; alt=&#34;Example output&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;At this point, you have successfully customized the default Auto DevOps pipeline provided by GitLab to use Bitnami&amp;rsquo;s Node.js Helm chart. Doing this ensures that your application deployments will always use a secure and up-to-date version of Node.js, while also giving you the flexibility to further customize the deployment as needed.&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;p&gt;To learn more about the topics discussed in this guide, use the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.bitnami.com/general/apps/gitlab/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami GitLab CE stack documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Node.js container&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Node.js Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.gitlab.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GitLab documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

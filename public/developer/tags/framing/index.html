@@ -1,0 +1,4156 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+<script>
+dataLayer = [];
+</script>
+
+
+<meta content='b9242434-9feb-47be-a894-3a9e658fdd50-test' name='onetrust-data-domain'>
+<meta content='https://tags.tiqcdn.com/utag/vmware/microsites-privacy/qa/utag.js' name='microsites-utag'>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src='https://www.vmware.com/files/templates/inc/utag_data.js'></script>
+
+<script src='https://tags.tiqcdn.com/utag/vmware/microsites-privacy/qa/utag.sync.js'></script>
+
+<script>
+function OptanonWrapper() { { window.dataLayer.push({ event: 'OneTrustGroupsUpdated' }); } }
+</script>
+
+<script>
+function setGTM(w,d,s,l,i){ w[l]=w[l]||[]; w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'}); var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:''; j.async=true; j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); }
+if (document.cookie.indexOf('OptanonConsent') > -1 && document.cookie.indexOf('groups=') > -1) { setGTM(window,document,'script','dataLayer','GTM-TQ9H33K'); } else{ waitForOnetrustActiveGroups(); } var timer; function waitForOnetrustActiveGroups() { if (document.cookie.indexOf('OptanonConsent') > -1 && document.cookie.indexOf('groups=') > -1) { clearTimeout(timer); setGTM(window,document,'script','dataLayer','GTM-TQ9H33K'); } else{ timer=setTimeout(waitForOnetrustActiveGroups, 250); } }
+</script>
+
+
+<script
+  src="https://browser.sentry-cdn.com/6.3.1/bundle.tracing.min.js"
+  integrity="sha384-JRd2IdwDASXsWVxwzVNu8jQ9C2risDIvq5ocYjUTz2nFtG6NXzOiATXTdvWa4xNR"
+  crossorigin="anonymous"
+></script>
+
+<script>
+Sentry.init({
+  dsn: "https://91138cf7f17842fd8a57d45372bf538c@o448817.ingest.sentry.io/5712977",
+  integrations: [new Sentry.Integrations.BrowserTracing()],
+  release: '',
+  environment: '',
+  
+  
+  tracesSampleRate: 0.2,
+  beforeSend: function(event, hint) {
+    var gtm = false;
+    try {
+      if (hint.originalException.stack)
+        gtm = hint.originalException.stack.indexOf('www.googletagmanager.com/gtm.js?id=') > -1;
+    } catch (error) {
+      console.error(error);
+    }
+    event.tags = event.tags || {};
+    if (gtm) {
+      event.tags.logger = 'gtm';
+    }
+    event.tags.logger = event.tags.logger || '_default_';
+    event.extra = event.extra || {};
+    if (gtm) {
+      event.tags.logger = 'gtm';
+      event.extra.dataLayer = dataLayer.map(
+        function(i) {
+          try {
+            return JSON.stringify(i, null, ' ');
+          } catch(error) {
+            return '[cannot be serialized]: ' + error.message;
+          }
+        }
+      );
+    }   
+    return event;
+  }
+});
+
+var savedTheme = localStorage.getItem("light-dark-mode-storage") || "dark";
+changeTheme(savedTheme, true);
+function changeTheme(mode, firstLoad) {
+  sendAmplitudeUserProps({"latest saved theme": mode}); 
+  if (!firstLoad) sendAmplitudeEvent("toggled theme", {"mode": mode});
+  if (mode === "light") {
+    var iframe = document.getElementById('auth-iframe');
+    var head = document.head;
+    var link = document.createElement("link");
+
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = "\/css\/light-theme.css";
+    link.id = "light-theme"
+
+    head.prepend(link);
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage('light', '*');
+    }
+    document.documentElement.classList.add('light-mode')
+  } 
+  if (mode === "dark") {
+    localStorage.clear();
+  }
+}
+
+var liveShowName, liveShowLink, liveShowStream;
+function isTvShowLive(showName) {   
+
+  var episodeShowNames = [], episodeLinks = [], episodeDates = [], episodeTimes = [], episodeLengths = [], episodeStreams = [];
+      
+        var epDate = new Date("2021-07-16 07:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 30 );
+        episodeShowNames.push("Cloud Stream by VMware");
+        episodeLinks.push("\/tv\/cloud-stream\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-07-14 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-07-13 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-07-12 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-07-09 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("4w62d0kL7Mw");
+      
+        var epDate = new Date("2021-07-09 07:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 30 );
+        episodeShowNames.push("Cloud Stream by VMware");
+        episodeLinks.push("\/tv\/cloud-stream\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-07-08 08:47:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("MV9k4a-DQuA");
+      
+        var epDate = new Date("2021-07-06 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-07-06 10:12:18 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("hun95HGfmdQ");
+      
+        var epDate = new Date("2021-07-02 07:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 30 );
+        episodeShowNames.push("Cloud Stream by VMware");
+        episodeLinks.push("\/tv\/cloud-stream\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-07-01 12:09:40 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("cGmm8Pl0J9k");
+      
+        var epDate = new Date("2021-06-30 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-29 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-28 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-25 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("Di_AR6nAss0");
+      
+        var epDate = new Date("2021-06-25 07:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 30 );
+        episodeShowNames.push("Cloud Stream by VMware");
+        episodeLinks.push("\/tv\/cloud-stream\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-24 10:33:22 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("Gx7mWrXvPt4");
+      
+        var epDate = new Date("2021-06-23 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-22 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-22 08:30:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("oMY18gz5Ips");
+      
+        var epDate = new Date("2021-06-21 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-21 09:50:11 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("kfvtcs8Id7w");
+      
+        var epDate = new Date("2021-06-16 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-15 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-15 00:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 255 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-14 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-11 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("FD_kY3Ey2pI");
+      
+        var epDate = new Date("2021-06-10 09:05:21 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("T1oanItW70k");
+      
+        var epDate = new Date("2021-06-09 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-08 10:19:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("46BiNHfQfo0");
+      
+        var epDate = new Date("2021-06-03 18:44:32 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("jsjf6LqRCM8");
+      
+        var epDate = new Date("2021-06-02 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-06-02 13:35:49 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("nws9emy-eN0");
+      
+        var epDate = new Date("2021-06-01 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-05-28 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("l3TWbrWkVzY");
+      
+        var epDate = new Date("2021-05-27 11:08:50 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("JfpWlq6C3LY");
+      
+        var epDate = new Date("2021-05-26 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-05-26 12:42:47 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("JOm1N74zvsI");
+      
+        var epDate = new Date("2021-05-25 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-05-25 10:20:35 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("ZVFlXsnt_r4");
+      
+        var epDate = new Date("2021-05-24 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-05-21 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("KeQnIagZYA4");
+      
+        var epDate = new Date("2021-05-20 08:36:44 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("GJNtgcAjHXo");
+      
+        var epDate = new Date("2021-05-19 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-05-18 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-05-18 11:04:56 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("ZJvIdh6WCwQ");
+      
+        var epDate = new Date("2021-05-17 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-05-14 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("CYQsLfVcgYI");
+      
+        var epDate = new Date("2021-05-12 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-05-11 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-05-10 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-05-05 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-05-04 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-05-03 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-04-30 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("UF1SglWIYz4");
+      
+        var epDate = new Date("2021-04-28 10:00:00 \u002b0100 \u002b0100");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("Gp8rgshU2Ho");
+      
+        var epDate = new Date("2021-04-27 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-04-26 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-04-21 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-04-20 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-04-16 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("yFA4YitondY");
+      
+        var epDate = new Date("2021-04-15 08:58:07 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("zDoFnJ7YDo0");
+      
+        var epDate = new Date("2021-04-14 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-04-13 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-04-13 11:30:57 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("Dpac46N_5qM");
+      
+        var epDate = new Date("2021-04-12 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-04-09 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("KfN4MK4B2f8");
+      
+        var epDate = new Date("2021-04-07 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-04-06 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-04-05 11:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-31 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-30 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-29 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-26 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("blanHrC0SFQ");
+      
+        var epDate = new Date("2021-03-25 13:25:23 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("2cjiJbo-bw0");
+      
+        var epDate = new Date("2021-03-24 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-22 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-19 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("v47-NTb6Qw8");
+      
+        var epDate = new Date("2021-03-18 16:20:06 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("fjRQB6HXTR8");
+      
+        var epDate = new Date("2021-03-17 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-16 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-16 13:37:59 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("U-9YEWDI91s");
+      
+        var epDate = new Date("2021-03-12 21:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("W_P7DBnDikY");
+      
+        var epDate = new Date("2021-03-11 13:13:03 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("ZHcM1U0tEAU");
+      
+        var epDate = new Date("2021-03-10 10:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-09 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-09 09:58:03 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("rjB1Fe9N3gE");
+      
+        var epDate = new Date("2021-03-08 10:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-05 21:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("44wv-d7H-HE");
+      
+        var epDate = new Date("2021-03-04 10:06:28 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("5GW6R0DRuy8");
+      
+        var epDate = new Date("2021-03-03 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-02 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-03-02 10:30:44 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("dVjq2gg2zNQ");
+      
+        var epDate = new Date("2021-03-01 10:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-02-26 21:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("r4JUZQMW2go");
+      
+        var epDate = new Date("2021-02-25 11:09:56 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("n_e-jdFedwA");
+      
+        var epDate = new Date("2021-02-24 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-02-23 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-02-23 11:53:38 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("K9ElVTTIrCg");
+      
+        var epDate = new Date("2021-02-22 10:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-02-22 15:02:20 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("XZF7BcMtmUU");
+      
+        var epDate = new Date("2021-02-17 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-02-16 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-02-16 11:42:28 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("GMdLgjUvxdc");
+      
+        var epDate = new Date("2021-02-11 12:00:40 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("SUtu3DjnE6I");
+      
+        var epDate = new Date("2021-02-10 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-02-10 12:56:07 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("VnjXhH07614");
+      
+        var epDate = new Date("2021-02-09 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-02-09 12:57:43 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("KBW8r-dEspQ");
+      
+        var epDate = new Date("2021-02-08 10:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-02-08 14:39:13 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("sHXJ6o952NM");
+      
+        var epDate = new Date("2021-02-05 21:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("slX2nAFHeK0");
+      
+        var epDate = new Date("2021-02-05 13:44:54 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("Yjl-ZKCSbos");
+      
+        var epDate = new Date("2021-02-02 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-02-02 16:23:12 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("41-971Jiy4Q");
+      
+        var epDate = new Date("2021-02-01 10:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-01-29 21:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("WnXnO97tsNo");
+      
+        var epDate = new Date("2021-01-27 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-01-26 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-01-25 10:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-01-25 15:58:07 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("_XSbCD2vGt8");
+      
+        var epDate = new Date("2021-01-22 21:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("AeHfVFepsMg");
+      
+        var epDate = new Date("2021-01-21 14:31:01 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("MjST0S7Xiag");
+      
+        var epDate = new Date("2021-01-20 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-01-19 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-01-18 10:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-01-18 16:30:50 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("vH-PGzj4yYI");
+      
+        var epDate = new Date("2021-01-15 21:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("WOMOXqzLYRs");
+      
+        var epDate = new Date("2021-01-15 13:24:32 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("_tU5L2UelXA");
+      
+        var epDate = new Date("2021-01-14 16:25:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("Zpq2i2Ki_cA");
+      
+        var epDate = new Date("2021-01-13 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-01-12 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-01-12 16:15:59 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("rhs0JdOGJp4");
+      
+        var epDate = new Date("2021-01-08 21:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("gSjMYDBb5Mc");
+      
+        var epDate = new Date("2021-01-08 15:47:04 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("19IFiI62G2c");
+      
+        var epDate = new Date("2021-01-07 08:51:40 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("zXaXgZ0EzcE");
+      
+        var epDate = new Date("2021-01-06 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-01-05 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2021-01-04 10:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-12-28 10:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-12-22 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-12-21 10:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-12-18 21:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("Nz1HSYdD_-g");
+      
+        var epDate = new Date("2020-12-16 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-12-15 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-12-14 11:30:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-12-11 13:20:11 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("eSFyZ5AN-NQ");
+      
+        var epDate = new Date("2020-12-09 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-12-09 16:30:27 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("mwEBPy1r-v8");
+      
+        var epDate = new Date("2020-12-08 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-12-08 13:45:26 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("kqKJ2NweR_o");
+      
+        var epDate = new Date("2020-12-04 16:47:57 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("D3QmNuZBAlw");
+      
+        var epDate = new Date("2020-12-02 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-12-02 15:17:17 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("Rw1exVvYSY4");
+      
+        var epDate = new Date("2020-12-01 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-12-01 13:34:35 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("rvWh6fWe7vY");
+      
+        var epDate = new Date("2020-11-30 11:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-11-30 15:27:57 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("pOwGEBSkboQ");
+      
+        var epDate = new Date("2020-11-25 13:16:32 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("RAF3-VZD6oQ");
+      
+        var epDate = new Date("2020-11-24 13:14:39 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("ckqE0Zr0kDc");
+      
+        var epDate = new Date("2020-11-24 13:03:04 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("YLuANLNi3AQ");
+      
+        var epDate = new Date("2020-11-23 11:30:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-11-20 21:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("v9GQYTc7TJc");
+      
+        var epDate = new Date("2020-11-19 16:46:04 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("iriNWdaXKkg");
+      
+        var epDate = new Date("2020-11-19 09:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-11-18 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-11-18 09:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-11-18 15:56:21 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("C4aK3FXfIb8");
+      
+        var epDate = new Date("2020-11-17 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-11-17 13:12:53 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("YJsnVT_LqTM");
+      
+        var epDate = new Date("2020-11-16 11:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-11-16 12:33:52 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("wXRuRATCtCQ");
+      
+        var epDate = new Date("2020-11-13 11:51:55 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("V8MlUUmwhrw");
+      
+        var epDate = new Date("2020-11-12 12:20:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("IzkuAU2uUo0");
+      
+        var epDate = new Date("2020-11-11 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-11-11 13:08:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("_c8_RwN4jAg");
+      
+        var epDate = new Date("2020-11-10 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-11-10 13:14:07 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("vr2RgufcZCw");
+      
+        var epDate = new Date("2020-11-09 11:24:26 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("hhKWUiaHbHU");
+      
+        var epDate = new Date("2020-11-06 11:09:02 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("NY-IouJg7Ek");
+      
+        var epDate = new Date("2020-11-05 15:39:40 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("5ROovjWTcng");
+      
+        var epDate = new Date("2020-11-04 12:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-11-04 15:15:10 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("xrnNdMA0zqQ");
+      
+        var epDate = new Date("2020-11-03 13:00:00 -0800 -0800");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-11-03 11:35:37 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("oSuRORtOfBs");
+      
+        var epDate = new Date("2020-11-02 11:53:50 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("OPOVgdFRcSM");
+      
+        var epDate = new Date("2020-10-30 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("gNMZOlEKJnI");
+      
+        var epDate = new Date("2020-10-30 11:29:05 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("IzMg9FquEK4");
+      
+        var epDate = new Date("2020-10-29 13:38:32 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("EX5PWbkL6Dg");
+      
+        var epDate = new Date("2020-10-29 11:42:55 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("_vOUEcRZVjg");
+      
+        var epDate = new Date("2020-10-28 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-10-27 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-10-27 10:48:31 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("UOZW3rMqZ1Q");
+      
+        var epDate = new Date("2020-10-26 11:30:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-10-26 11:14:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("mwtIZ8x5EOQ");
+      
+        var epDate = new Date("2020-10-23 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("YkOOCyK6Yak");
+      
+        var epDate = new Date("2020-10-23 12:16:56 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("4CJlQWDfAyM");
+      
+        var epDate = new Date("2020-10-22 09:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-10-22 14:33:22 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("G65BeKHoGk8");
+      
+        var epDate = new Date("2020-10-21 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-10-21 09:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-10-21 14:28:27 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("tDxg7vO-sp8");
+      
+        var epDate = new Date("2020-10-20 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-10-20 12:12:29 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("x2DL7a24AY8");
+      
+        var epDate = new Date("2020-10-19 10:49:26 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("1-uyAyuG1j8");
+      
+        var epDate = new Date("2020-10-16 21:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("dPRP08NPO-M");
+      
+        var epDate = new Date("2020-10-14 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-10-13 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-10-09 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("py6gfeDuA30");
+      
+        var epDate = new Date("2020-10-09 11:47:52 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("3-Y5jtqvfi0");
+      
+        var epDate = new Date("2020-10-08 10:12:48 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("uJ_neGT0QRg");
+      
+        var epDate = new Date("2020-10-07 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-10-07 12:12:13 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("37Fa2JYb3Cw");
+      
+        var epDate = new Date("2020-10-06 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-10-06 11:44:04 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("gFa0xMwKIyM");
+      
+        var epDate = new Date("2020-10-05 14:20:56 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("gPRY4EORgSM");
+      
+        var epDate = new Date("2020-10-02 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("llzH_we5guI");
+      
+        var epDate = new Date("2020-10-02 15:09:45 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("0RgX1n8vSiQ");
+      
+        var epDate = new Date("2020-10-02 14:56:57 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("_9UVWLPir_Q");
+      
+        var epDate = new Date("2020-10-01 13:09:14 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("LBAsF6wWWPY");
+      
+        var epDate = new Date("2020-10-01 13:08:55 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("Ec5xlZy5iVk");
+      
+        var epDate = new Date("2020-10-01 13:05:40 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("-fzTnFYJLAA");
+      
+        var epDate = new Date("2020-10-01 12:50:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("s7n7UWYQolk");
+      
+        var epDate = new Date("2020-10-01 12:38:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("wPwhisRbVBo");
+      
+        var epDate = new Date("2020-10-01 12:36:54 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("-uCPSXVuNIQ");
+      
+        var epDate = new Date("2020-10-01 12:29:07 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("0sR8FF3A_X8");
+      
+        var epDate = new Date("2020-10-01 12:24:18 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("43QNJ8ooQKI");
+      
+        var epDate = new Date("2020-10-01 12:21:19 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("c1OVw8Pt7dY");
+      
+        var epDate = new Date("2020-10-01 11:58:36 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("JSv7gubN0mc");
+      
+        var epDate = new Date("2020-10-01 11:48:05 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("1bH2iQWNo3I");
+      
+        var epDate = new Date("2020-09-30 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-09-28 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-09-28 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-09-28 10:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Between Chair and Keyboard");
+        episodeLinks.push("\/tv\/bcak\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-09-25 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("zAtaJ0x-ZwY");
+      
+        var epDate = new Date("2020-09-23 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-09-23 09:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-09-22 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-09-18 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("x-cDk8DIvwE");
+      
+        var epDate = new Date("2020-09-15 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-09-11 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("RVDK0m2XQeg");
+      
+        var epDate = new Date("2020-09-09 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-09-08 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-09-01 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-08-28 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("t6UBFimi3Xo");
+      
+        var epDate = new Date("2020-08-26 12:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Code");
+        episodeLinks.push("\/tv\/code\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-08-25 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-08-21 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("ibrDDaLD6Ks");
+      
+        var epDate = new Date("2020-08-20 09:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-08-19 09:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-08-18 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-08-14 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("ODTETX48yIU");
+      
+        var epDate = new Date("2020-08-11 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-08-07 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("F70wRexHIwg");
+      
+        var epDate = new Date("2020-07-31 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("p6zCzyBNhLE");
+      
+        var epDate = new Date("2020-07-31 17:52:50 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Talk");
+        episodeLinks.push("\/tv\/talk\/");
+        episodeStreams.push("NW7l7pyVWr0");
+      
+        var epDate = new Date("2020-07-28 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-07-24 20:00:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("pKzx17FXplU");
+      
+        var epDate = new Date("2020-07-23 09:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-07-22 09:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-07-21 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-07-17 21:41:37 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("XNi8uO0PwPo");
+      
+        var epDate = new Date("2020-07-14 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-07-10 22:25:43 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("FKvFloyf_Kg");
+      
+        var epDate = new Date("2020-06-30 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-06-30 09:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-06-29 09:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-06-26 22:08:46 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("SeNwPNo7gxw");
+      
+        var epDate = new Date("2020-06-23 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-06-19 21:51:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("P_QZtZJAZyU");
+      
+        var epDate = new Date("2020-06-16 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-06-09 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 120 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-05-29 22:12:51 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("IznsHhKL428");
+      
+        var epDate = new Date("2020-05-26 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-05-22 21:53:02 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("ZJgaGJm9NJE");
+      
+        var epDate = new Date("2020-05-21 21:55:47 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("t97l2bP8NCI");
+      
+        var epDate = new Date("2020-05-20 13:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-05-20 19:48:16 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("SpringOne Tour");
+        episodeLinks.push("\/tv\/springone-tour\/");
+        episodeStreams.push("wrXRxPRyClg");
+      
+        var epDate = new Date("2020-05-19 00:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-05-15 22:15:18 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("zpBFkT9B_0s");
+      
+        var epDate = new Date("2020-05-12 00:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-05-08 22:47:45 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("bQw3UZgYmOk");
+      
+        var epDate = new Date("2020-05-05 00:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-05-01 21:48:22 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("WMgpw4Z_zrM");
+      
+        var epDate = new Date("2020-04-25 09:33:20 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("ezM2H-tHMXk");
+      
+        var epDate = new Date("2020-04-17 22:20:14 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("o_gT_LfFn4s");
+      
+        var epDate = new Date("2020-04-15 16:28:59 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("ZcudSdi5qo4");
+      
+        var epDate = new Date("2020-04-14 18:29:22 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("CBA3I9TkzpQ");
+      
+        var epDate = new Date("2020-04-14 17:34:06 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("3tfnF4vsK9s");
+      
+        var epDate = new Date("2020-04-14 17:21:23 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("V2FQuFGrmXQ");
+      
+        var epDate = new Date("2020-04-14 16:12:57 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("SSu7V-S5yec");
+      
+        var epDate = new Date("2020-04-14 00:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-04-14 00:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("SeYre-Mgb14");
+      
+        var epDate = new Date("2020-04-11 10:03:09 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("an9D2FyFwR0");
+      
+        var epDate = new Date("2020-04-07 00:00:00 -0700 -0700");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Tanzu Tuesdays");
+        episodeLinks.push("\/tv\/tanzu-tuesdays\/");
+        episodeStreams.push("twitch");
+      
+        var epDate = new Date("2020-04-06 20:58:11 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("fM5XQ417H6w");
+      
+        var epDate = new Date("2020-04-06 20:56:35 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("jZy6r_n7DBA");
+      
+        var epDate = new Date("2020-04-06 20:54:06 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("u2OZovqZAdI");
+      
+        var epDate = new Date("2020-04-06 20:49:19 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("ZDqswmdZeGQ");
+      
+        var epDate = new Date("2020-04-06 20:46:45 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("bpBHpSND0Dw");
+      
+        var epDate = new Date("2020-04-06 20:44:19 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("Gs1klRwZHCI");
+      
+        var epDate = new Date("2020-04-06 20:42:15 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("-__NFQKN758");
+      
+        var epDate = new Date("2020-04-06 20:37:57 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("xZhVbt9PMi4");
+      
+        var epDate = new Date("2020-04-06 20:36:19 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("Sz9JwNtjkSE");
+      
+        var epDate = new Date("2020-04-06 20:29:53 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("uFGMeVSnMQA");
+      
+        var epDate = new Date("2020-04-06 20:20:02 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("oC3UAsOBXRU");
+      
+        var epDate = new Date("2020-04-06 20:19:13 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("ndBeOJx4ZTY");
+      
+        var epDate = new Date("2020-04-06 20:15:23 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("1hKXhmUeZMg");
+      
+        var epDate = new Date("2020-04-06 20:13:33 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("pgIXAId1Mag");
+      
+        var epDate = new Date("2020-04-06 20:12:13 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("F-EdDnjF6ao");
+      
+        var epDate = new Date("2020-04-06 20:06:37 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("RY_sRbqkkHE");
+      
+        var epDate = new Date("2020-04-06 20:02:12 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("aOcb2F1pCMU");
+      
+        var epDate = new Date("2020-04-06 19:49:59 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("uw5sLIwM_1k");
+      
+        var epDate = new Date("2020-04-06 19:47:50 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("HKysRNutORA");
+      
+        var epDate = new Date("2020-04-06 19:46:25 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("JqxMTQ2-VIE");
+      
+        var epDate = new Date("2020-04-06 19:41:49 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("TtA0_MEEjlM");
+      
+        var epDate = new Date("2020-04-06 19:34:26 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("Cl6UQ7AGDU8");
+      
+        var epDate = new Date("2020-04-06 18:22:06 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("vCwS15cPQOU");
+      
+        var epDate = new Date("2020-04-06 18:21:19 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("CyuhrQtEW90");
+      
+        var epDate = new Date("2020-04-06 16:28:40 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("ok6FoZWte4U");
+      
+        var epDate = new Date("2020-04-06 16:21:33 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("ISeVlELjrvE");
+      
+        var epDate = new Date("2020-04-06 16:16:14 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("4b8hKDObQ8M");
+      
+        var epDate = new Date("2020-04-06 16:04:50 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("IGOV3-um0CQ");
+      
+        var epDate = new Date("2020-04-06 15:52:13 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("4JSLVQyusjs");
+      
+        var epDate = new Date("2020-04-06 15:49:32 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("ZOstvragO2M");
+      
+        var epDate = new Date("2020-04-06 15:29:03 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("EVHHyiypiY0");
+      
+        var epDate = new Date("2020-04-06 15:27:39 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("_QEjffPz8OQ");
+      
+        var epDate = new Date("2020-04-06 15:20:27 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("1NZVwv1cmMc");
+      
+        var epDate = new Date("2020-04-06 15:11:11 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("Spring Live");
+        episodeLinks.push("\/tv\/spring-live\/");
+        episodeStreams.push("heINQyTR9HM");
+      
+        var epDate = new Date("2020-04-03 22:07:17 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("fEvOzL_eosg");
+      
+        var epDate = new Date("2020-03-27 21:49:30 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("LQbBgQnUs_k");
+      
+        var epDate = new Date("2020-03-20 22:16:44 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("A8dUFWbH3pM");
+      
+        var epDate = new Date("2020-03-13 22:04:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("Rce70OkfRhI");
+      
+        var epDate = new Date("2020-03-06 23:03:48 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("6pFW6h6AORQ");
+      
+        var epDate = new Date("2020-02-28 23:23:22 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("BmTCtLeuROU");
+      
+        var epDate = new Date("2020-02-21 23:17:37 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("HQX6wImrLTw");
+      
+        var epDate = new Date("2020-02-14 22:52:24 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("17fqujSGJFM");
+      
+        var epDate = new Date("2020-02-07 23:05:06 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("ZE4Zu9WQET4");
+      
+        var epDate = new Date("2020-01-31 23:37:02 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("se4soMN4fDg");
+      
+        var epDate = new Date("2020-01-24 22:20:23 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("efUAuOxR-ro");
+      
+        var epDate = new Date("2020-01-17 22:51:49 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("ZB4LhAeiTCE");
+      
+        var epDate = new Date("2020-01-10 22:31:09 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("AxEVgFqcnP4");
+      
+        var epDate = new Date("2019-12-13 22:42:03 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("582HunYxrgY");
+      
+        var epDate = new Date("2019-12-06 22:42:44 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("pyfU_ne-kOc");
+      
+        var epDate = new Date("2019-11-08 23:12:02 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("NY7pyRNrHzE");
+      
+        var epDate = new Date("2019-11-01 21:58:53 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("XxVHNWoZO_c");
+      
+        var epDate = new Date("2019-10-26 00:18:23 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("_wUA20WDfws");
+      
+        var epDate = new Date("2019-10-18 22:06:21 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("cx__8khtih4");
+      
+        var epDate = new Date("2019-10-11 22:55:31 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("78XQe6FdHac");
+      
+        var epDate = new Date("2019-10-04 22:23:51 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("pzXyZXcFa7o");
+      
+        var epDate = new Date("2019-09-27 22:28:15 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("4zkRX9PSJ5k");
+      
+        var epDate = new Date("2019-09-13 22:28:17 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("wEyLsEaomfA");
+      
+        var epDate = new Date("2019-09-06 21:53:43 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("CGywE84CCx8");
+      
+        var epDate = new Date("2019-08-23 21:36:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("fRoTKqH3rHI");
+      
+        var epDate = new Date("2019-08-16 21:41:54 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("4OQ_2hTyNrI");
+      
+        var epDate = new Date("2019-08-09 22:12:05 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("CKpSyl5vgK8");
+      
+        var epDate = new Date("2019-08-02 22:10:59 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("gzzq7TGBsL8");
+      
+        var epDate = new Date("2019-07-26 22:20:44 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("-U79ZLO_37E");
+      
+        var epDate = new Date("2019-07-19 23:01:43 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("tv-HJuwC4yI");
+      
+        var epDate = new Date("2019-07-12 21:55:08 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("aq-wlslJ5MQ");
+      
+        var epDate = new Date("2019-06-29 19:43:13 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("7Fsyo8lKB3M");
+      
+        var epDate = new Date("2019-06-21 21:51:52 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("tj5Ey2bHsfM");
+      
+        var epDate = new Date("2019-06-14 22:09:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("CSglwNTQiYg");
+      
+        var epDate = new Date("2019-06-07 21:56:44 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("zErhwjPRKn8");
+      
+        var epDate = new Date("2019-05-31 22:29:12 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("Cl-EWv3LmJA");
+      
+        var epDate = new Date("2019-05-10 22:30:23 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("qVIV2Y0M2Iw");
+      
+        var epDate = new Date("2019-05-03 22:48:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("IhbJ3ll4usI");
+      
+        var epDate = new Date("2019-04-26 22:04:52 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("vd5gGcy96go");
+      
+        var epDate = new Date("2019-04-19 22:07:51 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("Xfi9XqcZ76M");
+      
+        var epDate = new Date("2019-04-12 22:22:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("NFnpUlt0IuM");
+      
+        var epDate = new Date("2019-04-05 22:05:00 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("QU9BGPf0hBw");
+      
+        var epDate = new Date("2019-03-29 22:04:58 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("vgs3Af_ew3c");
+      
+        var epDate = new Date("2019-03-22 22:14:27 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("q-L2woZMBHY");
+      
+        var epDate = new Date("2019-03-15 21:55:32 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("3Px-kbcIaVE");
+      
+        var epDate = new Date("2019-03-08 22:34:05 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("jDdzs6-1BBM");
+      
+        var epDate = new Date("2019-03-02 00:01:38 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("C-vRlW7VYio");
+      
+        var epDate = new Date("2019-02-15 23:59:29 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("0uy2V2kYl4U");
+      
+        var epDate = new Date("2019-02-08 23:11:29 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("ILMK65YVSKw");
+      
+        var epDate = new Date("2019-02-01 23:11:10 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("A_YV98HhLrk");
+      
+        var epDate = new Date("2019-01-25 23:05:16 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("QdwtefUsoNI");
+      
+        var epDate = new Date("2019-01-11 23:18:37 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("fjoxmTeh3Fk");
+      
+        var epDate = new Date("2018-12-21 23:05:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("okw8brTi6MY");
+      
+        var epDate = new Date("2018-12-07 23:10:40 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("R_Wul_xdHsk");
+      
+        var epDate = new Date("2018-11-30 23:42:02 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("JU-zp1dTC58");
+      
+        var epDate = new Date("2018-11-16 23:24:43 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("7aR6k9xBN94");
+      
+        var epDate = new Date("2018-11-02 22:17:11 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("BSKU6QHOvVE");
+      
+        var epDate = new Date("2018-10-26 22:18:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("rt0fqOekgjI");
+      
+        var epDate = new Date("2018-10-19 21:35:10 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("Z9t1DvNcseA");
+      
+        var epDate = new Date("2018-10-12 22:02:04 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("e1XCsuTYUa4");
+      
+        var epDate = new Date("2018-10-05 23:58:03 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("zY2vpAf1SXA");
+      
+        var epDate = new Date("2018-09-21 22:03:07 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("1dXJ34-KLe8");
+      
+        var epDate = new Date("2018-09-07 22:02:50 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("y_RMncC1u3c");
+      
+        var epDate = new Date("2018-08-31 22:13:31 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("2YoK4bBy3CM");
+      
+        var epDate = new Date("2018-08-24 21:56:21 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("OA0fWPXxXYs");
+      
+        var epDate = new Date("2018-08-17 22:11:19 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("I8Tp7jU2oJk");
+      
+        var epDate = new Date("2018-08-10 21:58:02 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("ivZIf34zYuQ");
+      
+        var epDate = new Date("2018-08-03 22:17:19 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("VKtudjLc1oc");
+      
+        var epDate = new Date("2018-07-27 22:35:49 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("n_zqedVM0oM");
+      
+        var epDate = new Date("2018-07-20 22:22:44 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("sNr7TjChn6s");
+      
+        var epDate = new Date("2018-07-13 22:01:28 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("GSHixCT0Gcg");
+      
+        var epDate = new Date("2018-07-06 22:17:31 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("NObVcDG3ADM");
+      
+        var epDate = new Date("2018-06-22 22:04:45 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("N-lTSk1bGAg");
+      
+        var epDate = new Date("2018-06-15 21:45:29 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("xYMA-S75_9U");
+      
+        var epDate = new Date("2018-06-08 21:53:07 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("ixs2-UnWiGU");
+      
+        var epDate = new Date("2018-05-25 22:11:57 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("Ko_WfXRAypY");
+      
+        var epDate = new Date("2018-05-18 22:14:26 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("J8W_9GTmCNA");
+      
+        var epDate = new Date("2018-05-11 22:19:13 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("aQz3H9bIH8Y");
+      
+        var epDate = new Date("2018-04-27 22:31:50 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("8X8Rh_RKFSQ");
+      
+        var epDate = new Date("2018-04-22 01:04:28 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("8B1D7cTMPgA");
+      
+        var epDate = new Date("2018-04-13 22:39:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("oLGaWktrB60");
+      
+        var epDate = new Date("2018-04-08 00:50:33 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("zezeBAJ_3w8");
+      
+        var epDate = new Date("2018-03-30 22:07:28 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("McwwWhCXMxc");
+      
+        var epDate = new Date("2018-03-23 21:16:52 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("QW85Y0Ug3KY");
+      
+        var epDate = new Date("2018-03-02 22:51:20 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("JMCCeAb9eY4");
+      
+        var epDate = new Date("2018-02-23 22:42:18 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("od8TnIvuADg");
+      
+        var epDate = new Date("2018-02-16 22:55:44 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("t3kmscqbFHg");
+      
+        var epDate = new Date("2018-02-09 22:46:06 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("F47RwU8AzYI");
+      
+        var epDate = new Date("2018-02-02 22:20:20 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("-gLMTm85R3M");
+      
+        var epDate = new Date("2018-01-26 22:52:38 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("-JN8NSUnVgM");
+      
+        var epDate = new Date("2018-01-19 23:07:53 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("wmXHqQLdM2I");
+      
+        var epDate = new Date("2018-01-12 23:00:50 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("f_ANRYIXFgI");
+      
+        var epDate = new Date("2018-01-05 22:39:03 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("M_rxPPLG8pU");
+      
+        var epDate = new Date("2017-12-22 23:21:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("pDb2psNcvKU");
+      
+        var epDate = new Date("2017-12-15 22:26:53 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("xdCTC4scjDg");
+      
+        var epDate = new Date("2017-11-17 23:07:33 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("xtl2KV1JW9s");
+      
+        var epDate = new Date("2017-11-10 22:45:17 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("-Hvfl6zOLGE");
+      
+        var epDate = new Date("2017-11-03 21:45:39 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("hreCyC7XnOw");
+      
+        var epDate = new Date("2017-10-27 22:03:24 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("iMzf_oWsRi0");
+      
+        var epDate = new Date("2017-10-20 21:52:54 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("3XgBB4mATNM");
+      
+        var epDate = new Date("2017-10-13 21:39:56 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("WotK415iOQM");
+      
+        var epDate = new Date("2017-10-06 21:10:30 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("x9doB5eJWgQ");
+      
+        var epDate = new Date("2017-09-29 21:25:32 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("9uU2QMAiZrI");
+      
+        var epDate = new Date("2017-09-15 21:26:04 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("wqhKCiGsf1Y");
+      
+        var epDate = new Date("2017-09-08 22:15:41 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("fWkK-zsFtlU");
+      
+        var epDate = new Date("2017-08-11 21:12:23 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("8Xo_ghCIOSY");
+      
+        var epDate = new Date("2017-08-04 21:39:44 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("2Yyc2R8yDRo");
+      
+        var epDate = new Date("2017-07-28 21:39:01 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("xEdBSVaUtp4");
+      
+        var epDate = new Date("2017-07-21 21:12:34 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("slUMVwRXlRo");
+      
+        var epDate = new Date("2017-07-14 22:06:27 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("WnDG-5cvEew");
+      
+        var epDate = new Date("2017-07-07 21:09:56 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("PlnvxqKR28A");
+      
+        var epDate = new Date("2017-06-30 23:10:38 \u002b0000 UTC");
+        episodeDates.push(epDate.toLocaleDateString());
+        episodeTimes.push(epDate.toLocaleTimeString());
+        episodeLengths.push( 60 );
+        episodeShowNames.push("TGIK");
+        episodeLinks.push("\/tv\/tgik\/");
+        episodeStreams.push("9YYeE-bMWv8");
+      
+      var currentDate = (new Date(Date.now())).toLocaleDateString();
+      var index = episodeDates.indexOf(currentDate);
+      var isLive = false;
+      if (index > -1) {
+        var startTime = (new Date(episodeDates[index] + " " + episodeTimes[index])).getTime();
+        var endTime = startTime + (episodeLengths[index] * 60 * 1000);
+        var currentTime = (new Date(Date.now())).getTime();
+    
+        if (showName == null)
+          isLive = (currentTime < endTime && currentTime > startTime); 
+        else
+          isLive = (currentTime < endTime && currentTime > startTime && episodeShowNames[index] == showName); 
+        
+        if (isLive) {
+          liveShowName = episodeShowNames[index];
+          liveShowLink = episodeLinks[index];
+          liveShowStream = episodeStreams[index];
+        }
+      }
+      return isLive;
+}
+
+function sendAmplitudeEventOnLoad(eventType, eventProperties) {
+  $(window).on('load', function(e){dataLayer.push({'event': 'logEvent', 'eventType': eventType, 'eventProperties': eventProperties});});
+}
+function sendAmplitudeEvent(eventType, eventProperties) {
+  
+  var event = dataLayer.find(element => element["event"] == "logEvent");
+  if (event != null) {
+    var existingProps = Object.keys(event["eventProperties"]);
+    var newProps = Object.keys(eventProperties);
+    var difference = existingProps.filter(x => !newProps.includes(x));
+    var removeProps = {};
+    difference.forEach(element => {
+      var newObject = {};
+      removeProps[element] = undefined;
+    });
+    Object.assign(eventProperties, removeProps);
+  }
+  dataLayer.push({'event': 'logEvent', 'eventType': eventType, 'eventProperties': eventProperties});
+}
+function sendAmplitudeUserPropsOnLoad(userProperties) {
+  $(window).on('load', function(e){dataLayer.push({'event': 'setUserProperties', 'userProperties': userProperties});});
+}
+function sendAmplitudeUserProps(userProperties) {
+  dataLayer.push({'event': 'setUserProperties', 'userProperties': userProperties});
+}
+function setAmplitudeUserId(userId) {
+  dataLayer.push({'event': 'setUserId', 'userId': userId});
+}
+
+function getCookie(name) {
+  var dc = document.cookie;
+  var prefix = name + "=";
+  var begin = dc.indexOf("; " + prefix);
+  if (begin == -1) {
+    begin = dc.indexOf(prefix);
+    if (begin != 0) return null;
+  } else {
+    begin += 2;
+    var end = document.cookie.indexOf(";", begin);
+    if (end == -1) {
+      end = dc.length;
+    }
+  }
+
+  return decodeURI(dc.substring(begin + prefix.length, end));
+}
+
+  function updateFilters() {
+      let activeFilters = Array.from(document.querySelectorAll('li.filter.active')).map(el => el.getAttribute("filter"))
+      if(activeFilters.length === 0) {
+        document.querySelectorAll('[filter="all"]')[0].classList.add("active")
+        activeFilters = ["all"]
+      }
+      const params = new URLSearchParams(document.location.search.substring(1));
+      params.delete('filters')
+      const constructedParams = Array.from(params).length > 0 ? "&" + params.toString() : ''
+      window.history.pushState('', '', '?filters=' + activeFilters.join(",") + constructedParams);
+      
+      Array.from(document.getElementsByClassName("filter-item")).forEach(el => {
+        el.hidden = true
+        for (f of activeFilters) {
+          if (el.classList.contains(f) | f === 'all') {
+            el.hidden = false
+            break;
+          }
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const params = new URLSearchParams(document.location.search.substring(1));
+      let fs = params.get("filters")
+      if (fs) {
+        fs = fs.toLowerCase().split(',')
+        Array.from(document.getElementsByClassName("filter")).forEach(el => {
+          if (fs.includes(el.getAttribute("filter"))) {
+            el.classList.add("active")
+          } else {
+            el.classList.remove("active")
+          }
+        });
+        updateFilters()
+      }
+
+    });
+
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.85.0" />
+
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+<link rel="canonical" href="/tags/framing/" />
+<link rel="alternate" type="application/rss&#43;xml" href="/tags/framing/index.xml">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Framing | VMware Tanzu Developer Center</title>
+<meta name="description" content=""/>
+
+
+<meta content='/images/TAN-DevSite-OG.png' property='og:image'>
+<meta content='/images/TAN-DevSite-OG.png' name='twitter:image'>
+<meta content='summary_large_image' name='twitter:card'><meta property="og:title" content="Framing" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="/tags/framing/" />
+
+<meta itemprop="name" content="Framing">
+<meta itemprop="description" content=""><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Framing"/>
+<meta name="twitter:description" content=""/>
+
+
+
+
+
+
+
+
+
+<link rel="preload" href="/css/main.min.a0d646bc9a1bbd1188404c905fa315abcf2a1e1a56bc16420d97d00d39184113.css" as="style">
+<link rel="preload" href="/css/light-theme.css" as="style">
+<link href="/css/main.min.a0d646bc9a1bbd1188404c905fa315abcf2a1e1a56bc16420d97d00d39184113.css" rel="stylesheet" integrity="">
+
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+  </head>
+  <body class="td-term td-tag">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+<div class='container'>
+
+        <a class="navbar-brand" href="/">
+		<span class="navbar-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 447.1 23.04">
+  <g>
+    <g>
+      <path d="M51.58,17.33l-5.26-15a2.8,2.8,0,0,1-.16-.72A1.28,1.28,0,0,1,47.46.38a1.36,1.36,0,0,1,1.31,1.09l4.35,12.9L57.51,1.44A1.32,1.32,0,0,1,58.78.38h.13a1.38,1.38,0,0,1,1.35,1.06l4.35,12.93L69,1.4a1.28,1.28,0,0,1,1.24-1,1.24,1.24,0,0,1,1.27,1.23,2.8,2.8,0,0,1-.16.72l-5.3,15a1.53,1.53,0,0,1-1.4,1.2h-.1a1.44,1.44,0,0,1-1.41-1.2L58.85,4.61,54.49,17.33a1.44,1.44,0,0,1-1.4,1.2H53a1.54,1.54,0,0,1-1.44-1.2" class="cls-1" fill="#fff"/>
+      <path d="M89.9,1.68a1.29,1.29,0,1,1,2.58,0v3a7.06,7.06,0,0,1,6-4.34,1.25,1.25,0,0,1,1.27,1.33,1.3,1.3,0,0,1-1.14,1.34c-3.36.41-6.11,3-6.11,8.1v6a1.29,1.29,0,0,1-1.27,1.33,1.3,1.3,0,0,1-1.31-1.33V1.68" class="cls-1" fill="#fff"/>
+      <path d="M108,18.67c-4.67,0-8.48-3.7-8.48-9.13V9.46c0-5.05,3.45-9.13,8.15-9.13,5,0,7.89,4.24,7.89,8.9a1.2,1.2,0,0,1-1.18,1.22H102.11c.35,3.8,3,5.94,6,5.94a6.82,6.82,0,0,0,4.89-2,1.15,1.15,0,0,1,.73-.3,1.12,1.12,0,0,1,1.12,1.12,1.16,1.16,0,0,1-.4.85A8.53,8.53,0,0,1,108,18.67m5-10.15c-.26-3.2-2-6-5.42-6-3,0-5.2,2.54-5.52,6Z" class="cls-1" fill="#fff"/>
+      <path d="M71.59,13.17V13.1c0-3.72,3-5.71,7.39-5.71a18.15,18.15,0,0,1,5.32.75V7.53c0-3.18-1.91-4.83-5.15-4.83a8.64,8.64,0,0,0-4,.81,1.2,1.2,0,0,1-.46.1,1.16,1.16,0,0,1-1.14-1.13,1.08,1.08,0,0,1,.7-1.09,11.22,11.22,0,0,1,5.2-1,7.47,7.47,0,0,1,5.58,2,7.08,7.08,0,0,1,1.77,5.16v9.76a1.24,1.24,0,0,1-1.24,1.3,1.2,1.2,0,0,1-1.23-1.23V15.63a7.51,7.51,0,0,1-6.25,3c-3.21,0-6.46-1.88-6.46-5.51M84.33,11.8V10.09a17.91,17.91,0,0,0-5.08-.75c-3.24,0-5,1.44-5,3.66v.07c0,2.22,2,3.52,4.35,3.52,3.17,0,5.78-2,5.78-4.79" class="cls-1" fill="#fff"/>
+      <path d="M4.72,1.49A2.41,2.41,0,0,0,1.45.24,2.47,2.47,0,0,0,.25,3.59l5.49,12.2C6.6,17.7,7.51,18.7,9.22,18.7s2.62-1.09,3.48-2.91L17.54,5a.68.68,0,0,1,.68-.45.77.77,0,0,1,.76.79V15.77c0,1.61.87,2.93,2.55,2.93s2.58-1.32,2.58-2.93V7.24a2.6,2.6,0,0,1,2.73-2.71,2.53,2.53,0,0,1,2.61,2.71v8.53c0,1.61.88,2.93,2.55,2.93a2.63,2.63,0,0,0,2.59-2.93V7.24a2.59,2.59,0,0,1,2.72-2.71,2.53,2.53,0,0,1,2.62,2.71v8.53c0,1.61.87,2.93,2.55,2.93s2.58-1.32,2.58-2.93V6.07A6,6,0,0,0,38.88,0a7.86,7.86,0,0,0-5.49,2.39A6,6,0,0,0,28.1,0c-2.76,0-5.18,2.39-5.18,2.39A6.14,6.14,0,0,0,18.3,0a5.68,5.68,0,0,0-5.58,3.88l-3.5,8.45L4.72,1.49" class="cls-1" fill="#fff"/>
+      <path d="M115.79,2.54h0a2.14,2.14,0,1,1,4.28,0h0a2.14,2.14,0,1,1-4.28,0m3.87,0h0A1.74,1.74,0,0,0,117.93.74a1.77,1.77,0,0,0-1.74,1.79h0a1.74,1.74,0,1,0,3.47,0" class="cls-1" fill="#fff"/>
+      <path d="M117.11,1.67a.23.23,0,0,1,.23-.24h.72a.8.8,0,0,1,.6.22.65.65,0,0,1,.18.48h0a.64.64,0,0,1-.41.64l.31.39a.26.26,0,0,1,.07.18.21.21,0,0,1-.21.22.29.29,0,0,1-.23-.12l-.44-.58h-.36v.47a.23.23,0,1,1-.46,0Zm.92.79c.22,0,.34-.12.34-.3h0c0-.19-.13-.3-.35-.3h-.45v.61Z" class="cls-1" fill="#fff"/>
+    </g>
+    <g>
+      <path d="M144.57,2.84h-5.94V.36h14.58V2.84h-6V18.5h-2.67Z" class="cls-1" fill="#fff"/>
+      <path d="M167.61,10.23V18.5H165V16.63a5.69,5.69,0,0,1-4.54,2.19c-2.9,0-5-1.69-5-4.36s2.45-4.54,5.46-4.54a13.11,13.11,0,0,1,4.12.74v-.43a3.21,3.21,0,0,0-3.51-3.54,8.61,8.61,0,0,0-3.85,1.14l-1-1.93a11.58,11.58,0,0,1,5.18-1.37C165.57,4.53,167.61,6.85,167.61,10.23Zm-2.57,4V12.4a12.76,12.76,0,0,0-3.72-.53c-1.82,0-3.35,1-3.35,2.51s1.32,2.38,3,2.38S164.6,15.91,165,14.22Z" class="cls-1" fill="#fff"/>
+      <path d="M183.46,9.81V18.5H180.9V10.26a3.18,3.18,0,0,0-3.15-3.46A3.63,3.63,0,0,0,174,9.65V18.5h-2.61V4.85H174v2a5.1,5.1,0,0,1,4.33-2.3A5,5,0,0,1,183.46,9.81Z" class="cls-1" fill="#fff"/>
+      <path d="M186.63,16.55l7.66-9.35h-7.5V4.85h10.94v2l-7.66,9.35h7.71V18.5H186.63Z" class="cls-1" fill="#fff"/>
+      <path d="M213,4.85V18.5h-2.62v-2a5.09,5.09,0,0,1-4.33,2.3,5,5,0,0,1-5.12-5.29V4.85h2.56v8.24a3.17,3.17,0,0,0,3.14,3.46,3.63,3.63,0,0,0,3.75-2.86V4.85Z" class="cls-1" fill="#fff"/>
+      <path d="M224.73.36H231c5.86,0,10,3.75,10,9.05s-4.18,9.09-10,9.09h-6.26Zm6.42,15.71c4.2,0,7.13-2.75,7.13-6.66s-2.93-6.63-7.13-6.63H227.4V16.07Z" class="cls-1" fill="#fff"/>
+      <path d="M254.63,15l1.64,1.69a8.19,8.19,0,0,1-5.52,2.12,7,7,0,0,1-7-7.19,6.85,6.85,0,0,1,6.82-7.1c4.17,0,6.58,3.17,6.58,8.05H246.37a4.32,4.32,0,0,0,4.35,3.91A5.94,5.94,0,0,0,254.63,15Zm-8.24-4.51h8.19a3.8,3.8,0,0,0-3.93-3.65A4.29,4.29,0,0,0,246.39,10.5Z" class="cls-1" fill="#fff"/>
+      <path d="M258.84,4.85h2.82l4.26,10.61,4.17-10.61h2.83L267.16,18.5H264.7Z" class="cls-1" fill="#fff"/>
+      <path d="M284.67,15l1.64,1.69a8.19,8.19,0,0,1-5.52,2.12,7,7,0,0,1-7-7.19,6.85,6.85,0,0,1,6.82-7.1c4.17,0,6.58,3.17,6.58,8.05H276.41a4.32,4.32,0,0,0,4.35,3.91A5.94,5.94,0,0,0,284.67,15Zm-8.24-4.51h8.19a3.8,3.8,0,0,0-3.94-3.65A4.28,4.28,0,0,0,276.43,10.5Z" class="cls-1" fill="#fff"/>
+      <path d="M290.2,0h2.59V18.5H290.2Z" class="cls-1" fill="#fff"/>
+      <path d="M295.85,11.66a7.19,7.19,0,0,1,14.37,0,7.19,7.19,0,0,1-14.37,0Zm11.75,0a4.57,4.57,0,1,0-9.13,0,4.58,4.58,0,1,0,9.13,0Z" class="cls-1" fill="#fff"/>
+      <path d="M327.15,11.66c0,4.2-2.69,7.16-6.28,7.16a5.54,5.54,0,0,1-4.86-2.7V23h-2.59V4.85H316V7.2a5.56,5.56,0,0,1,4.86-2.67C324.46,4.53,327.15,7.49,327.15,11.66Zm-2.64,0c0-2.85-1.77-4.86-4.28-4.86s-4.22,2-4.22,4.86,1.77,4.89,4.22,4.89S324.51,14.51,324.51,11.66Z" class="cls-1" fill="#fff"/>
+      <path d="M340.5,15l1.64,1.69a8.23,8.23,0,0,1-5.53,2.12,7,7,0,0,1-7-7.19,6.85,6.85,0,0,1,6.81-7.1c4.18,0,6.58,3.17,6.58,8.05H332.23a4.33,4.33,0,0,0,4.36,3.91A6,6,0,0,0,340.5,15Zm-8.24-4.51h8.18a3.8,3.8,0,0,0-3.93-3.65A4.28,4.28,0,0,0,332.26,10.5Z" class="cls-1" fill="#fff"/>
+      <path d="M353.84,4.53V6.8c-2.83,0-4.83,1.56-5.07,3.94V18.5h-2.62V4.85h2.62V7.46A5.39,5.39,0,0,1,353.84,4.53Z" class="cls-1" fill="#fff"/>
+      <path d="M363.33,9.41A9.53,9.53,0,0,1,372.76,0a9.31,9.31,0,0,1,6.68,2.85l-1.88,1.8a6.58,6.58,0,0,0-4.8-2.2,6.94,6.94,0,0,0,0,13.87,6.57,6.57,0,0,0,4.8-2.19l1.88,1.8a9.43,9.43,0,0,1-6.68,2.85A9.55,9.55,0,0,1,363.33,9.41Z" class="cls-1" fill="#fff"/>
+      <path d="M392.23,15l1.63,1.69a8.19,8.19,0,0,1-5.52,2.12,7,7,0,0,1-7-7.19,6.85,6.85,0,0,1,6.81-7.1c4.18,0,6.58,3.17,6.58,8.05H384a4.33,4.33,0,0,0,4.36,3.91A6,6,0,0,0,392.23,15ZM384,10.5h8.18a3.8,3.8,0,0,0-3.93-3.65A4.28,4.28,0,0,0,384,10.5Z" class="cls-1" fill="#fff"/>
+      <path d="M409.82,9.81V18.5h-2.56V10.26a3.17,3.17,0,0,0-3.14-3.46,3.63,3.63,0,0,0-3.75,2.85V18.5h-2.62V4.85h2.62v2a5.08,5.08,0,0,1,4.33-2.3A5,5,0,0,1,409.82,9.81Z" class="cls-1" fill="#fff"/>
+      <path d="M420.92,17.84a4.38,4.38,0,0,1-2.72,1,3.5,3.5,0,0,1-3.59-3.73v-8h-2.06V4.85h2.06V1.09h2.56V4.85h3.22V7.06h-3.22v7.85a1.51,1.51,0,0,0,1.4,1.64A2,2,0,0,0,420,16Z" class="cls-1" fill="#fff"/>
+      <path d="M433.76,15l1.64,1.69a8.23,8.23,0,0,1-5.52,2.12,7,7,0,0,1-7-7.19,6.85,6.85,0,0,1,6.82-7.1c4.17,0,6.57,3.17,6.57,8.05H425.49a4.34,4.34,0,0,0,4.36,3.91A5.94,5.94,0,0,0,433.76,15Zm-8.24-4.51h8.19a3.81,3.81,0,0,0-3.94-3.65A4.28,4.28,0,0,0,425.52,10.5Z" class="cls-1" fill="#fff"/>
+      <path d="M447.1,4.53V6.8c-2.82,0-4.83,1.56-5.07,3.94V18.5h-2.61V4.85H442V7.46A5.39,5.39,0,0,1,447.1,4.53Z" class="cls-1" fill="#fff"/>
+    </g>
+  </g>
+</svg>
+</span>
+	</a>
+	<div class="td-navbar-nav-hamburger" id="main_navbar">
+		<ul class="navbar-nav mt-lg-0 align-items-center">
+			
+			
+			
+			
+			
+				
+				<li class="nav-item dropdown d-lg-block mr-xl-4 mr-2 mb-0">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Learn
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						
+						<a class="dropdown-item" href="/guides/" >Guides</a>
+						
+						<a class="dropdown-item" href="/outcomes/" >Outcomes</a>
+						
+						<a class="dropdown-item" href="/workshops/" >Workshops</a>
+						
+						<a class="dropdown-item" href="/samples/" >Samples</a>
+						
+						<a class="dropdown-item" href="/videos/" >Videos</a>
+						
+						<a class="dropdown-item" href="/blog/" >Blog</a>
+						
+						<a class="dropdown-item" href="/practices/" >Tanzu Practices</a>
+						
+					</div>
+				</li>
+				
+			
+				
+				<li class="nav-item dropdown d-lg-block mr-xl-4 mr-2 mb-0">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Topics
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						
+						<a class="dropdown-item" href="/topics/spring/" >Spring</a>
+						
+						<a class="dropdown-item" href="/topics/kubernetes/" >Kubernetes</a>
+						
+						<a class="dropdown-item" href="/topics/containers/" >Containers</a>
+						
+						<a class="dropdown-item" href="/topics/microservices/" >Microservices</a>
+						
+						<a class="dropdown-item" href="/topics/python/" >Python</a>
+						
+						<a class="dropdown-item" href="/topics/serverless/" >Serverless</a>
+						
+						<a class="dropdown-item" href="/topics/ci-cd/" >CI/CD</a>
+						
+						<a class="dropdown-item" href="/topics/messaging-and-integration/" >Messaging &amp; Integration</a>
+						
+						<a class="dropdown-item" href="/topics/reactive/" >Reactive</a>
+						
+						<a class="dropdown-item" href="/topics/event-streaming/" >Event Streaming</a>
+						
+						<a class="dropdown-item" href="/topics/agile/" >Agile</a>
+						
+						<a class="dropdown-item" href="/data/" >Data</a>
+						
+					</div>
+				</li>
+				
+			
+				
+				<li class="nav-item dropdown d-lg-block mr-xl-4 mr-2 mb-0">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Tanzu.TV
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						
+						<a class="dropdown-item" href="/tv/" >Overview </a>
+						
+						<a class="dropdown-item" href="/tv/tanzu-tuesdays/" >Tanzu Tuesdays</a>
+						
+						<a class="dropdown-item" href="/tv/code/" >Code</a>
+						
+						<a class="dropdown-item" href="/tv/tgik/" >TGIK</a>
+						
+						<a class="dropdown-item" href="/tv/bcak/" >Between Chair and Keyboard</a>
+						
+						<a class="dropdown-item" href="/tv/cloud-stream/" >Cloud Stream by VMware</a>
+						
+						<a class="dropdown-item" href="/tv/talk/" >Tanzu Talk</a>
+						
+						<a class="dropdown-item" href="/tv/springone-tour/" >SpringOne Tour</a>
+						
+						<a class="dropdown-item" href="/tv/spring-live/" >Spring Live</a>
+						
+					</div>
+				</li>
+				
+			
+				
+				<li class="nav-item dropdown d-lg-block mr-xl-4 mr-2 mb-0">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Community
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						
+						<a class="dropdown-item" href="/community/" >Overview</a>
+						
+						<a class="dropdown-item" href="/advocates/" >Advocates</a>
+						
+						<a class="dropdown-item" href="/team/" >Team</a>
+						
+					</div>
+				</li>
+				
+			
+
+			<li class="nav-item mr-xl-4 mr-2 mb-0 mobile-search-link" style="display: none;">
+				<a class="nav-link" href="/search"><span>Search</span></a>
+			</li>
+			
+			<li class="search remove-menu search_icon">
+				<div class="search-icon relative z-1" tabindex="0">
+					<svg id="search-svg" width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<circle cx="6.08696" cy="6.08696" r="5.33696" stroke="white" stroke-width="1.5"/>
+						<path d="M9.13049 10.3478L14.0001 15.2173" stroke="white" stroke-width="1.5"/>
+					</svg>
+				</div>
+			</li>
+
+			<li class="nav-item ml-lg-2 ml-1 mb-0 position-relative overflow-hidden text-nowrap ">
+				<div id="dark-select" class="nav-select"></div>
+				<div id="light-select" class="nav-select"></div>
+				<a class="position-relative" id="toggle-dark-mode"><i class="fas fa-moon"></i></a>
+				<a class="position-relative" id="toggle-light-mode"><i class="fas fa-sun mr-0"></i></a>
+			</li>
+
+
+
+		</ul>
+
+		<div id="menu-toggle">
+			<span>
+        <div id="menu-bars"><div class="menu-bar"></div><div class="menu-bar"></div><div class="menu-bar"></div></div>
+        <svg id="menu-close" viewBox="0 0 18.33 18.33" xmlns="http://www.w3.org/2000/svg"><line class="a" x1="1" x2="17.33" y1="1" y2="17.33"></line><line class="a" x1="17.33" x2="1" y1="1" y2="17.33"></line></svg>
+      </span>
+		</div>
+	</div>
+
+	<div id="search-nav" role="search">
+		<div class="container relative">
+		<form id="searchheaderform" action='/search' accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
+		<input type="text" name="q" id="searchheaderinput" autocomplete="off" placeholder="Search for guides, videos, code samples, posts, and more...">
+		<input type="submit" value="" id="searchheadersubmit" data-disable-with="">
+		</form>
+		
+		<div class="search-icon search-hide">
+		<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+		<path class="b" d="M19.41,18l7.29-7.29a1,1,0,0,0-1.41-1.41L18,16.59,10.71,9.29a1,1,0,0,0-1.41,1.41L16.59,18,9.29,25.29a1,1,0,1,0,1.41,1.41L18,19.41l7.29,7.29a1,1,0,0,0,1.41-1.41Z"></path>
+		</svg>
+		</div>
+		</div>
+	</div>
+</div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main ">
+        <div class="bg-gray-dark mt-lg-5 mt-0 py-lg-5 py-2">
+            <div class='container'>
+                <div class="td-content">
+	<h1>Tag: Framing</h1>
+	<div class="short-gradient-line mb-4"></div>
+	
+	
+	
+	
+	<div class="text-muted mt-5 pt-3">
+</div>
+</div>
+
+            </div>
+        </div>
+
+        <br/>
+
+        
+        
+        </div>
+
+        
+        
+
+    
+        
+        
+
+        
+        
+        
+
+      </div>
+      
+<footer class="bg-gray-dark py-5 d-print-none">
+<div class='container'>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 col-sm-6 col-lg-8 pl-0">
+        <a class="tvc-link h4" href="https://tanzu.vmware.com"><img class="icon mr-2" src='/images/icons/icon-tanzu.svg'/> VMware Tanzu</a>
+
+        <div class='copyright-legal-links mt-3'>
+          <small class="text-white">&copy; 2021 VMware, Inc </small>
+          <small class="ml-1"><a href="https://www.vmware.com/help/legal.html" target="_blank">Terms of Use</a></small>
+          <small class="ml-1"><a href="https://www.vmware.com/help/privacy.html" target="_blank">Privacy Policy</a></small>
+          <small class="ml-1"><a href="https://www.vmware.com/help/privacy/california-privacy-rights.html" target="_blank">Your California Privacy Rights</a></small>
+          <small class="ml-1"><a href="javascript:void(0);" class="ot-sdk-show-settings" style="cursor:pointer;">Cookie Settings</a></small>
+        </div>
+
+        <div>
+          
+          
+          
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Twitter" aria-label="Twitter">
+    <a class="text-white" target="_blank" href="https://twitter.com/VMwareTanzu">
+      <i class="fab fa-twitter"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="YouTube" aria-label="YouTube">
+    <a class="text-white" target="_blank" href="https://www.youtube.com/VMwareTanzu">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Stack Overflow" aria-label="Stack Overflow">
+    <a class="text-white" target="_blank" href="https://stackoverflow.com/questions/tagged/vmware-tanzu">
+      <i class="fab fa-stack-overflow"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="GitHub" aria-label="GitHub">
+    <a class="text-white" target="_blank" href="https://github.com/vmware-tanzu">
+      <i class="fab fa-github"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Twitch" aria-label="Twitch">
+    <a class="text-white" target="_blank" href="https://twitch.com/vmwaretanzu">
+      <i class="fab fa-twitch"></i>
+    </a>
+  </li>
+  
+</ul>
+
+          
+          
+        </div>
+
+
+      </div>
+
+      <div class="col-12 col-sm-6 col-lg-4 pl-0">
+        
+          <div class="newsletter mb-5">
+            <p class="text-white">Sign up for the developer newsletter</p>
+            <div class='btn btn-small click-to-show scroll-to-bottom'>Subscribe</div>
+            <script src="https://connect.tanzu.vmware.com/js/forms2/js/forms2.min.js"></script>
+            <form id="mktoForm_1609" class="hidden"></form>
+            <script>
+              MktoForms2.setOptions({formXDPath : "/rs/pivotal/images/marketo-xdframe-relative.html"});
+              MktoForms2.loadForm("https://connect.tanzu.vmware.com", "625-IUJ-009", 1609, function(form){
+                form.setValues({ "Function__c": "Developer" });
+                form.onSuccess(function(values, followUpUrl) {
+                  form.getFormElem().hide();
+                  window.dataLayer = window.dataLayer || [];
+                  window.dataLayer.push({
+                      'event' : 'ctaSubmitted',  
+                      'eventCategory': 'Subscription',  
+                      'eventAction': 'Form Submitted', 
+                      'eventLabel': 'Newsletter'
+                  });
+                  window.dataLayer.push({'event': 'logEvent', 'eventType': 'newsletter subscribed', 'eventProperties': {'page name': 'Framing', 'source': 'footer'} });
+                  sendAmplitudeEventOnLoad('newsletter subscribed', {'page name': 'Framing', 'source': 'footer', 'url path': window.location.pathname});
+                  $('.confirmation').show();
+                  return false;
+                });
+              });
+            </script>
+            <div class='confirmation' style="display:none">Done!</div>
+          </div>
+        
+      </div>
+
+    </div>
+  </div>
+</div>
+</footer>
+
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+<script src="/js/main.6386696985777a7235a3c703140b1c108c2b44d8ecfed7282e5c7e44d122f95c.js" integrity="sha256-Y4ZpaYV3enI1o8cDFAscEIwrRNjs/tcoLlx&#43;RNEi&#43;Vw=" crossorigin="anonymous"></script>
+
+  </body>
+</html>
+

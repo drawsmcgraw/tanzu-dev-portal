@@ -1,0 +1,868 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – REST</title>
+    <link>/tags/rest/</link>
+    <description>Recent content in REST on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 26 Oct 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/rest/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Develop a REST API with Bitnami&#39;s Node.js and MongoDB Containers</title>
+      
+      <link>/guides/microservices/develop-rest-api-nodejs-mongodb-containers/</link>
+      <pubDate>Tue, 24 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/microservices/develop-rest-api-nodejs-mongodb-containers/</guid>
+      <description>
+
+        
+        &lt;p&gt;For developers building cloud-native applications and APIs for Kubernetes, Bitnami offers a variety of &lt;a href=&#34;https://bitnami.com/stacks/containers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;containers&lt;/a&gt; and &lt;a href=&#34;https://github.com/bitnami/charts/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm charts&lt;/a&gt; to ease the process. These ready-to-use assets make it easier to develop and deploy applications consistently, follow best practices and focus on code rather than infrastructure configuration. Bitnami containers and charts are also always secure, optimized and up-to-date, so you can rest assured that your applications always have access to the latest language features and security fixes.&lt;/p&gt;
+&lt;p&gt;To illustrate these benefits, this two-part series will walk you through the process of developing and deploying a sample Node.js REST API locally using Bitnami containers. Then, once your API is reasonably stable or ready, it will show you how to make it available to a wider group of reviewers or users by deploying it on Kubernetes using Bitnami Helm charts.&lt;/p&gt;
+&lt;p&gt;In this first part, you will create and run a sample REST API locally on your development system using the Sails framework. You will also create a local MongoDB service for API data storage, and integrate and test your REST API with this MongoDB service. To perform these tasks, you can either use your existing Node.js development environment or, if you don&amp;rsquo;t have one, you can use the following Bitnami container images:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js container image&lt;/a&gt; contains the Node.js runtime together with all required dependencies and development tools.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s MongoDB container image&lt;/a&gt; contains the official MongoDB Community binaries together with support for persistence, SSL and replica sets.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and prerequisites&lt;/h2&gt;
+&lt;p&gt;This guide assumes that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have Docker installed and configured. &lt;a href=&#34;https://docs.docker.com/engine/installation/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about installing Docker&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a basic understanding of Node.js and REST API concepts. Learn more about &lt;a href=&#34;https://nodejs.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Node.js&lt;/a&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Representational_state_transfer&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;REST&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-1-create-a-skeleton-nodejs-application&#34;&gt;Step 1: Create a skeleton Node.js application&lt;/h2&gt;
+&lt;p&gt;The first step is to create a skeleton Node.js application. This article will use the Bitnami Node.js container image and the popular &lt;a href=&#34;https://sailsjs.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Sails MVC framework&lt;/a&gt;; however, there are multiple tools and methods to do this and you should feel free to use a different approach or a different framework. For example, if you already have a Node.js development environment, you can use that instead and skip the Docker commands below.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Begin by creating a directory for your application and making it the current working directory:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir myapp
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; myapp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use the following Docker commands to create and start a &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Node.js container&lt;/a&gt; on your host:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker create -v &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;pwd&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;:/app -t --net&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;host&amp;#34;&lt;/span&gt; --name node bitnami/node:13
+docker start node
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;em&gt;-v&lt;/em&gt; argument to the first command tells Docker to mount the host&amp;rsquo;s current directory into the container&amp;rsquo;s &lt;em&gt;/app&lt;/em&gt; path, so that the effects of commands run in the container are seen on the host. The &lt;em&gt;&amp;ndash;net=&amp;ldquo;host&amp;rdquo;&lt;/em&gt; parameter tells Docker to use the host&amp;rsquo;s network stack for the container. The container is named &lt;em&gt;node&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Once the container is running, connect to the container console with the command below. This will give you a command shell and allow you to use the Node.js tools available in the image for subsequent tasks.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it node /bin/bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install Sails and then use the Sails CLI to create the scaffolding for a skeleton application. When prompted for the application type, choose an &amp;ldquo;Empty&amp;rdquo; application.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;npm install -g sails
+sails new .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the application scaffolding has been generated, start the application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sails lift
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;By default, a Sails application starts in development mode and runs at port 1337. Browse to http://DOCKER-HOST-ADDRESS:1337, where DOCKER-HOST-ADDRESS is the IP address of your host, and confirm that you see the Sails welcome page shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/sails-welcome.png&#34; alt=&#34;Sails default page&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Exit the container console. This will terminate the Sails application process, although the container will continue to run in the background.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-2-create-and-start-a-local-mongodb-service&#34;&gt;Step 2: Create and start a local MongoDB service&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.mongodb.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MongoDB&lt;/a&gt; is a scalable and popular data storage accompaniment for Node.js applications. &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s MongoDB image&lt;/a&gt; makes it easy to create a local MongoDB service which can be used to store, retrieve and modify data related to your REST API. Alternatively, if you already have the MongoDB server and a MongoDB database on your host, you can use that instead and skip the Docker commands below.&lt;/p&gt;
+&lt;p&gt;Create and start a MongoDB database service using the &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami MongoDB container&lt;/a&gt; on your host.  If you wish, you can replace the database credentials and other variables shown below with your own values, but make a note of them as you will need them in the next step.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker create -e &lt;span class=&#34;nv&#34;&gt;MONGODB_USERNAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;myapp -e &lt;span class=&#34;nv&#34;&gt;MONGODB_PASSWORD&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;myapp -e &lt;span class=&#34;nv&#34;&gt;MONGODB_DATABASE&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mydb -e &lt;span class=&#34;nv&#34;&gt;MONGODB_ROOT_PASSWORD&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;root --net&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;host&amp;#34;&lt;/span&gt; --name mongodb bitnami/mongodb
+docker start mongodb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The environment variables passed to the first command set the administrator password for the MongoDB instance and also create a new database named &lt;em&gt;mydb&lt;/em&gt; with corresponding user credentials. This database will be used to store data for the REST API. As before, the &lt;em&gt;&amp;ndash;net=&amp;ldquo;host&amp;rdquo;&lt;/em&gt; parameter tells Docker to use the host&amp;rsquo;s network stack for this container as well. The container is named &lt;em&gt;mongodb&lt;/em&gt; and, once started, the MongoDB service will be available on the Docker host at port 27017.&lt;/p&gt;
+&lt;h2 id=&#34;step-3-create-and-configure-a-rest-api-endpoint&#34;&gt;Step 3: Create and configure a REST API endpoint&lt;/h2&gt;
+&lt;p&gt;At this point, you have a skeleton Node.js application and a MongoDB database service. You can now start creating your REST API. As before, if you&amp;rsquo;re using an existing Node.js development environment, skip the Docker commands below.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Connect to the container console again with the command below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it node /bin/bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Sails comes with a built-in &lt;a href=&#34;https://sailsjs.com/documentation/concepts/extending-sails/generators/available-generators&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;generator for API endpoints&lt;/a&gt;. Use this to generate the scaffolding for a new sample REST API endpoint for Item objects. By default, this endpoint will be exposed at the &lt;em&gt;/item&lt;/em&gt; URI.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sails generate api item
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install the MongoDB adapter for Sails:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;npm install sails-mongo --save  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Exit the Docker container once the installation is complete.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Follow the &lt;a href=&#34;https://sailsjs.com/documentation/tutorials/using-mongo-db&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;steps outlined in the Sails documentation to configure the generated application to use MongoDB&lt;/a&gt; for data storage. First, edit the &lt;em&gt;myapp/config/datastores.js&lt;/em&gt; file and modify the default data store entry as shown below.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;k&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nx&#34;&gt;adapter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;sails-mongo&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nx&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;mongodb://myapp:myapp@localhost/mydb&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you used different values when creating the MongoDB container, or if you&amp;rsquo;re using a different MongoDB installation, remember to replace the values shown above as needed.&lt;/p&gt;
+&lt;p&gt;Then, update the &lt;em&gt;id&lt;/em&gt; and &lt;em&gt;migrate&lt;/em&gt; attributes in the &lt;em&gt;myapp/config/models.js&lt;/em&gt; file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;nx&#34;&gt;migrate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;alter&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;string&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;columnName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;_id&amp;#39;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a data model for the REST API Item object. For this article, use a simple model with just two attributes: a &lt;em&gt;name&lt;/em&gt; and a &lt;em&gt;quantity&lt;/em&gt;. Edit the &lt;em&gt;myapp/api/models/Item.js&lt;/em&gt; and update it to look like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;nx&#34;&gt;module&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;exports&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+
+  &lt;span class=&#34;nx&#34;&gt;attributes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;string&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;quantity&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;number&amp;#39;&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Connect to the container console again. Start the application and put it in the background:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it node /bin/bash
+sails lift &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Exit the Docker container once the application starts.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As before, the application will start in development mode and become available at port 1337 of the host.&lt;/p&gt;
+&lt;h2 id=&#34;step-4-test-the-rest-api&#34;&gt;Step 4: Test the REST API&lt;/h2&gt;
+&lt;p&gt;Your REST API is now active and configured to use MongoDB. You can now proceed to test it from your host, by sending it various types of HTTP requests and inspecting the responses. If you&amp;rsquo;re using the Bitnami containers, remember that they are using the host&amp;rsquo;s network stack and so will be available at ports 1337 (Node.js) and 27017 (MongoDB) respectively.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;At the host console, send a POST request to the API using &lt;em&gt;curl&lt;/em&gt; to create a new item record:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -X POST -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;name&amp;#34;:&amp;#34;milk&amp;#34;,&amp;#34;quantity&amp;#34;:&amp;#34;10&amp;#34;}&amp;#39;&lt;/span&gt; http://localhost:1337/item
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/api-post.png&#34; alt=&#34;POST request&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check if the item record was created with a GET request:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl http://localhost:1337/item
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/api-get.png&#34; alt=&#34;GET request&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;You can also connect to the running MongoDB container and use the &lt;em&gt;mongo&lt;/em&gt; CLI to see the data in the MongoDB database.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it mongodb /bin/bash
+mongo --authenticationDatabase mydb -u myapp -p myapp mydb --eval &lt;span class=&#34;s2&#34;&gt;&amp;#34;db.item.find()&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/db-get.png&#34; alt=&#34;Database check&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Modify the item record with a PUT request. Replace the ID placeholder in the command below with the document&amp;rsquo;s unique identifier from the previous commands.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -X PUT -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;name&amp;#34;:&amp;#34;milk&amp;#34;,&amp;#34;quantity&amp;#34;:&amp;#34;5&amp;#34;}&amp;#39;&lt;/span&gt; http://localhost:1337/item/ID
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/api-put.png&#34; alt=&#34;PUT request&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Delete the item record with a DELETE request:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -X DELETE http://localhost:1337/item/ID
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/api-delete.png&#34; alt=&#34;DELETE request&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;You can also connect to the running MongoDB container and use the &lt;em&gt;mongo&lt;/em&gt; CLI to confirm that the data has been deleted from the MongoDB database:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it mongodb /bin/bash
+mongo --authenticationDatabase mydb -u myapp -p myapp mydb --eval &lt;span class=&#34;s2&#34;&gt;&amp;#34;db.item.count()&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/db-delete.png&#34; alt=&#34;Database check&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;At this point, you have a working Node.js REST API integrated with a MongoDB database. However, it&amp;rsquo;s currently only available on your local machine and only while the containers are running. This is fine for local development, but becomes a bottleneck when you want to make it available to others for review and testing.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s where the &lt;a href=&#34;/guides/microservices/deploy-rest-api-nodejs-mongodb-charts/&#34;&gt;second part of this series&lt;/a&gt; comes in. Continue adding features to your API and once you&amp;rsquo;re happy with it, proceed to the concluding article and learn how to make your REST API available to a larger group by containerizing it, deploying it on Kubernetes and connecting it to a MongoDB service also running on Kubernetes.&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;p&gt;To learn more about the topics discussed in this article, use the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js container image&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s MongoDB container image&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://sailsjs.com/documentation/reference&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Sails documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.mongodb.com/manual/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MongoDB documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Basics of REST</title>
+      
+      <link>/guides/microservices/basics-of-rest/</link>
+      <pubDate>Thu, 07 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/microservices/basics-of-rest/</guid>
+      <description>
+
+        
+        &lt;p&gt;So what is &lt;a href=&#34;https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;REST&lt;/a&gt;? At a high level REST, or REpresentational State Transfer, is an architectural style for distributed hypermedia systems. It was created from a combination of other architectural styles and enlists several constraints. Roy Fielding, its creator, said that &amp;ldquo;REST provides a set of architectural constraints that, when applied as a whole, emphasizes scalability of component interactions, generality of interfaces, independent deployment of components, and intermediary components to reduce interaction latency, enforce security, and encapsulate legacy systems.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;This guide will cover:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;REST HTTP requests&lt;/li&gt;
+&lt;li&gt;REST HTTP responses&lt;/li&gt;
+&lt;li&gt;Constraints needed for an API to be RESTful&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;requests&#34;&gt;Requests&lt;/h2&gt;
+&lt;p&gt;The client has to make a request to the server to get or modify data on the server. A request contains the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;HTTP verb&lt;/li&gt;
+&lt;li&gt;headers&lt;/li&gt;
+&lt;li&gt;path: to a resource&lt;/li&gt;
+&lt;li&gt;[optional] message body: data&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Consider the example of a todo list. An example request could look like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;GET /todos
+Accept: application/json
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;http-methodsverbs&#34;&gt;HTTP Methods/Verbs&lt;/h3&gt;
+&lt;p&gt;HTTP methods, or verbs, define what kind of operation to perform on a resource. Some of the primary ones used with RESTful APIs are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;GET&lt;/code&gt;: get a resource or collection of resources&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;POST&lt;/code&gt;: create a new resource&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PUT&lt;/code&gt;: update a resource&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PATCH&lt;/code&gt;: partially modify a resource&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;DELETE&lt;/code&gt;: delete a resource&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;http-headers&#34;&gt;HTTP Headers&lt;/h3&gt;
+&lt;p&gt;The client uses headers to pass along request information to the server. Requests can have an &lt;code&gt;Accept&lt;/code&gt; request HTTP header which specifies what content type the client can accept from the server. The values are of the media, or &lt;a href=&#34;https://www.iana.org/assignments/media-types/media-types.xhtml&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MIME type&lt;/a&gt;. The simplest MIME types are of the format &lt;code&gt;type/subtype&lt;/code&gt;. For example, this could be &lt;code&gt;text/html&lt;/code&gt; which is for a text file containing HTML. Or &lt;code&gt;application/json&lt;/code&gt; for a JSON file. To see a list of common &lt;code&gt;Accept&lt;/code&gt; values check out the &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MDN web docs&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;path&#34;&gt;Path&lt;/h3&gt;
+&lt;p&gt;Requests need to contain a path to the resource it is trying to perform the HTTP request on. In the above example, that is &lt;code&gt;/todos&lt;/code&gt;. This is the resource that you are looking to read from or write to.&lt;/p&gt;
+&lt;p&gt;One important thing to note is the difference between addressing a collection and an individual item in that collection. The path &lt;code&gt;/todos&lt;/code&gt; would be addressing all of the items on the todo list. A &lt;code&gt;POST&lt;/code&gt; to this path could create a new item on that list, and a request to &lt;code&gt;GET /todos&lt;/code&gt; would return all items. On the other hand, &lt;code&gt;GET /todos/2&lt;/code&gt; would return just the second item on the todo list.&lt;/p&gt;
+&lt;h2 id=&#34;response&#34;&gt;Response&lt;/h2&gt;
+&lt;p&gt;After the client sends a request to the server, the server sends a response back to the client. This response consists of a:
+status code
+headers
+message body: data&lt;/p&gt;
+&lt;p&gt;For the previous request:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;GET /todos
+Accept: application/json
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The response could contain the following for a successful request:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;HTTP/1.1 200 OK
+Content-Type: application/json
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;pay rent&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;due&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1589031653&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;completed&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;get groceries&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;due&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1588869295&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;completed&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;http-headers-1&#34;&gt;HTTP Headers&lt;/h3&gt;
+&lt;p&gt;The responses have a &lt;code&gt;Content-Type&lt;/code&gt; entity header which specifies the MIME type of the resource. Its value should match one of the &lt;code&gt;Accept&lt;/code&gt; types sent by the client. In the above example, both the &lt;code&gt;Content-Type&lt;/code&gt; and &lt;code&gt;Accept&lt;/code&gt; header values are &lt;code&gt;application/json&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Headers can contain information on a wide array of topics including how to handle the TCP connection, authentication, caching, and more. Some REST APIs may have headers specific to them, but there’s also some headers that have a &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;universal definition&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;response-status-code&#34;&gt;Response Status Code&lt;/h3&gt;
+&lt;p&gt;One of the return values in a response is a response status code. Each code has a specific designation; for example, &lt;code&gt;200&lt;/code&gt; is &lt;code&gt;OK&lt;/code&gt; and means the request was successful. The response code categories are as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;1XX&lt;/code&gt;: Informational&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;2XX&lt;/code&gt;: Successful&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;3XX&lt;/code&gt;: Redirects&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;4XX&lt;/code&gt;: Client Errors&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;5XX&lt;/code&gt;: Server Errors&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To see the detailed list of response codes and their meaning, check out the &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Status&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MDN web docs&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;body&#34;&gt;Body&lt;/h3&gt;
+&lt;p&gt;The body contains the data the client requested in the MIME type specified in the &lt;code&gt;Content-Type&lt;/code&gt; header. In the example above, the body of the response is:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;pay rent&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;due&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1589031653&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;completed&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;get groceries&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;due&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1588869295&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+        &lt;span class=&#34;nt&#34;&gt;&amp;#34;completed&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;constraints&#34;&gt;Constraints&lt;/h2&gt;
+&lt;p&gt;In order to create RESTful APIs, they need to adhere to six style constraints:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Client-Server Separation&lt;/li&gt;
+&lt;li&gt;Stateless&lt;/li&gt;
+&lt;li&gt;Cache&lt;/li&gt;
+&lt;li&gt;Uniform Interface&lt;/li&gt;
+&lt;li&gt;Layered System&lt;/li&gt;
+&lt;li&gt;[Optional] Code-On-Demand&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;client-server&#34;&gt;Client-Server&lt;/h3&gt;
+&lt;p&gt;First, there needs to be a separation of client and server. This means that the client and server each need to work independent of each other. Their only form of interaction is when a client makes requests and a server sends a response whenever it receives a request. One of the benefits is that the client and server can each be updated or modified independently without affecting the other.&lt;/p&gt;
+&lt;p&gt;For example, if you make a call to a restaurant to place a takeout order, the only interaction is you asking for a specific item and them responding with an ok or saying they don’t have it.&lt;/p&gt;
+&lt;h3 id=&#34;stateless&#34;&gt;Stateless&lt;/h3&gt;
+&lt;p&gt;Next, the client and server communication needs to be stateless: the server and client don&amp;rsquo;t need to know the state of the other. The server doesn&amp;rsquo;t store state from the client and therefore the client can&amp;rsquo;t depend on it. Therefore the client needs to send everything the server would need to process a request every time and any storing needs to happen client-side.&lt;/p&gt;
+&lt;p&gt;To continue with the analogy, when you make your call, you don’t need to know what the restaurant has in stock, and they don’t need to know what you want until you order. Additionally, you’re responsible for keeping track of what you like to order, not the restaurant.&lt;/p&gt;
+&lt;h3 id=&#34;cache&#34;&gt;Cache&lt;/h3&gt;
+&lt;p&gt;Cache constraints require that the response be labeled as cacheable or non-cacheable. If it&amp;rsquo;s cacheable, then the client can choose to use this data for future requests that are equivalent. For instance, if the data is valid for a set time, the cached data will be used instead of making a request to the server.&lt;/p&gt;
+&lt;p&gt;For your takeout call, the restaurant may tell you that a specific item is not available until a certain date. You can then remember to not order it again if you make another request before that date.&lt;/p&gt;
+&lt;h3 id=&#34;uniform-interface&#34;&gt;Uniform Interface&lt;/h3&gt;
+&lt;p&gt;As mentioned, the client and server are independent of each other, meaning they evolve and change independently. For this reason, it’s imperative that the interface between the client and server expect some commonality in their communication. This constraint can actually be broken down even further:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Resource-Based&lt;/strong&gt;: This is two-fold: First, individual resources should be identifiable in the request. Often this is done in the path of the URI of the request. For example, &lt;code&gt;/todos/2&lt;/code&gt; would directly address the &lt;code&gt;todo&lt;/code&gt; item with the ID of &lt;code&gt;2&lt;/code&gt;. Second, the presentation of the resource does not necessarily need to match the internal representation by the server. The &lt;code&gt;todo&lt;/code&gt; item may be returned as JSON, but more realistically the server is storing this in a database in another format.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Manipulate Resources Through Representations&lt;/strong&gt;: When the client receives a resource, the representation of that resource contains enough information to update or delete it. This could be seen as the flip-side of the “stateless” constraint. Using the same example of a todo list, if a client requests all items in a todo list, each of those items would likely include an ID so that it could be individually addressed.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Self-Descriptive Messages&lt;/strong&gt;: Each message or resource should include enough information so that the client knows how to process that message. For example, if a client has requested a resource that’s returned as JSON, the response should also include a &lt;code&gt;Content-Type&lt;/code&gt; header with the value &lt;code&gt;application/json&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Hypermedia as the Engine of Application Sate&lt;/strong&gt;: AKA &lt;a href=&#34;https://en.wikipedia.org/wiki/HATEOAS&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;“HATEOAS”&lt;/a&gt;. This could be a whole conversation on it’s own, and it’s encouraged to read on this topic as well, but in short each response should include related links that the client can use to discover other actions and resources. Continuing the ToDo example, requesting an individual todo item may include links to the list that it is a part of.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;layered-system&#34;&gt;Layered System&lt;/h3&gt;
+&lt;p&gt;Layered system constraints are used to scope hierarchical layers based on behavior and have each layer be unable to have visibility past the layer it is interacting with. That’s to say, a client may send a request to a server, which in turn may send a request to a data service, which sends a request to an authentication service. All of this is invisible to the client and the client can not and should not distinguish between a direct request to the data or one that has multiple requests server-side. This is also true for infrastructure and operational components such as proxies and load balancers. Introducing these components to the server architecture should require no updates from the client.&lt;/p&gt;
+&lt;h2 id=&#34;optional-code-on-demand&#34;&gt;[Optional] Code-On-Demand&lt;/h2&gt;
+&lt;p&gt;This constraint states that a server can extend the functionality of a client by providing it executable code. Probably the most common example of this is client-side scripting with JavaScript, but this can take many forms. While this keeps clients simpler and smaller, it also reduces visibility of features and can introduce ambiguity. Because of this, while the absence of other constraints may mean a service isn’t actually RESTful, this constraint is optional.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Well, this is the end of this coverage of the basics of REST. Reading Roy Fielding&amp;rsquo;s REST &lt;a href=&#34;https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;dissertation&lt;/a&gt; is a great place to start if you haven&amp;rsquo;t already. If you’d like to start building your own REST APIs and are a Spring developer, be sure to check out &lt;a href=&#34;/guides/spring/spring-build-api&#34;&gt;Building a REST API with Spring Boot&lt;/a&gt; to see these principles in action!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Building an API with Spring Boot</title>
+      
+      <link>/guides/spring/spring-build-api/</link>
+      <pubDate>Tue, 05 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/spring-build-api/</guid>
+      <description>
+
+        
+        &lt;p&gt;Spring Boot is a framework built on top of Spring that focuses on allowing developers to quickly but safely build applications and microservices. It focuses on minimal configuration and “out-of-the-box” functionality. In just a few lines of code, a developer can have an application running on its own embedded web server. This guide will demonstrate how you can quickly build a microservice by building a REST API from scratch. You can also see the completed code &lt;a href=&#34;https://github.com/BrianMMcClain/spring-boot-api-demo&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;the-design&#34;&gt;The Design&lt;/h2&gt;
+&lt;p&gt;For this example, you’ll build an API to interact with an inventory system. The inventory tracks every item in a fictitious shop, along with the price and count of each item. Before writing the code, take a few moments to consider the design of the API. The design is, after all, the user experience for the developer, and ensuring it’s clear and simple is just as important as it is when building a frontend user interface.&lt;/p&gt;
+&lt;p&gt;If you’re familiar with the basics of REST, much of this should look pretty much as you would expect. If you’re a bit newer, or just want a refresher, make sure to check out &lt;a href=&#34;/guides/microservices/basics-of-rest&#34;&gt;Basics of REST&lt;/a&gt;, which discusses different aspects of REST such as verbs, status codes, and more. For this API, there will be just a handful of endpoints and verbs supported.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;GET /items/{id}&lt;/code&gt;:  The endpoint that likely first comes to mind is getting information about an item in the inventory. This endpoint will take in an item ID (for example, &lt;code&gt;/items/1&lt;/code&gt;), look it up by that ID, and return all the relevant information about that specific item.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GET /items&lt;/code&gt;: If providing an ID returns one item, explicitly omitting an ID could return &lt;em&gt;all&lt;/em&gt; items. In a production application, a lot of care should be taken when implementing operations that return an entire database worth of content. It’s expensive to both gather that information from the database as well as transmit it to the requester. In this case, the database will only contain a few items, so it’s not too expensive to perform.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;POST /items&lt;/code&gt;: If you can get items from the inventory, you should probably also be able to create new items in the inventory. Here’s where proper and clear documentation really helps your developer,.as the existence of this endpoint alone does not tell them what they need to provide. In this case, the endpoint will take in a JSON object, and expect an item’s  name, price, and count. The API will handle generating an ID for the new item.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PUT /items/{id}&lt;/code&gt;: An inventory system would be pretty useless if you couldn’t change the price or count of any of the items. In this case, the endpoint expects a JSON object containing either the price, count, or both.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;DELETE /items/{id}&lt;/code&gt;: Not every product is carried forever. You could simply keep the count at zero, but to keep the inventory clean, deleting it from the database will prove to be useful.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;With all of the endpoints planned out, we can now begin implementation!&lt;/p&gt;
+&lt;h2 id=&#34;building-the-application&#34;&gt;Building the Application&lt;/h2&gt;
+&lt;p&gt;One of the easiest ways to start a Spring Boot application is to use &lt;a href=&#34;https://start.spring.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;start.spring.io&lt;/a&gt;. It will allow you to define the configuration and choose the dependencies specific to your application, then generate all of the boilerplate that surrounds a Spring application. This application assumes that it will be built and run with &lt;a href=&#34;http://maven.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Maven&lt;/a&gt; as well as the default choice of Java and Spring Boot version. What you choose for the group, artifact, name, and description fields doesn’t matter; what does matter is that you add the &lt;strong&gt;Spring Web&lt;/strong&gt; dependency.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/spring-build-api-01.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Once everything is configured, click &lt;strong&gt;Generate&lt;/strong&gt; to download a ZIP file containing all of the code for your new project. Extract it and open it with your editor of choice, and you’ll find a handful of files. Most of these will be untouched since all of the code will be added to new files, but it’s important to see what’s generated out of the box.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/spring-build-api-02.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Notably, the &lt;code&gt;pom.xml&lt;/code&gt; file contains all of the configuration on what dependencies your code requires, as well as configuration on how to build it. &lt;code&gt;SpringBootApiDemo.java&lt;/code&gt; is where your application will start; it contains the code to start everything a Spring application needs. In this example, you’ll be creating two files: one to define the Item object, and one to build the REST API.&lt;/p&gt;
+&lt;h3 id=&#34;the-item-object&#34;&gt;The Item Object&lt;/h3&gt;
+&lt;p&gt;The best place to start is by defining what an Item is. In the same directory as the &lt;code&gt;SpringBootApiDemo.java&lt;/code&gt; file, create a new file named &lt;code&gt;Item.java&lt;/code&gt;. Consider the code below for what this definition looks like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Item&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+ 
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;double&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;price&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;double&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;price&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;price&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;price&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;count&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;double&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getPrice&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;price&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;setPrice&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;double&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;price&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;price&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;price&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getCount&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;setCount&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;count&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+ 
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;None of this code is specific to Spring, and in fact if you’re a Java developer, this is probably even routine. This code creates a new class with four fields (&lt;code&gt;id&lt;/code&gt;, &lt;code&gt;name&lt;/code&gt;, &lt;code&gt;price&lt;/code&gt;, and &lt;code&gt;count&lt;/code&gt;), a constructor, and a handful of getters and setters. Since the item ID and name will never be changed, only the price and count have setters.&lt;/p&gt;
+&lt;h3 id=&#34;the-rest-api&#34;&gt;The REST API&lt;/h3&gt;
+&lt;p&gt;Now it’s time to build the API. In the same directory you’ve created the &lt;code&gt;Item.java&lt;/code&gt; file, create one more file named &lt;code&gt;InventoryController.java&lt;/code&gt;. This is the class that will be what’s referred to in Spring as a &lt;code&gt;RestController&lt;/code&gt;. In fact, that’s the exact annotation you’ll add to your class to tell Spring that this is a &lt;code&gt;RestController&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@RestController&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;InventoryController&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Before you can get into the API code, there’s one last thing you need to handle, and that’s how all of the items in the inventory are tracked. In a real application, this would mean connecting to a database as well as writing code to write to and read from that database. There are actually some great solutions provided by Spring for this as well, and if you’re interested in learning more, one great place to start is to read about &lt;a href=&#34;https://spring.io/projects/spring-data-jpa&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring JPA&lt;/a&gt;. But, for the sake of simplicity, with this example the inventory is managed in-memory in an &lt;code&gt;ArrayList&lt;/code&gt; collection.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;n&#34;&gt;ArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inventory&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;(&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Arrays&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;asList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Keyboard&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;29&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;99&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;76&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;),&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Mouse&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;19&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;99&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;43&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;),&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Monitor&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;79&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;99&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;),&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;PC&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;749&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;99&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;),&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Headphones&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;19&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;99&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To prevent writing the same code to look up items by ID over and over, there’s one helper method you can put together:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;findItem&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;// Search the list of items for the item of interest.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// If the item does not exist, return null;
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inventory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;stream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+      &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;filter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()))&lt;/span&gt;
+      &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;findAny&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+      &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;orElse&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This code uses the &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Java Stream interface&lt;/a&gt; to iterate over all the items in the &lt;code&gt;ArrayList&lt;/code&gt;, returning the &lt;code&gt;Item&lt;/code&gt; that it matches by the ID. If no item with the given ID is found, it instead returns &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;get-all-of-the-items&#34;&gt;Get All Of The Items&lt;/h3&gt;
+&lt;p&gt;With this helper code complete, it’s time to start building the actual API! Since there’s already a collection of items in an inventory, why not start by implementing the &lt;code&gt;GET /items&lt;/code&gt; endpoint to get all of the items?&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@GetMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/items&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getInventory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// Spring Boot will handle the serialization of the ArrayList
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// to a JSON array, so we can return the list directly.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inventory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are two things to note here.. First, this code explicitly tells Spring that it’s the code to run when a &lt;code&gt;GET&lt;/code&gt; request is sent to &lt;code&gt;/items&lt;/code&gt; by annotating this method with &lt;code&gt;@GetMapping(“/items”)&lt;/code&gt;. Second, you’ll notice there’s no code to serialize the &lt;code&gt;ArrayList&lt;/code&gt; that is our inventory. Spring will see that it’s an &lt;code&gt;ArrayList&lt;/code&gt; of &lt;code&gt;Item&lt;/code&gt; object, inspect all of the fields that are defined in an &lt;code&gt;Item&lt;/code&gt;, and then send a response containing a JSON array. This code alone is enough to start sending requests and getting responses if you’d like to see it in action for yourself. Since this code was generated with Maven in mind, it can be run with:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./mvnw spring-boot:run
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In a few moments, the application will be up and running, and you can try out the new endpoint:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ curl localhost:8080/items
+
+[{&amp;quot;id&amp;quot;:1,&amp;quot;name&amp;quot;:&amp;quot;Keyboard&amp;quot;,&amp;quot;price&amp;quot;:29.99,&amp;quot;count&amp;quot;:76},{&amp;quot;id&amp;quot;:2,&amp;quot;name&amp;quot;:&amp;quot;Mouse&amp;quot;,&amp;quot;price&amp;quot;:19.99,&amp;quot;count&amp;quot;:43},{&amp;quot;id&amp;quot;:3,&amp;quot;name&amp;quot;:&amp;quot;Monitor&amp;quot;,&amp;quot;price&amp;quot;:79.99,&amp;quot;count&amp;quot;:7},{&amp;quot;id&amp;quot;:4,&amp;quot;name&amp;quot;:&amp;quot;PC&amp;quot;,&amp;quot;price&amp;quot;:749.99,&amp;quot;count&amp;quot;:2},{&amp;quot;id&amp;quot;:5,&amp;quot;name&amp;quot;:&amp;quot;Headphones&amp;quot;,&amp;quot;price&amp;quot;:19.99,&amp;quot;count&amp;quot;:14}]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Congratulations! You’ve just built your first REST endpoint using Spring Boot! There’s a few more to implement, but luckily you’ll see the more complicated endpoints aren’t much harder than this one.&lt;/p&gt;
+&lt;h3 id=&#34;get-an-individual-item&#34;&gt;Get An Individual Item&lt;/h3&gt;
+&lt;p&gt;Next, take a look at the &lt;code&gt;GET /items/{id}&lt;/code&gt; endpoint. This endpoint will return a single item if it exists, or a &lt;code&gt;404&lt;/code&gt; if it does not exist.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@GetMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/items/{id}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getItem&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@PathVariable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;item&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;findItem&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;item&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// If the item does not exist, return 404
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ResponseStatusException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;NOT_FOUND&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Item Not Found&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+  
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Much like the previous endpoint, note the &lt;code&gt;@GetMapping&lt;/code&gt; annotation, this time with a templated piece in the path (&lt;code&gt;{id}&lt;/code&gt;). This is mapped to an argument in the Java method using one more annotation, &lt;code&gt;@PathVariable(“id”) Long id&lt;/code&gt;, which is how Spring will match up the variable data in the request path to the variable in the code. After that, it will call the handy &lt;code&gt;findItem&lt;/code&gt; helper method defined previously to look up the ID that the user provides. If the item that’s returned is &lt;code&gt;null&lt;/code&gt;, then the code will return &lt;code&gt;404&lt;/code&gt; by throwing a &lt;code&gt;ResponseStatusException&lt;/code&gt;. Otherwise, the code returns an &lt;code&gt;Item&lt;/code&gt; object directly. Much like in the previous endpoint, Spring will observe the fields of the &lt;code&gt;Item&lt;/code&gt; class to figure out how to serialize it and send the response as a JSON object. Try restarting your code and trying the request out:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ curl localhost:8080/items/1
+
+{&amp;quot;id&amp;quot;:1,&amp;quot;name&amp;quot;:&amp;quot;Keyboard&amp;quot;,&amp;quot;price&amp;quot;:29.99,&amp;quot;count&amp;quot;:76}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;creating-a-new-item&#34;&gt;Creating A New Item&lt;/h3&gt;
+&lt;p&gt;So, now you can get the items from the inventory. But what if you want to add a new item? You’ll need some information from the developer, such as the item name.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@PostMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/items&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@ResponseStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;CREATED&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;createItem&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@RequestBody&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// Since item IDs cannot be changed, generated a new ID, create a new item, add it to the
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// inventory, and then return the new item.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;newID&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inventory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;inventory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;size&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;newItem&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;newID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getPrice&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getCount&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;inventory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;newItem&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;newItem&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If a &lt;code&gt;GET&lt;/code&gt; request uses the &lt;code&gt;@GetMapping&lt;/code&gt; annotation, then a &lt;code&gt;POST&lt;/code&gt; request uses the &lt;code&gt;@PostMappint&lt;/code&gt; annotation. Since this is responding to a different HTTP verb, there’s no issue mapping to the same path that was mapped to earlier. There’s one new annotation for the method arguments:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;@RequestBody Item req
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;@RequestBody&lt;/code&gt; annotation tells Spring that we want to load the body of the &lt;code&gt;POST&lt;/code&gt; request into the &lt;code&gt;req&lt;/code&gt; variable, and that it should expect an object that can be deserialized to an &lt;code&gt;Item&lt;/code&gt; object. This is another nice feature of Spring, where this translation between JSON and Java objects is automatically handled for you. The rest of the code creates a new &lt;code&gt;Item&lt;/code&gt; (since IDs cannot be changed), saves it to the inventory, and returns the newly created object. Once again, restart your application and give it a try:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ curl -XPOST http://localhost:8080/items -H &amp;quot;Content-Type: application/json&amp;quot; -d &#39;{&amp;quot;name&amp;quot;: &amp;quot;Speakers&amp;quot;, &amp;quot;price&amp;quot;: 49.99, &amp;quot;count&amp;quot;: 30}&#39;
+
+{&amp;quot;id&amp;quot;:6,&amp;quot;name&amp;quot;:&amp;quot;Speakers&amp;quot;,&amp;quot;price&amp;quot;:49.99,&amp;quot;count&amp;quot;:30}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This &lt;code&gt;cURL&lt;/code&gt; request specifically sets the &lt;code&gt;Content-Type&lt;/code&gt; header to let our application know that it’s being sent JSON, so make sure your client of choice is doing the same.&lt;/p&gt;
+&lt;h3 id=&#34;update-an-existing-item&#34;&gt;Update An Existing Item&lt;/h3&gt;
+&lt;p&gt;What good is an inventory system that can’t update the count of an item in an inventory? Take a look at the &lt;code&gt;PUT /items/{id}&lt;/code&gt; method. Unlike the &lt;code&gt;POST&lt;/code&gt; request, this &lt;code&gt;PUT&lt;/code&gt; request tells our REST API that we want to update an existing item:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@PutMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/items/{id}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;updateItem&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@PathVariable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nd&#34;&gt;@RequestBody&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Map&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;item&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;findItem&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;item&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// If the item does not exist, return 404
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ResponseStatusException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;NOT_FOUND&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Item Not Found&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// Item exists, so update an existing one
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;c1&#34;&gt;// Iterate over the POSTed JSON fields
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;k&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;keySet&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;// Update the items price if a price field is provided
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;k&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;price&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setPrice&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Double&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;parseDouble&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;k&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)));&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;// Update the items count if a count field is provided
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;k&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;count&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setCount&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Integer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;parseInt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;k&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)));&lt;/span&gt;
+            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+        &lt;span class=&#34;c1&#34;&gt;// Return the updated item
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As you might have guessed, since this is responding to a &lt;code&gt;PUT&lt;/code&gt; call, this method has the &lt;code&gt;@PutMapping(“/items/{id}&lt;/code&gt; annotation. The arguments for this method also combine what we’ve seen in two different endpoints, with the &lt;code&gt;@PathVariable&lt;/code&gt; annotation pulling the &lt;code&gt;id&lt;/code&gt; from the request path, and the &lt;code&gt;@RequestBody&lt;/code&gt; annotation pulling the request body. You’ll also notice that the request body is being read as a &lt;code&gt;Map&amp;lt;String, String&amp;gt;&lt;/code&gt; this time. You could also read this as an &lt;code&gt;Item&lt;/code&gt; object, but remember that you don’t know if the request will define a price, a count, or both. Instead, Spring will read in the JSON as a &lt;code&gt;Map&lt;/code&gt;, with both keys and values of type &lt;code&gt;String&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;As with the item lookup, if the item doesn’t even exist, a &lt;code&gt;404&lt;/code&gt; is returned. Otherwise, the code will inspect each key of the &lt;code&gt;Map&amp;lt;String, String&amp;gt;&lt;/code&gt; object, and if it finds a key of either &lt;code&gt;price&lt;/code&gt; or &lt;code&gt;count&lt;/code&gt;, it will update the item that it looked up using the &lt;code&gt;id&lt;/code&gt; provided in the request path. Finally, the newly updated item is returned back to the requester. Give it a try for yourself by getting an item, updating, and getting it again to make sure the changes took place:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ curl http://localhost:8080/items/1
+{&amp;quot;id&amp;quot;:1,&amp;quot;name&amp;quot;:&amp;quot;Keyboard&amp;quot;,&amp;quot;price&amp;quot;:29.99,&amp;quot;count&amp;quot;:76}
+
+$ curl -XPUT http://localhost:8080/items/1 -d &#39;{&amp;quot;count&amp;quot;: 175, &amp;quot;price&amp;quot;: 27.99}&#39; -H &amp;quot;Content-Type: application/json&amp;quot;
+{&amp;quot;id&amp;quot;:1,&amp;quot;name&amp;quot;:&amp;quot;Keyboard&amp;quot;,&amp;quot;price&amp;quot;:27.99,&amp;quot;count&amp;quot;:175}
+
+$ curl http://localhost:8080/items/1
+{&amp;quot;id&amp;quot;:1,&amp;quot;name&amp;quot;:&amp;quot;Keyboard&amp;quot;,&amp;quot;price&amp;quot;:27.99,&amp;quot;count&amp;quot;:175}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;deleting-an-item&#34;&gt;Deleting An Item&lt;/h3&gt;
+&lt;p&gt;All that remains is the &lt;code&gt;DELETE /items/{id}&lt;/code&gt; endpoint. This code is actually a bit simpler, as you’ll see:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@DeleteMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/items/{id}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;deleteItem&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@PathVariable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Item&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;item&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;findItem&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;item&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// If the item does not exist, return 404
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ResponseStatusException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HttpStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;NOT_FOUND&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Item Not Found&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// If the item exists, delete it from the list
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;inventory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;remove&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Continuing the trend, this method has the &lt;code&gt;@DeleteMapping(“/items/{id}”)&lt;/code&gt; annotation, and maps the &lt;code&gt;id&lt;/code&gt; variable in the request path to the &lt;code&gt;id&lt;/code&gt; variable in the method arguments. It looks up the item and returns &lt;code&gt;404&lt;/code&gt; if it doesn’t exist, and if it does, it deletes it from the inventory. One slight difference is that this method doesn’t return anything. By default, if a method in a &lt;code&gt;RestController&lt;/code&gt; doesn’t have a return type, the HTTP request will return a &lt;code&gt;200&lt;/code&gt; status code and an empty body. Give this a shot and see the two different responses you get if you send the same request twice:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ curl -v -XDELETE http://localhost:8080/items/1
+...
+&amp;lt; HTTP/1.1 200
+...
+
+$ curl -v -XDELETE http://localhost:8080/items/1
+...
+&amp;lt; HTTP/1.1 404
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The output has been truncated to be easier to read, but as expected, the first request returned &lt;code&gt;200&lt;/code&gt; and the second returned &lt;code&gt;404&lt;/code&gt; since the item had already been deleted.&lt;/p&gt;
+&lt;h2 id=&#34;testing-the-application&#34;&gt;Testing The Application&lt;/h2&gt;
+&lt;p&gt;You should also be able to test your code, right? Luckily, Spring Boot provides a great way to test the REST APIs that you build. Take a look at the &lt;code&gt;HttpRequestsTest.java&lt;/code&gt; file. In this example it’s located in the &lt;code&gt;/src/test/java/com/github/brianmmcclain/springbootapidemo&lt;/code&gt; directory, but that will depend on what values you used when generating your code.&lt;/p&gt;
+&lt;p&gt;The first thing to do is to tell Spring that this class contains tests, as well as to set up &lt;a href=&#34;https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/web/servlet/MockMvc.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MockMvc&lt;/a&gt; to mock the HTTP requests and bypass the need to set up the actual web tier to run the tests.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@SpringBootTest&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@AutoConfigureMockMvc&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;HttpRequestsTest&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+ 
+   &lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+   &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;MockMvc&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;mockMvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;MockMvc&lt;/code&gt; is used to perform the actual tests. Take a look at the test for the &lt;code&gt;GET /items&lt;/code&gt; endpoint:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Test&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getInventoryShouldReturnAllItems&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;throws&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;mockMvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;perform&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/items&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;andExpect&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isOk&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;andExpect&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;jsonPath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;$&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isArray&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;andExpect&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;jsonPath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;$.length()&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;These tests are fairly verbose, which helps make clear exactly what the tests are checking. This one sends a &lt;code&gt;GET&lt;/code&gt; request to &lt;code&gt;/items&lt;/code&gt; and ensures that the response is a JSON Array with a length of 5. Consider another one that’s more complicated and take a look at the test for &lt;code&gt;POST /items&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Test&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;postWithoutIdShouldCreate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;throws&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;mockMvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;perform&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;post&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/items&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;contentType&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MediaType&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;APPLICATION_JSON&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;content&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;{\&amp;#34;name\&amp;#34;: \&amp;#34;Speakers\&amp;#34;, \&amp;#34;price\&amp;#34;: 39.99, \&amp;#34;count\&amp;#34;: 33}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;andExpect&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isCreated&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;andExpect&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;jsonPath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;$.id&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;andExpect&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;jsonPath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;$.name&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Speakers&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;andExpect&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;jsonPath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;$.price&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;39&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;99&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;andExpect&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;jsonPath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;$.count&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;33&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;       
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This test will send a &lt;code&gt;POST&lt;/code&gt; to &lt;code&gt;/items&lt;/code&gt; with the data &lt;code&gt;&amp;quot;{&amp;quot;name&amp;quot;: &amp;quot;Speakers&amp;quot;, &amp;quot;price&amp;quot;: 39.99, &amp;quot;count&amp;quot;: 33}&amp;quot;&lt;/code&gt;, setting the &lt;code&gt;Content-Type&lt;/code&gt; header to &lt;code&gt;application/json&lt;/code&gt;. It will then ensure that the response has a status code of &lt;code&gt;201&lt;/code&gt; (with &lt;code&gt;status().isCreated()&lt;/code&gt;, which is equal to &lt;code&gt;201&lt;/code&gt;), as well as check that all the fields that are returned are what you would expect.&lt;/p&gt;
+&lt;h2 id=&#34;learn-more&#34;&gt;Learn More&lt;/h2&gt;
+&lt;p&gt;The Spring website has some great guides on writing &lt;a href=&#34;https://spring.io/guides/gs/rest-service/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;RESTful APIs with Spring Boot&lt;/a&gt; as well as a more in-depth look at &lt;a href=&#34;https://spring.io/guides/gs/testing-web/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Testing the Web Layer&lt;/a&gt;, which are wonderful next steps. If you’re new to REST APIs, make sure to check out the &lt;a href=&#34;/guides/microservices/basics-of-rest&#34;&gt;Basics of REST&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Deploy a REST API on Kubernetes with Bitnami&#39;s Helm Charts</title>
+      
+      <link>/guides/microservices/deploy-rest-api-nodejs-mongodb-charts/</link>
+      <pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/microservices/deploy-rest-api-nodejs-mongodb-charts/</guid>
+      <description>
+
+        
+        &lt;p&gt;In the &lt;a href=&#34;/guides/microservices/develop-rest-api-nodejs-mongodb-containers/&#34;&gt;first part of this series&lt;/a&gt;, you developed and integrated a sample REST API with a MongoDB database running on your local system. In this second and concluding part, you will transition your API from your local system to a Kubernetes environment, thereby making it available to a wider audience for review, test and usage.&lt;/p&gt;
+&lt;p&gt;To achieve this, you will use the following Helm charts and containers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js Helm chart&lt;/a&gt;, which lets you quickly deploy a Node.js application on Kubernetes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s MongoDB Helm chart&lt;/a&gt;, which gives you a fully-functional, secure and replicated MongoDB database cluster on Kubernetes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As with container images, &lt;a href=&#34;https://github.com/bitnami/charts/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Helm charts&lt;/a&gt; are secure and packaged according to current best practices, so you can use them immediately with your preferred Kubernetes provider or environment.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and Prerequisites&lt;/h2&gt;
+&lt;p&gt;This guide makes the following assumptions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have a Docker environment installed and configured. &lt;a href=&#34;https://docs.docker.com/engine/installation/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about installing Docker&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Docker Hub account. &lt;a href=&#34;https://hub.docker.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Register for a free account&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Kubernetes cluster running with Helm v3.x and &lt;em&gt;kubectl&lt;/em&gt; installed. &lt;a href=&#34;https://docs.bitnami.com/kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about getting started with Kubernetes and Helm using different cloud providers&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a basic understanding of Node.js and REST API concepts. Learn more about &lt;a href=&#34;https://nodejs.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Node.js&lt;/a&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Representational_state_transfer&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;REST APIs&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-1-deploy-a-mongodb-service-on-kubernetes&#34;&gt;Step 1: Deploy a MongoDB service on Kubernetes&lt;/h2&gt;
+&lt;p&gt;The first step is to deploy MongoDB on your Kubernetes cluster. The easiest way to do this is with &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s MongoDB Helm chart&lt;/a&gt;, which gives you a ready-to-use deployment with minimal effort and within a few minutes.&lt;/p&gt;
+&lt;p&gt;Use the commands below to deploy MongoDB on your Kubernetes cluster. If you wish, you can also replace the database name and credentials shown below with your own values, but make a note of them as you will need them in subsequent steps.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install mongodb bitnami/mongodb --set &lt;span class=&#34;nv&#34;&gt;mongodbRootPassword&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;root --set &lt;span class=&#34;nv&#34;&gt;mongodbUsername&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;myapp --set &lt;span class=&#34;nv&#34;&gt;mongodbPassword&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;myapp --set &lt;span class=&#34;nv&#34;&gt;mongodbDatabase&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mydb --set replicaSet.enabled&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The parameters passed to the chart define the MongoDB administrator password and also create a new database named &lt;em&gt;mydb&lt;/em&gt; with corresponding user credentials.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the Bitnami MongoDB Helm chart&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Wait for the deployment to complete before proceeding to the next step.&lt;/p&gt;
+&lt;h2 id=&#34;step-2-adapt-the-application-source-code&#34;&gt;Step 2: Adapt the application source code&lt;/h2&gt;
+&lt;p&gt;Next, you must adapt your application&amp;rsquo;s source code to read MongoDB connection parameters from the Kubernetes environment. This is a necessary prelude to deploying the application with Bitnami&amp;rsquo;s Node.js Helm chart.&lt;/p&gt;
+&lt;p&gt;Edit the &lt;em&gt;myapp/config/datastores.js&lt;/em&gt; file and modify the default data store entry to look like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;k&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nx&#34;&gt;adapter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;sails-mongo&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nx&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb://&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;process&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;DATABASE_USER&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;:&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;process&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;DATABASE_PASSWORD&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;@&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;process&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;DATABASE_HOST&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;process&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;DATABASE_NAME&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;These values will be injected into the application&amp;rsquo;s environment by the Helm chart at deployment time.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js Helm chart&lt;/a&gt; starts the application using the &lt;em&gt;npm start&lt;/em&gt; command. By default, this will start the Sails application in production mode. Since this is a development deployment, modify the application&amp;rsquo;s &lt;em&gt;package.json&lt;/em&gt; file so that the &lt;em&gt;start&lt;/em&gt; command looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;err&#34;&gt;...&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;scripts&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;#34;start&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;node app.js&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;err&#34;&gt;...&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;step-3-create-and-publish-a-docker-image-of-the-application&#34;&gt;Step 3: Create and publish a Docker image of the application&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js Helm chart&lt;/a&gt; has the ability to pull a container image of your Node.js application from a registry such as Docker Hub. Therefore, before you can use the chart, you must create and publish a Docker image of the application by following these steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Create a file named &lt;em&gt;Dockerfile&lt;/em&gt; in the application&amp;rsquo;s working directory, and fill it with the following content:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;FROM bitnami/node:13
+
+&lt;span class=&#34;c1&#34;&gt;# Copy the application code&lt;/span&gt;
+COPY . /app
+
+&lt;span class=&#34;c1&#34;&gt;# Set working directory&lt;/span&gt;
+WORKDIR /app
+
+&lt;span class=&#34;c1&#34;&gt;# Create a non-root user&lt;/span&gt;
+RUN useradd -r -u &lt;span class=&#34;m&#34;&gt;1001&lt;/span&gt; -g root nonroot
+RUN chown -R nonroot /app
+USER nonroot
+
+&lt;span class=&#34;c1&#34;&gt;# Set the application port to 3000&lt;/span&gt;
+ENV &lt;span class=&#34;nv&#34;&gt;PORT&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;3000&amp;#34;&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Start the application&lt;/span&gt;
+CMD &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;node&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;app.js&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This &lt;em&gt;Dockerfile&lt;/em&gt; uses the &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node/tree/master/13/debian-10&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Node.js 13.x development image&lt;/a&gt; to copy the application files from the current directory. It also creates a non-root user account that the application will run under. For security reasons, it&amp;rsquo;s recommended to always run your application using a non-root user account. Finally, it sets the application to run on port 3000 (the default port expected by the Bitnami Node.js Helm chart) and starts the Node.js server.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The Dockerfile used above produces a development image which contains additional development tools and dependencies. For production scenarios, you should instead use &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node/tree/master/13-prod/debian-10&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js 13.x production image&lt;/a&gt; with a multi-stage build process, as described in this &lt;a href=&#34;https://docs.bitnami.com/tutorials/deploy-custom-nodejs-app-bitnami-containers/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;tutorial on creating a production-ready image of a Node.js application&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Build the image using the command below. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker build -t DOCKER-USERNAME/myapp:1.0 .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result of this command is a development image containing the application, the Node.js runtime and all the related dependencies and development tools.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to Docker Hub and publish the image. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker login
+docker push DOCKER-USERNAME/myapp:1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-4-deploy-the-rest-api-on-kubernetes&#34;&gt;Step 4: Deploy the REST API on Kubernetes&lt;/h2&gt;
+&lt;p&gt;By default, Bitnami&amp;rsquo;s Node.js Helm chart installs its own preconfigured MongoDB service. While this is useful in some scenarios, it must be disabled in this case, as you will be connecting your Node.js application to the MongoDB deployment created in &lt;a href=&#34;#step-1-deploy-a-mongodb-service-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;. When disabling this default behavior, it is mandatory to pass the chart, as alternative, a Kubernetes secret containing the details of the MongoDB deployment it should use.&lt;/p&gt;
+&lt;p&gt;Follow the steps below to create the Kubernetes secret.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Obtain the cluster IP address of the MongoDB deployment created in &lt;a href=&#34;#step-1-deploy-a-mongodb-service-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get svc &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep mongodb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a Kubernetes secret containing the MongoDB service&amp;rsquo;s IP address, port, database name and access credentials. Replace the MONGODB-IP-ADDRESS placeholder with the cluster IP address obtained from the previous command. If you used different database credentials or values when deploying the chart in &lt;a href=&#34;#step-1-deploy-a-mongodb-service-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;, replace the values shown below appropriately.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create secret generic my-mongodb --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;host&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;MONGODB-IP-ADDRESS --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;myapp --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;myapp --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;database&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mydb --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;27017&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will create a Kubernetes secret named &lt;em&gt;my-mongodb&lt;/em&gt; with the values needed for the Helm chart to successfully integrate with the MongoDB deployment.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Deploy the REST API using Bitnami&amp;rsquo;s Node.js Helm chart and the MongoDB secret. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install node bitnami/node &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set image.repository&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;DOCKER-USERNAME/myapp &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set image.tag&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;1.0 &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set &lt;span class=&#34;nv&#34;&gt;getAppFromExternalRepository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set mongodb.install&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set externaldb.secretName&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;my-mongodb &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set service.type&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;LoadBalancer 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s take a closer look at this command:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;em&gt;service.type=LoadBalancer&lt;/em&gt; parameter makes the application available at a public IP address.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;getAppFromExternalRepository=false&lt;/em&gt; parameter controls whether the chart will retrieve the application from an external repository. In this case, since the application is already published as a container image, such retrieval is not necessary.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;image.repository&lt;/em&gt; and &lt;em&gt;image.tag&lt;/em&gt; parameters tell the chart which container image and version to pull from the registry. The values assigned to these parameters should match the image published in &lt;a href=&#34;#step-3-create-and-publish-a-docker-image-of-the-application&#34;&gt;Step 3&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;mongodb.install=false&lt;/em&gt; parameter disables the built-in MongoDB chart, and the &lt;em&gt;externaldb.secretName&lt;/em&gt; parameter names the secret holding details of the alternate MongoDB deployment to use.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the Bitnami Node.js Helm chart&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Wait for the deployment to complete. Obtain the public IP address of the load balancer service:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get svc &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep node
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-5-test-the-rest-api&#34;&gt;Step 5: Test the REST API&lt;/h2&gt;
+&lt;p&gt;Your REST API is now deployed on Kubernetes. You can proceed to test it by sending it various types of HTTP requests and inspecting the responses. Replace the SERVICE-IP-ADDRESS placeholder in the commands below with the public IP address of the load balancer service obtained at the end of the previous step.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Send a POST request to the API to create a new item record:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -X POST -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;name&amp;#34;:&amp;#34;eggs&amp;#34;,&amp;#34;quantity&amp;#34;:&amp;#34;12&amp;#34;}&amp;#39;&lt;/span&gt; http://SERVICE-IP-ADDRESS/item
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/deploy-rest-api-nodejs-mongodb-charts/api-post.png&#34; alt=&#34;POST request&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check if the item record was created with a GET request:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl http://SERVICE-IP-ADDRESS/item
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/deploy-rest-api-nodejs-mongodb-charts/api-get.png&#34; alt=&#34;GET request&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;You can also connect to the MongoDB deployment on Kubernetes to confirm that the record exists. If you used different database credentials or values when deploying the chart in &lt;a href=&#34;#step-1-deploy-a-mongodb-service-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;, replace the values shown below appropriately.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl run --namespace default mongodb-client --rm --tty -i --restart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Never&amp;#39;&lt;/span&gt; --image docker.io/bitnami/mongodb:4.2.3-debian-10-r31 --command -- mongo mydb --host mongodb --authenticationDatabase mydb -u myapp -p myapp --eval &lt;span class=&#34;s2&#34;&gt;&amp;#34;db.item.find()&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/deploy-rest-api-nodejs-mongodb-charts/db-get.png&#34; alt=&#34;Database check&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Your Node.js REST API is now running on Kubernetes and available for public review. You can now continue adding features to your API, upgrading the application and scaling out the database using normal Kubernetes procedures, which you can learn more about in our tutorial on &lt;a href=&#34;https://docs.bitnami.com/kubernetes/how-to/deploy-application-kubernetes-helm/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;deploying, scaling and upgrading applications on Kubernetes&lt;/a&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;As you continue developing and deploying your REST API, consider using a tool like Skaffold, which continuously monitors your application source code and deploys the latest version automatically on Kubernetes. &lt;a href=&#34;https://docs.bitnami.com/tutorials/continuously-develop-express-application-kubernetes-bitnami-skaffold-octant/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about building a continuous development pipeline for a Node.js application with Skaffold&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Node.js Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami MongoDB Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js container image&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Zipkin Demo</title>
+      
+      <link>/samples/spring-zipkin-demo/</link>
+      <pubDate>Mon, 26 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-zipkin-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with Zipkin and Spring Boot</title>
+      
+      <link>/guides/spring/spring-zipkin/</link>
+      <pubDate>Mon, 26 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/spring-zipkin/</guid>
+      <description>
+
+        
+        &lt;p&gt;The moment you facilitate one application making a request to another over the network, you  introduce significant complexity. Maybe “significant” is relative, but ask yourself, “What could go wrong?” Because the more services you introduce that your application comes to rely on, the harder it becomes to diagnose any problems that crop up. Is the application slow because of the network? Or is it because one of the services is taking a long time to process? Or something else?&lt;/p&gt;
+&lt;p&gt;This is where tracing can help. Tracing, at the most basic level, tracks requests as they come into the application and flow through the system. It measures how long a request takes to move from point to point, as well as how long it spends in a specific service. Having this insight makes it easier to quickly home in on a problem, rather than guessing, hunting, or outright assuming where a problem may be.&lt;/p&gt;
+&lt;p&gt;There are many tracing solutions out there, but in this post we will look at one of the more popular ones: &lt;a href=&#34;https://zipkin.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Zipkin&lt;/a&gt;. With a powerful community behind it, Zipkin offers instrumentation for numerous languages, frameworks, and data services, and in many cases  getting started is as simple as including a dependency or two and adding a few lines of code. As an example, we will run through  how you can take an existing Spring Boot application and implement Zipkin tracing into it.&lt;/p&gt;
+&lt;h2 id=&#34;standing-up-zipkin&#34;&gt;Standing Up Zipkin&lt;/h2&gt;
+&lt;p&gt;Before instrumenting your code and collecting traces, you must first stand up an instance of Zipkin to which you can send those collections. You have several options, all documented in the &lt;a href=&#34;https://zipkin.io/pages/quickstart.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Zipkin Quickstart&lt;/a&gt;, with the easiest being to run it on Docker. If you have Docker running locally already, you can get Zipkin running with one command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -d -p 9411:9411 openzipkin/zipkin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you don’t have Docker locally but you do have Java installed, it’s almost as easy to run it on your machine. You can download a pre-built JAR and run it with the following commands:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -sSL https://zipkin.io/quickstart.sh &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; bash -s
+java -jar zipkin.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Whichever way you choose to run Zipkin, you’ll find it accessible on your machine at http://127.0.0.1:9411. If you open your browser to this address and see Zipkin running, you’re good to go!&lt;/p&gt;
+&lt;h2 id=&#34;preparing-the-demo&#34;&gt;Preparing the Demo&lt;/h2&gt;
+&lt;p&gt;How you instrument your code largely depends on the language, framework, and libraries that you use. For this post, we’ll look at an example &lt;a href=&#34;https://github.com/BrianMMcClain/spring-zipkin-demo&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;written in Java with Spring Boot&lt;/a&gt;. If you’re not a Java developer, they are more likely than not some &lt;a href=&#34;https://zipkin.io/pages/tracers_instrumentation.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;great examples for your language of choice&lt;/a&gt;. For this example, we’ll instrument a bare-bones Spring Boot application consisting of a frontend that calls a backend service, which will also be a Spring Boot application.&lt;/p&gt;
+&lt;p&gt;Let’s assume that both applications started as a basic &lt;a href=&#34;/guides/spring/spring-build-api&#34;&gt;Spring Boot application built with the Spring Web dependency&lt;/a&gt;. The frontend has one endpoint located at &lt;code&gt;/&lt;/code&gt;, which when called, reaches out to the backend. The backend also has a single endpoint, also located at &lt;code&gt;/&lt;/code&gt;, that simply returns the string “backend.” Finally, the frontend sends a response to the user that reads, “Hello from the backend!”&lt;/p&gt;
+&lt;h2 id=&#34;instrumenting-the-backend&#34;&gt;Instrumenting the Backend&lt;/h2&gt;
+&lt;p&gt;Let’s first start by instrumenting the backend. This can be done with two additions to the existing code. First, add the &lt;code&gt;spring-cloud-starter-zipkin&lt;/code&gt; dependency to the &lt;code&gt;pom.xml&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-starter-zipkin&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, you’ll need an additional configuration to your &lt;code&gt;application.properties&lt;/code&gt; file (or if you prefer, this can also be done in the &lt;code&gt;application.yml&lt;/code&gt; file):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;spring.application.name=backend
+server.port=8082
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will tell Zipkin the name of the application while annotating the different pieces of each trace, which will allow you to easily track requests as they flow from the frontend to the backend. We’ve also configured the backend to start on port 8082 so that it doesn’t try to run on the same port as the frontend.&lt;/p&gt;
+&lt;p&gt;That’s it! Much like many of the Spring Boot components, the rest is automatically taken care of for you. All that remains is to instrument the frontend!&lt;/p&gt;
+&lt;h2 id=&#34;instrumenting-the-frontend&#34;&gt;Instrumenting the Frontend&lt;/h2&gt;
+&lt;p&gt;You will need to add one additional piece to the frontend, but first, you’ll do the same work that you did with the backend. Start by adding the &lt;code&gt;spring-cloud-starter-zipkin&lt;/code&gt; dependency:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-starter-zipkin&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, in your &lt;code&gt;application.properties&lt;/code&gt; file, configure the name of the frontend application:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;spring.application.name=frontend
+server.port=8080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The other piece to configure is how the requests are sent to the backend. We need to create a client that will be automatically configured to capture traces as it sends requests, then combine that data with the requests coming into the frontend. For this, we’ll allow the &lt;code&gt;WebController&lt;/code&gt; class to automatically configure a &lt;code&gt;RestTemplate&lt;/code&gt; object for us. To do this, here is all the necessary code :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.github.brianmmcclain.springzipkindemo&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.web.bind.annotation.GetMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.web.bind.annotation.RestController&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.web.client.RestTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.beans.factory.annotation.Autowired&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.context.annotation.Bean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@RestController&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;WebController&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+    &lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt; 
+    &lt;span class=&#34;n&#34;&gt;RestTemplate&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;restTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&#34;nd&#34;&gt;@GetMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;helloWorld&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;restTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getForObject&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;http://localhost:8082&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;lt;h1&amp;gt;Hello from the &amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;!&amp;lt;/h1&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt; 
+    &lt;span class=&#34;n&#34;&gt;RestTemplate&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;restTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RestTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;WebController&lt;/code&gt; class is given the &lt;code&gt;@RestController&lt;/code&gt; annotation, which tells our application that it will be the class that will handle the logic for HTTP requests as they come in. The class has a variable named &lt;code&gt;restTemplate&lt;/code&gt; of type &lt;code&gt;RestTemplate&lt;/code&gt; and given the &lt;code&gt;@Autowired&lt;/code&gt; annotation that will automatically create the &lt;code&gt;RestTemplate&lt;/code&gt;. It also has the &lt;code&gt;helloWorld&lt;/code&gt; method with the &lt;code&gt;GetMapping(“/”)&lt;/code&gt; annotation, which tells our code to invoke this method when the application receives requests on the &lt;code&gt;/&lt;/code&gt; endpoint. This method sends the request to the backend, constructs the response, and sends it back to the user. Finally, the &lt;code&gt;restTemplate&lt;/code&gt; bean of type &lt;code&gt;RestTemplate&lt;/code&gt; is  what the Autowired &lt;code&gt;restTemplate&lt;/code&gt; variable will look for when being created. In this case, the bean returns a new &lt;code&gt;RestTemplate&lt;/code&gt; object, into which the &lt;code&gt;spring-cloud-starter-zipkin&lt;/code&gt; dependency will hook.&lt;/p&gt;
+&lt;h2 id=&#34;running-the-demo&#34;&gt;Running the Demo&lt;/h2&gt;
+&lt;p&gt;With Zipkin already running, it’s now time to start up both the frontend and the backend applications. Because they are Spring Boot applications, you can open two terminals, navigate to the two code bases, and run the same command to start both of them:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;./mvnw spring-boot:run
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will start the frontend on port 8080 as well as start the backend on port 8082. Once both applications are up and running, send a request or two to the frontend application located at &lt;a href=&#34;http://localhost:8080&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:8080&lt;/a&gt;. For each request, you should be greeted with the phrase, “Hello from the backend!” After you’ve sent some traffic to the application, you can reach Zipkin running at &lt;a href=&#34;http://localhost:9411/zipkin/?serviceName=backend&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:9411/zipkin/?serviceName=backend&lt;/a&gt;, click “Run Query,” and will be greeted with all   your application’s recent traces:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/zipkin-spring-1.png&#34; alt=&#34;List of traces in Zipkin&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;By clicking on one of these traces, you can dig further into the entire flow of a request. This is great for troubleshooting issues in large, complex distributed applications where figuring out exactly where a request is slowing down can be a real challenge:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/zipkin-spring-2.png&#34; alt=&#34;Individual Zipkin trace&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Zipkin also allows you to visualize the services on which your application depends. If you click on the “Dependencies” page on the left-hand panel, you’ll be shown this visualization for your application:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/zipkin-spring-3.png&#34; alt=&#34;Zipkin dependency graph&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;While simple for this use case, you can imagine how useful this feature will be as your application’s needs for external services grows.&lt;/p&gt;
+&lt;h2 id=&#34;whats-next&#34;&gt;What’s Next?&lt;/h2&gt;
+&lt;p&gt;If you’re not a Java or Spring developer, take a look at some of the available examples out there for your &lt;a href=&#34;https://zipkin.io/pages/tracers_instrumentation.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;language and framework of choice&lt;/a&gt;! There is instrumentation available for many languages, such as &lt;a href=&#34;https://github.com/openzipkin/zipkin-ruby&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ruby&lt;/a&gt;, &lt;a href=&#34;https://github.com/Yelp/py_zipkin&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Python&lt;/a&gt;, &lt;a href=&#34;https://github.com/openzipkin-contrib/zipkin-go-opentracing&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Go&lt;/a&gt;, and may more! Looking to dig even deeper into observability? Make sure to check out our collection of &lt;a href=&#34;/patterns/observability/&#34;&gt;content&lt;/a&gt;, which covers metrics, logging, and tracing.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Boot REST API Demo</title>
+      
+      <link>/samples/spring-boot-build-api/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-boot-build-api/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Boot Data REST Demo with JPA</title>
+      
+      <link>/samples/spring-boot-data-rest-demo/</link>
+      <pubDate>Tue, 21 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-boot-data-rest-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: The Spring REST Stack</title>
+      
+      <link>/samples/the-spring-rest-stack/</link>
+      <pubDate>Tue, 21 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/the-spring-rest-stack/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

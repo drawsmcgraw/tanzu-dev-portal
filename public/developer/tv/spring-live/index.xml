@@ -1,0 +1,751 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Spring Live</title>
+    <link>/tv/spring-live/</link>
+    <description>Recent content in Spring Live on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/tv/spring-live/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Spring Live: Cloud native in an hour: A live demonstration of Spring Cloud with Consul and Resilience4J</title>
+      
+      <link>/tv/spring-live/0002/</link>
+      <pubDate>Wed, 15 Apr 2020 16:28:59 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0002/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0002.jpg" width="640" />]]>
+        
+        &lt;p&gt;According to recent studies, Spring Boot is the most widely used Java framework today, with
+over 75 million downloads per month and counting. Most Java developers are familiar with
+Spring Boot and the benefits it brings to enterprise development in general, but they are often
+less acquainted with its cloud native progeny, Spring Cloud. This talk serves as a hands-on,
+beginner’s introduction to Spring Cloud, including a practical demonstration of some of its
+latest modules. It features the live development of a simple cloud native application, built in
+real time while showcasing various distributed computing patterns and integrating with Consul
+and Resilience4J. In the ever-evolving world of modern, cloud native architectures, learn why
+Spring Cloud is still an essential tool that every Java developer should know.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: How to use Spring Security to Supercharge AppSec with OpenID Connect &amp; OAuth2</title>
+      
+      <link>/tv/spring-live/0015/</link>
+      <pubDate>Tue, 14 Apr 2020 18:29:22 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0015/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0015.jpg" width="640" />]]>
+        
+        &lt;p&gt;One fully open-source solution is widely used and respected to secure distributed systems &amp;amp; assets: Spring Security. Built with Java &amp;amp; Spring, it provides a proven app security platform that integrates with numerous languages and components to provide end-to-end security for your critical systems.&lt;/p&gt;
+&lt;p&gt;Defense is a multi-faceted topic, and your systems&#39; security is central to it all. In this session, you’ll see how you can leverage Spring Security to implement OpenID Connect &amp;amp; OAuth2 with ease, adding powerful &amp;amp; extensible mechanisms for authentication &amp;amp; authorization to secure your distributed systems.&lt;/p&gt;
+&lt;p&gt;This session is a live-coding &amp;ldquo;lock it down&amp;rdquo; exploration of how to secure your apps &amp;amp; assets now and maintain their security over time using 100% open-source software.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Machine Learning Architectures</title>
+      
+      <link>/tv/spring-live/0004/</link>
+      <pubDate>Tue, 14 Apr 2020 17:34:06 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0004/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0004.jpg" width="640" />]]>
+        
+        &lt;p&gt;Machine Learning is clearly here to stay. While it is a far cry from actual Artificial Intelligence, it provides many invaluable and remarkable ways to learn from the data we are collecting about our customers, products and daily activities. The past afforded us machine learning libraries which became machine learning frameworks. Now, we are designing and building machine learning platforms that facilitate entire initiatives in reusable and extensible ways. We will discuss many of the drivers of modern machine learning systems and the platforms that we are seeing emerge.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: How to Work with Various Kubernetes Objects to Host a Spring Boot App</title>
+      
+      <link>/tv/spring-live/0005/</link>
+      <pubDate>Tue, 14 Apr 2020 17:21:23 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0005/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0005.jpg" width="640" />]]>
+        
+        &lt;p&gt;Hosting an app with Kubernetes is the path of least resistance, we don&amp;rsquo;t need to understand how a given infrastructure/Cloud works. Kubernetes abstracts and automates all that for us. Kubernetes has native objects that can help deploy, scale, configure and Load balance applications. These objects can be specified in text files along with a call to the Kubernetes API. However, we do need to learn what these objects are and how they can help us define application requirements. In this session we will take a look at Kubernetes, its objects and walkthrough a workflow of deploying and managing a Spring boot app with Kubernetes.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Production-Ready Spring Boot Applications</title>
+      
+      <link>/tv/spring-live/0041/</link>
+      <pubDate>Tue, 14 Apr 2020 16:12:57 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0041/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0041.jpg" width="640" />]]>
+        
+        &lt;p&gt;Along with a quick getting started experience, Spring Boot includes a number of additional features to help you monitor and manage your application when you push it to production. Spring Boot&amp;rsquo;s Actuator provides a powerful set of features that can be used with HTTP or JMX to help you monitor and manage your application. Externalized configuration and profiles help you run your application with a different set of properties based on the environment. Additionally, Spring Boot provides support for Micrometer, an application metrics facade that supports numerous monitoring systems. In this talk, we will look at some of the features that you can use in your Spring Boot application when deploying it to production.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Security Instrumentation Is the Future of All Software</title>
+      
+      <link>/tv/spring-live/0036/</link>
+      <pubDate>Mon, 06 Apr 2020 20:58:11 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0036/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0036.jpg" width="640" />]]>
+        
+        &lt;p&gt;The traditional “outside in” scanning and firewalling approach to application security has failed. After decades of attempts to improve software security, vulnerability rates are still staggering, attacks are increasing in volume and severity, development speed is increasing, and we have perennial talent shortages. It’s time we finally recognize that efforts to push security into software through software development have been ineffective. Even worse, they have slowed development and hampered innovation.&lt;/p&gt;
+&lt;p&gt;In this talk, we will show how you can use software security instrumentation to achieve software security from the “inside out”. Security testing is far faster and more accurate from inside the application. We can also inventory applications and analyze open source. Maybe most interesting is that we can use instrumentation to prevent vulnerabilities from being exploited. Unlike traditional confrontational approaches to AppSec, the instrumentation approach establishes a safe and powerful way for development and security teams to collaborate. In this talk, we’ll show how software security instrumentation works, how it is already enhancing the security of applications in thousands of organizations, and what the future holds for this powerful technology.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Terraform-ing your cloud</title>
+      
+      <link>/tv/spring-live/0027/</link>
+      <pubDate>Mon, 06 Apr 2020 20:56:35 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0027/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0027.jpg" width="640" />]]>
+        
+        &lt;p&gt;A large part of embracing DevOps involves embracing automation. Over the last decade we have seen the emergence of “as Code” — Build-as-Code, Configuration-as-Code and Infrastructure-as-Code. The benefits to utilizing such tools are huge! We can codify the state of the world around our applications, giving us the ability to treat everything that our code needs like we treat the code itself. Version control, release management, tagging, even rolling backs are now possible. Terraform, an open-source tool from HashiCorp allows us to build, control and modify our infrastructure. Terraform exposes a Domain-specific language (DSL) that we can use to express what our infrastructure should look like. Terraform can work with all the major cloud providers, including Amazon AWS, Google GCP and Microsoft Azure. If you are curious about what this tool has to offer, this session is for you. Come on in, and let&amp;rsquo;s learn how to Terraform your cloud.&lt;/p&gt;
+&lt;p&gt;This session will focus on Terraform. We will look in to how this tool works, explore its capabilities, and see how it can play a pivotal role in our Infrastructure-as-Code (IaC) strategy. With lots of code and demos, this session will certainly give you enough fodder for thought, and provide a baseline so you can decide if Terraform is right for you.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Breaking Out Of The Cross Platform Mobile App Tooling Thunderdome</title>
+      
+      <link>/tv/spring-live/0039/</link>
+      <pubDate>Mon, 06 Apr 2020 20:54:06 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0039/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0039.jpg" width="640" />]]>
+        
+        &lt;p&gt;Many teams question how to best manage mobile application complexity across multiple
+platforms, and this has led to the creation of many tools to try to simplify it. Unfortunately, these tools can add more complexity and overhead than they remove! Instead of trying to abstract away the differences between mobile and web platforms, this talk explores how to share business logic among them with minimal tool dependencies by using C/C++, JavaScript, and Kotlin.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Developing fault-tolerant stream processing application with Kafka Streams and Kubernetes</title>
+      
+      <link>/tv/spring-live/0011/</link>
+      <pubDate>Mon, 06 Apr 2020 20:49:19 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0011/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0011.jpg" width="640" />]]>
+        
+        &lt;p&gt;All things change constantly, and we need to get on board with streams! Moreover, dealing with constantly changing data at low latency is pretty hard. It doesn’t need to be that way. Kafka Streams, Apache Kafka’s stream processing library, allows developers to build sophisticated stateful stream processing applications which you can deploy in an environment of your choice. Kafka Streams is not only scalable but fully elastic allowing for dynamic scale-in and scale-out as the library handles state migration transparently in the background. By running Kafka Streams applications on Kubernetes, you can use Kubernetes powerful control plane to standardize and simplify the application management—from deployment to dynamic scaling. In this talk, Viktor explains the essentials of dynamic scaling and state migration in Kafka Streams. You will see a live demo of how a Kafka Streams application can run in a Docker container and the dynamic scaling of an application running in Kubernetes.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Tanzu Application Catalog Overview</title>
+      
+      <link>/tv/spring-live/0016/</link>
+      <pubDate>Mon, 06 Apr 2020 20:46:45 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0016/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0016.jpg" width="640" />]]>
+        
+        &lt;p&gt;Tanzu Application Catalog Overview with Tony Vetter&lt;/p&gt;
+&lt;p&gt;Learn more about the VMware Tanzu portfolio here: &lt;a href=&#34;https://cloud.vmware.com/tanzu&#34;&gt;https://cloud.vmware.com/tanzu&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Spring Live Intro with Michael Cote</title>
+      
+      <link>/tv/spring-live/0028/</link>
+      <pubDate>Mon, 06 Apr 2020 20:44:19 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0028/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0028.jpg" width="640" />]]>
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Who&#39;s who in the Tanzu</title>
+      
+      <link>/tv/spring-live/0018/</link>
+      <pubDate>Mon, 06 Apr 2020 20:42:15 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0018/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0018.jpg" width="640" />]]>
+        
+        &lt;p&gt;Learn more about Tanzu with our own Scott Buchanan&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://cloud.vmware.com/tanzu&#34;&gt;https://cloud.vmware.com/tanzu&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: How to Hack OAuth</title>
+      
+      <link>/tv/spring-live/0014/</link>
+      <pubDate>Mon, 06 Apr 2020 20:37:57 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0014/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0014.jpg" width="640" />]]>
+        
+        &lt;p&gt;OAuth is the foundation of most of modern online security, used everywhere from signing in to mobile apps, to protecting your bank accounts. Despite its ubiquity, it is still often difficult to implement safely and securely, especially in today&amp;rsquo;s landscape, which is dramatically different from the world of online security as it existed when OAuth was initially created.&lt;/p&gt;
+&lt;p&gt;This talk will explore several real-world OAuth hacks that affected major providers like Twitter, Facebook and Google. I&amp;rsquo;ll share the details of how each specific attack happened, as well as what they could have done to prevent it. Some of these attacks exploited technical flaws in the system, and some exploited the easier to hack, squishier component in the middle: people.&lt;/p&gt;
+&lt;p&gt;Key takeaways:
+You will learn what problems OAuth solves, and what it does not solve.
+You&amp;rsquo;ll learn the parts of OAuth that provide hackers an opportunity to attack the flow.
+You&amp;rsquo;ll have a better understanding of some real-world OAuth hacks that happened in the past.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Spring Live Intro by Josh Long</title>
+      
+      <link>/tv/spring-live/0009/</link>
+      <pubDate>Mon, 06 Apr 2020 20:36:19 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0009/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0009.jpg" width="640" />]]>
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Spring Tools 4 - Bootiful Spring Tooling for the Masses</title>
+      
+      <link>/tv/spring-live/0013/</link>
+      <pubDate>Mon, 06 Apr 2020 20:29:53 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0013/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0013.jpg" width="640" />]]>
+        
+        &lt;p&gt;This hands-on live-coding session will show you how to use Spring Tools 4 to be super productive when working on Spring Boot 2 applications. We will demonstrate all the additional help to create, understand, and navigate your Spring code, including super fast navigation across Spring definitions, deep understanding of your Spring code, and more. We will dive into the details of how information from live running Spring Boot 2 apps will appear directly in your source code to provide unique insights into your running application. You will see why Spring beans are(n’t) being created and where they are being injected (including navigation), available URL routes from running apps, and more. The live-coding will be done using a mixture of clients, ranging from Spring Tools 4 for Eclipse to Visual Studio Code, including support for up to Java 13, and useful features of the tooling to make every attendee more productive implementing applications on top of Spring (Boot).&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Deploying Spring Boot microservices to the cloud with JHipster and Azure</title>
+      
+      <link>/tv/spring-live/0020/</link>
+      <pubDate>Mon, 06 Apr 2020 20:20:02 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0020/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0020.jpg" width="640" />]]>
+        
+        &lt;p&gt;Developing and deploying microservices should not be hard, if you have the right tools!&lt;/p&gt;
+&lt;p&gt;In this live-coding session, join Julien Dubois, Azure developer advocate, Spring old-timer and JHipster creator, as he goes through the process of coding a Spring Boot microservice, all the way up to scaling it and monitoring it in production.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Josh Long Intro for Europe/Middle East</title>
+      
+      <link>/tv/spring-live/0010/</link>
+      <pubDate>Mon, 06 Apr 2020 20:19:13 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0010/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0010.jpg" width="640" />]]>
+        
+        &lt;p&gt;A little hello from Josh Long for the Europe/Middle Eastern Hours&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Spring and Kotlin: A Winning Combination</title>
+      
+      <link>/tv/spring-live/0006/</link>
+      <pubDate>Mon, 06 Apr 2020 20:15:23 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0006/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0006.jpg" width="640" />]]>
+        
+        &lt;p&gt;While Kotlin is the alternative JVM language of choice for Android applications, on the server side it can be used everywhere Java can. The Spring Framework in particular makes excellent use of Kotlin features. Spring supports Kotlin data classes, takes advantage of reified types, and provides small domain-specific languages for bean configuration, testing, and more. This talk will show how Kotlin fits into the Spring ecosystem and how Spring developers can benefit from its null safety, strong typing, and powerful support for concurrency.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Tanzu Observability Commercial</title>
+      
+      <link>/tv/spring-live/0022/</link>
+      <pubDate>Mon, 06 Apr 2020 20:13:33 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0022/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0022.jpg" width="640" />]]>
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Reactive-O-Rama</title>
+      
+      <link>/tv/spring-live/0003/</link>
+      <pubDate>Mon, 06 Apr 2020 20:12:13 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0003/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0003.jpg" width="640" />]]>
+        
+        &lt;p&gt;NOTE: the recording ended before the talk could conclude&lt;/p&gt;
+&lt;p&gt;Microservices and big-data increasingly confront us with the limitations of traditional input/output. In traditional IO, work that is IO-bound dominates threads. This wouldn&amp;rsquo;t be such a big deal if we could add more threads cheaply, but threads are expensive on the JVM, and most other platforms. Even if threads were cheap and infinitely scalable, we&amp;rsquo;d still be confronted with the faulty nature of networks. Things break, and they often do so in subtle, but non-exceptional ways. Traditional approaches to integration bury the faulty nature of networks behind overly simplifying abstractions. We need something better.&lt;/p&gt;
+&lt;p&gt;Spring Framework 5 is here ! It introduces the Spring developer to a growing world of support for reactive programming across the Spring portfolio, starting with a new Netty-based web runtime, component model and module called Spring WebFlux, and then continuing to Spring Data Kay, Spring Security 5.0, Spring Boot 2.0 and Spring Cloud Finchley. Sure, it sounds like a lot, but don&amp;rsquo;t worry! Join me, your guide, Spring developer advocate Josh Long, and we&amp;rsquo;ll explore the wacky, wonderful world of Reactive Spring together.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: 4 questions to ask your Dev team</title>
+      
+      <link>/tv/spring-live/0033/</link>
+      <pubDate>Mon, 06 Apr 2020 20:06:37 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0033/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0033.jpg" width="640" />]]>
+        
+        &lt;p&gt;Good collaboration between Platform Teams and Application Teams is critical for delivering any production service. Practices such as site reliability engineering and continuous delivery must be understood by everyone to be effective, but creating that shared understanding can be hard in an existing organization. In this talk, Hannah will provide a simple guide to getting started.&lt;/p&gt;
+&lt;p&gt;Our experience has shown us that Platform Teams and Application Teams don’t talk enough, and we don’t talk about the right things. This session will give you four simple questions to start that dialogue—you might be surprised what you learn if you ask the right questions!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Building community for your company&#39;s open source projects</title>
+      
+      <link>/tv/spring-live/0037/</link>
+      <pubDate>Mon, 06 Apr 2020 20:02:12 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0037/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0037.jpg" width="640" />]]>
+        
+        &lt;p&gt;Encouraging other people to participate in your company’s open source project is not an easy task, and there is no one size fits all solution. However, there are some things that you can do to increase your chances of success.&lt;/p&gt;
+&lt;p&gt;This talk contains 3 parts, and here are a few examples of what will be covered in each section:
+-Openness and Transparency: Use public channels for all project communications, and include decision-making processes and leadership in your governance documents. Be honest with yourselves and the community about governance and contributions.
+-Growth: Remove barriers to contribution and consider how legal decisions will impact participation. Be proactive, but leave space for outside contributors.
+-Corporate Factors: Provide training for engineers and product managers in how to work and plan features in the open. Recruit customers and partners as contributors.&lt;/p&gt;
+&lt;p&gt;You will walk away with practical advice about encouraging outside participation in corporate open source projects.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Spring Clinic Hours with Dr. Syer</title>
+      
+      <link>/tv/spring-live/0012/</link>
+      <pubDate>Mon, 06 Apr 2020 19:49:59 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0012/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0012.jpg" width="640" />]]>
+        
+        &lt;p&gt;Bring us your sick and needy! This is your chance to get a health check or vital signs on your application written with Spring, Spring Boot and Spring Cloud. Or maybe you have a success story you&amp;rsquo;d like to share with others? Or just come and chew the fat, and maybe a problem shared will be a problem halved. Dave will answer as many questions as he can and queue up the others until we can find the right person to ask. No problem is out of bounds, but if you are interested in resource usage in modern apps and platforms, startup time, or performance measurements and improvements, this is a great opportunity to learn and contribute.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Tanzu Vanguards</title>
+      
+      <link>/tv/spring-live/0001/</link>
+      <pubDate>Mon, 06 Apr 2020 19:47:50 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0001/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0001.jpg" width="640" />]]>
+        
+        &lt;p&gt;A brief introduction to the Tanzu Vanguard super user community. This presentation will go over who the Vanguards are and how to join the community.&lt;/p&gt;
+&lt;p&gt;Learn more about Tanzu Vanguard: &lt;a href=&#34;https://tanzu.vmware.com/vanguard&#34;&gt;https://tanzu.vmware.com/vanguard&lt;/a&gt;
+Learn more about the VMware Tanzu portfolio here: &lt;a href=&#34;https://cloud.vmware.com/tanzu&#34;&gt;https://cloud.vmware.com/tanzu&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Effective Spring Boot on Google Cloud Platform</title>
+      
+      <link>/tv/spring-live/0008/</link>
+      <pubDate>Mon, 06 Apr 2020 19:46:25 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0008/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0008.jpg" width="640" />]]>
+        
+        &lt;p&gt;Enterprises are moving applications to the cloud to increase operational agility. However, when migrations are lift and shift, they don’t take full advantage of Cloud services. . To truly run and operate the application in production, we’ll also take a look at how to add trace, logging, and Prometheus monitoring to your application to extract essential metrics. Engineers at Google Cloud Platform worked closely with the Spring team to produce idiomatic integrations with Spring Cloud Sleuth (trace), Spring Data, and more to easily integrate and utilize Cloud services to increase developer productivity, and reduce infrastructure overhead. Join this talk to see how to start from scratch and truly leverage the benefits of Cloud environment.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: WebFlux.fn and WebMvc.fn: Functional Web Endpoints</title>
+      
+      <link>/tv/spring-live/0023/</link>
+      <pubDate>Mon, 06 Apr 2020 19:41:49 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0023/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0023.jpg" width="640" />]]>
+        
+        &lt;p&gt;In Spring Framework 5.0, we introduced WebFlux.fn: a functional way to define reactive web endpoints. In Spring 5.2, we added WebMvc.fn, which does the same for nonreactive, Servlet environments. In this talk, we&amp;rsquo;ll discuss both WebFlux.fn and the new WebMvc.fn and cover topics such as: * the difference between annotation-based MVC and this functional approach, * using router and handler functions, * request predicates, * nested routes, * and more!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Kubernetes local development workflow distilled</title>
+      
+      <link>/tv/spring-live/0021/</link>
+      <pubDate>Mon, 06 Apr 2020 19:34:26 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0021/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0021.jpg" width="640" />]]>
+        
+        &lt;p&gt;The Kubernetes ecosystem can be very operator-focused and it can be a challenge for developers to distill the information that is relevant for their job. There are a large number of available tools aimed at solving a broad set of problems but it can be daunting choosing which to invest in. This session aims to suggest best practices and get hands-on with some of the essential tooling.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Debugging Tools for Networking Problems</title>
+      
+      <link>/tv/spring-live/0026/</link>
+      <pubDate>Mon, 06 Apr 2020 18:22:06 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0026/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0026.jpg" width="640" />]]>
+        
+        &lt;p&gt;Modern applications and software rely on networking to have a usable product for customers. Yet, many platform operators and application developers are ill-equipped to debug problems that manifest in the networking stack. Together, we will try to address this knowledge gap by examining some helpful tools that can allow you to pinpoint the exact cause of that network failure!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Azure Spring Cloud: A new way to run spring boot microservices atop Kubernetes</title>
+      
+      <link>/tv/spring-live/0025/</link>
+      <pubDate>Mon, 06 Apr 2020 18:21:19 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0025/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0025.jpg" width="640" />]]>
+        
+        &lt;p&gt;We’ve seen a growth in the use of cloud-native architectures, particularly microservices. Microservice-based architectures help improve scalability and velocity but implementing them can pose challenges. For many Java developers, Spring Boot and Spring Cloud have helped address these challenges, providing a robust platform with well-established patterns for developing and operating microservice applications. But creating and maintaining a Spring Cloud environment requires work. Such as setting up the infrastructure for dynamic scaling, installing and managing multiple components, and wiring up the application to your logging infrastructure. In this session, the speaker will introduce how to easily bring Spring boot microservices to the cloud with Azure Spring Cloud, a fully managed service built and operated by Microsoft and Pivotal, troubleshoot them and scale them.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Processing CloudEvents with Spring and Knative</title>
+      
+      <link>/tv/spring-live/0034/</link>
+      <pubDate>Mon, 06 Apr 2020 16:28:40 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0034/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0034.jpg" width="640" />]]>
+        
+        &lt;p&gt;A quick tour of building a Spring Boot application to handle incoming CloudEvents. This app will be deployed on Kubernetes using Knative Serving and Eventing. We&amp;rsquo;ll start from scratch using &lt;a href=&#34;https://start.spring.io&#34;&gt;https://start.spring.io&lt;/a&gt; and step by step build up and deploy our app to a Kubernetes cluster. In the process we&amp;rsquo;ll use Spring Boot, Spring Cloud Function, CloudEvents SDK for Java and Knative in addition to general Kubernetes tools like kubectl and skaffold.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Shifting to the Where? Exploring the paths to a cloudless world</title>
+      
+      <link>/tv/spring-live/0038/</link>
+      <pubDate>Mon, 06 Apr 2020 16:21:33 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0038/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0038.jpg" width="640" />]]>
+        
+        &lt;p&gt;Have you ever wondered how your app would need to change to move to a microservices framework? Not sure how to get started? Let&amp;rsquo;s talk about it! We&amp;rsquo;ll take a dive into how to gather and use the data coming from your application to optimize your systems for a containerized or serverless world.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Developing Applications with Spring and Neo4j</title>
+      
+      <link>/tv/spring-live/0030/</link>
+      <pubDate>Mon, 06 Apr 2020 16:16:14 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0030/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0030.jpg" width="640" />]]>
+        
+        &lt;p&gt;Many of us have a great deal of experience working with traditional relational databases and with so-called NoSQL databases (document stores &amp;amp; key/value pairs) as well. Graph databases provide capabilities that we may not have fully leveraged…yet. In this session, learn how to exploit the power of connected data quickly and powerfully using Spring Boot and Spring Data. The presenter will explain the types of data that benefit most from a graph database and demonstrate how to really use Spring to take advantage of it. We will also take a look at the new reactive capabilities and how this can take your application to the next level. Learn how to elevate the relationships among your data to the same level as your data and tap the full power of the stack!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Thinking Architecturally</title>
+      
+      <link>/tv/spring-live/0017/</link>
+      <pubDate>Mon, 06 Apr 2020 16:04:50 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0017/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0017.jpg" width="640" />]]>
+        
+        &lt;p&gt;Rich Hickey once said programmers know the benefits of everything and the trade-offs of nothing…an approach that can lead a project down a path of frustrated developers and unhappy customers. As architects though, we must consider the trade-offs of every new library, language, pattern or approach and quickly make decisions often with incomplete information. How should we think about the inevitable technology choices we have to make on a project? How do we balance competing agendas? How do we keep our team happy and excited without chasing every new thing that someone finds on the inner webs?&lt;/p&gt;
+&lt;p&gt;As architects, it is our responsibility to effectively guide our teams on the technology journey. In this talk, I will outline the importance of trade-offs, how we can analyze new technologies and how we can effectively capture the inevitable architectural decisions we will make. I will also explore the value of fitness functions as a way of ensuring the decisions we make are actually reflected in the code base.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Handling secrets in your cloud-native architecture</title>
+      
+      <link>/tv/spring-live/0035/</link>
+      <pubDate>Mon, 06 Apr 2020 15:52:13 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0035/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0035.jpg" width="640" />]]>
+        
+        &lt;p&gt;Your company already has an approved secret backend. And they bought a platform. Learn how they can peacefully coexist in a Cloud-Native world with …
+Zero runtime coupling
+No credential leaks/No developer-visible credentials
+Examples will feature Vault but could be any secret backend with an API.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Modernize Your Business</title>
+      
+      <link>/tv/spring-live/0019/</link>
+      <pubDate>Mon, 06 Apr 2020 15:49:32 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0019/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0019.jpg" width="640" />]]>
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Build Images with Confidence and Ease with Cloud Native Buildpacks</title>
+      
+      <link>/tv/spring-live/0029/</link>
+      <pubDate>Mon, 06 Apr 2020 15:29:03 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0029/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0029.jpg" width="640" />]]>
+        
+        &lt;p&gt;As Kubernetes becomes the runtime platform of choice and images become the standard packaging for applications, turning apps into images with confidence and ease becomes a critical element to our productivity and success. Dockerfile and Jib are popular approaches for building images, but each has limitations, and these limitations become more pronounced as we scale the number and variety of applications we need to build and maintain. Enter Cloud Native Buildpacks, tooling that makes it quick and easy for developers to go from source to image for a variety of frameworks, and provides enterprises security, auditability, transparency and control for building and patching images. In this talk we&amp;rsquo;ll cover the basics of Cloud Native Buildpacks and show a few different ways in which they can be used, including the pack CLI, the Spring Boot Maven/Gradle plugins, and kpack hosted service. By the end of this talk, building images will be a cinch to do locally or as part of a mature pipeline.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: How to implement and manager an award winning platform to enable developers</title>
+      
+      <link>/tv/spring-live/0040/</link>
+      <pubDate>Mon, 06 Apr 2020 15:27:39 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0040/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0040.jpg" width="640" />]]>
+        
+        &lt;p&gt;We launched the Tanzu Platform to enable our development teams. Platform and DevOps automation ensures software launches and patching are delivered consistently, securely, with scalability and zero downtime. This allows our customers to realize cost efficiencies and recognize revenue sooner than previously possible. Using this platform we wee able to quickly launch two programs that met our customer demands while being able to make updates to the site on demand and scale to manage orders for a new vehicle being launched.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Cloud Native Batch Processing</title>
+      
+      <link>/tv/spring-live/0007/</link>
+      <pubDate>Mon, 06 Apr 2020 15:20:27 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0007/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0007.jpg" width="640" />]]>
+        
+        &lt;p&gt;This talk will explore the latest release of Spring Batch as well as how to utilize it in a modern Kubernetes environment. We will work through building a cloud-native batch process using Spring&amp;rsquo;s stack including Spring Batch, Spring Cloud Task, and other cloud tools as well as dive into what makes developing batch processes on Kubernetes both attractive as well as easy!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Spring Live: Jsonnet - configuration data templating for Spring on Kubernetes</title>
+      
+      <link>/tv/spring-live/0031/</link>
+      <pubDate>Mon, 06 Apr 2020 15:11:11 +0000</pubDate>
+      
+      <guid>/tv/spring-live/0031/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/spring-live/0031.jpg" width="640" />]]>
+        
+        &lt;p&gt;Spring Developers have evolved from the 00s, where being an experts in XML was a critical to your very survival. In the 2010/20s - JSON and YAML are king. Typically, a full stack Spring Developer will need to manage multiple config file formats; application.yml, Kubernetes manifest, Terraform ,Ansible, Cloud Formation the list goes on. Jsonnet is a data templating language developed at Google that is very similar to their internal GCL (Generic/Google Config Language). Jsonnet allows common data fragments such as IP addresses and host names to be shared across multiple configuration files regardless of format. It has powerful data merging that allows config snippets to be &amp;ldquo;mixed in&amp;rdquo; to different files. We will walk through an example of how a Spring project can benefit from DRY configuration using Jsonnet.&lt;/p&gt;
+&lt;p&gt;Learn more about the VMware Tanzu portfolio here: &lt;a href=&#34;https://cloud.vmware.com/tanzu&#34;&gt;https://cloud.vmware.com/tanzu&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

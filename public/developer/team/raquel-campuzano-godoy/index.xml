@@ -1,0 +1,185 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – </title>
+    <link>/team/raquel-campuzano-godoy/</link>
+    <description>Recent content on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/team/raquel-campuzano-godoy/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Assign Pods to Nodes With Bitnami Helm Chart Affinity Rules</title>
+      
+      <link>/guides/kubernetes/assign-pods-to-nodes-with-bitnami-helm-chart-affinity-rules/</link>
+      <pubDate>Tue, 13 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/assign-pods-to-nodes-with-bitnami-helm-chart-affinity-rules/</guid>
+      <description>
+
+        
+        &lt;p&gt;First published on &lt;a href=&#34;https://docs.bitnami.com/tutorials/assign-pod-nodes-helm-affinity-rules/&#34;&gt;https://docs.bitnami.com/tutorials/assign-pod-nodes-helm-affinity-rules/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;When you install an application in a Kubernetes cluster, the &lt;a href=&#34;https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes scheduler&lt;/a&gt; decides in which nodes the application pods will be installed unless certain constraints are defined. For example, Kubernetes scheduler may decide to install application pods in a node with more available memory. This is mostly useful except when cluster administrators prefer to distribute a group of pods across the cluster in a specific manner. For this use case, they need a tool that can force Kubernetes to follow custom rules specified by the user.&lt;/p&gt;
+&lt;p&gt;Affinity rules supply a way to force the scheduler to follow specific rules that determine where pods should be distributed. To help users to implement affinity rules, Bitnami has enhanced its Helm charts by including opinionated affinities in their manifest files. Cluster administrators now only need to define the criteria to be followed by the scheduler when placing application pods in cluster nodes. They can then enable this feature via a simple install-time parameter&lt;/p&gt;
+&lt;p&gt;This tutorial will demonstrate the available affinity rules and how they can be adapted to your needs.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and Prerequisites&lt;/h2&gt;
+&lt;p&gt;This article assumes that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have a Google Cloud account. &lt;a href=&#34;https://cloud.google.com/free&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Register for a Google Cloud account&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Kubernetes cluster running with Helm v3.x and &lt;code&gt;kubectl&lt;/code&gt; installed. &lt;a href=&#34;https://docs.bitnami.com/kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about getting started with Kubernetes and Helm using different cloud providers&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;This guide uses a Kubernetes cluster created in GKE. These steps are the same for all Kubernetes engines. They don’t work, however, in Minikube, since with Minikube you only can create single-node clusters.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;how-affinity-rules-work-in-bitnami-helm-charts&#34;&gt;How Affinity Rules Work in Bitnami Helm Charts&lt;/h2&gt;
+&lt;p&gt;All Bitnami infrastructure solutions available in the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Helm charts catalog&lt;/a&gt; now include pre-defined affinity rules exposed through the &lt;code&gt;podAffinityPreset&lt;/code&gt; and &lt;code&gt;podAntiAffinitypreset&lt;/code&gt; parameters in their &lt;code&gt;values.yml&lt;/code&gt; file:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/bitnami-helm-chart-affinity-rules/image-1.png&#34; alt=&#34;Pod affinity rules&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Pod affinity and anti-affinity rules allow you to define how the scheduler should behave when locating application pods in your cluster eligible nodes. Depending on the option you choose, the scheduler will behave as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;podAffinityPreset&lt;/code&gt; - Using the &lt;code&gt;podAffinity&lt;/code&gt; rule, the scheduler will locate a new pod on the same node where other pods with the same label are located. This approach is especially helpful to group under the same node pods that meet specific pre-defined patterns.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;podAntiAffinitypreset&lt;/code&gt; - Using the &lt;code&gt;podAntiAffinity&lt;/code&gt; parameter lets the scheduler locates one pod in each node. Thus, you will prevent locating a new pod on the same node as other pods are running. This option is convenient if your deployment will demand high availability.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Having the pods distributed across all nodes allows Kubernetes to ensure high availability of your cluster by keeping running the remaining nodes when one node fails.&lt;/p&gt;
+&lt;p&gt;These are the values you can set for both pod affinity and anti-affinity rules:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Soft&lt;/strong&gt; - Use this value to make the scheduler enforce a rule wherever it can be met (best-effort approach). If the rule cannot be met, the scheduler will deploy the required pods in the nodes with enough resources.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Hard&lt;/strong&gt; - Use this value to make the scheduler enforce a rule. This means that if there are remaining pods that do not comply with the pre-defined rule, they won&amp;rsquo;t be allocated in any node.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Bitnami Helm charts have the &lt;code&gt;podAntiAffinity&lt;/code&gt; rule with the &lt;code&gt;soft&lt;/code&gt; value enabled by default. Hence, if there are not enough nodes to place one pod per node, it will leave the scheduler to decide where the remaining pods should be located.&lt;/p&gt;
+&lt;p&gt;The following section shows two different use cases of configuring &lt;code&gt;podAntiaffinity&lt;/code&gt; parameter.&lt;/p&gt;
+&lt;h2 id=&#34;deploying-a-chart-using-the-podantiaffinity-rule&#34;&gt;Deploying a Chart Using the &lt;code&gt;podAntiAffinity&lt;/code&gt; Rule&lt;/h2&gt;
+&lt;p&gt;The following examples illustrate how the &lt;code&gt;podAntiAffinity&lt;/code&gt; rule works in the context of the Bitnami MySQL Helm chart. They cover two use cases: installing the chart with the default &lt;code&gt;podAntiAffinity&lt;/code&gt; value and changing the &lt;code&gt;podAntiAffinity&lt;/code&gt; value from &lt;code&gt;soft&lt;/code&gt; to &lt;code&gt;hard&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;use-case-1-install-the-chart-with-the-default-podantiaffinity-value&#34;&gt;Use Case 1: Install the Chart with the Default &lt;code&gt;podAntiaffinity&lt;/code&gt; Value&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Install the Bitnami Helm charts repository by running:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;helm repo add bitnami https://charts.bitnami.com/bitnami 
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Deploy the MySQL Helm chart by executing the command below. Note that the chart will deploy the cluster with three nodes and two replicas - one primary and one secondary. To make the scheduler follow the default &lt;code&gt;podAntiAffinity&lt;/code&gt; rule, set the parameter as follows:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;helm install mysql bitnami/mysql --set architecture=replication --set secondary.replicaCount=2 --set secondary.podAntiAffinityPreset=soft 
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Verify the cluster by checking the nodes. Use the following command to list the connected nodes:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get nodes 
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;You will see an output message like this:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/bitnami-helm-chart-affinity-rules/image-2.png&#34; alt=&#34;Example kubectl get pods output&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Three nodes are running in the cluster.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Check how the pods are distributed. Execute the command below:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get pods -o wide 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/bitnami-helm-chart-affinity-rules/image-3.png&#34; alt=&#34;Example kubectl get pods -o wide output&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;As expected, both the primary and the secondary pods are in different nodes.&lt;/p&gt;
+&lt;p&gt;To verify how the scheduler acts when the &lt;em&gt;soft&lt;/em&gt; value is defined, scale up the cluster by setting the number of secondary replicas to three instead of one. Thus, the resulting number of pods will be four, instead of two.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;To scale the cluster, use the command below:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;kubectl scale sts/mysql-secondary --replicas 3 
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Check the pods by running again the &lt;code&gt;kubectl get pods&lt;/code&gt; command. The &lt;code&gt;soft&lt;/code&gt; value left the scheduler to locate the remaining pod that didn&amp;rsquo;t comply with the &amp;ldquo;one pod per node&amp;rdquo; rule:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/bitnami-helm-chart-affinity-rules/image-4.png&#34; alt=&#34;Example kubectl get pods output&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Note that two pods are running in the same node.&lt;/p&gt;
+&lt;h3 id=&#34;use-case-2-change-the-podantiaffinity-value-from-soft-to-hard&#34;&gt;Use Case 2: Change the &lt;code&gt;podAntiAffinity&lt;/code&gt; Value from Soft to Hard&lt;/h3&gt;
+&lt;p&gt;To try the &lt;code&gt;hard&lt;/code&gt; type of the &lt;code&gt;podAntiAffinity&lt;/code&gt; rule, deploy the chart again by changing the &lt;code&gt;secondary.podAntiAffinityPreset&lt;/code&gt; value from &lt;code&gt;soft&lt;/code&gt; to &lt;code&gt;hard&lt;/code&gt; as shown below. The chart will deploy the cluster with three nodes and two replicas - one primary and one secondary.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helm install mysql-hard bitnami/mysql --set architecture=replication --set secondary.replicaCount=2 --set secondary.podAntiAffinityPreset=hard
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Check the nodes and the pods by running the &lt;code&gt;kubectl get nodes&lt;/code&gt; and the &lt;code&gt;kubectl get pods –o wide&lt;/code&gt; commands:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/bitnami-helm-chart-affinity-rules/image-5.png&#34; alt=&#34;Example kubectl get pods -o wide output&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Both the primary and secondary pods are running in the same node.&lt;/p&gt;
+&lt;p&gt;To verify how the scheduler acts when the &lt;code&gt;hard&lt;/code&gt; value is defined, scale up the cluster by setting the number of secondary replicas to three instead of one. Thus, the resulting number of pods will be four, instead of two.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Scale up the cluster by executing the command below:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;kubectl scale sts/mysql-hard secondary --replicas 3 
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;When checking the pods, you will see that the scheduler has ignored the &amp;ldquo;one pod per node&amp;rdquo; rule and also located only as many pods as there are nodes. The fourth pod was not deployed as there are only three nodes available.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/bitnami-helm-chart-affinity-rules/image-6.png&#34; alt=&#34;Example kubectl get pods -o wide output&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;podAntiAffinity&lt;/code&gt; rule is an easy way to control how application pods will be distributed across the cluster nodes when installing a Helm chart. Deploy your favorite Bitnami applications and enable this feature via a simple install-time parameter.&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful Links&lt;/h2&gt;
+&lt;p&gt;To learn more about the topics discussed in this article, use the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Helm charts catalog&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.bitnami.com/kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Helm charts documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes scheduler documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes pod affinity documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: Kubeapps Meets Tanzu Kubernetes Grid: a New Release is out</title>
+      
+      <link>/blog/kubeapps-meets-tanzu-kubernetes-grid-a-new-release-is-out/</link>
+      <pubDate>Fri, 11 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/kubeapps-meets-tanzu-kubernetes-grid-a-new-release-is-out/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;em&gt;Special thanks to Antonio Gamez and Michael Nelson, members of the VMware Kubeapps Team&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;The latest version of &lt;a href=&#34;https://github.com/kubeapps/kubeapps/releases/tag/v2.3.2&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubeapps (v.2.3.2)&lt;/a&gt; is now available for deployment on VMware Tanzu™ Kubernetes Grid™ (TKG) workload clusters. VMware Tanzu users already benefit from deploying Kubeapps in several environments and, now with a little configuration Kubeapps can be integrated with your TKG workload cluster.&lt;/p&gt;
+&lt;p&gt;In addition to this capability,  Kubeapps also features full compatibility with the latest versions of &lt;a href=&#34;https://pinniped.dev/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Pinniped&lt;/a&gt; which means that it can be used with &lt;a href=&#34;https://github.com/kubeapps/kubeapps/blob/7aa7c579251e0fb5b446ab71a67d8d847d6ce843/docs/user/using-an-OIDC-provider-with-pinniped.md#enabling-oidc-login-in-managed-clusters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;any OIDC provider for your TKG clusters and even in managed clusters&lt;/a&gt; such as Azure Kubernetes Service (AKS) and Google Kubernetes Engine (GKE).&lt;/p&gt;
+&lt;p&gt;Want to know more? Keep reading to discover the latest capabilities of Kubeapps that will enable developers and admin clusters to deploy and manage trusted open-source content in TKG clusters.&lt;/p&gt;
+&lt;h2 id=&#34;a-bit-of-history-what-is-kubeapps&#34;&gt;A bit of History: What is Kubeapps?&lt;/h2&gt;
+&lt;p&gt;Kubeapps is an in-cluster web-based application that enables users with a one-time installation to deploy, manage, and upgrade applications on a Kubernetes cluster.&lt;/p&gt;
+&lt;p&gt;This past year, the Kubeapps team has added key new features to support different use cases and scenarios. Firstly, we added &lt;a href=&#34;https://blog.bitnami.com/2020/05/kubeapps-now-supports-private-docker-registries.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;support for private Helm and Docker registries&lt;/a&gt; and later, in &lt;a href=&#34;https://blog.bitnami.com/2020/10/Kubeapps-2.0.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubeapps version 2.0&lt;/a&gt;, we built support to run Kubeapps on various VMware Tanzu ™ platforms such as Tanzu ™ Mission Control, vSphere and Tanzu ™ Kubernetes Grid.&lt;/p&gt;
+&lt;p&gt;With Kubeapps you can:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Customize deployments through an intuitive, form-based user interface&lt;/li&gt;
+&lt;li&gt;Inspect, upgrade and delete applications installed in the cluster&lt;/li&gt;
+&lt;li&gt;Browse and deploy from public or private chart repositories including VMware Marketplace™ and Bitnami Application Catalog&lt;/li&gt;
+&lt;li&gt;Secure authentication to Kubeapps using an OAuth2/OIDC provider such as the VMware Cloud Service Portal&lt;/li&gt;
+&lt;li&gt;Secure authorization based on Kubernetes role-based access control&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;key-features-of-kubeapps-232&#34;&gt;Key Features of Kubeapps 2.3.2&lt;/h2&gt;
+&lt;p&gt;In this Kubeapps release, we have focused on delivering key user experience features including the capability to enable Tanzu users to deploy Kubeapps directly as a Helm chart in TKG workload clusters. This version is tested and validated on the latest version of TKG (v1.3.1)&lt;/p&gt;
+&lt;p&gt;Once Kubeapps is up and running, cluster admins will benefit from having :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SSO for Authentication with TKG using Pinniped by configuring an OIDC provider&lt;/li&gt;
+&lt;li&gt;Ability to configure VMware Tanzu™ Application Catalog (TAC) as a private Chart repository;&lt;/li&gt;
+&lt;li&gt;Capability to configure VMware Marketplace ™ Catalog and the Bitnami Application Catalog as public chart repositories;&lt;/li&gt;
+&lt;li&gt;A customized user interface adapted to the Tanzu look and feel.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/kubeapps-232-release/kubeapps-tkg.png&#34; alt=&#34;alt_text&#34;  title=&#34;Kubeapps support for SSO Authentication&#34; /&gt;
+&lt;em&gt;Kubeapps support for SSO Authentication&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;All these new capabilities are designed to offer a seamless experience between Kubeapps and Tanzu Kubernetes Grid clusters.&lt;/p&gt;
+&lt;h2 id=&#34;how-can-i-configure-kubeapps-to-run-in-my-tkg-clusters&#34;&gt;How can I configure Kubeapps to run in my TKG clusters?&lt;/h2&gt;
+&lt;p&gt;Tanzu users can execute these simple steps to gain the maximum advantage with this new version of Kubeapps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Configure your cluster to enable SSO for Authentication with TKG using Pinniped and integrate Kubeapps with the identity management provider&lt;/li&gt;
+&lt;li&gt;Adjust the Kubeapps user interface to get a customized look and feel&lt;/li&gt;
+&lt;li&gt;Configure role-based access control in Kubeapps (RBAC) to manage roles and permissions among the teams in your organization&lt;/li&gt;
+&lt;li&gt;Deploy Kubeapps in the cluster&lt;/li&gt;
+&lt;li&gt;Add public and private repositories to Kubeapps: the public VMware Marketplace™ repository and your private &lt;a href=&#34;https://tanzu.vmware.com/application-catalog&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu Application Catalog&lt;/a&gt; for &lt;a href=&#34;https://tanzu.vmware.com/tanzu/advanced&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Advanced&lt;/a&gt; repository&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;At this point your development team can start deploying, listing, removing and managing applications in your TKG clusters from the Kubeapps user interface with total confidence!&lt;/p&gt;
+&lt;p&gt;Refer to the Kubeapps documentation to learn how to &lt;a href=&#34;https://github.com/kubeapps/kubeapps/tree/master/docs/step-by-step/kubeapps-on-tkg&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;deploy and configure Kubeapps on VMware Tanzu Kubernetes Grid.&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;support-and-resources&#34;&gt;Support and Resources&lt;/h2&gt;
+&lt;p&gt;Since Kubeapps is an OSS project, support for this version of Kubeapps will be provided on a best-effort basis.&lt;/p&gt;
+&lt;p&gt;For solving the problems you may have (including deployment support, operational support and bug fixes), please &lt;a href=&#34;https://github.com/kubeapps/kubeapps/issues&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;open an issue in the Kubeapps GitHub repository.&lt;/a&gt; A markdown template is provided by default to open new issues with the information requested to prioritize and respond to them as soon as possible.&lt;/p&gt;
+&lt;p&gt;Also, if you want to contribute to the project, feel free to &lt;a href=&#34;https://github.com/kubeapps/kubeapps/pulls&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;send us a pull request,&lt;/a&gt; and the team will check it and guide you in the process for a successful merge.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/kubeapps/kubeapps/tree/master/docs&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Kubeapps documentation section&lt;/a&gt; is full of useful resources to help you get the best of the chart.&lt;/p&gt;
+&lt;p&gt;Check out the step-by-step guide for &lt;a href=&#34;https://github.com/kubeapps/kubeapps/tree/master/docs/step-by-step/kubeapps-on-tkg&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;deploying and configuring Kubeapps on VMware Tanzu™ Kubernetes Grid™&lt;/a&gt; and the &lt;a href=&#34;https://docs.bitnami.com/tutorials/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami documentation tutorials site&lt;/a&gt; for improving your Kubernetes skills.&lt;/p&gt;
+&lt;p&gt;For more information on VMware Tanzu Kubernetes Grid, refer to &lt;a href=&#34;https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/index.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;its documentation page&lt;/a&gt;  where you will find handy information on managing your Kubernetes clusters.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

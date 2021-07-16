@@ -1,0 +1,324 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Alexander Brand</title>
+    <link>/team/alexander-brand/</link>
+    <description>Recent content in Alexander Brand on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 24 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/team/alexander-brand/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Platform Observability</title>
+      
+      <link>/guides/kubernetes/observability/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/observability/</guid>
+      <description>
+
+        
+        &lt;p&gt;Observability is crucial for successfully operating a complex software system
+such as Kubernetes. With this in mind, Kubernetes offers multiple facilities
+that enable operators to observe the system at runtime. With that said, the onus
+is on the platform operator to consume, evaluate, and act on the information
+exposed by Kubernetes.&lt;/p&gt;
+&lt;p&gt;Kubernetes has multiple sources of information that operators can use to observe
+the platform&amp;rsquo;s behavior. These include component logs, audit logs, events, and
+metrics.&lt;/p&gt;
+&lt;h2 id=&#34;component-logs&#34;&gt;Component Logs&lt;/h2&gt;
+&lt;p&gt;Kubernetes is a distributed system composed of multiple processes that run
+across multiple hosts. Each component writes logs to stdout and stderr to
+provide visibility into what is happening in the process. These logs are one of
+the most important troubleshooting tools available to platform operators when
+there is an issue with the system.&lt;/p&gt;
+&lt;h2 id=&#34;audit-logs&#34;&gt;Audit Logs&lt;/h2&gt;
+&lt;p&gt;The Kubernetes API server records every interaction with an audit log. The audit
+logging capability is configurable using a policy file that controls which
+events should be recorded and what data they should include. Typically, each log
+entry contains what happened, when it happened, and who was involved in the
+action. The API server supports multiple audit backends for persisting the audit
+log: a file on disk, a statically-configured webhook, and a
+dynamically-configured webhook.&lt;/p&gt;
+&lt;h2 id=&#34;events&#34;&gt;Events&lt;/h2&gt;
+&lt;p&gt;In addition to logs, Kubernetes components emit events that track what is
+happening in the system. Examples of events include the Kubelet pulling a
+container image, or the Scheduler assigning a pod to a node. Events are
+first-class resources in the Kubernetes API, and thus are stored in the
+Kubernetes API server. Because they are stored in the API, there is a retention
+policy that controls the length of time the events are stored. To persist events
+for historical analysis, platform operators should implement a solution that
+ships the events to an external system.&lt;/p&gt;
+&lt;h2 id=&#34;metrics&#34;&gt;Metrics&lt;/h2&gt;
+&lt;p&gt;Each Kubernetes component exposes a set of metrics that track the component&amp;rsquo;s
+state. These metrics are available through an HTTP endpoint at &lt;code&gt;/metrics&lt;/code&gt; and
+are exposed using the Prometheus data format. The API server, for example,
+exposes metrics such as &lt;code&gt;apiserver_current_inflight_requests&lt;/code&gt; and
+&lt;code&gt;apiserver_watch_events_total&lt;/code&gt;. To take advantage of these metrics, platform
+operators should use a monitoring system that can scrape Prometheus metrics and
+generate alerts on those metrics.&lt;/p&gt;
+&lt;p&gt;Kubernetes also exposes node and pod-level resource consumption metrics through
+the Metrics API. These metrics are accessible directly via the API, or more
+easily, through the &lt;code&gt;kubectl top&lt;/code&gt; command. To enable this API, operators must
+deploy the &lt;a href=&#34;https://kubernetes.io/docs/tasks/debug-application-cluster/resource-metrics-pipeline/#metrics-server&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes Metrics
+server&lt;/a&gt;,
+which is not deployed by default.&lt;/p&gt;
+&lt;h2 id=&#34;distributed-tracing&#34;&gt;Distributed Tracing&lt;/h2&gt;
+&lt;p&gt;Distributed Tracing is another important pillar of observability. As a platform
+operator, consider deploying a tracing system to offer it as a platform service.
+This will enable developers to perform distributed tracing in their
+applications.&lt;/p&gt;
+&lt;h2 id=&#34;popular-tooling-and-approaches&#34;&gt;Popular Tooling and Approaches&lt;/h2&gt;
+&lt;h3 id=&#34;logging&#34;&gt;Logging&lt;/h3&gt;
+&lt;h4 id=&#34;elasticsearch&#34;&gt;Elasticsearch&lt;/h4&gt;
+&lt;p&gt;Open source search and analytics database for all types of data that is commonly
+utilized in the Kubernetes ecosystem for log storage.&lt;/p&gt;
+&lt;p&gt;It is the storage and search engine component of the ELK/EFK stack.&lt;/p&gt;
+&lt;p&gt;Its distributed, fast and scalable data ingestion nature make it a natural fit
+for container log aggregation, search and analytics.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Built for scale&lt;/li&gt;
+&lt;li&gt;Automated failover handling&lt;/li&gt;
+&lt;li&gt;Distributed by design&lt;/li&gt;
+&lt;li&gt;Widely tested&lt;/li&gt;
+&lt;li&gt;Commonly used and known as part of the ELK/EFK stack&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Geographic distribution of nodes not recommended&lt;/li&gt;
+&lt;li&gt;Relatively large memory footprint&lt;/li&gt;
+&lt;li&gt;The difficulty configuring and tuning it is considerable&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;It&amp;rsquo;s worth considering buying and paying support for an alternative hosted
+platform such as vRealize Log Insight.&lt;/p&gt;
+&lt;h4 id=&#34;logstash&#34;&gt;Logstash&lt;/h4&gt;
+&lt;p&gt;The data processing pipeline that aggregates and ships logs to the storage
+engine utilized in the cluster. Commonly combined with Elasticsearch as
+component of the ELK stack. It can ingest and process multiple sources
+simultaneously, making it a good candidate to funnel container logs from a host,
+process and forward them to the storage engine.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Commonly used&lt;/li&gt;
+&lt;li&gt;Flexible&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Performance and resource consumption can be problematic&lt;/li&gt;
+&lt;li&gt;Written in JRuby (java runtime required)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;fluentd&#34;&gt;Fluentd&lt;/h4&gt;
+&lt;p&gt;Fluentd is another data collector/processing engine that is commonly combined
+with Elasticsearch as a container logging platform. It can parse, analyze and
+transform logs before sending them to the storage engine. Written in Ruby and C
+for the speed-sensitive components, it has a lot of plugins provided by the Ruby
+community.&lt;/p&gt;
+&lt;p&gt;Fluentd runs containerized in the cluster as a DaemonSet. Typically all nodes in
+the platform will run a Fluentd Pod which is configured to read the standard
+output of all containers running in the node and funnel them for storage in a
+database. The database can live inside or outside of the cluster.&lt;/p&gt;
+&lt;p&gt;Typically, containerized log storage leverages Elasticsearch. Fluentd can ship
+logs to external entities such as Splunk as well.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Part of CNCF&lt;/li&gt;
+&lt;li&gt;Wide ecosystem of plugins out of the box provided
+by the Ruby community&lt;/li&gt;
+&lt;li&gt;Excellent support for Elastic&lt;/li&gt;
+&lt;li&gt;Written in CRuby (No java runtime required)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Partly written in Ruby make it slower than other options&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;fluent-bit&#34;&gt;Fluent Bit&lt;/h4&gt;
+&lt;p&gt;Fluent Bit is Fluentd&amp;rsquo;s smaller counterpart. It&amp;rsquo;s part of the Fluentd ecosystem.
+It&amp;rsquo;s more suitable for containerized workloads given its smaller footprint. It&amp;rsquo;s
+fully written in C, but significantly fewer plugins are available for it.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Created with a highly distributed use case in mind&lt;/li&gt;
+&lt;li&gt;Super light memory footprint&lt;/li&gt;
+&lt;li&gt;Extensible&lt;/li&gt;
+&lt;li&gt;Fully written in C, zero dependencies&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Smaller number of plugins available compared to Fluentd&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Fluent Bit should be your first choice for Kubernetes, unless you find a
+specific need or missing plugin to consider Fluentd.&lt;/p&gt;
+&lt;h4 id=&#34;loki&#34;&gt;Loki&lt;/h4&gt;
+&lt;p&gt;Loki is a horizontally-scalable, highly-available, multi-tenant log aggregation
+system inspired by Prometheus. It is designed to be very cost effective and easy
+to operate. It does not index the contents of the logs, but rather a set of
+labels for each log stream.&lt;/p&gt;
+&lt;p&gt;Loki supports a number of database options for the indexes and can store logs on
+disk or on any of the major object storage options such as S3, Minio, Google
+Cloud Object Storage.&lt;/p&gt;
+&lt;p&gt;It is usually paired with &lt;a href=&#34;#grafana&#34;&gt;Grafana&lt;/a&gt; for visualization and
+&lt;a href=&#34;#promtail&#34;&gt;Promtail&lt;/a&gt; for log ingestion.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Considerably easier to use and operate than Elasticsearch&lt;/li&gt;
+&lt;li&gt;Offloads indexing and log storage to reliable external services&lt;/li&gt;
+&lt;li&gt;Allows you to use Grafana for both logs and metrics&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Less sophisticated search capabilities than Elasticsearch&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;promtail&#34;&gt;Promtail&lt;/h4&gt;
+&lt;p&gt;Promtail is the log shipping component built specifically for shipping logs to
+Loki. It would not be used otherwise.&lt;/p&gt;
+&lt;h4 id=&#34;vrealize-log-insight&#34;&gt;vRealize Log Insight&lt;/h4&gt;
+&lt;p&gt;vRealize Log Insight (vRLI) is VMware&amp;rsquo;s product offering that delivers
+heterogeneous and highly scalable log management with intuitive, actionable
+dashboards, sophisticated analytics and broad third-party extensibility.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A Fluentd plugin exists for vRLI&lt;/li&gt;
+&lt;li&gt;Scalability. Supports up to 15,000 events / second by scaling out appliances&lt;/li&gt;
+&lt;li&gt;Automatic visualizations based on existing data&lt;/li&gt;
+&lt;li&gt;Integration with vRealize Operations Manager&lt;/li&gt;
+&lt;li&gt;Accepts rsyslog, syslog-ng, log4j agents or through API ingestion&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Requires a licenses to be purchased
+&lt;ul&gt;
+&lt;li&gt;The version that&amp;rsquo;s bundled with NSX-T can only be used for NSX-T or vSphere
+logs.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Must be deployed in a virtual environment through an appliance.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;visualization&#34;&gt;Visualization&lt;/h3&gt;
+&lt;h4 id=&#34;kibana&#34;&gt;Kibana&lt;/h4&gt;
+&lt;p&gt;Open source data discovery and visualization dashboard for accessing information
+stored in Elasticsearch. It&amp;rsquo;s the &amp;lsquo;K&amp;rsquo; in the ELK/EFK stacks. It and provides
+insight into the container logs aggregated from the cluster. With the stored
+data in Elasticsearch it is possible to create colorful dashboards, charts and
+reports, gaining immediate valuable insight into the state of the cluster and
+the applications running in it.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Integrates seamlessly with Elasticsearch&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;grafana&#34;&gt;Grafana&lt;/h4&gt;
+&lt;p&gt;Grafana is an interactive visualization tool popularly used as a frontend for
+metrics. It has native integration with Prometheus and Elasticsearch, making it
+an easy choice to make for visualizing performance data of a running Kubernetes
+cluster.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s easy to install and expandable, making it appealing for visualizing
+application performance data.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s typically installed as an application in the cluster it will operate on.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Integrates seamlessly with Prometheus&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;monitoring&#34;&gt;Monitoring&lt;/h3&gt;
+&lt;h4 id=&#34;prometheus&#34;&gt;Prometheus&lt;/h4&gt;
+&lt;p&gt;Prometheus is a CNCF project widely used for Kubernetes platform monitoring as
+well as metrics collection and aggregation. Prometheus works by scraping data
+from configured endpoints, parsing it and storing it in its internal time-series
+database. This data can then be easily queried directly with PromQL, or
+displayed using a visualization tool such as Grafana.&lt;/p&gt;
+&lt;p&gt;Prometheus has push-gateway facility as well, for instrumenting applications
+with the available client libraries to push metrics when exposing an endpoint to
+scrape is not suitable. Ephemeral jobs such as pipelines are a good example of
+tasks in which pushing data to the metrics server make sense.&lt;/p&gt;
+&lt;p&gt;A &lt;a href=&#34;https://github.com/coreos/prometheus-operator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Prometheus Operator&lt;/a&gt; exists to
+install and manage the operation of your Prometheus cluster. We highly recommend
+taking advantage of it when installing Prometheus.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Part of CNCF&lt;/li&gt;
+&lt;li&gt;Easy installation&lt;/li&gt;
+&lt;li&gt;Well documented&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Long term storage is limited&lt;/li&gt;
+&lt;li&gt;Often requires addon solutions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;datadog&#34;&gt;Datadog&lt;/h4&gt;
+&lt;p&gt;System and application monitoring tool that runs as a DaemonSet in the cluster.
+Allows you to get metrics and logs from services in real time to visualize
+kubernetes states and get notified of failovers and events.&lt;/p&gt;
+&lt;p&gt;Additionally, it can be configured outside of the cluster and have it gather
+Kubernetes metrics.&lt;/p&gt;
+&lt;p&gt;Alerting is also possible based on collected metrics from the platform or
+the applications running in it.&lt;/p&gt;
+&lt;p&gt;Similarly to ELK, it provides log aggregation, live tail facility, log archiving
+and custom visualizations.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Platform administrators have less to worry about&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Agent is not open source&lt;/li&gt;
+&lt;li&gt;Agent configuration not properly documented&lt;/li&gt;
+&lt;li&gt;Cost $$$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If customers aren&amp;rsquo;t price sensitive, this is a good option and offloads from the
+platform administrator duties.&lt;/p&gt;
+&lt;h4 id=&#34;tanzu-observability-by-wavefront&#34;&gt;Tanzu Observability by Wavefront&lt;/h4&gt;
+&lt;p&gt;Tanzu Observability by Wavefront is a Software as a Service solution from VMware
+that collects and aggregates Kubernetes and Application metrics.&lt;/p&gt;
+&lt;p&gt;The Tanzu Observability by Wavefront service deploys daemon sets on Kubernetes
+cluster nodes to collect metrics on clusters, nodes, pods, containers, and
+control plane objects. These metrics are then pushed to the SaaS application
+through a proxy.&lt;/p&gt;
+&lt;p&gt;Wavefront integrates with many different platforms and applications out of the
+box and builds initial dashboards to quickly visualize the health of workloads
+and clusters.&lt;/p&gt;
+&lt;p&gt;Wavefront integrates with many different platforms including:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Kubernetes&lt;/li&gt;
+&lt;li&gt;Pivotal Cloud Foundry&lt;/li&gt;
+&lt;li&gt;VMware vSphere&lt;/li&gt;
+&lt;li&gt;Amazon Web Services&lt;/li&gt;
+&lt;li&gt;Microsoft Azure&lt;/li&gt;
+&lt;li&gt;Google Cloud Platform&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;VMware Tanzu Kubernetes Grid Integrated has an integration built in to enable
+the Wavefront functionality.&lt;/p&gt;
+&lt;p&gt;Wavefront also integrates with application services including:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Apache HTTP&lt;/li&gt;
+&lt;li&gt;Envoy&lt;/li&gt;
+&lt;li&gt;Istio&lt;/li&gt;
+&lt;li&gt;Elasticsearch&lt;/li&gt;
+&lt;li&gt;NGINX&lt;/li&gt;
+&lt;li&gt;WebSphere&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Wavefront can also ingest data from other monitoring tools such as: Fluentd,
+Logstash, Splunk, vROps, Jaeger, and Prometheus.&lt;/p&gt;
+&lt;p&gt;Alert notifications can be sent to a variety of solutions including: Slack,
+PagerDuty, ServiceNow, or a Webhook for custom alerts.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Platform administrators have less to worry about&lt;/li&gt;
+&lt;li&gt;Wavefront can scale to manage large numbers of clusters simultaneously&lt;/li&gt;
+&lt;li&gt;Built in Integrations for platforms, applications, and alerts&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Data is stored outside the customer&amp;rsquo;s data center&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

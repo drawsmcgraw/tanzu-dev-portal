@@ -1,0 +1,192 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Spring Cloud Contract</title>
+    <link>/tags/spring-cloud-contract/</link>
+    <description>Recent content in Spring Cloud Contract on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 24 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/spring-cloud-contract/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Modernization with Consumer Driven Contracts</title>
+      
+      <link>/guides/microservices/consumer-driven-contracts/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/microservices/consumer-driven-contracts/</guid>
+      <description>
+
+        
+        &lt;p&gt;There are multiple approaches to modernizing applications and defining APIs. This guide describes the consumer driven contracts approach. The guide &lt;a href=&#34;/guides/microservices/api-first-development/&#34;&gt;Understanding API-First Development&lt;/a&gt; describes an alternative approach.&lt;/p&gt;
+&lt;p&gt;The consumer driven contracts approach may be useful when a team is building many related services at the same time as part of a modernization effort, and your team knows the &amp;ldquo;domain language&amp;rdquo; of the bounded context, but doesn&amp;rsquo;t know the individual properties of each aggregate and event payload.&lt;/p&gt;
+&lt;p&gt;This approach is also useful when a legacy application contains a large data model and existing service surface area, and your team doesn&amp;rsquo;t want to port 100% of the legacy application to a microservices architecture. (Maybe not all of that legacy functionality is needed anymore.  It&amp;rsquo;s been around for a long time and no one really knows everything it does.)&lt;/p&gt;
+&lt;p&gt;Consumer driven contracts help address the following issues:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;How can you add to an API without breaking downstream clients?&lt;/li&gt;
+&lt;li&gt;How can something be removed from a service without breaking downstream clients?&lt;/li&gt;
+&lt;li&gt;How can a service developer find out who is using their service?&lt;/li&gt;
+&lt;li&gt;How can a service developer release with short release cycles and continuous delivery?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In a modernization effort, there are several additional problems addressed by consumer driven contracts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;How can a team know how much of the legacy functionality to add to a new service?&lt;/li&gt;
+&lt;li&gt;How can a team decide what order to add new functionality?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;using-consumer-driven-contracts&#34;&gt;Using Consumer Driven Contracts&lt;/h2&gt;
+&lt;p&gt;In an event-driven architecture, many microservices expose two kinds of APIs: a RESTful API over HTTP and a message-based API for publishing and subscribing to domain events.  The messaging tier provides a mechanism for a constellation of microservices to be loosely coupled as an emergent and reactive system.  The RESTful API provides a means for integrating with these services in a synchronous fashion as well as to provide complex query capability for services that have received events from a service.  By allowing consumers to provide contracts for both of these tiers, we can provide a &lt;em&gt;prescribed language&lt;/em&gt; to our consumers that matches their needs.&lt;/p&gt;
+&lt;h3 id=&#34;using-separate-test-base-classes-for-consumers-and-transport-types&#34;&gt;Using Separate Test Base Classes for Consumers and Transport Types&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://spring.io/projects/spring-cloud-contract&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Contract&lt;/a&gt; provides support for consumer driven contracts and service schemas in Spring applications, covering a range of options for writing tests and publishing them as assets, ensuring that a contract is kept by producers and consumers for both HTTP and message-based interactions.&lt;/p&gt;
+&lt;p&gt;Spring Cloud Contract allows you to control the base class that generated server tests use, and these allow us to customize the individual tests for our needs with various mocks and configuration.  The DNA project initializer sets up a &lt;code&gt;contracts&lt;/code&gt; directory in the specification project and configures a single base class for all tests.  Instead, we recommend setting up a directory structure such as the following to allow for tuning tests for individual consumers and to separate HTTP/messaging concerns:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;contracts/
+ |- &amp;lt;consumer1&amp;gt;/
+ |--- http/
+ |----- shouldReturnResultWhenRequestIsMade.groovy
+ |--- messaging/
+ |----- shouldProduceSuccessMessageWhenRequestIsProcessed.groovy
+ |- &amp;lt;consumer2&amp;gt;/
+ |--- http/
+ |--- messaging/
+ ...
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In your &lt;code&gt;build.gradle&lt;/code&gt; file, you&amp;rsquo;ll need to configure how this gets mapped to base classes.  The following will generate tests with a base class made up of the last two segments of the package such as &lt;consumer1&gt;HttpBase or &lt;consumer2&gt;MessagingBase in the &lt;code&gt;com.rate.auto.autorateablequote.contract&lt;/code&gt; package:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;l&#34;&gt;contracts {&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;packageWithBaseClasses&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;com.rate.auto.autorateablequote.contract&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;}&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can then provide those base class implementations as such:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@RunWith&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SpringRunner&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@SpringBootTest&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;classes&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ServiceApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;})&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@AutoConfigureMockMvc&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Import&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WireMockConfiguration&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@ActiveProfiles&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;mock&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;abstract&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Consumer1HttpBase&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+	&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+	&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;MockMvc&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;mvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+	&lt;span class=&#34;nd&#34;&gt;@Before&lt;/span&gt;
+	&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    	&lt;span class=&#34;n&#34;&gt;RestAssuredMockMvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;mockMvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;mvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+	&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@RunWith&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SpringRunner&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@SpringBootTest&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;classes&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ServiceApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;})&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@AutoConfigureMockMvc&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@AutoConfigureMessageVerifier&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Import&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WireMockConfiguration&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@ActiveProfiles&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;mock&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;abstract&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Consumer1MessagingBase&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+	&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+	&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;MockMvc&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;mvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+	&lt;span class=&#34;nd&#34;&gt;@Before&lt;/span&gt;
+	&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    	&lt;span class=&#34;n&#34;&gt;RestAssuredMockMvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;mockMvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;mvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+	&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+	&lt;span class=&#34;cm&#34;&gt;/**
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; 	* This method is called from the triggeredBy() method in the contract DSL to
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; 	* publish the message to be tested.
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; 	*/&lt;/span&gt;
+	&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;requestAutoRateApiIsCalled&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    	&lt;span class=&#34;c1&#34;&gt;// given:
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    	&lt;span class=&#34;n&#34;&gt;MockMvcRequestSpecification&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;request&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RestAssuredMockMvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;given&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+            	&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;header&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;application/json;charset=UTF-8&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+            	&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;{\&amp;#34;quote\&amp;#34;:{\&amp;#34;jurisdiction\&amp;#34;:\&amp;#34;NY\&amp;#34;,\&amp;#34;policyEffectiveDate\&amp;#34;:\&amp;#34;2017-05-25T15:04:05-04:00\&amp;#34;,\&amp;#34;policyTransactionType\&amp;#34;:\&amp;#34;01\&amp;#34;,\&amp;#34;quoteEffectiveDate\&amp;#34;:\&amp;#34;2017-05-25T15:04:05-04:00\&amp;#34;,\&amp;#34;quoteId\&amp;#34;:\&amp;#34;1\&amp;#34;}}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+    	&lt;span class=&#34;c1&#34;&gt;// when:
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    	&lt;span class=&#34;n&#34;&gt;ResponseOptions&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RestAssuredMockMvc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;given&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+            	&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;post&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/rateableQuote&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+	&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;contracts-for-restful-apis&#34;&gt;Contracts for RESTful APIs&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;l&#34;&gt;def iso8601FormattedDatePattern = &amp;#39;(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})(\\.\\d+)?[+-](\\d{2})\\:(\\d{2})&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;org.springframework.cloud.contract.spec.Contract.make {&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;request {&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;method &amp;#39;POST&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;urlPath(&amp;#39;/rateableQuote&amp;#39;) {&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;queryParameters {&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        	&lt;/span&gt;}&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;}&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;body([&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;quote&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;jurisdiction&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value(regex(&amp;#39;[a-zA-Z]{2}&amp;#39;)),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;policyEffectiveDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value(producer(&amp;#39;2017-05-25T15:04:05.999-04:00&amp;#39;), consumer(regex(iso8601FormattedDatePattern))),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;policyTransactionType&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value(regex(&amp;#39;[0-9]{2}&amp;#39;)),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;quoteEffectiveDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value(producer(&amp;#39;2017-05-25T15:04:05.999-04:00&amp;#39;), consumer(regex(iso8601FormattedDatePattern))),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;quoteId&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value(regex(&amp;#39;[0-9]+&amp;#39;))&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            	&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;headers {&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;contentType(&amp;#34;application/json;charset=UTF-8&amp;#34;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;}&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;}&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;response {&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;status 200&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;headers {&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;header(&amp;#34;Content-Type&amp;#34;, &amp;#34;application/json;charset=UTF-8&amp;#34;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;}&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;body([&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;rate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;$5.00&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;}&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;}&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;contracts-for-messaging-apis&#34;&gt;Contracts for Messaging APIs&lt;/h3&gt;
+&lt;p&gt;In order to create tests and stubs for services that communicate via messages over &lt;a href=&#34;https://spring.io/projects/spring-cloud-stream&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Stream&lt;/a&gt;, you&amp;rsquo;ll need to add a handful of dependencies to your build.gradle:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;l&#34;&gt;testCompile(&amp;#34;org.springframework.cloud:spring-cloud-stream-test-support&amp;#34;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In order to test that your API controller emits a message as a side effect of an appropriate message call, you&amp;rsquo;ll need to express that contract in the contract DSL as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;l&#34;&gt;def iso8601FormattedDatePattern = &amp;#39;(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})(\\.\\d+)?[+-](\\d{2})\\:(\\d{2})&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;org.springframework.cloud.contract.spec.Contract.make {&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;input {&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;// the contract will be triggered by a method&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;triggeredBy(&amp;#39;requestAutoRateApiIsCalled()&amp;#39;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;}&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;outputMessage {&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;// in Spring Cloud Stream, this is the destination channel where the message is expected to be published&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;sentTo &amp;#39;rateable_quote&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;body([&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;eventId&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;QUOTE_DATA_COLLECTED&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;entity&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                    	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                    	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;quoteId&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value(regex(&amp;#39;[0-9]+&amp;#39;)),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                    	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;policyEffectiveDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value(regex(iso8601FormattedDatePattern)),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                    	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;policyTransactionType&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value(regex(&amp;#39;[0-9]{2}&amp;#39;)),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                    	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;jurisdiction&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value(regex(&amp;#39;[a-zA-Z]{2}&amp;#39;)),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                    	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;quoteEffectiveDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value(regex(iso8601FormattedDatePattern)),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                    	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;createdAt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value(regex(iso8601FormattedDatePattern)),&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                    	&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;lastModified&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;value(regex(iso8601FormattedDatePattern))&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            	&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    	&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;}&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;}&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You also need to implement the &lt;code&gt;requestAutoRateApiIsCalled()&lt;/code&gt; method in your producer implementation&amp;rsquo;s base class as described above so that generated tests will produce the message under test.&lt;/p&gt;
+&lt;h2 id=&#34;outcome&#34;&gt;Outcome&lt;/h2&gt;
+&lt;p&gt;This approach results in an environment where a microservice does not dictate the APIs it provides, but reacts to client needs by implementing them in a pull-based fashion. This inverts the classic architecture question &amp;ldquo;what data should my domain model contain?&amp;rdquo;  The answer in this pattern is &amp;ldquo;nothing until a client says it needs something&amp;rdquo;.  It allows the development team to work backwards from the finish line to the starting point, creating a consumer that needs some data and then looking for the service that should provide that data in order to make a contract with it.&lt;/p&gt;
+&lt;p&gt;How does consumer driven contracts work when all services need &lt;em&gt;all&lt;/em&gt; of the data in order to interact with other legacy services that assume full access to a large data model?  In this case, it&amp;rsquo;s much harder for a client to say &amp;ldquo;I need X, Y, and Z&amp;rdquo; and turns into many clients asking for the same large payload.&lt;/p&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;This &lt;a href=&#34;https://spring.io/blog/2016/10/31/webinar-replay-consumer-driven-contracts-and-your-microservice-architecture&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;webinar&lt;/a&gt; from a few years back also discusses the consumer-driven approach and provides a demo.&lt;/p&gt;
+&lt;p&gt;As described in the introduction, a consumer-driven approach is sometimes used when breaking down a monolithic legacy application. For more on that topic, see the guide &lt;a href=&#34;/guides/microservices/deconstructing-the-monolith/&#34;&gt;Breaking Down a Monolith&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The consumer driven contract approach is almost by definition a “bottom up” method. An alternative, “top down” approach is described in the guide  &lt;a href=&#34;/guides/microservices/api-first-development/&#34;&gt;Understanding API-First Development&lt;/a&gt; in which you create an API contract before doing a full code implementation. The human-readable API specification is the first deliverable, allowing fast feedback from stakeholders.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

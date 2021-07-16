@@ -1,0 +1,1402 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Buildpacks</title>
+    <link>/tags/buildpacks/</link>
+    <description>Recent content in Buildpacks on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 12 May 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/buildpacks/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Automated Code to URL on Kubernetes using Cloud Native Buildpacks, Knative and ArgoCD</title>
+      
+      <link>/guides/ci-cd/cnbp-knative-argocd/</link>
+      <pubDate>Wed, 12 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/ci-cd/cnbp-knative-argocd/</guid>
+      <description>
+
+        
+        &lt;p&gt;Technologies like Docker and Kubernetes simplify the process of building, running and maintaining cloud native applications. At the same time taking source code, building it into a container image and turning it into a deployed application on Kubernetes can be a time consuming process. A large part of the process can be automated with Continuous Integration Systems (CI) and Continuous Deployment(CD) Systems. However there are stages in the build and deployment phases that still need to be defined manually. Most CI systems aren&amp;rsquo;t application aware. They cannot build automated Docker images from source code unless explicitly defined in a spec file like &lt;a href=&#34;https://docs.docker.com/engine/reference/builder/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Dockerfiles&lt;/a&gt; or a config file that a CI system can understand. Due to which, Apart from writing application code, you also need to manually define and test Dockerfiles or config files to convert source code into an executable container image. When deploying the image onto Kubernetes, you need to then define various Kubernetes constructs needed to run the application. Like &lt;a href=&#34;https://kubernetes.io/docs/concepts/workloads/controllers/deployment/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Deployments&lt;/a&gt;, &lt;a href=&#34;https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;StatefulSets&lt;/a&gt;, &lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/service/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Services&lt;/a&gt;, &lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/ingress/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ingress&lt;/a&gt; etc. This process can add errors, security gaps and overhead.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/cnbp-knative-argocd/dev-process.png&#34; alt=&#34;Building and Running Applications on Kubernetes&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;In this Guide we are going to show how to automate building of Container Images and buildout of Kubernetes Resources using Cloud Native Buildpacks and Knative respectively. We will also demonstrate how this can process can be further optimized using &lt;strong&gt;GitOps&lt;/strong&gt; style practices via ArgoCD. We will work with a sample application based on Spring and run the application on Kubernetes with an addressable URL. We will use:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://buildpacks.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Native Buildpacks&lt;/a&gt; to automate Container Image build process. Cloud Native Buildpacks is a specification that defines how OCI compliant containers can be build, removing the need to specify or build &lt;code&gt;Dockerfiles&lt;/code&gt;. They can automatically detect the language an application is written in and determine the best and most secure way to package applications in a container image. Cloud Native Buildpacks can also be used to update container images easily for any changes. For this guide we will use an implementation of Cloud Native Buildpacks called &lt;a href=&#34;https://github.com/pivotal/kpack&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kpack&lt;/a&gt;. kpack lets you use deploy Cloud Native Buildpacks on a Kubernetes Cluster. (See &lt;a href=&#34;../../containers/cnb-what-is/&#34;&gt;What are Cloud Native Buildpacks?&lt;/a&gt; for more on Cloud Native Buildpacks, and kpack.)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://knative.dev/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Knative&lt;/a&gt; to automatically generate an Ingress Service with URL and other Kubernetes Resources for the container image that was built using Cloud Native Buildpacks. Knative Serving automates the process of creating Kubernetes objects needed for an application like Deployment, Replicasets, Services etc.,  eliminating the need to write complex Kubernetes YAML files.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://argoproj.github.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ArgoCD&lt;/a&gt; to automate deployment pipeline pushing container images on to Kubernetes using Knative. ArgoCD helps deploy application continuously using GitOps methodology. It can take specifications like Kubernetes resources, Knative, Kustomize etc. to deploy application on Kubernetes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A sample application called &lt;a href=&#34;https://github.com/Boskey/spring-petclinic&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Petclinic&lt;/a&gt; that is based on &lt;a href=&#34;https://spring.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://kind.sigs.k8s.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kind&lt;/a&gt; as a local Kubernetes Cluster&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In summary, our overall workflow will be to take the sample application in Spring, use Cloud Native Buildpacks/kpack to convert source code into a container image, use Knative Serving to create a deployment using ArgoCD. This process will eliminate the need to write &lt;code&gt;Dockerfiles&lt;/code&gt; or any &lt;code&gt;Kubernetes&lt;/code&gt; resource &lt;code&gt;YAML&lt;/code&gt; files.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and prerequisites&lt;/h2&gt;
+&lt;p&gt;There are a few things you will need before getting started&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;You have &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl&lt;/a&gt;, a tool to interact with Kubernetes Cluster installed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.docker.com/products/docker-desktop&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Desktop&lt;/a&gt; is installed on your laptop/machine with at least 4 GB of memory and 4 CPU&amp;rsquo;s allocated to Docker Resources.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You have access to &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Hub Repository&lt;/a&gt; to store container images.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You have an account in &lt;a href=&#34;https://github.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Github&lt;/a&gt; to clone the app &lt;em&gt;Petclinic&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1-prepare-a-kubernetes-cluster-and-clone-sample-application&#34;&gt;1. Prepare a Kubernetes Cluster and clone Sample Application&lt;/h3&gt;
+&lt;p&gt;We will deploy a Kind cluster using Docker Desktop and install &lt;a href=&#34;https://projectcontour.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Contour&lt;/a&gt; on it to help provide Ingress management. Contour along with &lt;a href=&#34;https://www.envoyproxy.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Envoy&lt;/a&gt; Proxy will help create service and URL management for Knative.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;brew install kind
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Create a Kubernetes Cluster called &lt;em&gt;tdp-guide&lt;/em&gt; and set &lt;strong&gt;Kubectl&lt;/strong&gt; context to &lt;em&gt;tdp-guide&lt;/em&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kind create cluster --name tdp-guide
+kubectl cluster-info --context kind-tdp-guide
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Log onto Github and Fork the repository for our sample app &lt;a href=&#34;https://github.com/Boskey/spring-petclinic&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Petclinic&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;2-install-knative-serving&#34;&gt;2. Install Knative Serving&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f https://github.com/knative/serving/releases/download/v0.22.0/serving-crds.yaml
+kubectl apply -f https://github.com/knative/serving/releases/download/v0.22.0/serving-core.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;3-install-contour-ingress-controller&#34;&gt;3. Install Contour Ingress Controller&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f https://github.com/knative/net-contour/releases/download/v0.22.0/contour.yaml
+kubectl apply -f https://github.com/knative/net-contour/releases/download/v0.22.0/net-contour.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Change Knative Serving config to use Contour Ingress&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl patch configmap/config-network \
+  --namespace knative-serving \
+  --type merge \
+  --patch &#39;{&amp;quot;data&amp;quot;:{&amp;quot;ingress.class&amp;quot;:&amp;quot;contour.ingress.networking.knative.dev&amp;quot;}}&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;4-install-and-configure-cloud-native-buildpack-using-kpack&#34;&gt;4. Install and Configure Cloud Native Buildpack using &lt;em&gt;kpack&lt;/em&gt;&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f https://github.com/pivotal/kpack/releases/download/v0.2.2/release-0.2.2.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Cloud Native Buildpacks will need a Repository to Store container images that it will be building. This could be any OCI compliant repository, for this guide we will use Docker Hub. You can easily create and account in Docker Hub if you don&amp;rsquo;t have one.&lt;/p&gt;
+&lt;p&gt;We need to create a Docker Hub account credentials &lt;em&gt;secret&lt;/em&gt; in Kubernetes. Use the below command and change the &lt;code&gt;docker-username&lt;/code&gt; to the your repo name in Docker Hub. Change the &lt;code&gt;docker-password&lt;/code&gt; to your account password.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create secret docker-registry tutorial-registry-credentials \
+    --docker-username=abc \
+    --docker-password=********* \
+    --docker-server=https://index.docker.io/v1/\
+    --namespace default
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Cloud Native Buildpacks create Container images using a &lt;code&gt;builder&lt;/code&gt; that uses a predefined &lt;code&gt;stack&lt;/code&gt; of container image layers. You can define custom stack, store and builders. For this guide, we are using standard definitions.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f https://raw.githubusercontent.com/Boskey/spring-petclinic/main/kpack-config/sa.yaml
+kubectl apply -f https://raw.githubusercontent.com/Boskey/spring-petclinic/main/kpack-config/store.yaml
+kubectl apply -f https://raw.githubusercontent.com/Boskey/spring-petclinic/main/kpack-config/stack.yaml
+kubectl apply -f https://raw.githubusercontent.com/Boskey/spring-petclinic/main/kpack-config/builder.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;5-install-and-configure-argocd&#34;&gt;5. Install and Configure ArgoCD&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Install ArgoCD CLI&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;brew install argocd
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Since ArgoCD is installed on a Kind cluster, it does not have a &lt;em&gt;Kubernetes Load Balancing Service type&lt;/em&gt; to expose the ArgoCD service. We will manually expose the ArgoCD service using &lt;code&gt;port-forward&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;On a new Terminal,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl port-forward svc/argocd-server -n argocd 8080:443
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Fetch ArgoCD credentials to login via CLI&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=&amp;quot;{.data.password}&amp;quot; | base64 -d
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Copy the output of the above command, that is the &lt;code&gt;admin&lt;/code&gt; password for ArgoCD
+Login to ArgoCD&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd login localhost:8080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;em&gt;username: &lt;code&gt;admin&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;password: &lt;code&gt;&amp;lt;copy-paste from the command above&amp;gt;&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;We have now installed Knative Serving, Cloud Native Buildpacks and ArgoCD. Its time to implement a workflow that will take our source code and convert it into a URL.&lt;/p&gt;
+&lt;h3 id=&#34;6-build-container-image-using-cloud-native-buildpacks&#34;&gt;6. Build Container Image using Cloud Native Buildpacks&lt;/h3&gt;
+&lt;p&gt;We will be using the &lt;em&gt;Petclinic&lt;/em&gt; app, the file &lt;code&gt;petclinic-image-build.yaml&lt;/code&gt; tells kpack where the source code is via the &lt;code&gt;spec.source.git.url&lt;/code&gt; , where to upload and what tag to use for the final container image using &lt;code&gt;spec.tag&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Copy this file and change the &lt;code&gt;spec.tag&lt;/code&gt; to your &lt;code&gt;&amp;lt;docker-repo&amp;gt;/&amp;lt;app-name&amp;gt;&lt;/code&gt; and change the &lt;code&gt;spec.source.git.url&lt;/code&gt; to your Git Repo for Petclinic you forked in Step 1&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;apiVersion: kpack.io/v1alpha1
+kind: Image
+metadata:
+  name: petclinic-image
+  namespace: default
+spec:
+  tag: boskey/app
+  serviceAccount: tutorial-service-account
+  builder:
+    name: my-builder
+    kind: Builder
+  source:
+    git:
+      url: https://github.com/spring-projects/spring-petclinic
+      revision: 82cb521d636b282340378d80a6307a08e3d4a4c4
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Apply the file using &lt;code&gt;Kubectl&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;kubectl apply -f petclinic-image-build.yaml&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This process will take around 5 -10 Minutes to finish depending on the resources Docker Desktop has. Keep watching the images CRD to see if the images is finished building.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get images.kpack.io
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once the image is build you should see the output of the Docker Hub URL where the Container image is located. The output should be similar to this.
+Capture the Image location from your command to list images.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[bsavla] ci-cd 🐘kubectl get images.kpack.io
+NAME        LATESTIMAGE                                                                                          READY
+ttv-image   index.docker.io/boskey/app@sha256:949a72120f888b2f37fdf3be0c439422ce4d2225529aa533aae6f6cb85da9424   True
+[bsavla] ci-cd 🐘
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;7-update-knative-service-definition&#34;&gt;7. Update Knative Service Definition&lt;/h3&gt;
+&lt;p&gt;So far we have built a container image based on the sample app &lt;em&gt;Petclinic&lt;/em&gt;, Now we will deploy the app onto Kubernetes via Knative Serving. ArgoCD will help us automate the deployment. We now need to define a &lt;code&gt;knative-serving&lt;/code&gt; spec for our app. The Git repository you forked already has the below spec in a file called &lt;code&gt;knative-service.yaml&lt;/code&gt; under the &lt;code&gt;knative&lt;/code&gt; folder. This spec file tells Knative where to fetch the container image for the application that needs to be deployed on Kubernetes. Edit the file &lt;code&gt;knative-service.yaml&lt;/code&gt; in the Git repository you forked in step 1. Change the &lt;code&gt;image&lt;/code&gt; property to the image URL you got from kpack (step 6). The file should be under the folder &lt;code&gt;knative&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: petclinic-knative # The name of the app
+  namespace: default # The namespace the app will use
+spec:
+  template:
+    spec:
+      containers:
+       - image: index.docker.io/boskey/app@sha256:9595c435357a6105bbd26405d6eaa15bd6a7d4ae4b2e5f42946b169ef9257f76  # generated by kpack
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;8-use-argocd-to-deploy-application&#34;&gt;8. Use ArgoCD to deploy application.&lt;/h3&gt;
+&lt;p&gt;Let&amp;rsquo;s create an application using ArgoCD, &lt;strong&gt;Replace the  &lt;code&gt;--repo&lt;/code&gt; URL with the Github repo you forked in Step 1&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd app create petclinic --repo https://github.com/Boskey/spring-petclinic.git --path knative --dest-server https://kubernetes.default.svc --dest-namespace default
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This tells ArgoCD to create an application called &lt;em&gt;petclinic&lt;/em&gt; on the local cluster and the &lt;em&gt;&lt;code&gt;--path&lt;/code&gt;&lt;/em&gt; variable tells ArgoCD &lt;em&gt;how&lt;/em&gt; to deploy. In our case the &lt;code&gt;--path&lt;/code&gt; variable points to the &lt;code&gt;knative-serving&lt;/code&gt; specification. So ArgoCD will pass the &lt;code&gt;knative-serving&lt;/code&gt; specification to the local Kubernetes cluster, where the CRD for Knative will understand how to deploy the application and will automatically create Deployments, resource pools, Services etc.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s Sync the app in ArgoCD&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd app sync petclinic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will deploy PetClinic on the Kubernetes Cluster along with a URL petclinic-knative.default.example.com. You can look at all the resource that were created&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get all
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can look at the application deployed.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl -n contour-external port-forward svc/envoy 8080:80 
+curl -H &amp;quot;Host: petclinic-knative.default.example.com&amp;quot; localhost:8080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you want to look at the application on your browser, create a DNS entry in your &lt;code&gt;/etc/hosts&lt;/code&gt; file as below&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;127.0.0.1       petclinic-knative.default.example.com
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And browse to &lt;a href=&#34;http://localhost:8080&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:8080&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;You should see the Petclinic Application deployed there.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s say you have an update to the PetClinic application, you apply your changes and push them to the repo on Github. To deploy the newer version, all you have to do is create a new container image using &lt;code&gt;kpack&lt;/code&gt; and update the knative-serving specification file with the new image location at &lt;code&gt;knative-service.yaml&lt;/code&gt;. When synced, ArgoCD will detect the change in the file, and re-deploy the application with the newer container image using knative-serving. Knative will detect that this is an updated version of the same application and will deploy the new version with an updated revision.&lt;/p&gt;
+&lt;p&gt;You can also create a new deployment for different pipelines like &lt;code&gt;staging&lt;/code&gt; by creating a new application in ArgoCD and pointing them to the same &lt;code&gt;knative-service.yaml&lt;/code&gt; file.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with the pack CLI using Cloud Native Buildpacks</title>
+      
+      <link>/guides/containers/cnb-gs-pack/</link>
+      <pubDate>Thu, 16 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/containers/cnb-gs-pack/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://github.com/buildpacks/pack&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;pack&lt;/code&gt;&lt;/a&gt; is a command line interface (CLI) tool that builds container images locally on your developer machine using &lt;a href=&#34;../cnb-what-is&#34;&gt;Cloud Native Buildpacks&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;There are a few things you need to do before getting started with &lt;code&gt;pack&lt;/code&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Install &lt;a href=&#34;https://hub.docker.com/search?type=edition&amp;amp;offering=community&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Desktop&lt;/a&gt;. The &lt;code&gt;pack&lt;/code&gt; CLI requires the Docker daemon, so you&amp;rsquo;ll need to have that installed and running locally.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check out &lt;a href=&#34;https://kube.academy/courses/containers-101&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Containers 101&lt;/a&gt; on KubeAcademy, particularly if you&amp;rsquo;ve never worked with containers or Docker before.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Follow the documentation for &lt;a href=&#34;https://buildpacks.io/docs/install-pack/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;installing &lt;code&gt;pack&lt;/code&gt;&lt;/a&gt; in your local environment.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;using-pack&#34;&gt;Using &lt;code&gt;pack&lt;/code&gt;&lt;/h2&gt;
+&lt;h3 id=&#34;build-image-from-working-directory&#34;&gt;Build Image from Working Directory&lt;/h3&gt;
+&lt;p&gt;To generate a container image, use &lt;code&gt;pack build&lt;/code&gt;. The following commands will clone a sample Java repository, change to the app directory, and build the container image from this working directory.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/buildpacks/samples
+
+cd samples/apps/java-maven
+
+pack build myapp
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;build-image-from-specified-path&#34;&gt;Build Image from Specified Path&lt;/h3&gt;
+&lt;p&gt;Alternatively, you may point to the app path using the &lt;code&gt;-p&lt;/code&gt; option:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/buildpacks/samples
+
+pack build myapp -p samples/apps/java-maven
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;run-image-locally&#34;&gt;Run Image Locally&lt;/h3&gt;
+&lt;p&gt;After you&amp;rsquo;ve built your image locally, test it out with Docker using the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;docker run --rm -p 8080:8080 myapp
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Visit &lt;code&gt;localhost:8080&lt;/code&gt; in your favorite browser to see the app running.&lt;/p&gt;
+&lt;h3 id=&#34;publish-image-to-repository&#34;&gt;Publish Image to Repository&lt;/h3&gt;
+&lt;p&gt;If you are logged into a container registry from your local machine via Docker Desktop, you can build your image and publish to a remote registry at the same time using the &lt;code&gt;--publish&lt;/code&gt; option. Just make sure to clarify the &lt;code&gt;username&lt;/code&gt; before the app name:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pack build username/myapp -p samples/apps/java-maven --publish
+&lt;/code&gt;&lt;/pre&gt;
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with kpack to Automate Builds using Cloud Native Buildpacks</title>
+      
+      <link>/guides/containers/cnb-gs-kpack/</link>
+      <pubDate>Thu, 16 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/containers/cnb-gs-kpack/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://github.com/pivotal/kpack&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;kpack&lt;/code&gt;&lt;/a&gt; is a Kubernetes-native build service that builds container images on Kubernetes using &lt;a href=&#34;../cnb-what-is&#34;&gt;Cloud Native Buildpacks&lt;/a&gt;. It takes source code repositories (like GitHub), builds the code into a container image, and uploads it to the container registry of your choice.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;There are a few things you need to do before getting started with &lt;code&gt;kpack&lt;/code&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Have access to a Kubernetes cluster. If you don&amp;rsquo;t, you can use local options like &lt;a href=&#34;https://hub.docker.com/search?type=edition&amp;amp;offering=community&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Desktop&lt;/a&gt; or &lt;a href=&#34;https://github.com/kubernetes/minikube&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Minikube&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check out &lt;a href=&#34;https://kube.academy/courses/getting-started&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with Kubernetes&lt;/a&gt; on KubeAcademy, particularly if you&amp;rsquo;ve never worked with Kubernetes before.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Optionally &lt;a href=&#34;https://github.com/wercker/stern/releases&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;install &lt;code&gt;stern&lt;/code&gt;&lt;/a&gt;, a tool that makes it easy to tail the logs during builds.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Command to install with Homebrew on Mac OS &lt;code&gt;brew install stern&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have the &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl CLI&lt;/a&gt; to interact with your cluster.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Command to install with Homebrew on Mac OS &lt;code&gt;brew install kubectl&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Accessible Docker V2 Registry, &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;DockerHub&lt;/a&gt; will suffice it is free and creating an account is easy.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Follow the documentation for &lt;a href=&#34;https://github.com/pivotal/kpack/blob/master/docs/install.md/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;installing &lt;code&gt;kpack&lt;/code&gt;&lt;/a&gt; in your Kubernetes cluster.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;initial-kpack-configuration&#34;&gt;Initial &lt;code&gt;kpack&lt;/code&gt; Configuration&lt;/h2&gt;
+&lt;p&gt;Among the things you will need before you get started are a code repository with compatible code (I&amp;rsquo;m using Spring Java in this case) and a container registry (I&amp;rsquo;m using Google GCR).&lt;/p&gt;
+&lt;p&gt;To make sure your &lt;code&gt;kpack&lt;/code&gt; environment is ready after following the install instructions above, run.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get pods --namespace kpack --watch
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;using-kpack&#34;&gt;Using &lt;code&gt;kpack&lt;/code&gt;&lt;/h2&gt;
+&lt;h3 id=&#34;set-up-container-registry-secret&#34;&gt;Set Up Container Registry Secret&lt;/h3&gt;
+&lt;p&gt;The first thing you need to do is tell &lt;code&gt;kpack&lt;/code&gt; how to access the container registry to upload the completed images when they&amp;rsquo;re done.&lt;/p&gt;
+&lt;p&gt;You&amp;rsquo;ll need a secret with credentials to access GCR, so you&amp;rsquo;ll create a manifest like this and apply it with &lt;code&gt;kubectl apply -f&lt;/code&gt;.&lt;/p&gt;
+
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	gcr-registry-credentials.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;Save and apply your secret&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f gcr-registry-credentials.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Secret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr-registry-credentials&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;annotations&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kpack.io/docker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;us.gcr.io&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kubernetes.io/basic-auth&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;stringData&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;_json_key&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    {
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;        &amp;lt;GCP JSON Credentials Go Here&amp;gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    }&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	dockerhub-registry-credentials.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;Save and apply your secret&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f dockerhub-registry-credentials.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Secret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dockerhub-registry-credentials&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;annotations&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kpack.io/docker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;https://index.docker.io/v1/&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kubernetes.io/basic-auth&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;stringData&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;lt;username&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;lt;password&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;For more details see the &lt;a href=&#34;https://github.com/pivotal/kpack/blob/master/docs/secrets.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;kpack&lt;/code&gt; secrets documentation.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Also note the annotation of &lt;code&gt;kpack.io/docker&lt;/code&gt;; it tells &lt;code&gt;kpack&lt;/code&gt; which registries to use these credentials for. In the case of &lt;code&gt;gcr-registry-credentials.yaml&lt;/code&gt;, any image tagged for &lt;code&gt;us.gcr.io.&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;set-up-container-registry-service-account&#34;&gt;Set Up Container Registry Service Account&lt;/h3&gt;
+&lt;p&gt;Now you need a service account referencing those credentials in your secret. The manifest is pretty simple:&lt;/p&gt;
+
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	gcr-registry-service-account.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;Apply your new service account.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f gcr-registry-credentials.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ServiceAccount&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr-registry-service-account&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secrets&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr-registry-credentials&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;imagePullSecrets&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr-registry-credentials&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	dockerhub-service-account.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;Apply your new service account.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f dockerhub-registry-credentials.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ServiceAccount&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dockerhub-service-account&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secrets&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dockerhub-registry-credentials&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;imagePullSecrets&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dockerhub-registry-credentials&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;create-your-store&#34;&gt;Create your Store&lt;/h3&gt;
+&lt;p&gt;A store is a repository of &lt;a href=&#34;http://buildpacks.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;buildpacks&lt;/a&gt; packaged into &lt;a href=&#34;https://buildpacks.io/docs/buildpack-author-guide/package-a-buildpack/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;buildpackages&lt;/a&gt; that kpack uses to build images.
+You can add more languages by including more buildpacks you create or from &lt;a href=&#34;https://github.com/paketo-buildpacks&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Paketo Buildpacks&lt;/a&gt; we have only included a few bellow.&lt;/p&gt;
+&lt;p&gt;The store will be referenced by a builder resource.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f store.yaml 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	store.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kpack.io/v1alpha1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterStore&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;sources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/java&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/graalvm&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/java-azure&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/nodejs&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/dotnet-core&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/go&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/php&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr.io/paketo-buildpacks/nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;apply-a-cluster-stack&#34;&gt;Apply a Cluster Stack&lt;/h3&gt;
+&lt;p&gt;A &lt;a href=&#34;https://buildpacks.io/docs/concepts/components/stack/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;stack&lt;/a&gt; provides the buildpack lifecycle with build-time and run-time environments in the form of images.&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&#34;https://github.com/buildpacks/pack&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pack CLI&lt;/a&gt; command: &lt;code&gt;pack suggest-stacks&lt;/code&gt; will display a list of recommended stacks that can be used. We recommend starting with the &lt;code&gt;io.buildpacks.stacks.bionic&lt;/code&gt; base stack.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f stack.yaml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	stack.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kpack.io/v1alpha1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterStack&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;base&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;io.buildpacks.stacks.bionic&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;buildImage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;paketobuildpacks/build:base-cnb&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;runImage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;paketobuildpacks/run:base-cnb&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;apply-a-builder&#34;&gt;Apply a Builder&lt;/h3&gt;
+&lt;p&gt;A builder is an image that bundles all the bits and information on how to build your apps, like&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A buildpack&lt;/li&gt;
+&lt;li&gt;An implementation of the lifecycle&lt;/li&gt;
+&lt;li&gt;A build-time environment that platforms may use to execute the lifecycle&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;kpack will push the builder image to your registry.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f builder.yaml 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	builder.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;ul&gt;
+&lt;li&gt;Change &lt;code&gt;spec.serviceAccount&lt;/code&gt; to your service account&amp;rsquo;s name.&lt;/li&gt;
+&lt;li&gt;Change &lt;code&gt;spec.tag&lt;/code&gt; to your registry address appending &lt;code&gt;/builder&lt;/code&gt; or a name of your choosing to hold your builder.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kpack.io/v1alpha1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Builder&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;my-builder&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;serviceAccount&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dockerhub-registry-service-account&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;tag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;index.docker.io/&amp;lt;docker-hub-repo&amp;gt;/&amp;lt;builder&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;stack&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;base&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterStack&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;store&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterStore&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/java&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/java-azure&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/graalvm&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/nodejs&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/dotnet-core&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/go&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/php&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;paketo-buildpacks/nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;create-an-image-configuration&#34;&gt;Create an Image Configuration&lt;/h3&gt;
+&lt;p&gt;Now you&amp;rsquo;re all ready to start building images and pushing them to your registry. To create a manifest that builds containers off the application code on GitHub:&lt;/p&gt;
+
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	gcr-image.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;Applying your image yaml will enable automation to build your new image.
+This build will take a few minutes and will be subsequently faster each time you run as it has a cache.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f gcr-image.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Change &lt;code&gt;spec.tag&lt;/code&gt; to your registry address appending &lt;code&gt;/app&lt;/code&gt; or a name of your choosing to hold your app.&lt;/li&gt;
+&lt;li&gt;Change &lt;code&gt;spec.serviceAccount&lt;/code&gt; to your service account&amp;rsquo;s name.&lt;/li&gt;
+&lt;li&gt;At &lt;code&gt;spec.source.git.url&lt;/code&gt; is the source code repo being used to build the app.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;spec.source.git.revision&lt;/code&gt; is the commit tag used to build, a change here will trigger a new build!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;build.pivotal.io/v1alpha1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Image&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;petclinic-image&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;tag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;us.gcr.io/&amp;lt;project&amp;gt;/&amp;lt;spring-petclinic&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;serviceAccount&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;gcr-registry-service-account&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Builder&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;source&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;git&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;https://github.com/spring-projects/spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;revision&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;82cb521d636b282340378d80a6307a08e3d4a4c4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+
+&lt;div class=&#34;expand&#34;&gt;
+    &lt;div class=&#34;expand-label&#34; style=&#34;cursor: pointer;&#34; onclick=&#34;$h = $(this);$h.next(&#39;div&#39;).slideToggle(100,function () {$h.children(&#39;i&#39;).attr(&#39;class&#39;,function () {return $h.next(&#39;div&#39;).is(&#39;:visible&#39;) ? &#39;fas fa-chevron-down&#39; : &#39;fas fa-chevron-right&#39;;});});&#34;&gt;
+        &lt;i style=&#34;font-size:x-small;&#34; class=&#34;fas fa-chevron-right&#34;&gt;&lt;/i&gt;
+        &lt;span&gt;
+        
+    	
+    	dockerhub-image.yaml
+    	
+    	&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;expand-content&#34; style=&#34;display: none;&#34;&gt;
+        &lt;p&gt;Applying your image yaml will enable automation to build your new image.
+This build will take a few minutes and will be subsequently faster each time you run as it has a cache.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f dockerhub-image.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Change &lt;code&gt;spec.tag&lt;/code&gt; to your registry address appending &lt;code&gt;/app&lt;/code&gt; or a name of your choosing to hold your app.&lt;/li&gt;
+&lt;li&gt;Change &lt;code&gt;spec.serviceAccount&lt;/code&gt; to your service account&amp;rsquo;s name.&lt;/li&gt;
+&lt;li&gt;At &lt;code&gt;spec.source.git.url&lt;/code&gt; is the source code being used to build the app.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;spec.source.git.revision&lt;/code&gt; is the commit used to build, a change here will trigger a new build!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;kpack.io/v1alpha1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Image&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;petclinic-image&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;tag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;index.docker.io/&amp;lt;docker-hub-repo&amp;gt;/app&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;serviceAccount&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dockerhub-service-account&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;my-builder&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Builder&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;source&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;git&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;https://github.com/spring-projects/spring-petclinic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;revision&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;82cb521d636b282340378d80a6307a08e3d4a4c4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can see the GitHub URL, and that you&amp;rsquo;re building off master. Also, you configured the desired image tag (including the registry) and included the service account and builders you created. Once you apply this manifest, it will begin building.&lt;/p&gt;
+&lt;p&gt;By running &lt;code&gt;kubectl get images&lt;/code&gt; you should see the image created but not complete:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;NAME              LATESTIMAGE   READY
+petclinic-image                 Unknown
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;watching-the-build&#34;&gt;Watching the Build&lt;/h3&gt;
+&lt;p&gt;If you run a &lt;code&gt;kubectl get pods&lt;/code&gt;, you&amp;rsquo;ll see a pod created (with a series of init containers) to build the image.&lt;/p&gt;
+&lt;p&gt;Since it includes six different containers, it&amp;rsquo;s hard to use &lt;code&gt;kubectl logs&lt;/code&gt; because you have to know which container to specify at which stage. It&amp;rsquo;s much easier to use the &lt;code&gt;stern&lt;/code&gt; tool mentioned at the beginning.&lt;/p&gt;
+&lt;p&gt;The pod that is created has a name that starts with &lt;code&gt;image-name-build&lt;/code&gt;; so in this case, &lt;code&gt;petclinic-image-build.&lt;/code&gt; The command to run to see the logs is &lt;code&gt;stern petclinic-image-build,&lt;/code&gt; and you&amp;rsquo;ll see all the logs pass by during the build and upload.&lt;/p&gt;
+&lt;p&gt;Once it&amp;rsquo;s complete you can recheck the image with &lt;code&gt;kubectl get images&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;NAME LATESTIMAGE                                                                                                        READY
+petclinic-image   us.gcr.io/pgtm-tbritten/spring-petclinic@sha256:&amp;lt;sha hash&amp;gt;   True
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can now run &lt;code&gt;docker pull us.gcr.io/&amp;lt;project&amp;gt;/&amp;lt;spring-petclinic&amp;gt;&lt;/code&gt; to download the completed image. Or you can create a Kubernetes manifest to run the image.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;As mentioned in the previous section on image configuration, the &lt;code&gt;spec.source.git.revision&lt;/code&gt; is the commit used to build, try changing it to trigger a new build!&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;bonus---deploy-your-app-to-kubernetes&#34;&gt;Bonus - Deploy your app to Kubernetes&lt;/h3&gt;
+&lt;p&gt;kpack is best used in conjunction with a CI/CD tool, but if you want to deploy your app to Kubernetes now you can very easily.&lt;/p&gt;
+&lt;p&gt;You will reuse your secret with your registry and pull from the repository that holds the container image.  You created this repo in the &lt;em&gt;Create an Image Configuration&lt;/em&gt; section and can be found at  &lt;code&gt;spec.tag&lt;/code&gt; place it after &lt;code&gt;--image=$DH_USERNAME/app&lt;/code&gt; .&lt;/p&gt;
+&lt;p&gt;Create a deployment with the image kpack made with your source code&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create deployment kpack-demo --image=&amp;lt;registry-name&amp;gt;/&amp;lt;app-repo&amp;gt;      
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To verify deployment&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get deployments                                          
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Expose the Pod to the public internet using the kubectl expose command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl expose deployment kpack-demo --type=LoadBalancer --port=8080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;--type=LoadBalancer&lt;/code&gt; flag exposes your Service outside of the cluster.
+The application code inside the image &lt;code&gt;k8s.gcr.io/echoserver&lt;/code&gt; only listens on TCP port 8080.&lt;/p&gt;
+&lt;p&gt;To verify your service&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get services                
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;On cloud providers that support load balancers, an external IP address would be provisioned to access the Service.&lt;/p&gt;
+&lt;p&gt;On minikube, the LoadBalancer type makes the Service accessible using:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;minikube service kpack-demo                                         
+&lt;/code&gt;&lt;/pre&gt;
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Deploy Cloud Native Apps Using GitLab CI/CD and Cloud Native Buildpacks</title>
+      
+      <link>/guides/ci-cd/gitlab-ci-cd-cnb/</link>
+      <pubDate>Thu, 11 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/ci-cd/gitlab-ci-cd-cnb/</guid>
+      <description>
+
+        
+        &lt;p&gt;GitLab is a single application built from the ground up for all stages of the DevOps lifecycle that enables  product, development, QA, security, and operations teams to work on the same project concurrently. It provides teams with a single data store, user interface, and permission model across the DevOps lifecycle. Teams can collaborate and work on a project utilizing a single conversation, which significantly reduces cycle time, allowing developers to focus exclusively on building great software quickly.
+This tutorial will explain how to create a sample CI/CD pipeline in GitLab and use Cloud Native Buildpacks to package the project source code into deployable containers.&lt;/p&gt;
+&lt;h2 id=&#34;what-are-cloud-native-buildpacks&#34;&gt;What Are Cloud Native Buildpacks?&lt;/h2&gt;
+&lt;p&gt;Traditionally, in the build stage of the CI/CD cycle, the source code and its dependencies are packaged into containers that can be deployed against any proper container-hosting platform, either on-prem or in the cloud. A Dockerfile is usually used to pass all the commands required to assemble an image.&lt;/p&gt;
+&lt;p&gt;The challenge with this process—especially for large-scale deployments done frequently—is making sure that each and every build is identical and complies with the security, software currency, and build rules of the organization.&lt;/p&gt;
+&lt;p&gt;This is where buildpacks come in. A buildpack represents a package of all the tools and scripts required to produce a &lt;a href=&#34;https://www.opencontainers.org&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;standards-based&lt;/a&gt;, compliant container runtime.  The result is that developers no longer need to worry about maintaining Dockerfiles, and operators can make sure that all the containers are built using standard, preconfigured, tested, and approved images.
+Not only that, because the software development is now abstracted from the underlying build process, it is possible to run a complete rebase for a whole environment (dev, test, staging, production) whether as part of a planned OS upgrade/patching process or in response to a newly identified vulnerability.&lt;/p&gt;
+&lt;h2 id=&#34;how-to-use-cloud-native-buildpacks-with-gitlab-cicd&#34;&gt;How to Use Cloud Native Buildpacks with GitLab CI/CD&lt;/h2&gt;
+&lt;p&gt;GitLab pipelines are defined in the &lt;code&gt;.gitlab-ci.yml&lt;/code&gt; file; they consist of one or more jobs grouped into stages. If no stages are defined in a pipeline, the following three are assumed: build, test, and deploy. The jobs defined in the &lt;code&gt;.gitlab-ci.yml&lt;/code&gt; file handle the CI/CD tasks required to get the code built, tested, verified, staged, and deployed to one or more target platforms.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-ci-cd-cnb/screenshots/image3.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;create-a-new-project-in-gitlab-saas--or-using-your-gitlab-instance-if-you-have-a-self-managed-one&#34;&gt;Create a New Project in GitLab SaaS  (or Using Your GitLab Instance If You Have a Self-Managed One)&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to GitLab.com.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click on “New Project.”&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-ci-cd-cnb/screenshots/image8.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;As we are going to use Cloud Native Buildpacks, let’s create the new project based on the Spring project template by clicking “Create from Template” and then choosing the Spring template. This will create a sample Java Spring project, which by default will include a Dockerfile.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-ci-cd-cnb/screenshots/image10.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-ci-cd-cnb/screenshots/image12.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;As we are going to use a buildpack to build the project, let’s rename the Dockerfile to &lt;code&gt;backup-dockerfile&lt;/code&gt; to ensure it won’t be used during the build process. The easiest way to do this is to click the Web IDE link in the top right.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-ci-cd-cnb/screenshots/image5.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;ol start=&#34;5&#34;&gt;
+&lt;li&gt;Click the down arrow next to &lt;code&gt;Dockerfile&lt;/code&gt;, and rename &lt;code&gt;Dockerfile&lt;/code&gt; to &lt;code&gt;backup-dockerfile&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-ci-cd-cnb/screenshots/image4.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;In GitLab, the project pipeline is configured in the &lt;code&gt;.gitlab-ci.yml&lt;/code&gt; file. To add a pipeline file to the project, click the new file icon, and in the “Create New File” dialog click  &lt;code&gt;.gitlab-ci.yml&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-ci-cd-cnb/screenshots/image11.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-ci-cd-cnb/screenshots/image7.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;ol start=&#34;7&#34;&gt;
+&lt;li&gt;
+&lt;p&gt;To add GitLab Auto DevOps templates, click the template dropdown and choose “Auto DevOps Template.”&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;This is the whole &lt;a href=&#34;https://docs.gitlab.com/ee/topics/autodevops/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GitLab Auto DevOps&lt;/a&gt; template, which was built by GitLab engineers based on CI/CD best practices. Auto DevOps aims to simplify the setup and execution of a mature and modern software development lifecycle, but as using the whole Auto DevOps template covers every stage in the CI/CD lifecycle and requires a GitLab Ultimate license, we will trim down the &lt;code&gt;.gitlab-ci.yml&lt;/code&gt; file to only include the build stage. To that end, remove all but the following in the &lt;code&gt;include&lt;/code&gt; section:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Jobs/Build.gitlab-ci.yml &lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/Build.gitlab-ci.yml&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;9&#34;&gt;
+&lt;li&gt;
+&lt;p&gt;In order to instruct the build job to use Cloud Native Buildpacks, add &lt;code&gt;AUTO_DEVOPS_BUILD_IMAGE_CNB_ENABLED: &amp;quot;true&amp;quot;&lt;/code&gt; under the variables section.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;By default, the &lt;code&gt;heroku/buildpacks:18&lt;/code&gt; builder will be used to build the output containers. This can be changed by assigning a different builder to the &lt;code&gt;AUTO_DEVOPS_BUILD_IMAGE_CNB_BUILDER&lt;/code&gt; variable, for example, &lt;code&gt;AUTO_DEVOPS_BUILD_IMAGE_CNB_BUILDER: paketobuildpacks/builder:base&lt;/code&gt;. If you have the &lt;code&gt;pack&lt;/code&gt; CLI installed locally, you can see all of the suggested buildpacks by running &lt;code&gt;pack builder suggest&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;Suggested builders:
+	Google:                gcr.io/buildpacks/builder:v1      Ubuntu &lt;span class=&#34;m&#34;&gt;18&lt;/span&gt; base image with buildpacks &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; .NET, Go, Java, Node.js, and Python                                              
+	Heroku:                heroku/buildpacks:18              heroku-18 base image with buildpacks &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; Ruby, Java, Node.js, Python, Golang, and PHP                                       
+	Paketo Buildpacks:     paketobuildpacks/builder:base     Ubuntu bionic base image with buildpacks &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; Java, .NET Core, NodeJS, Go, Ruby, NGINX, and Procfile                        
+	Paketo Buildpacks:     paketobuildpacks/builder:full     Ubuntu bionic base image with buildpacks &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; Java, .NET Core, NodeJS, Go, PHP, Ruby, Apache HTTPD, NGINX, and Procfile     
+	Paketo Buildpacks:     paketobuildpacks/builder:tiny     Tiny base image &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;bionic build image, distroless-like run image&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; with buildpacks &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; Java Native Image and Go   
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;11&#34;&gt;
+&lt;li&gt;Pass the environment variables to the running jobs. This can be accomplished several ways:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Directly adding them in the pipeline file (&lt;code&gt;.gitlab-ci.yml&lt;/code&gt;):&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-ci-cd-cnb/screenshots/image6.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Defining them on the pipeline level before running the pipeline:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-ci-cd-cnb/screenshots/image1.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Adding them under &amp;ldquo;Settings&amp;rdquo; in the left menu -&amp;gt; CI/CD, expanding the &amp;ldquo;Variables&amp;rdquo; tab, clicking the edit pen and changing the value to any other buildpack URL (diagram below), then triggering the pipeline again.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-ci-cd-cnb/screenshots/image2.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;ol start=&#34;11&#34;&gt;
+&lt;li&gt;Some buildpacks, like Google and Paketo, make the generated container available on port 8080. So if you are using the Gitlab Deploy template (part of GitLab Auto DevOps), you will need to change the listening port for the readiness probe from &lt;code&gt;5000&lt;/code&gt; (the default in the template) to &lt;code&gt;8080&lt;/code&gt;. This can be done easily by setting an environment variable named &lt;code&gt;HELM_UPGRADE_EXTRA_ARGS&lt;/code&gt; value to &lt;code&gt;--set service.internalPort=8080 --set service.externalPort=8080&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/gitlab-ci-cd-cnb/screenshots/image9.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;use-cloud-native-buildpacks-with-gitlab-in-gitlab-build-job-without-using-the-gitlab-build-template&#34;&gt;Use Cloud Native Buildpacks with GitLab in GitLab Build Job WITHOUT Using the GitLab Build Template&lt;/h3&gt;
+&lt;p&gt;GitLab CI/CD also allows you to use your own build script if you so wish. Let’s look at a build script that reads the &lt;code&gt;AUTO_DEVOPS_BUILD_IMAGE_CNB_BUILDER&lt;/code&gt; environment variable to determine which buildpack to use, which we saw how to set in Step 11:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;build_using_passed_builder&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;build&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;&amp;gt;- &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;if ! docker info &amp;amp;&amp;gt;/dev/null; then&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;if [ -z &amp;#34;$DOCKER_HOST&amp;#34; ] &amp;amp;&amp;amp; [ &amp;#34;$KUBERNETES_PORT&amp;#34; ]; then&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;export DOCKER_HOST=&amp;#39;tcp://localhost:2375&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;fi&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;fi&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;echo $AUTO_DEVOPS_BUILD_IMAGE_CNB_BUILDER&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;&amp;gt;- &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;if [  -z &amp;#34;$AUTO_DEVOPS_BUILD_IMAGE_CNB_BUILDER&amp;#34;]; then&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;export AUTO_DEVOPS_BUILD_IMAGE_CNB_BUILDER=&amp;#39;heroku/buildpacks:18&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;fi&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;wget https://github.com/buildpacks/pack/releases/download/v0.17.0/pack-v0.17.0-linux.tgz&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;tar -xvf pack-v0.17.0-linux.tgz&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;chmod +x pack &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;mv pack /usr/local/bin/&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;pack build $IMAGE --builder $AUTO_DEVOPS_BUILD_IMAGE_CNB_BUILDER &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;docker push $IMAGE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let’s walk through this step by step to make sure we understand exactly what’s happening:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;We first determine where Docker, which will be used to build our code, is running.&lt;/li&gt;
+&lt;li&gt;We then look at the &lt;code&gt;AUTO_DEVOPS_BUILD_IMAGE_CNB_BUILDER&lt;/code&gt; environment variable to determine which buildpack to use. If this variable isn’t set, we default to using &lt;code&gt;heroku/buildpacks:18&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Next, we authenticate against Docker using the &lt;code&gt;CI_JOB_TOKEN&lt;/code&gt; variable provided automatically to us by GitLab.&lt;/li&gt;
+&lt;li&gt;We then download the &lt;code&gt;pack&lt;/code&gt; CLI and make sure it has the proper permissions to make it executable.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;pack&lt;/code&gt; CLI is uses the buildpack defined in the &lt;code&gt;AUTO_DEVOPS_BUILD_IMAGE_CNB_BUILDER&lt;/code&gt; environment variable to build our code, tagging the container with the name we expect to be provided in the &lt;code&gt;IMAGE&lt;/code&gt; variable.&lt;/li&gt;
+&lt;li&gt;Finally, we &lt;code&gt;docker push&lt;/code&gt; the image to the GitLab container registry.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If you save this at &lt;code&gt;jobs/build.gitlab-ci.yml&lt;/code&gt;, for example, you can update your &lt;code&gt;.gitlab-ci.yml&lt;/code&gt; file to use this custom build job instead, with the following change:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;jobs/build.gitlab-ci.yml&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;add-kubernetes-clusters-to-the-gitlab-project&#34;&gt;Add Kubernetes Clusters to the GitLab Project&lt;/h2&gt;
+&lt;p&gt;Kubernetes clusters can be added to the GitLab project so that applications can be deployed to them directly from the CI/CD pipeline. To add to the K8s cluster project, please follow the steps in the &lt;a href=&#34;https://docs.gitlab.com/ee/user/project/clusters/add_remove_clusters.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Add and Removing Kubernetes Cluster&lt;/a&gt; guide.&lt;/p&gt;
+&lt;h2 id=&#34;deploy-the-packaged-container-to-the-kubernetes-clusters&#34;&gt;Deploy the Packaged Container to the Kubernetes Clusters&lt;/h2&gt;
+&lt;p&gt;GitLab automates and simplifies the deployment of containers to Kubernetes through the provided AutoDeploy template. Similar to the AutoBuild template, it’s based on CI/CD best practices and can save operators/developers the hassle of composing and maintaining long deployment scripts and &lt;a href=&#34;/guides/kubernetes/helm-what-is/&#34;&gt;Helm charts&lt;/a&gt;. To use the AutoDeploy template we’ll include the &lt;code&gt;Deploy.gitlab-ci.yml&lt;/code&gt; template under the “include” section in the &lt;code&gt;.gitlab-ci.yml&lt;/code&gt; file, so it will look like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Jobs/Build.gitlab-ci.yml &lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/Build.gitlab-ci.yml&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Jobs/Deploy.gitlab-ci.yml &lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/Deploy.gitlab-ci.yml&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Including the template will once again kick off the pipeline, this time adding a second job to deploy to your Kubernetes cluster.
+While the use of the AutoDeploy template requires a GitLab Ultimate license, you can get one by starting a &lt;a href=&#34;https://about.gitlab.com/free-trial/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;30-day trial license&lt;/a&gt;. Whether you use the AutoDeploy template or write your own build step, you can build CI/DI pipelines for your GitLab projects for free.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: Hello Python, My Old Friend: Revisiting Python in a Cloud-Native Climate</title>
+      
+      <link>/blog/hello-python-my-old-friend-revisiting-python-in-a-cloud-native-climate/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/hello-python-my-old-friend-revisiting-python-in-a-cloud-native-climate/</guid>
+      <description>
+
+        
+        &lt;p&gt;For quite a while now, I’ve kept an eye on &lt;a href=&#34;https://redmonk.com/sogrady/2020/07/27/language-rankings-6-20/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;RedMonk’s programming language rankings&lt;/a&gt; — which track the usage of all programming languages based on data from GitHub, as well as discussion about them on Stack Overflow —— to get insight into the various language trends. In the &lt;a href=&#34;https://redmonk.com/sogrady/2020/02/28/language-rankings-1-20/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;January 2020 update,&lt;/a&gt; something interesting happened: Python reached  No. 2 on the list, taking over Java.&lt;/p&gt;
+&lt;p&gt;As RedMonk pointed out, “[T]he numerical ranking is substantially less relevant than the language’s tier or grouping. In many cases, one spot on the list is not distinguishable from the next.” However, it’s still interesting, especially as Python has continued to hold the No. 2 spot into the latest ranking after spending approximately seven years ranked third or fourth.&lt;/p&gt;
+&lt;p&gt;RedMonk isn’t alone in its findings, either. GitHub’s report, &lt;a href=&#34;https://octoverse.github.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The State of the Octoverse&lt;/a&gt; also ranked Python as the second most-popular language used on that website, just behind JavaScript. Not only that, it also found Python remains among the top 10 fastest-growing languages in the community, despite already having a foothold with developers. In the &lt;a href=&#34;https://www.jetbrains.com/lp/python-developers-survey-2019/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JetBrains Python Developers Survey in 2019&lt;/a&gt;, it found that one of the most popular things developers use Python for is web development, with Flask and Django fighting for the top web framework.&lt;/p&gt;
+&lt;p&gt;At one time Python was my main language of choice. For the past few years, I’ve primarily been a Java developer, and a Ruby developer before that. Since the time that Python was my go-to, the landscape of software development has changed significantly. Microservices-based architecture continued to gain popularity at mach speed and the adoption of serverless began. Perhaps  most significantly, we saw the rise of Kubernetes.&lt;/p&gt;
+&lt;p&gt;So now that Java’s been bumped out of the top spot for more than six months running, it seems like an especially good time to revisit how to build an application in Python.&lt;/p&gt;
+&lt;h2 id=&#34;building-the-application&#34;&gt;Building the Application&lt;/h2&gt;
+&lt;p&gt;For the purposes of this post, I wanted to keep the application simple. I chose a two-tier application: a &lt;a href=&#34;https://github.com/BrianMMcClain/python-shop-backend&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;backend app&lt;/a&gt; that serves up a list of items in an inventory, and a &lt;a href=&#34;https://github.com/BrianMMcClain/python-shop-frontend&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;frontend app&lt;/a&gt; to display the inventory. Both applications were written using &lt;a href=&#34;https://flask.palletsprojects.com/en/1.1.x/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Flask&lt;/a&gt;, a lightweight web application framework for Python. Flask provides a lot to make developing web apps in Python easy, with features such as routing, response templates, logging, session management, and more. For this app, we’re using it just for basic request routing and template rendering.&lt;/p&gt;
+&lt;p&gt;If you’ve written in Python before, much of the code should look pretty standard. The backend application has one endpoint served at &lt;code&gt;/&lt;/code&gt; , which returns a JSON array of objects. The frontend app has a single endpoint, also at &lt;code&gt;/&lt;/code&gt;, which requests the lists of items from the backend and passes them to a &lt;a href=&#34;https://github.com/BrianMMcClain/python-shop-frontend/blob/main/templates/index.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;template that it renders&lt;/a&gt;. One thing that should be pointed out is the &lt;code&gt;getBackendURI()&lt;/code&gt; function in the &lt;a href=&#34;https://github.com/BrianMMcClain/python-shop-frontend/blob/main/app.py&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;app.py file&lt;/a&gt; for the frontend. This function is called when the frontend needs to know where to request data from the backend:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;n&#34;&gt;CONFIG_PATH&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/config/config.cfg&amp;#34;&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getBackendURI&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;os&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;exists&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CONFIG_PATH&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;config&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;from_pyfile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CONFIG_PATH&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;config&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;BACKEND_URI&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;http://localhost:8082&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This method reads the contents of &lt;code&gt;/config/config.cfg&lt;/code&gt; to know where to send requests when reaching out to the backend. If the file doesn’t exist, it sends requests to localhost. You may notice that this file doesn’t exist anywhere in the code; that’s because we’ll be generating it when we deploy our application to Kubernetes.  Be sure to keep that in mind.&lt;/p&gt;
+&lt;h2 id=&#34;packaging-the-application&#34;&gt;Packaging the Application&lt;/h2&gt;
+&lt;p&gt;Speaking of deploying to Kubernetes, now we need to package our code into containers. We could write a Dockerfile ourselves, but lucky for us, &lt;a href=&#34;/guides/containers/cnb-what-is/&#34;&gt;Cloud Native Buildpacks&lt;/a&gt; can build the container automatically! If you’re new to using Cloud Native Buildpacks with Python, I recommend reading &lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;this guide&lt;/a&gt; from my teammate &lt;a href=&#34;/team/ben-wilcock/&#34;&gt;Ben Wilcock&lt;/a&gt; which explains how to get started.&lt;/p&gt;
+&lt;p&gt;Since I just use &lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Hub&lt;/a&gt; as my container registry, you can use the following commands yourself so long as you replace my username with your own. While we’re in the directory containing the &lt;a href=&#34;https://github.com/BrianMMcClain/python-shop-backend&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;python-shop-backend&lt;/code&gt;&lt;/a&gt; code, let’s build and push a container image for it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ pack build brianmmcclain/python-shop-backend  --builder gcr.io/buildpacks/builder:v1
+…
+Successfully built image brianmmcclain/python-shop-backend
+
+$ docker push brianmmcclain/python-shop-backend
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the above example, I’ve used the &lt;a href=&#34;/guides/containers/cnb-gs-pack/&#34;&gt;pack CLI&lt;/a&gt; to build a container from my code, telling it to use a specific builder. In this case, the builder can tell that we’re building a container for a Python application, so it pulls in the dependencies with &lt;code&gt;pip&lt;/code&gt; by reading the &lt;code&gt;requirements.txt&lt;/code&gt; file.   It knows how to run the application, thanks to the &lt;code&gt;Procfile&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Next, we’ll do the same thing in the directory containing the &lt;a href=&#34;https://github.com/BrianMMcClain/python-shop-frontend&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;python-shop-frontend&lt;/code&gt;&lt;/a&gt; code:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ pack build brianmmcclain/python-shop-frontend  --builder gcr.io/buildpacks/builder:v1
+…
+Successfully built image brianmmcclain/python-shop-frontend
+
+$ docker push brianmmcclain/python-shop-frontend
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Just as we saw with the backend code, &lt;code&gt;pack&lt;/code&gt; builds the container, then we push it up to Docker Hub. Now all that’s left is to run it!&lt;/p&gt;
+&lt;h2 id=&#34;deploying-to-kubernetes&#34;&gt;Deploying to Kubernetes&lt;/h2&gt;
+&lt;p&gt;In the &lt;code&gt;python-shop-frontend&lt;/code&gt; codebase, I’ve included a file named &lt;a href=&#34;https://github.com/BrianMMcClain/python-shop-frontend/blob/main/deploy.yaml&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;deploy.yaml, &lt;/a&gt; which contains all of the resources we need to deploy to Kubernetes. In my case, I’m just deploying to Minikube, but you can &lt;a href=&#34;/blog/kubernetes-at-home-local-k8s-options/&#34;&gt;use other solutions&lt;/a&gt; if you’d like. You can apply this YAML to Kubernetes with the &lt;code&gt;kubectl apply&lt;/code&gt; command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl apply -f deploy.yaml
+deployment.apps/python-shop-backend created
+service/python-shop-backend-service created
+configmap/python-shop-frontend-config created
+deployment.apps/python-shop-frontend created
+service/python-shop-frontend-service created
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see a couple of deployments created: one for the frontend and one for the backend. We’ve also created two services for each deployment to attach to. Finally, we’ve created a ConfigMap named &lt;code&gt;python-shop-frontend-config&lt;/code&gt;. Remember when we were looking at the code and noticed a reference to a file at &lt;code&gt;/config/config.cfg&lt;/code&gt;? Here’s where that data lives. Take a look at this ConfigMap definition:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ConfigMap&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;python-shop-frontend-config&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;config.cfg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;BACKEND_URI=&amp;#34;http://python-shop-backend-service:8080&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here’s where we’ve defined that &lt;code&gt;BACKEND_URI&lt;/code&gt; will point to the &lt;code&gt;python-shop-backend-service&lt;/code&gt; service in port 8080. We then reference this ConfigMap in the Deployment for the frontend:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;apps/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;python-shop-frontend&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;python-shop-frontend&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;replicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;matchLabels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;python-shop-frontend&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;python-shop-frontend&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;python-shop-frontend&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;brianmmcclain/python-shop-frontend:latest&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumeMounts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;python-shop-frontend-config-volume&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;mountPath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/config&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;imagePullPolicy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Always&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;containerPort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8080&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;python-shop-frontend-config-volume&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;configMap&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;python-shop-frontend-config&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Notice the volume defined in the &lt;code&gt;volumes&lt;/code&gt; section named &lt;code&gt;python-shop-frontend-config-volume&lt;/code&gt;, which references the &lt;code&gt;python-shop-frontend-config&lt;/code&gt; ConfigMap. In the container specification, we then mount this volume to the container running the frontend at &lt;code&gt;/config&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;python-shop-frontend&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;brianmmcclain/python-shop-frontend:latest&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumeMounts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;python-shop-frontend-config-volume&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;mountPath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/config&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With this configuration, a file is created from the ConfigMap named &lt;code&gt;config.cfg&lt;/code&gt; and mounted at &lt;code&gt;/config&lt;/code&gt;, which our application reads to know the value of &lt;code&gt;BACKEND_URI&lt;/code&gt;. By configuring our code this way, if the address of the backend ever changes we can update the ConfigMap without having to restart our frontend container.&lt;/p&gt;
+&lt;h2 id=&#34;so-whats-the-verdict&#34;&gt;So What’s the Verdict?&lt;/h2&gt;
+&lt;p&gt;In putting together this post, I was reminded of what an enjoyable experience it is to write in Python. I was also very happy to see how easily we can use it to leverage more modern technologies, such as Kubernetes and Cloud Native Buildpacks. Indeed, Python is lightweight, and can result in fairly slim container images.  Flask, meanwhile, proves to be a great framework for developing modern applications.&lt;/p&gt;
+&lt;p&gt;Of course, there would be a lot more to consider if we were writing a production application, such as logging, metrics, a proper web server to back our code, and much more. But it makes sense that Python has had such a hold on the software community, and it’s exciting to see that it’s only getting stronger. If, like me, you want to learn more, I suggest checking out some of the other content that &lt;a href=&#34;/team/ben-wilcock&#34;&gt;Ben&lt;/a&gt; has been making, such as &lt;a href=&#34;/guides/python/cf-gs/&#34;&gt;running Python in production&lt;/a&gt;. For even more Python content, make sure to check out the Python section of the &lt;a href=&#34;/topics/python/&#34;&gt;Python topic page&lt;/a&gt; for guides and videos!&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/JS_YIn49xuw&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Python Like A Pro: How To Deploy Python Application Into Production</title>
+      
+      <link>/guides/python/cf-gs/</link>
+      <pubDate>Tue, 28 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/python/cf-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;In this guide, you&amp;rsquo;ll learn how to get a Python application into production in seconds.&lt;/p&gt;
+&lt;p&gt;Production is super important. It&amp;rsquo;s where your users meet your code and where you get recognition for all the hard work you&amp;rsquo;ve put in. Production is where your company competes, and where it gets rewarded for all the risks it&amp;rsquo;s taken &amp;mdash; large and small.&lt;/p&gt;
+&lt;p&gt;Getting code into production quickly and regularly is life changing for developers like yourself. It opens the door to true agility &amp;mdash; a huge win for you, your team, and your company. But if the path to production is littered with roadblocks, getting your applications out there will be tiring and time consuming.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s where Cloud Foundry comes in.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-cloud-foundry&#34;&gt;What Is Cloud Foundry?&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://cloudfoundry.org&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Foundry&lt;/a&gt; is an open-source platform that simplifies the lives of developers. Cloud Foundry&amp;rsquo;s &lt;a href=&#34;https://www.cloudfoundry.org/application-runtime/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;lsquo;Application Runtime&amp;rsquo;&lt;/a&gt; takes your application code &amp;mdash; written in Python or a number of other languages or frameworks &amp;mdash; and runs it on any cloud, including Azure, AWS, GCP, Kubernetes, or even vSphere VMs.&lt;/p&gt;
+&lt;p&gt;A unique feature of Cloud Foundry is its smooth developer experience. Using a single command you can have your code running in a safe, secure, and stable environment in seconds. Once running, Cloud Foundry takes care of everything else including log streaming, health monitoring, scaling, networking, load-balancing, and makes everyday chores like starting and stopping applications a breeze.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;There are a few things you need to do before getting started with Cloud Foundry:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Install the &lt;a href=&#34;https://docs.cloudfoundry.org/cf-cli/install-go-cli.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Foundry CLI&lt;/a&gt; tool on your computer. This is the tool you will use to interact with Cloud Foundry. You can check that the tool is working by issuing the command &lt;code&gt;cf help&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Decide which Cloud Foundry you&amp;rsquo;re going to use and obtain it&amp;rsquo;s endpoint URL. If you don&amp;rsquo;t have a Cloud Foundry to work with, consider installing Cloud Foundry locally onto Kubernetes on your computer by following the steps in &lt;a href=&#34;/guides/kubernetes/cf4k8s-gs&#34;&gt;this guide&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note: Cloud Foundry goes by many names. There are many &lt;a href=&#34;https://www.cloudfoundry.org/thefoundry/#cert-distros&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;lsquo;certified distributions&amp;rsquo;&lt;/a&gt; that offer Cloud Foundry as a commercial product. The &lt;a href=&#34;https://tanzu.vmware.com/application-service&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu Application Service&lt;/a&gt; is one example. It is certified to meet the Cloud Foundry open-source standard and is fully compatible with the &lt;a href=&#34;https://docs.cloudfoundry.org/cf-cli/install-go-cli.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cf CLI&lt;/a&gt; tool.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;get-the-sample-python-application&#34;&gt;Get The Sample Python Application&lt;/h2&gt;
+&lt;p&gt;Download the sample Python application from Github and make the sample application&amp;rsquo;s folder your current working directory as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; git clone https://github.com/benwilcock/buildpacks-python-demo.git
+&amp;gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; buildpacks-python-demo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the folder you will notice three text files, &lt;code&gt;web.py&lt;/code&gt;, &lt;code&gt;requirements.txt&lt;/code&gt;, and &lt;code&gt;Procfile&lt;/code&gt;. If you already know what each of these files is for, you can skip ahead to the next section. If you want to know more about them, read on.&lt;/p&gt;
+&lt;p&gt;The file &lt;code&gt;web.py&lt;/code&gt; contains a hello-world web application written in &lt;code&gt;Python3&lt;/code&gt; using the &lt;code&gt;Flask&lt;/code&gt; and &lt;code&gt;MarkupSafe&lt;/code&gt; libraries.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;flask&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Flask&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;markupsafe&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;escape&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;app&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Flask&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;vm&#34;&gt;__name__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello_world&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Hello, World!&amp;#39;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/hello/&amp;lt;username&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello_user&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;# say hello to that user&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Hello &lt;/span&gt;&lt;span class=&#34;si&#34;&gt;%s&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;%&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;escape&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The file &lt;code&gt;requirements.txt&lt;/code&gt; clarifies which libraries your application is dependent on, and their versions. Pip can generate the contents of this file for you using the command &lt;code&gt;pip freeze&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;click==7.1.2
+Flask==1.1.2
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+Werkzeug==1.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;Procfile&lt;/code&gt; specifies the command-line used to execute the application at runtime. In this case the Procfile declares that the &lt;code&gt;web.py&lt;/code&gt; file contains your &lt;code&gt;FLASK_APP&lt;/code&gt;, calls &lt;code&gt;flask run&lt;/code&gt;, and binds the web-server to the &lt;code&gt;--host&lt;/code&gt; with the IP address &lt;code&gt;0.0.0.0&lt;/code&gt;. It is expected that the &lt;code&gt;--port&lt;/code&gt; to bind the application to will be set as an environment variable using the name &lt;code&gt;$PORT&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;web: FLASK_APP=web.py python3 -m flask run --host=0.0.0.0 --port=$PORT
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Cloud Foundry&amp;rsquo;s buildpack system uses these files to determine that your application is a Python application. Follow the steps below to run this application in Cloud Foundry.&lt;/p&gt;
+&lt;h2 id=&#34;login-to-cloud-foundry&#34;&gt;Login To Cloud Foundry&lt;/h2&gt;
+&lt;p&gt;You can login to your Cloud Foundry application service using the &lt;code&gt;cf login&lt;/code&gt; command as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf login -a &amp;lt;your-api-url&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;cf&lt;/code&gt; tool will then prompt you for your credentials and ask you to select an &amp;lsquo;org&amp;rsquo; and a &amp;lsquo;space&amp;rsquo;. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf login -a CF_API_ENDPOINT_URL
+API endpoint: CF_API_ENDPOINT_URL
+
+Email: &amp;lt;enter-your-email&amp;gt;
+
+Password: &amp;lt;enter-your-password&amp;gt;
+
+Select an org:
+1. tanzu-devrel
+
+&amp;lt;enter-selected-org-number&amp;gt;
+
+Select a space:
+1. development
+2. production
+
+&amp;lt;enter-selected-space-number&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you&amp;rsquo;re using your employers Cloud Foundry, the login process may be different. For example, you may have single sign on (SSO) rather than a username and password and you may be restricted in terms of which orgs and spaces are available to you.&lt;/p&gt;
+&lt;p&gt;&amp;lsquo;Org and space&amp;rsquo; are simply Cloud Foundry terms for application partitioning. Depending on how your cloud foundry was set up, you may see very different names and options. Cloud Foundry doesn&amp;rsquo;t attach any special meaning to these names. Production could just as easily be called &amp;lsquo;bob&amp;rsquo; if that makes sense in your organization. Ask your platform team for advice on which space to use.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Don&amp;rsquo;t really push apps to production unless it&amp;rsquo;s definitely safe for you to do so!&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;If at any point you need to remind yourself which API url, org, or space you are currently using, you can use the &lt;code&gt;cf target&lt;/code&gt; command like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf target
+
+api endpoint:   CF_API_ENDPOINT_URL
+api version:    2.151.0
+user:           &amp;lt;your-email&amp;gt;
+org:            tanzu-devrel
+space:          production
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If at any time you need help with a specific command such as &lt;code&gt;cf login&lt;/code&gt; simply ask for context specific help using the &lt;code&gt;--help&lt;/code&gt; option as shown below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf login --help
+
+NAME:
+   login - Log user in
+
+USAGE:
+   cf login &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-a API_URL&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-u USERNAME&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-p PASSWORD&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-o ORG&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-s SPACE&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--sso &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; --sso-passcode PASSCODE&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--origin ORIGIN&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;run-your-python-application-in-the-production-space&#34;&gt;Run Your Python Application In The &amp;lsquo;Production&amp;rsquo; Space&lt;/h2&gt;
+&lt;p&gt;The &lt;code&gt;cf target&lt;/code&gt; command above confirmed that the &lt;code&gt;production&lt;/code&gt; space is the current target for your applications. Any space is fine, it doesn&amp;rsquo;t have to be production, the process is the same.&lt;/p&gt;
+&lt;p&gt;The command you use to run your application on Cloud Foundry is &lt;code&gt;cf push&lt;/code&gt;. You must give the application a name when you push it. In the example below the name &lt;code&gt;python-demo&lt;/code&gt; has been used:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf push python-demo --random-route
+Pushing app python-demo to org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;You don&amp;rsquo;t have to use &lt;code&gt;--random-route&lt;/code&gt; either, it just prevents clashes when an app exists with the same name elsewhere on your Cloud Foundry instance.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The &lt;code&gt;cf push&lt;/code&gt; command uses a technology called &amp;lsquo;&lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;buildpacks&lt;/a&gt;&amp;rsquo; to put your Python application into a Docker container before running it. The process takes no more than a minute or two on average. During that time, Cloud Foundry will communicate what the buildpack is doing before finally confirming that your application is running.&lt;/p&gt;
+&lt;p&gt;When the application has started, Cloud Foundry will alert you and give you the route (URL) that has been assigned to the application.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;Waiting &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; app to start...
+
+name:              python-demo
+requested state:   started
+routes:            python-demo-lean-quokka-sc.cfapps.io
+last uploaded:     Tue &lt;span class=&#34;m&#34;&gt;28&lt;/span&gt; Jul 16:32:38 BST &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt;
+stack:             cflinuxfs3
+buildpacks:        python
+
+type:            web
+instances:       1/1
+memory usage:    1024M
+start command:   &lt;span class=&#34;nv&#34;&gt;FLASK_APP&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;web.py python3 -m flask run --host&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0.0.0.0 --port&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$PORT&lt;/span&gt;
+     state     since                  cpu    memory       disk           details
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;   running   2020-07-28T15:32:55Z   0.0%   4.3M of 1G   214.6M of 1G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this case, the route assigned to this application by Cloud Foundry is &lt;code&gt;python-demo-lean-quokka-sc.cfapps.io&lt;/code&gt;. Your application&amp;rsquo;s route will be different. You will use the route &lt;strong&gt;you&lt;/strong&gt; have been given to test that you can communicate with the application.&lt;/p&gt;
+&lt;h2 id=&#34;test-your-python-application-is-running&#34;&gt;Test Your Python Application Is Running&lt;/h2&gt;
+&lt;p&gt;To test the application is running, issue a HTTP GET request to the route Cloud Foundry gave to you when you used the &lt;code&gt;cf push&lt;/code&gt; command in the previous step.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; http python-demo-lean-quokka-sc.cfapps.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The application will respond with the legend &amp;lsquo;Hello, World!&amp;rsquo; like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;HTTP/1.1 &lt;span class=&#34;m&#34;&gt;200&lt;/span&gt; OK
+Connection: keep-alive
+Content-Length: &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt;
+Content-Type: text/html&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;charset&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;utf-8
+Date: Tue, &lt;span class=&#34;m&#34;&gt;28&lt;/span&gt; Jul &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt; 15:37:41 GMT
+Server: Werkzeug/1.0.1 Python/3.8.3
+X-Vcap-Request-Id: 7b49d6ff-30d3-46c1-75d8-0bb75275b75d
+
+Hello, World!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The test above uses the &lt;a href=&#34;https://httpie.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;HTTPie&lt;/a&gt; tool, but you could also use &lt;code&gt;curl&lt;/code&gt; or a regular web browser. It&amp;rsquo;s up to you.&lt;/p&gt;
+&lt;h2 id=&#34;theres-more&#34;&gt;There&amp;rsquo;s More&lt;/h2&gt;
+&lt;p&gt;Here&amp;rsquo;s a few more commonly used &lt;code&gt;cf&lt;/code&gt; commands for you. Don&amp;rsquo;t forget, you can use &lt;code&gt;cf help&lt;/code&gt; to get a full list of all the available commands at any time, and &lt;code&gt;cf &amp;lt;command&amp;gt; --help&lt;/code&gt; will give you detailed information on each of them.&lt;/p&gt;
+&lt;h3 id=&#34;listing-your-applications&#34;&gt;Listing Your Applications&lt;/h3&gt;
+&lt;p&gt;You can see a list of all the applications you have running in your current space at any time using the &lt;code&gt;cf apps&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf apps
+Getting apps in org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;...
+OK
+
+name          requested state   instances   memory   disk   urls
+python-demo   started           1/1         1G       1G     python-demo-lean-quokka-sc.cfapps.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;getting-detailed-application-status&#34;&gt;Getting Detailed Application Status&lt;/h3&gt;
+&lt;p&gt;You can get fine-grained application status using the &lt;code&gt;cf app&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf app python-demo
+Showing health and status &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; app python-demo in org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;...
+
+name:              python-demo
+requested state:   started
+routes:            python-demo-lean-quokka-sc.cfapps.io
+last uploaded:     Tue &lt;span class=&#34;m&#34;&gt;28&lt;/span&gt; Jul 16:32:38 BST &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt;
+stack:             cflinuxfs3
+buildpacks:        python
+
+type:           web
+instances:      1/1
+memory usage:   1024M
+     state     since                  cpu    memory        disk           details
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;   running   2020-07-28T15:32:55Z   0.5%   30.8M of 1G   214.6M of 1G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;tailing-an-applications-log&#34;&gt;Tailing An Applications Log&lt;/h3&gt;
+&lt;p&gt;You can view the log stream for your application in realtime with the &lt;code&gt;cf logs&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf logs python-demo
+Retrieving logs &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; app python-demo in org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;...
+
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can get recent logs (rather than a tail of the log) using the &lt;code&gt;--recent&lt;/code&gt; option.&lt;/p&gt;
+&lt;h3 id=&#34;deleting-removing-an-application&#34;&gt;Deleting (Removing) An Application&lt;/h3&gt;
+&lt;p&gt;You can remove and delete your application from Cloud Foundry at any time using the &lt;code&gt;cf delete&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf delete python-demo
+Really delete the app python-demo?&amp;gt; y
+Deleting app python-demo in org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;...
+OK
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;Most Cloud Foundry installations include a Python Buildpack. But did you know that you can use buildpacks without using Cloud Foundry? Buildpacks are a fabulous, sustainable, stress-free way to get code into Docker containers. To find out how to use them in your Python tool chain take a look at our &lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;Python buildpack guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Did you know that can push Docker images directly to Cloud Foundry? You use the same &lt;code&gt;cf push&lt;/code&gt; command but add the &lt;code&gt;--docker-image&lt;/code&gt; option. Take a look at the help for the push command for more information or read the docs &lt;a href=&#34;http://cli.cloudfoundry.org/en-US/cf/push.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Did you know that you can run Cloud Foundry directly on top of Kubernetes? That means you can get the same smooth &lt;code&gt;cf push&lt;/code&gt; experience on your Kubernetes cluster. Just think, less YAML, less &lt;code&gt;kubectl&lt;/code&gt;, less stress! You can get started with our &lt;a href=&#34;/guides/kubernetes/cf4k8s-gs&#34;&gt;CF for K8s guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you liked this guide, you might find these others in our &amp;lsquo;Python Like A Pro&amp;rsquo; series useful:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;Install Python Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-managing-python-packages&#34;&gt;Managing Python Project Dependencies Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-installing-global-packages&#34;&gt;Managing Python Global Packages Like A Pro&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;Build Python Docker Containers Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And if you&amp;rsquo;d prefer to see Cloud Foundry in action without actually following the steps above, check out our video guide:&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/qLg2xtQ5kTA&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Python Like A Pro: Building Docker Containers</title>
+      
+      <link>/guides/python/cnb-gs-python/</link>
+      <pubDate>Tue, 21 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/python/cnb-gs-python/</guid>
+      <description>
+
+        
+        &lt;p&gt;Packaging your application code into Docker containers is a tricky business. Python code is no exception. There are a &lt;em&gt;ton&lt;/em&gt; of best practices that you need to know about if you&amp;rsquo;re going to build a container that is safe, secure, and maintainable over the long term. &lt;a href=&#34;https://buildpacks.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Buildpacks&lt;/a&gt; codify these best practices, and they&amp;rsquo;re open-source, so they&amp;rsquo;re a great way to turn your application code into runnable containers.&lt;/p&gt;
+&lt;p&gt;And because buildpacks completely remove the need for a &lt;code&gt;Dockerfile&lt;/code&gt;, they dramatically simplify the maintenance of your container images &amp;mdash; particularly useful if you have multiple images to maintain. They&amp;rsquo;re no &amp;lsquo;flash-in-the-pan&amp;rsquo; either. Developed by Heroku in 2011, and also used in Cloud Foundry, buildpacks have built and run millions of production workloads!&lt;/p&gt;
+&lt;p&gt;For Python developers, there are currently two implementations of the Buildpack standard which provide Python compatible buildpacks. One is from Google and the other is from Heroku. In this guide, you&amp;rsquo;ll learn how to use Heroku&amp;rsquo;s Python buildpack to create a container image for a sample Python application.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;There are a few things you need to do before getting started with Python Buildpacks:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Install &lt;a href=&#34;https://hub.docker.com/search?type=edition&amp;amp;offering=community&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Desktop&lt;/a&gt;. The &lt;code&gt;pack&lt;/code&gt; CLI requires the Docker daemon, so you&amp;rsquo;ll need to have that installed and running locally.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check out &lt;a href=&#34;https://kube.academy/courses/containers-101&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Containers 101&lt;/a&gt; on KubeAcademy, particularly if you&amp;rsquo;ve never worked with containers or Docker before.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Follow the documentation for &lt;a href=&#34;https://buildpacks.io/docs/install-pack/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;installing &lt;code&gt;pack&lt;/code&gt;&lt;/a&gt; in your local environment.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[Optional] If you are completely new to buildpacks, you might prefer to first read up on &lt;a href=&#34;/guides/containers/cnb-what-is&#34;&gt;what are buildpacks?&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;using-buildpacks-with-python&#34;&gt;Using Buildpacks With Python&lt;/h2&gt;
+&lt;p&gt;Buildpacks work the same way no matter what language the code is written in. In this guide you&amp;rsquo;ll use a simple Python application, but remember that the process works in the same way for Node.JS, Java, Go, PHP, and more.&lt;/p&gt;
+&lt;p&gt;Follow the steps below to quickly create a container image for a Python application using the Heroku Python Buildpack.&lt;/p&gt;
+&lt;h3 id=&#34;get-the-sample-python-application&#34;&gt;Get The Sample Python Application&lt;/h3&gt;
+&lt;p&gt;Download the sample Python application from Github and make the sample application&amp;rsquo;s folder your current working directory as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; git clone https://github.com/benwilcock/buildpacks-python-demo.git
+&amp;gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; buildpacks-python-demo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the folder you will notice three text files, &lt;code&gt;web.py&lt;/code&gt;, &lt;code&gt;requirements.txt&lt;/code&gt;, and &lt;code&gt;Procfile&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The file &lt;code&gt;web.py&lt;/code&gt; contains a hello-world web application written in &lt;code&gt;Python3&lt;/code&gt; using the &lt;code&gt;Flask&lt;/code&gt; and &lt;code&gt;MarkupSafe&lt;/code&gt; libraries.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;flask&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Flask&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;markupsafe&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;escape&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;app&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Flask&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;vm&#34;&gt;__name__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello_world&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Hello, World!&amp;#39;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/hello/&amp;lt;username&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello_user&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;# say hello to that user&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Hello &lt;/span&gt;&lt;span class=&#34;si&#34;&gt;%s&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;%&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;escape&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The file &lt;code&gt;requirements.txt&lt;/code&gt; clarifies which libraries your application is dependent on, and their versions. Pip can generate the contents of this file for you using the command &lt;code&gt;pip freeze&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;click==7.1.2
+Flask==1.1.2
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+Werkzeug==1.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;Procfile&lt;/code&gt; specifies the command-line used to execute the application at runtime. In this case the Procfile declares that the &lt;code&gt;web.py&lt;/code&gt; file contains your &lt;code&gt;FLASK_APP&lt;/code&gt;, calls &lt;code&gt;flask run&lt;/code&gt;, and binds the web-server to the &lt;code&gt;--host&lt;/code&gt; with the IP address &lt;code&gt;0.0.0.0&lt;/code&gt;. It is expected that the &lt;code&gt;--port&lt;/code&gt; to bind the application to will be set as an environment variable using the name &lt;code&gt;$PORT&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;web: FLASK_APP=web.py python3 -m flask run --host=0.0.0.0 --port=$PORT
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;get-the-list-of-suggested-builders&#34;&gt;Get The List Of Suggested Builders&lt;/h3&gt;
+&lt;p&gt;There are many implementations of the &lt;a href=&#34;https://buildpacks.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Buildpacks&lt;/a&gt; standard. These implementations are called &amp;lsquo;builders&amp;rsquo;. To discover the very latest list of suggested builders, use the &lt;code&gt;pack suggest-builders&lt;/code&gt; command as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; pack suggest-builders
+
+Suggested builders:
+	Google:                gcr.io/buildpacks/builder:v1                 Ubuntu &lt;span class=&#34;m&#34;&gt;18&lt;/span&gt; base image with buildpacks &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; .NET, Go, Java, Node.js, and Python
+	Heroku:                heroku/buildpacks:18                         heroku-18 base image with buildpacks &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; Ruby, Java, Node.js, Python, Golang, &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt; PHP
+	Paketo Buildpacks:     gcr.io/paketo-buildpacks/builder:full-cf     cflinuxfs3 base image with buildpacks &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; Java, .NET, NodeJS, Golang, PHP, HTTPD and NGINX
+        ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As you can see, both &lt;a href=&#34;https://github.com/heroku/heroku-buildpack-python&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Heroku&lt;/a&gt; and &lt;a href=&#34;https://github.com/GoogleCloudPlatform/buildpacks&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Google Cloud Platform&lt;/a&gt; offer open-source Python compatible builders. For this exercise, you&amp;rsquo;ll use the Heroku builder, but you could just as easily use Google&amp;rsquo;s.&lt;/p&gt;
+&lt;h3 id=&#34;set-heroku-as-your-default-builder&#34;&gt;Set Heroku As Your Default Builder&lt;/h3&gt;
+&lt;p&gt;Copy the name of the builder that you want to set as your default from the list above &amp;mdash; in this case it&amp;rsquo;s &lt;code&gt;heroku/buildpacks:18&lt;/code&gt; &amp;mdash; and use the &lt;code&gt;pack set-default-builder&lt;/code&gt; command to set this buildpack as the default as shown below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; pack set-default-builder heroku/buildpacks:18
+Builder heroku/buildpacks:18 is now the default builder
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;use-pack-to-create-your-container-image&#34;&gt;Use &lt;code&gt;pack&lt;/code&gt; To Create Your Container Image&lt;/h3&gt;
+&lt;p&gt;To run the builder and create your Python application container image, use the command &lt;code&gt;pack build&lt;/code&gt;. Be sure to also specify an image name for the container in the format &amp;ldquo;&amp;lt;repository&amp;gt;/&amp;lt;container-name&amp;gt;:&amp;lt;tag&amp;gt;&amp;rdquo; as shown in the following example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; pack build benwilcock/python-sample:1.0.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The process of building the image will now begin. The first time you do this, you will notice that docker is downloading a series of container image &amp;lsquo;layers.&amp;rsquo; This is because buildpacks are also containers, so they must first be pulled by Docker before the buildpack can be run locally. Once these images are in your cache, the process is much quicker. The output looks something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;18: Pulling from heroku/buildpacks
+4e20becbd46f: Pull &lt;span class=&#34;nb&#34;&gt;complete&lt;/span&gt;
+3c742a4a0f38: Already exists
+ab0f59294661: Downloading &lt;span class=&#34;o&#34;&gt;[=============================&lt;/span&gt;&amp;gt;                     &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;  16.05MB/26.96MB
+Digest: sha256:296e4f3394e3147a61bd8b08d3c46c0dfa2bf2d4266ed598241cf2419dc96fa3
+Status: Image is up to date &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; heroku/buildpacks:18
+18: Pulling from heroku/pack
+Digest: sha256:219a7621db58790ace66a87d33a200cd89aeda03192994e11a05967fbf8892f6
+Status: Image is up to date &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; heroku/pack:18
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt;&amp;gt; DETECTING
+heroku/python   0.2
+heroku/procfile 0.5
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt;&amp;gt; ANALYZING
+Restoring metadata &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;heroku/python:shim&amp;#34;&lt;/span&gt; from &lt;span class=&#34;nv&#34;&gt;cache&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt;&amp;gt; RESTORING
+Restoring data &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;heroku/python:shim&amp;#34;&lt;/span&gt; from &lt;span class=&#34;nv&#34;&gt;cache&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt;&amp;gt; BUILDING
+-----&amp;gt; No change in requirements detected, installing from cache
+-----&amp;gt; Installing SQLite3
+-----&amp;gt; Installing requirements with pip
+-----&amp;gt; Discovering process types
+       Procfile declares types     -&amp;gt; &lt;span class=&#34;nv&#34;&gt;web&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt;&amp;gt; EXPORTING
+Reusing layer &lt;span class=&#34;s1&#34;&gt;&amp;#39;launcher&amp;#39;&lt;/span&gt;
+Reusing layer &lt;span class=&#34;s1&#34;&gt;&amp;#39;heroku/python:profile&amp;#39;&lt;/span&gt;
+Adding 1/1 app layer&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;s&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Reusing layer &lt;span class=&#34;s1&#34;&gt;&amp;#39;config&amp;#39;&lt;/span&gt;
+*** Images &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;a904788f7748&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;:
+      index.docker.io/benwilcock/python-sample:1.0.0
+Adding cache layer &lt;span class=&#34;s1&#34;&gt;&amp;#39;heroku/python:shim&amp;#39;&lt;/span&gt;
+Successfully built image benwilcock/python-sample:1.0.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When you see the words &amp;ldquo;Successfully built image&amp;rdquo; the process is complete. Your new container image will now be available in your local Docker image repository. You can list the images in your local repository with the command &lt;code&gt;docker images&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; docker images
+REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE
+benwilcock/python-sample    1.0.0               59843a212207        &lt;span class=&#34;m&#34;&gt;40&lt;/span&gt; years ago        651MB
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Already we&amp;rsquo;re benefiting from buildpack engineering! Notice that the &lt;code&gt;CREATED&lt;/code&gt; date says &amp;ldquo;40 years ago&amp;rdquo;. This is a best practice whereby the timestamps of layers are &amp;lsquo;zeroed&amp;rsquo; to make container builds more reproducible, cache-able, and to avoid unnecessary image downloads. You can read more &lt;a href=&#34;https://buildpacks.io/docs/reference/reproducibility/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;test-the-container-image&#34;&gt;Test The Container Image&lt;/h3&gt;
+&lt;p&gt;Testing the container is no more difficult than running the image with the &lt;code&gt;docker run&lt;/code&gt; command as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; docker run -d -ePORT&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8080&lt;/span&gt; -p8080:8080 --name python-sample benwilcock/python-sample:1.0.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now the container image of your application is running in the background, simply query the &lt;code&gt;http://localhost:8080&lt;/code&gt; endpoint, either using a command-line tool like &lt;a href=&#34;https://httpie.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Httpie&lt;/a&gt; as shown below, or a regular web browser.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; http localhost:8080/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Your application will respond with the legend &amp;ldquo;Hello, World!&amp;rdquo; like so:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;HTTP/1.0 200 OK
+Content-Length: 13
+Content-Type: text/html; charset=utf-8
+Date: Tue, 21 Jul 2020 10:27:47 GMT
+Server: Werkzeug/1.0.1 Python/3.6.11
+
+Hello, World!
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And you&amp;rsquo;re done! You built your sample Python application into an OCI compliant Docker container image without resorting to a &lt;code&gt;Dockerfile&lt;/code&gt;. Heroku will take care of most of the underlying maintenance tasks on the operating system and the Python interpreter. All you need to do is re-run &lt;code&gt;pack build&lt;/code&gt; and you&amp;rsquo;ll get a fresh image. If nothing changed, neither will your image.&lt;/p&gt;
+&lt;h3 id=&#34;tidy-up&#34;&gt;Tidy Up&lt;/h3&gt;
+&lt;p&gt;You can stop and remove the container from Docker as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; docker stop python-sample
+&amp;gt; docker rm python-sample
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h3&gt;
+&lt;p&gt;Learn more about buildpacks right here on the Tanzu Developer Center with these great guides:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;/guides/containers/cnb-what-is&#34;&gt;Buildpacks: What Are They?&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;/guides/containers/cnb-gs-pack&#34;&gt;Getting Started With The &lt;code&gt;pack&lt;/code&gt; CLI&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;/guides/containers/cnb-gs-kpack&#34;&gt;Getting Started With Automated Builds Using &lt;code&gt;kpack&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Find out more about what the &lt;code&gt;pack&lt;/code&gt; tool can do by using the &lt;code&gt;--help&lt;/code&gt; command and browsing the &lt;a href=&#34;https://buildpacks.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Buildpacks.io&lt;/a&gt; website.&lt;/p&gt;
+&lt;p&gt;If you liked this guide, you might find these others in our &amp;lsquo;Python Like A Pro&amp;rsquo; series useful:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;Install Python Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-managing-python-packages&#34;&gt;Managing Python Project Dependencies Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-installing-global-packages&#34;&gt;Managing Python Global Packages Like A Pro&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cf-gs&#34;&gt;Run Python In Production Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And if you&amp;rsquo;d prefer to see the buildpack in action without actually following the steps above, check out the accompanying YouTube video guide:&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/JS_YIn49xuw&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: From Commit to Container</title>
+      
+      <link>/blog/from-commit-to-container/</link>
+      <pubDate>Fri, 29 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/from-commit-to-container/</guid>
+      <description>
+
+        
+        &lt;p&gt;While running software in containers is very popular, it can be a little confusing to figure out the best way to get your code into a container. Now that the industry is mostly unified on Open Container Initiative (OCI) Standard container image formats, they can be built in any number of ways.&lt;/p&gt;
+&lt;p&gt;Building via Dockerfiles is the most commonly used approach, but there are also other tools that can make it easier with less learning upfront and some other advantages.&lt;/p&gt;
+&lt;h2 id=&#34;dockerfiles&#34;&gt;Dockerfiles&lt;/h2&gt;
+&lt;p&gt;If you’re not familiar with the specification for Dockerfiles, you can find it &lt;a href=&#34;https://docs.docker.com/engine/reference/builder/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;. The basic layout looks something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; debian:latest&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ADD&lt;/span&gt; my-app-file /app/&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;CMD&lt;/span&gt; /app/my-app-file&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first thing we need is a starting point, and in this case, we’re using a debian image, and the &lt;code&gt;latest&lt;/code&gt; version. There are also ones that are language-specific like &lt;code&gt;python&lt;/code&gt; or &lt;code&gt;golang&lt;/code&gt; and ones tied to specific distributions.&lt;/p&gt;
+&lt;p&gt;The next lines include whatever steps we need to prepare the image, and the last line tells the image what command to run when the image is executed. There are a lot of variations of this but these are the basics. How can we make it better? Well a real application that is a bit more complicated would make this easier. Here’s a very simple golang http server application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;main&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+    &lt;span class=&#34;s&#34;&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+    &lt;span class=&#34;s&#34;&gt;&amp;#34;net/http&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;http&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;HandleFunc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;w&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;http&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ResponseWriter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;r&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;http&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Fprintf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;w&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Hello World!&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
+
+    &lt;span class=&#34;nx&#34;&gt;http&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;ListenAndServe&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;:8080&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A very simple Dockerfile for this app would look like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; golang:latest&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; mkdir /app&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ADD&lt;/span&gt; main.go /app/ &lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WORKDIR&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; /app&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;CGO_ENABLED&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;GOOS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;linux go build -a -installsuffix cgo -o main .&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;CMD&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/app/main&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;EXPOSE&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; 8080&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;FROM&lt;/code&gt; is a language-specific image. We’re creating a directory, copying our application into the image, and then using go to compile the binary. The last line &lt;code&gt;EXPOSE&lt;/code&gt; tells your container runtime which port this image exposes.&lt;/p&gt;
+&lt;p&gt;When you run a &lt;code&gt;docker build . -t myrepo/myimage&lt;/code&gt; with just these two short text files, you end up with an 829MB image- that’s rather large.&lt;/p&gt;
+&lt;h3 id=&#34;multistage-dockerfiles&#34;&gt;Multistage Dockerfiles&lt;/h3&gt;
+&lt;p&gt;The reason the resulting image is so large is that the source image is large too, but for good reason. The golang image is 810MB as it contains a lot more operating system components to successfully be able to compile all sorts of golang programs. The nice thing about go is that the resulting binary is portable. So you can use one image to build the binary, and then copy it to a new, smaller image that doesn’t need all the extra build components, as shown in this example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; golang:latest as builder&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; mkdir /app &lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ADD&lt;/span&gt; main.go /app/ &lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WORKDIR&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; /app &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;CGO_ENABLED&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;GOOS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;linux go build -a -installsuffix cgo -o main .&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; alpine:latest&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;COPY&lt;/span&gt; --from&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;builder /app/main main&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;CMD&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;main&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;EXPOSE&lt;/span&gt;&lt;span class=&#34;s&#34;&gt; 8080&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now if you build using this Dockerfile, your image is only 13MB. Much better! You can see we tagged the first image as &lt;code&gt;builder&lt;/code&gt; and then used the &lt;code&gt;--from&lt;/code&gt; option of &lt;code&gt;COPY&lt;/code&gt; to copy the file to the smaller image based on alpine linux. But can you get it smaller? Yes! Change the &lt;code&gt;FROM alpine:latest&lt;/code&gt; to &lt;code&gt;FROM scratch&lt;/code&gt; which is an empty image. The result will be a 7.41MB image. Now though if you need bash or literally anything but your binary in that image, you’ll have to explicitly add it- that&amp;rsquo;s the main downside of using &lt;code&gt;scratch&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;There are a whole bunch of other tricks to building Dockerfiles and it really depends on your comfort with them and what you’re trying to accomplish.&lt;/p&gt;
+&lt;h2 id=&#34;cloud-native-buildpacks&#34;&gt;Cloud-Native Buildpacks&lt;/h2&gt;
+&lt;p&gt;If your goal is just to get your code into a running image without being concerned about all the details in the last section, buildpacks might be right for you. &lt;a href=&#34;../../guides/containers/cnb-what-is/&#34;&gt;Cloud-Native Buildpacks&lt;/a&gt; are designed to identify your code and automatically build and image. Here’s an &lt;a href=&#34;../../guides/containers/cnb-gs-pack/&#34;&gt;example&lt;/a&gt; using java, but we can do the same for our go app here.&lt;/p&gt;
+&lt;p&gt;All you need to do is initialize the go module with a simple &lt;code&gt;go mod init&lt;/code&gt; command. Now you can use the &lt;code&gt;pack&lt;/code&gt; CLI to build our app by running &lt;code&gt;pack build myrepo/myimage.&lt;/code&gt; The resulting image will be a reasonable 82MB, and you didn’t even need to write a single line of Dockerfile. Buildpacks also have a lot of other advantages for automating image builds and updated existing ones to provide more secure, scalable image building.&lt;/p&gt;
+&lt;h2 id=&#34;cloud-foundry-on-kubernetes&#34;&gt;Cloud Foundry on Kubernetes&lt;/h2&gt;
+&lt;p&gt;Both the &lt;code&gt;docker build&lt;/code&gt; and &lt;code&gt;pack build&lt;/code&gt; commands get you a container image, but neither gets you a running copy of your application. Cloud Foundry leverages buildpacks too, but it also manages the deployment of the images as well via the &lt;a href=&#34;../../guides/kubernetes/cf4k8s-gs/&#34;&gt;cf-for-k8s&lt;/a&gt; project. For this example here, once you’re setup, a simple &lt;code&gt;cf push myapp&lt;/code&gt; would take your go application, build it, push it, and also deploy it. In the end you would have a single instance of your application running without having to know anything about Dockerfiles, buildpacks, or Kubernetes.&lt;/p&gt;
+&lt;h2 id=&#34;using-these-tools-in-your-pipeline-to-production&#34;&gt;Using These Tools in Your Pipeline to Production&lt;/h2&gt;
+&lt;p&gt;In these examples, you ran these commands manually, which is great to get started but isn&amp;rsquo;t scalable. The key to speeding up your code moving to production is automatically building your images no matter which tool you choose.&lt;/p&gt;
+&lt;p&gt;For the case of Dockerfiles or Cloud Foundry, the most common approach is to use a &lt;a href=&#34;../../guides/ci-cd/ci-cd-what-is/&#34;&gt;Continuous Integration&lt;/a&gt; tool like Jenkins or &lt;a href=&#34;../../guides/ci-cd/concourse-gs/&#34;&gt;Concourse&lt;/a&gt; to automatically run these commands on each code commit.&lt;/p&gt;
+&lt;p&gt;For buildpacks, there’s a tool called &lt;a href=&#34;../../guides/containers/cnb-gs-kpack/&#34;&gt;&lt;code&gt;kpack&lt;/code&gt;&lt;/a&gt; which can run on Kubernetes and help automate the building of your images. It supports multiple source formats and can push to any standard container registry.&lt;/p&gt;
+&lt;p&gt;Try out some of these different approaches to running your application and see which works the best for different applications.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Getting Started with kpack</title>
+      
+      <link>/videos/kpack-gs/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/kpack-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Spring Live: Build Images with Confidence and Ease with Cloud Native Buildpacks</title>
+      
+      <link>/videos/spring-live-buildpacks/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-live-buildpacks/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: What are Cloud Native Buildpacks?</title>
+      
+      <link>/guides/containers/cnb-what-is/</link>
+      <pubDate>Thu, 16 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/containers/cnb-what-is/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://buildpacks.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Native Buildpacks&lt;/a&gt; turn your code into OCI-compliant containers. They examine your source code, build it, and create a container image with all the required dependencies to run your application.&lt;/p&gt;
+&lt;h2 id=&#34;why-are-they-important&#34;&gt;Why Are They Important?&lt;/h2&gt;
+&lt;p&gt;There are two things to consider when discussing the value of Cloud Native Buildpacks: how the container is created, and how the container is maintained.&lt;/p&gt;
+&lt;p&gt;If you’ve created a container using Dockerfiles before, you’re already familiar with the decisions you need to make. You need to decide which base image to base your container on and which version of that image to use, and then ensure it has the proper versions of all the dependencies that your application relies on.  After that, you need to bring in the additional dependencies  and runtimes, build your application, and then slim down your container image to ensure it’s as lean and quick as possible.&lt;/p&gt;
+&lt;p&gt;Cloud Native Buildpacks know how to build and containerize your application. If it&amp;rsquo;s a Java app, they will bring in the JVM. If it&amp;rsquo;s a Ruby app, they will bring in the Ruby runtime.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/containers/diagrams/cnb-1.png&#34; alt=&#34;Image Layers&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Your container also needs to be maintained. Throughout the entire stack—from the base image to dependencies to your application runtime—it&amp;rsquo;s important to keep things up to date and secure. Since Cloud Native Buildpacks separate out the base image, the runtime, and your application into different layers, they&amp;rsquo;re very quick to update only the layers that changed.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/containers/diagrams/cnb-2.png&#34; alt=&#34;Image Rebase&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;how-do-they-work&#34;&gt;How Do They Work?&lt;/h2&gt;
+&lt;p&gt;Cloud Native Buildpacks are an abstract lifecycle, so they are more of a definition than an implementation (see the &lt;a href=&#34;#how-can-i-use-them&#34;&gt;&amp;ldquo;How Can I Use Them?&amp;quot;&lt;/a&gt; section below for something more concrete). That lifecycle is broken down into four steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Detection:&lt;/strong&gt; Automatically determines which buildpacks are required to build the application.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Analysis:&lt;/strong&gt; If any layer can be reused from a previous build, pulls it from the cache. (This helps optimize the build process.)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Build:&lt;/strong&gt; Creates the runnable artifacts from your application&amp;rsquo;s source code&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Export:&lt;/strong&gt; Creates the final OCI-compliant image.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Let&amp;rsquo;s walk through these steps in a couple of specific scenarios, one where we have a Spring Boot app that uses Maven, and another where we have an app written in Ruby. An implementation of the lifecycle would look something like the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Each buildpack&amp;rsquo;s &lt;code&gt;detect&lt;/code&gt; script is run against our codebase. If a &lt;code&gt;pom.xml&lt;/code&gt; file is found, we determine that we&amp;rsquo;re building a Java app with Maven. If a &lt;code&gt;Gemfile&lt;/code&gt; is found, we know we need the Ruby buildpack.&lt;/li&gt;
+&lt;li&gt;If we&amp;rsquo;ve previously run a build with the buildpack, it will reuse those images that contain components such as the base run image, or the JDK in the case of a Java app, or the Ruby runtime for a Ruby application.&lt;/li&gt;
+&lt;li&gt;In the case of a Java app, the buildpack will use Maven to build our JAR. In the case of a Ruby application, the buildpack will use Bundler to pull down all of the application dependencies defined in our &lt;code&gt;Gemfile&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;All of these layers are then put together into a single container image that is ready to be run however we choose.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;how-can-i-use-them&#34;&gt;How Can I Use Them?&lt;/h2&gt;
+&lt;p&gt;The easiest way to get started with Cloud Native Buildpacks is to &lt;a href=&#34;https://buildpacks.io/docs/app-journey/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;use the &lt;code&gt;pack&lt;/code&gt; CLI&lt;/a&gt;, an implementation of the Buildpack lifecycle. The &lt;code&gt;pack&lt;/code&gt; CLI uses nothing but a local Docker daemon to run the Buildpack lifecycle entirely locally.&lt;/p&gt;
+&lt;p&gt;Alternatively, you can &lt;a href=&#34;https://github.com/pivotal/kpack&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;check out &lt;code&gt;kpack&lt;/code&gt;&lt;/a&gt;, a Kubernetes-native container build service. You tell &lt;code&gt;kpack&lt;/code&gt; where your code is and which branch to build, and it will build and containerize your application using Cloud Native Buildpacks, all on your Kubernetes cluster.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

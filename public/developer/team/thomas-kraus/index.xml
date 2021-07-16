@@ -1,0 +1,392 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – </title>
+    <link>/team/thomas-kraus/</link>
+    <description>Recent content on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/team/thomas-kraus/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Blog: Data Science with Python &amp; JupyterHub on Kubernetes - Part 1</title>
+      
+      <link>/blog/data-science-with-python-jupyterhub-on-kubernetes-part-1/</link>
+      <pubDate>Thu, 07 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/data-science-with-python-jupyterhub-on-kubernetes-part-1/</guid>
+      <description>
+
+        
+        &lt;p&gt;Provisioning environments for data scientists and analysts to run simulations, test new models, or experiment with new datasets can be time-consuming and error-prone. Python is a popular choice for data science use cases, and one of the easiest ways to leverage Python is through Jupyter Notebooks. A web-based development environment for multiple languages, Jupyter Notebooks support the creation and sharing of documents that contain code, equations, visualizations, output, and markup text all in the same document. Because Jupyter Notebooks are just text files, they can be easily stored and managed in a source code repository such as GitLab or GitHub. JupyterHub, meanwhile, is a multiuser hub that spawns, manages, isolates, and proxies multiple instances of a single-user Jupyter Notebook server.&lt;/p&gt;
+&lt;p&gt;Kubernetes provides the perfect abstractions and API to automate consistent and isolated environments for data scientists to conduct their work. Combining these three things—Jupyter Notebooks, Python, and Kubernetes—into one powerful platform therefore makes a lot of sense.&lt;/p&gt;
+&lt;p&gt;In the first post in this two-part series, you will learn how to deploy a Kubernetes cluster using kind on a Mac, then how to install JupyterHub into that cluster. In the second post, we will show you how to use the data science and machine learning notebooks you have created on your newly deployed JupyterHub service running on Kubernetes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s/p1-jh-ex.png&#34; alt=&#34;Example notebook in JupyterHub&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;There are a few things you’ll need before getting started with Jupyter Notebooks on Kubernetes. These instructions leverage the kind project (&lt;a href=&#34;https://kind.sigs.k8s.io/),&#34;&gt;https://kind.sigs.k8s.io/),&lt;/a&gt; which stands for Kubernetes in Docker. I ran through this example on my MacBook, but any system that has Docker installed can be used; kind will create a default storage class for your cluster using a local path persistent volume. For a production deployment of JupyterHub, you want to make sure you have persistent storage (using the CSI) that maps to a shared storage solution such as NFS, iSCSI, or FC. The default JupyterHub Helm chart settings create a service type load balancer because most managed Kubernetes offerings come configured with a cloud load balancer. To keep this tutorial brief, we will use Kubernetes port forwarding to forward a local port to our proxy-public service, which would normally be exposed through the cloud load balancer.&lt;/p&gt;
+&lt;h2 id=&#34;install-kind-and-create-your-kubernetes-cluster&#34;&gt;Install kind and Create Your Kubernetes Cluster&lt;/h2&gt;
+&lt;p&gt;Start by taking the following steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Open your favorite terminal emulator on your Mac, which should be running OS X&lt;/li&gt;
+&lt;li&gt;Use the Brew package manager, which makes installing kind on Mac OS X simple&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯ brew install &lt;span class=&#34;nv&#34;&gt;kind&lt;/span&gt;
+
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Downloading https://homebrew.bintray.com/bottles/kind-0.9.0.catalina.bottle.1.tar.gz
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Downloading from https://d29vzk4ow07wi7.cloudfront.net/e5ba99b5f14711e0dcb121a992d74c5ee6c6b0468b27e5200bf796d4987e13c0?response-content-disposition&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;attachme
+&lt;span class=&#34;c1&#34;&gt;######################################################################## 100.0%&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Pouring kind-0.9.0.catalina.bottle.1.tar.gz
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Caveats
+zsh completions have been installed to:
+  /usr/local/share/zsh/site-functions
+
+/usr/local/share/zsh/site-functions is not in your zsh FPATH!
+Add it by following these steps:
+  https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; Summary
+🍺  /usr/local/Cellar/kind/0.9.0: &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt; files, 9.2MB
+&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&amp;gt; &lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;brew cleanup&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt; has not been run in &lt;span class=&#34;m&#34;&gt;30&lt;/span&gt; days, running now...
+Removing: /Users/kraustvmware.com/Library/Caches/Homebrew/pcre2--10.35.catalina.bottle.tar.gz... &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;2.0MB&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Removing: /Users/kraustvmware.com/Library/Caches/Homebrew/sqlite--3.33.0.catalina.bottle.tar.gz... &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;1.9MB&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Removing: /Users/kraustvmware.com/Library/Caches/Homebrew/Cask/iterm2--3.3.12.zip... &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;13.5MB&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Removing: /Users/kraustvmware.com/Library/Logs/Homebrew/fdupes... &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;64B&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Removing: /Users/kraustvmware.com/Library/Logs/Homebrew/gdbm... &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;64B&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Removing: /Users/kraustvmware.com/Library/Logs/Homebrew/readline... &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;64B&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Removing: /Users/kraustvmware.com/Library/Logs/Homebrew/sqlite... &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;64B&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Removing: /Users/kraustvmware.com/Library/Logs/Homebrew/xz... &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;64B&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Removing: /Users/kraustvmware.com/Library/Logs/Homebrew/pcre2... &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;64B&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Removing: /Users/kraustvmware.com/Library/Logs/Homebrew/openssl@1.1... &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;64B&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Removing: /Users/kraustvmware.com/Library/Logs/Homebrew/python@3.8... &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;3&lt;/span&gt; files, 172.3KB&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Pruned &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; symbolic links from /usr/local
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;Download a kind cluster configuration manifest or create your own. This is my config:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯ cat multinode-conf.yaml
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  apiServerAddress: &lt;span class=&#34;s2&#34;&gt;&amp;#34;127.0.0.1&amp;#34;&lt;/span&gt;
+  apiServerPort: &lt;span class=&#34;m&#34;&gt;6443&lt;/span&gt;
+nodes:
+- role: control-plane
+- role: worker
+- role: worker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;Create your local Kubernetes cluster:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯ kind create cluster --config ./multinode-conf.yaml --name jupyter
+Creating cluster &lt;span class=&#34;s2&#34;&gt;&amp;#34;jupyter&amp;#34;&lt;/span&gt; ...
+ ✓ Ensuring node image &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;kindest/node:v1.19.1&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; 🖼
+ ✓ Preparing nodes 📦 📦 📦
+ ✓ Writing configuration 📜
+ ✓ Starting control-plane 🕹️
+ ✓ Installing CNI 🔌
+ ✓ Installing StorageClass 💾
+ ✓ Joining worker nodes 🚜
+Set kubectl context to &lt;span class=&#34;s2&#34;&gt;&amp;#34;kind-jupyter&amp;#34;&lt;/span&gt;
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-jupyter
+
+Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;5&#34;&gt;
+&lt;li&gt;Test your Kubernetes cluster:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯ kubectl config get-contexts
+CURRENT   NAME           CLUSTER        AUTHINFO       NAMESPACE
+*         kind-jupyter   kind-jupyter   kind-jupyter
+
+❯ kubectl get nodes
+NAME                    STATUS   ROLES    AGE     VERSION
+jupyter-control-plane   Ready    master   2m31s   v1.19.1
+jupyter-worker          Ready    &amp;lt;none&amp;gt;   2m1s    v1.19.1
+jupyter-worker2         Ready    &amp;lt;none&amp;gt;   2m1s    v1.19.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;helm-install&#34;&gt;HELM Install&lt;/h2&gt;
+&lt;p&gt;Before we can install the JupyterHub Helm chart, we need to ensure Helm is installed. If you don’t already have it, follow the instructions below for OS X or reference this &lt;a href=&#34;/guides/kubernetes/helm-gs/&#34;&gt;Getting Started Guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;On your Mac, download and install the &lt;a href=&#34;https://github.com/helm/helm/releases&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm CLI&lt;/a&gt; if you haven&amp;rsquo;t already done so.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+❯ chmod &lt;span class=&#34;m&#34;&gt;700&lt;/span&gt; get_helm.sh
+❯ ./get_helm.sh
+Downloading https://get.helm.sh/helm-v3.4.1-darwin-amd64.tar.gz
+Verifying checksum... Done.
+Preparing to install helm into /usr/local/bin
+Password:
+helm installed into /usr/local/bin/helm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;install-jupyterhub&#34;&gt;Install JupyterHub&lt;/h2&gt;
+&lt;p&gt;We are now going to leverage the Helm package manager for Kubernetes to install JupyterHub. Follow the instructions below to deploy JupyterHub notebooks on your Kubernetes cluster.&lt;/p&gt;
+&lt;p&gt;Add the Jupyter Helm chart repo to Helm:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯ helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
+❯ helm repo update
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;On a Linux machine, generate a random hex string to be used as a security token by JupyterHub:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯ openssl rand -hex &lt;span class=&#34;m&#34;&gt;32&lt;/span&gt;
+  c46350ed823f94.......20dff86cc63a570d3be
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Confirm the existence of the “standard” storage class, which will be used for the persistent volume for each instance spawned by JupyterHub. This will allow each user to have a 10GB persistent volume so that their work will persist through restarts of their instance or pod and be mounted to their home directory.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯ kubectl get storageclass                                      
+
+NAME                 PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+standard &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;default&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;   rancher.io/local-path   Delete          WaitForFirstConsumer   &lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;                  3m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Modify the configuration of a Helm chart. This is done at deployment time with a values YAML file. To simplify your experience, we have already created a &lt;a href=&#34;https://raw.githubusercontent.com/tkrausjr/k8s-manifests/master/jupyter-hub/scipy-jhub-values-kind.yaml&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;configuration YAML&lt;/a&gt; file for the JupyterHub Helm package, which you can download and edit. We have preconfigured this values file to configure several things for your JupyterHub installation:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Thanks to the new Docker image pull changes on Docker Hub, you will need to configure an &lt;code&gt;imagePullSecret&lt;/code&gt; with your Docker Hub account to pull the required images. Read more about it &lt;a href=&#34;https://docs.docker.com/docker-hub/download-rate-limit/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Change the default interface to the newer &lt;a href=&#34;https://jupyter.org/#:~:text=JupyterLab%20is%20a%20web%2Dbased,scientific%20computing%2C%20and%20machine%20learning.&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Jupyter Lab&lt;/a&gt; interface. This recent improvement provides some aesthetic and functional benefits, such as providing a terminal interface to your Jupyter Notebook instance to do things like git checkouts.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯ wget https://raw.githubusercontent.com/tkrausjr/k8s-manifests/master/jupyter-hub/scipy-jhub-values-kind.yaml
+
+❯ vi scipy-jhub-values-kind.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Change the following in the &lt;code&gt;scipy-jhub-values-kind.yaml&lt;/code&gt; file:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Put in your Docker Hub account the username, email, and password.&lt;/li&gt;
+&lt;li&gt;Put in the generated hex string from Step 1.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;c&#34;&gt;# imagePullSecret is configuration to create a k8s Secret that Helm chart&amp;#39;s pods&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# can get credentials from to pull their images.&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;imagePullSecret&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;create&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;automaticReferenceInjection&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; 
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;lt;DockerHub-Username&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;## &amp;lt;&amp;lt;Change to your User Name&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;email&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;lt;DockerHub-Email&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;## &amp;lt;&amp;lt;Change to your Email&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;lt;DockerHub-Password&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;## &amp;lt;&amp;lt;Change to your Pass&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;hub&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;service&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterIP&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;uid&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1000&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;fsGid&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1000&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;deploymentStrategy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Recreate&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;db&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;sqlite-pvc&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;upgrade&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;pvc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;accessModes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;ReadWriteOnce&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;storage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;3Gi&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;storageClassName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;standard &lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;## &amp;lt;Change to your Storage Class&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;singleuser&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;jupyter/scipy-notebook&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;tag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;latest&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;memory&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;limit&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;5G&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;guarantee&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2.&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;5G&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;defaultUrl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/lab&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;storage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;dynamic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;dynamic&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;storageClass&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;standard &lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;## &amp;lt;Change to your Storage Class&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;proxy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;service&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterIP&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secretToken&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;c86a373144e4e8b1341fa5661cdc70f165856ba48eb54028eb844d41f1f2aeb4d4a0cca29b9548d52cb9b4c2fb901aa00537a9d37451a6f77953add34039ca56&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;## &amp;lt;&amp;lt;Change the token to your random hex string from Step 1&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: We have chosen the latest version of the &lt;code&gt;jupyter/scipy-notebook&lt;/code&gt;, which comes with all the required libraries for the machine learning and data science use cases we will demonstrate in the second post of this two-part series. Specifically, the &lt;code&gt;scipy-notebook&lt;/code&gt; comes preinstalled with pandas, matplotlib, scikit-learn, beautifulsoup, and seaborn. For a list of the Docker images that the Jupyter team maintains, you can look &lt;a href=&#34;https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Create a dedicated Kubernetes namespace to house the JupyterHub Kubernetes components:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯  kubectl create namespace jupyter
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Install JupyterHub using the Helm chart and reference the values file you modified in Step 3:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯  helm install jhub-datascience jupyterhub/jupyterhub -f scipy-jhub-values-kind.yaml -n jupyter --timeout 180s
+WARNING: You should switch to &lt;span class=&#34;s2&#34;&gt;&amp;#34;https://charts.helm.sh/stable&amp;#34;&lt;/span&gt;
+NAME: jhub-datascience
+LAST DEPLOYED: Thu Oct &lt;span class=&#34;m&#34;&gt;29&lt;/span&gt; 13:58:01 &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt;
+NAMESPACE: jupyter
+STATUS: deployed
+REVISION: &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+TEST SUITE: None
+NOTES:
+Thank you &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; installing JupyterHub!
+Your release is named jhub-datascience and installed into the namespace jupyter.
+You can find &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; the hub and proxy is ready by doing:
+ kubectl --namespace&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;jupyter get pod
+and watching &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; both those pods to be in status &lt;span class=&#34;s1&#34;&gt;&amp;#39;Running&amp;#39;&lt;/span&gt;.
+You can find the public IP of the JupyterHub by doing:
+ kubectl --namespace&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;jupyter get svc proxy-public
+It might take a few minutes &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; it to appear!
+Note that this is still an alpha release! If you have questions, feel free to
+  1. Read the guide at https://z2jh.jupyter.org
+  2. Chat with us at https://gitter.im/jupyterhub/jupyterhub
+  3. File issues at https://github.com/jupyterhub/zero-to-jupyterhub-k8s/issues
+directly instead.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: This installation will take a while to pull down all the images required to use JupyterHub and bootstrap the installation process.&lt;/p&gt;
+&lt;p&gt;You can monitor and troubleshoot the JupyterHub installation by watching the pod creations in the &lt;code&gt;jupyter&lt;/code&gt; namespace.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯  kubectl get po -n jupyter -w                        
+
+NAME                              READY   STATUS    RESTARTS   AGE
+continuous-image-puller-4lpbv     1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          90s
+continuous-image-puller-cw8vd     1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          90s
+continuous-image-puller-hr75f     1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          90s
+continuous-image-puller-skspt     1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          90s
+hub-7d9698c5d4-dh4ld              1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          90s
+proxy-7c5f54cb77-t8l4d            1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          90s
+user-scheduler-67f756d5d6-4gb6b   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          90s
+user-scheduler-67f756d5d6-f4z4c   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          90s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can also monitor for errors by putting a watch on Kubernetes events happening during the installation of the Helm release inside the &lt;code&gt;jupyter&lt;/code&gt; namespace.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯  kubectl get events -n jupyter -w
+
+0s          Normal    Pulled                   pod/continuous-image-puller-6ksn9      Container image &lt;span class=&#34;s2&#34;&gt;&amp;#34;k8s.gcr.io/pause:3.2&amp;#34;&lt;/span&gt; already present on machine
+0s          Normal    Created                  pod/continuous-image-puller-6ksn9      Created container pause
+0s          Normal    Started                  pod/continuous-image-puller-6ksn9      Started container pause
+0s          Normal    EnsuringLoadBalancer     service/proxy-public                   Ensuring load balancer
+0s          Normal    EnsuredLoadBalancer      service/proxy-public                   Ensured load balancer
+0s          Warning   FailedScheduling         pod/hub-7b9c7b96d5-2l4sd               running &lt;span class=&#34;s2&#34;&gt;&amp;#34;VolumeBinding&amp;#34;&lt;/span&gt; filter plugin &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; pod &lt;span class=&#34;s2&#34;&gt;&amp;#34;hub-7b9c7b96d5-2l4sd&amp;#34;&lt;/span&gt;: pod has unbound immediate PersistentVolumeClaims
+0s          Warning   ProvisioningFailed       persistentvolumeclaim/hub-db-dir       storageclass.storage.k8s.io &lt;span class=&#34;s2&#34;&gt;&amp;#34;standard&amp;#34;&lt;/span&gt; not found
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To look at a failed Helm release in Kubernetes:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯  helm list -A                              
+WARNING: &lt;span class=&#34;s2&#34;&gt;&amp;#34;kubernetes-charts.storage.googleapis.com&amp;#34;&lt;/span&gt; is deprecated &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;stable&amp;#34;&lt;/span&gt; and will be deleted Nov. 13, 2020.
+WARNING: You should switch to &lt;span class=&#34;s2&#34;&gt;&amp;#34;https://charts.helm.sh/stable&amp;#34;&lt;/span&gt;
+NAME      	NAMESPACE	REVISION	UPDATED                                	STATUS	CHART            	APP VERSION
+jhub-scipy	jupyter  	&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       	2020-11-04 09:25:17.906053349 -0800 PST	failed	jupyterhub-0.10.0	1.2.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To uninstall a failed Helm release in Kubernetes:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯  helm uninstall jhub-scipy -n jupyter                                                                                               
+
+WARNING: &lt;span class=&#34;s2&#34;&gt;&amp;#34;kubernetes-charts.storage.googleapis.com&amp;#34;&lt;/span&gt; is deprecated &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;stable&amp;#34;&lt;/span&gt; and will be deleted Nov. 13, 2020.
+WARNING: You should switch to &lt;span class=&#34;s2&#34;&gt;&amp;#34;https://charts.helm.sh/stable&amp;#34;&lt;/span&gt;
+release &lt;span class=&#34;s2&#34;&gt;&amp;#34;jhub-scipy&amp;#34;&lt;/span&gt; uninstalled
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;jupyter-hub-access&#34;&gt;Jupyter Hub Access&lt;/h2&gt;
+&lt;p&gt;To verify that your Jupyter Hub deployment is successful, the following Kubernetes objects should be running in the &lt;code&gt;jupyter&lt;/code&gt; namespace:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯  kubectl get deploy,po,svc,pvc -n jupyter     
+
+NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/hub              1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           3m
+deployment.apps/proxy            1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           3m
+deployment.apps/user-scheduler   2/2     &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;           3m
+
+NAME                                  READY   STATUS    RESTARTS   AGE
+pod/continuous-image-puller-4lpbv     1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          3m
+pod/continuous-image-puller-cw8vd     1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          3m
+pod/continuous-image-puller-hr75f     1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          3m
+pod/continuous-image-puller-skspt     1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          3m
+pod/hub-7d9698c5d4-dh4ld              1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          3m
+pod/proxy-7c5f54cb77-t8l4d            1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          3m
+pod/user-scheduler-67f756d5d6-4gb6b   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          3m
+pod/user-scheduler-67f756d5d6-f4z4c   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          3m
+
+NAME           TYPE        CLUSTER-IP      EXTERNAL-IP   PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;    AGE
+hub            ClusterIP   10.96.151.178   &amp;lt;none&amp;gt;        8081/TCP   3m
+proxy-api      ClusterIP   10.96.90.242    &amp;lt;none&amp;gt;        8001/TCP   3m
+proxy-public   ClusterIP   10.96.66.108    &amp;lt;none&amp;gt;        80/TCP     3m
+
+NAME          STATUS   VOLUME            CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+claim-admin   Bound    pvc-46f13b00-580a-435a-b263-22b4cfd2376d   10Gi       RWO            
+standard       20m
+hub-db-dir    Bound    pvc-96243b44-2088-44df-828a-d9abf75cea46   3Gi        RWO            standard       51m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The final step is to expose the proxy-public Kubernetes service locally on your Mac using port forwarding.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯ kubectl port-forward -n jupyter svc/proxy-public 8080:80 &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;39859&lt;/span&gt;
+Forwarding from 127.0.0.1:8080 -&amp;gt; &lt;span class=&#34;m&#34;&gt;8000&lt;/span&gt;                                                     
+Forwarding from &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;::1&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;:8080 -&amp;gt; &lt;span class=&#34;m&#34;&gt;8000&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To access the JupyterHub web UI from your Mac, use your web browser and enter your local IP address with the port specified above (8080), so http://localhost:8080/.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s/p1-jh-login.png&#34; alt=&#34;JupyterHub login screen&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Congratulations! You are now ready to consume the service you have created and developed using Python Jupyter Notebooks running on JupyterHub on Kubernetes. In &lt;a href=&#34;/blog/data-science-with-python-jupyterhub-on-kubernetes-part-2/&#34;&gt;Part 2 of this series&lt;/a&gt;, we will focus on how to use JupyterHub and use Jupyter Notebooks on Kubernetes.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: Data Science with Python &amp; JupyterHub on Kubernetes - Part 2</title>
+      
+      <link>/blog/data-science-with-python-jupyterhub-on-kubernetes-part-2/</link>
+      <pubDate>Fri, 08 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/data-science-with-python-jupyterhub-on-kubernetes-part-2/</guid>
+      <description>
+
+        
+        &lt;p&gt;In a &lt;a href=&#34;/blog/data-science-with-python-jupyterhub-on-kubernetes-part-1&#34;&gt;previous post&lt;/a&gt;, we discussed the advantages of running JupyterHub on Kubernetes. We also showed you how to install a local Kubernetes cluster using kind on your Mac, as well as how to install the JupyterHub Helm chart on a Kubernetes cluster.&lt;/p&gt;
+&lt;p&gt;In this post, we will focus on the experience of the developers, who are going to be leveraging our service to develop new models using &lt;code&gt;scikit-learn&lt;/code&gt; or perform calculations and transformations of large datasets using pandas. To illustrate the value that Jupyter Notebooks and JupyterHub provide in a multiuser environment, we will clone a Git repository containing two example Jupyter Notebooks that we can work with.&lt;/p&gt;
+&lt;h2 id=&#34;using-jupyterhub&#34;&gt;Using JupyterHub&lt;/h2&gt;
+&lt;p&gt;Each user that accesses JupyterHub will have their own workspace complete with a single-user Jupyter Notebook server, which uses the JupyterLab Interface. To demonstrate the capabilities of JupyterHub and Python, we will check out the following sample notebooks that we have written and executed:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;industry-revenue-analysis.ipynb&lt;/strong&gt; – Analysis of historical financial data organized by industry that leverages the pandas library&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ml-stock-predictor-knn-v4.ipynb&lt;/strong&gt; – Machine learning (ML) based on revenue data from public financial statements that leverages the &lt;code&gt;scikit-learn&lt;/code&gt; library for Python&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Each time a user logs into the JupyterHub web page, an additional pod will be instantiated for that user and a 10GB persistent volume will be mapped to the user’s home directory.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;In &lt;a href=&#34;/blog/data-science-with-python-jupyterhub-on-kubernetes-part-1&#34;&gt;Part 1&lt;/a&gt;, we showed you how to expose the JupyterHub proxy-public Kubernetes service locally on your Mac using port forwarding. If you have not already done this, execute the following command:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;❯ kubectl port-forward -n jupyter svc/proxy-public 8080:80 &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;39859&lt;/span&gt;
+Forwarding from 127.0.0.1:8080 -&amp;gt; &lt;span class=&#34;m&#34;&gt;8000&lt;/span&gt;                                                     
+Forwarding from &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;::1&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;:8080 -&amp;gt; &lt;span class=&#34;m&#34;&gt;8000&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;To access the JupyterHub web UI, from your Mac you would use a web browser and enter the localhost IP (127.0.0.1) or localhost with the port specified above (8080), so http://localhost:8080/. JupyterHub is running with a default dummy authenticator, so entering any username and password combination will let you enter the hub.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s-p2/login-admin.png&#34; alt=&#34;Jupyter login screen&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Once you are authenticated, you will be brought to the workspaces screen, which will allow you to open a local terminal inside the container, run interactive Python in a console, or create a new Python3 Jupyter notebook. You can also get interactive help or browse the local container’s directory structure.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s-p2/ui.png&#34; alt=&#34;JupyterHub UI&#34;  /&gt;&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;Click the Terminal button under Other on the main workspace screen.
+At the Terminal prompt, type the following command:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git clone https://github.com/tkrausjr/data-science-demos.git data-science
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s-p2/terminal.png&#34; alt=&#34;Running git clone in a terminal in JupyterHub&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;running-the-machine-learning-notebook&#34;&gt;Running the Machine Learning Notebook&lt;/h2&gt;
+&lt;p&gt;To jumpstart your data science learning, two sample notebooks are in the data science directory created by your git clone operation in the previous step. The repos and sample datasets are here: &lt;a href=&#34;https://github.com/tkrausjr/finance-analysis.git&#34;&gt;https://github.com/tkrausjr/finance-analysis.git&lt;/a&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Open the &lt;code&gt;/data-science/jupyter-hub&lt;/code&gt; directory.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s-p2/terminal-dir.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;To run the machine learning notebook, double-click the &lt;code&gt;ml-stock-predictor-knn-v4.ipynb&lt;/code&gt; file. You can run each cell individually by clicking in the cell and then hitting the &lt;code&gt;&amp;gt;| Run&lt;/code&gt; button or using keyboard shortcut &lt;strong&gt;Shift + Enter&lt;/strong&gt;. To run all cells from top to bottom (in other words, the entire program) you can go to &lt;strong&gt;Menu &amp;ndash;&amp;gt; Run &amp;ndash;&amp;gt; Run All Cells&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s-p2/run-all-cells-stock.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;This notebook aims to classify companies as high growth or low growth according to their historical annual revenue growth, using supervised learning with the k-nearest neighbor (KNN) classification algorithm. As such, it will:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Using the pandas library, create a data frame from a CSV containing real public companies’ annual sales figures and stock price data.&lt;/li&gt;
+&lt;li&gt;Clean up the data frame and calculate and create new columns representing year-over-year sales growth. In our classification problem, the annual revenue growth becomes the features or attributes that will be put into our ML model.&lt;/li&gt;
+&lt;li&gt;Filter out the highest-growth companies by labeling them with a 0 or 1 to represent low growth or high growth, respectively. In supervised learning we have to label our data so the algorithm can determine upon which answers it should base its learning.&lt;/li&gt;
+&lt;li&gt;Visualize and explore the data with the pandas and seaborn libraries.&lt;/li&gt;
+&lt;li&gt;Train, test, and split the data with the &lt;code&gt;scikit-learn&lt;/code&gt; library.&lt;/li&gt;
+&lt;li&gt;Run a KNN ML model against the dataset and evaluate it using the &lt;code&gt;scikit-learn&lt;/code&gt; library.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s-p2/graph-1.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s-p2/stock.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s-p2/graph-2.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The output of the classification report in cell 36 shows us that although the model seems to be working, it is actually just choosing the value for the majority class, which is “0” every time. To make this model work as a classification problem, we would need to do some additional work, namely to undersample from the majority class or oversample from the minority class in order to create a more balanced dataset.&lt;/p&gt;
+&lt;h2 id=&#34;running-the-data-analytics-notebook&#34;&gt;Running the Data Analytics Notebook&lt;/h2&gt;
+&lt;p&gt;To run the pandas data analysis notebook, double-click the &lt;code&gt;industry-revenue-analysis.ipynb&lt;/code&gt; file. You can run each cell individually by clicking in the cell and then hitting the &lt;code&gt;&amp;gt;| Run&lt;/code&gt; button or using keyboard shortcut &lt;strong&gt;Shift + Enter&lt;/strong&gt;. To run all cells from top to bottom (in other words, the entire program) you can go to &lt;strong&gt;Menu &amp;ndash;&amp;gt; Run &amp;ndash;&amp;gt; Run All Cells&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s-p2/run-all-cells-ind.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;This notebook will do the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Using the pandas library, create two data frames from two separate CSVs containing real public companies’ annual sales figures and industry sector data.&lt;/li&gt;
+&lt;li&gt;Merge the two data frames using “ticker” as the key value.&lt;/li&gt;
+&lt;li&gt;Aggregate the historical revenue data by industry and year and create a pandas pivot table.&lt;/li&gt;
+&lt;li&gt;Calculate the annual percentage change in revenue per industry and sort from highest to lowest for the most recent period.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s-p2/table.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;multiuser-support&#34;&gt;Multiuser Support&lt;/h2&gt;
+&lt;p&gt;When another data scientist wants to use the platform, they just need to login to JupyterHub and it will take care of the rest.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s-p2/login-john.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/jupyter-hub-on-k8s-p2/ui.png&#34; alt=&#34;&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;When a second data scientist (in this case, myself, Thomas) logs into JupyterHub, a second persistent volume claim, persistent volume, and pod will be provisioned for the new user.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl get pvc -n jupyter                    
+NAME                  STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+claim-admin           Bound    pvc-6e02d65b-c47a-4cf4-a1ad-489dc7cc49de   10Gi       RWO            standard       45m
+claim-john            Bound    pvc-3c1ee9a3-68ab-4d71-a1f4-8cf8c04fb975   10Gi       RWO            standard       109s
+hub-db-dir            Bound    pvc-b0a0657d-a9f8-4a17-9002-2a3c8f2cade6   3Gi        RWO            standard       88m
+
+
+$ kubectl get po -n jupyter -l &lt;span class=&#34;nv&#34;&gt;component&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;singleuser-server            
+NAME            READY   STATUS    RESTARTS   AGE
+jupyter-admin   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          73m
+jupyter-john    1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          2m15s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;In this post, we have shown how deploying JupyterHub on top of Kubernetes provides various benefits, including:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;An isolated workspace where each data scientist will have their own dedicated CPU and memory guaranteed instance of a Jupyter Notebook server that will be spawned on demand and run on a shared Kubernetes platform.&lt;/li&gt;
+&lt;li&gt;Efficient usage of resources, including the culling of unused Jupyter instances with the ability to shut down (defaults to an hour) unused Jupyter instances and autosave any additions or changes that have been made to running Notebooks. Users can log back in and be reconnected to their Jupyter Notebook instance with all their previous work thanks to the persistent volumes allocated to each Jupyter pod.&lt;/li&gt;
+&lt;li&gt;Data persistence for data scientists’ work to be persisted to a dynamically created persistent volume so they either can log out and back in to JupyterHub and resume where they left off or have their work survive a pod failure.&lt;/li&gt;
+&lt;li&gt;A way to provide data scientists with a lower-cost alternative to more expensive compute options for certain tasks, such as data cleanup, exploration, and model development.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Hopefully you now better understand how a JupyterHub implementation running on Kubernetes can provide a scalable, simple, and powerful platform for data science teams to work with. If you are new to Jupyter Notebooks in general, I would recommend experimenting with the sample notebooks used in this post or walking through a Jupyter Notebook tutorial that goes into more detail on developing in Jupyter Notebooks with &lt;code&gt;pandas&lt;/code&gt;, &lt;code&gt;numpy&lt;/code&gt;, or &lt;code&gt;scikit-learn&lt;/code&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

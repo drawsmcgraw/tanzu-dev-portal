@@ -1,0 +1,430 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Tanzu</title>
+    <link>/tags/tanzu/</link>
+    <description>Recent content in Tanzu on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 24 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/tanzu/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Getting Started with Contour - To Ingress and Beyond</title>
+      
+      <link>/guides/kubernetes/service-routing-contour-to-ingress-and-beyond/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/service-routing-contour-to-ingress-and-beyond/</guid>
+      <description>
+
+        
+        &lt;h3 id=&#34;introduction-to-contour&#34;&gt;Introduction to Contour&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://projectcontour.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Contour&lt;/a&gt; is an open source Kubernetes
+&lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ingress controller&lt;/a&gt;
+that acts as a control plane for the Envoy edge and service proxy (see below).​
+Contour supports dynamic configuration updates and multi-team ingress delegation
+while maintaining a lightweight profile.&lt;/p&gt;
+&lt;p&gt;Contour is built for Kubernetes to empower you to quickly deploy cloud native
+applications by using the flexible HTTPProxy API which is a lightweight system
+that provides many of the advanced routing features of a Service Mesh.&lt;/p&gt;
+&lt;p&gt;Contour deploys the
+&lt;a href=&#34;https://www.envoyproxy.io/docs/envoy/latest/intro/what_is_envoy&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Envoy&lt;/a&gt; proxy
+as a reverse proxy and load balancer. Envoy is a Layer 7 (application layer) bus
+for proxy and communication in modern service-oriented architectures, such as
+Kubernetes clusters. Envoy strives to make the network transparent to
+applications while maximizing observability to ease troubleshooting.&lt;/p&gt;
+
+&lt;div class=&#34;youtube-video-shortcode&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/Kz671dXioS0&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;div align=&#34;center&#34;&gt;&lt;i&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=Kz671dXioS0&amp;feature=youtu.be&#34;&gt;Watch Paul livestream trying Contour 1.12.0 for the first time.&lt;/a&gt;&lt;/i&gt;&lt;/div&gt;
+&lt;h3 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h3&gt;
+&lt;p&gt;You&amp;rsquo;ll need a Kubernetes cluster. This guide uses a
+&lt;a href=&#34;https://tanzu.vmware.com/kubernetes-grid&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Kubernetes Grid&lt;/a&gt; cluster, but
+any Kubernetes Cluster whether they&amp;rsquo;re running on a Public Cloud, in your
+[Home] Lab, or on your desktop such as &lt;a href=&#34;https://kind.sigs.k8s.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;KIND&lt;/a&gt; or
+&lt;a href=&#34;https://minikube.sigs.k8s.io/docs/start/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;minikube&lt;/a&gt;. You&amp;rsquo;ll also need the
+Kubernetes CLI
+&lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl&lt;/a&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Verify access to your Kubernetes cluster&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl version --short
+Client Version: v1.20.2
+Server Version: v1.19.3+vmware.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a scratch directory to work from&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir ~/scratch/contour-demo
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ~/scratch/contour-demo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;installing-contour-1120&#34;&gt;Installing Contour 1.12.0&lt;/h3&gt;
+&lt;p&gt;Since version 1.11.0 we&amp;rsquo;ve got two primary options for installing Contour, A
+singleton install from manifests, or by using the
+&lt;a href=&#34;https://projectcontour.io/resources/deprecation-policy/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Operator&lt;/a&gt; (which is
+currently in Alpha). Since we only plan to install Contour once on the cluster,
+we can stick to the safer method of using the Contour provided manifests.&lt;/p&gt;
+&lt;p&gt;You can install Contour directly from the manifests provided by the project,
+however best practice would have you download them locally first for validation
+and repeatability.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Download contour installation manifests&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;wget https://projectcontour.io/quickstart/v1.12.0/contour.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;View the manifests in your favorite local text editor&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;less contour.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Validate even further by doing a dry run install&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f contour.yaml --dry-run&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;client
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If that all looks good (and it should!), perform the actual install&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f contour.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;After a few moments you can confirm that its ready.&lt;/p&gt;
+&lt;p&gt;You&amp;rsquo;re looking for both the &lt;strong&gt;deployment&lt;/strong&gt; and &lt;strong&gt;DaemonSet&lt;/strong&gt; to show as fully
+Available, and a valid IP (or hostname) in the &lt;code&gt;EXTERNAL-IP&lt;/code&gt; field of your
+envoy &lt;strong&gt;service&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl -n projectcontour get deployment,daemonset,service
+
+  NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
+  deployment.apps/contour   2/2     &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;           2m18s
+
+  NAME                   DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+  daemonset.apps/envoy   &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;       &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;           &amp;lt;none&amp;gt;          2m17s
+
+  NAME              TYPE           CLUSTER-IP       EXTERNAL-IP
+  PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;                      AGE
+  service/contour   ClusterIP      100.71.191.199   &amp;lt;none&amp;gt;
+  8001/TCP                     2m18s
+  service/envoy     LoadBalancer   100.66.114.136   a36c85343e9284c1cb4236d844c31aab-1691151764.us-east-2.elb.amazonaws.com   80:30825/TCP,443:30515/TCP   2m18s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Save the Ingress &lt;code&gt;EXTERNAL-IP&lt;/code&gt; for later use as a &lt;a href=&#34;http://xip.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;xip.io&lt;/a&gt; dynamic DNS host.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Note for AWS Users&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;Since this is deployed in Amazon Web Services I had to resolve the hostname
+using the &lt;code&gt;host&lt;/code&gt; command, but in other clouds you will probably get an IP
+address.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;INGRESS_HOST&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;lt;external ip address from above&amp;gt;.xip.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;creating-an-ingress-using-contour-1120&#34;&gt;Creating an Ingress using Contour 1.12.0&lt;/h3&gt;
+&lt;p&gt;Now that Contour is installed we can validate it is functioning correctly by
+deploying an application, exposing it as a service, then creating an Ingress
+resource. As well as creating the resources we&amp;rsquo;ll output the manifests to a file
+for later re-use.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a namespace&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create namespace my-ingress-app -o yaml &amp;gt; my-ingress-app-namespace.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a deployment containing a basic nginx pod&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n my-ingress-app create deployment --image&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;nginx &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  nginx -o yaml &amp;gt; my-ingress-app-deployment.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a service for the deployment&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n my-ingress-app expose deployment nginx --port &lt;span class=&#34;m&#34;&gt;80&lt;/span&gt; -o yaml &amp;gt; my-ingress-app-service.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Finally create an Ingress for the service&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n my-ingress-app create ingress nginx --class&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;default &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --rule&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;nginx.&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$INGRESS_HOST&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;/*=nginx:80&amp;#34;&lt;/span&gt; -o yaml &amp;gt; my-ingress-app-ingress.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Validate that your resources are deployed and ready&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl -n my-ingress-app get all,ingress
+
+Warning: extensions/v1beta1 Ingress is deprecated in v1.14+, unavailable in v1.22+&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; use networking.k8s.io/v1 Ingress
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/nginx-6799fc88d8-dphdt   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          13m
+
+NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;   AGE
+service/nginx   ClusterIP   100.69.247.38   &amp;lt;none&amp;gt;        80/TCP    12m
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginx   1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           13m
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginx-6799fc88d8   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       13m
+
+NAME                       CLASS     HOSTS                                                                     ADDRESS                                                                   PORTS   AGE
+ingress.extensions/nginx   default   a36c85343e9284c1cb4236d844c31acb-1691151764.us-east-2.elb.amazonaws.com   a36c85343e9284c1cb4236d844c31acb-1691151764.us-east-2.elb.amazonaws.com   &lt;span class=&#34;m&#34;&gt;80&lt;/span&gt;      51s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Validate that you can access the application&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ curl -s nginx.3.13.150.109.xip.io  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep h1
+
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Congratulations! If you see the &lt;strong&gt;Welcome to nginx!&lt;/strong&gt; message, that means you&amp;rsquo;ve
+successfully installed and tested Contour as an Ingress Controller. However its
+so much more than that, so lets explore further.&lt;/p&gt;
+&lt;p&gt;However let&amp;rsquo;s clean up our resources before we move on. Since all of our
+resources are in a single namespace we could use
+&lt;code&gt;kubectl delete namespace my-ingress-app&lt;/code&gt;, However we also saved the manifests
+so we can use those like so:&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-warning&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Caution&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;We created these manifests in the same directory as our contour manifests, so
+we will move them into a subdirectory to ensure we only delete the app itself.
+This is a lesson learned that we should have created them in a subdirectory
+in the first place for organizational purposes.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir my-ingress-app
+mv my-ingress-app-* my-ingress-app/
+kubectl delete -f my-ingress-app
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;beyond-ingress-with-contour-1120&#34;&gt;Beyond Ingress with Contour 1.12.0&lt;/h3&gt;
+&lt;p&gt;As well as &lt;strong&gt;Ingress&lt;/strong&gt; Contour supports a resource type &lt;strong&gt;HTTPProxy&lt;/strong&gt; which
+extends the concept of &lt;strong&gt;Ingress&lt;/strong&gt; to add many features that you would normally
+have to reach for &lt;strong&gt;Istio&lt;/strong&gt; or a similar service mesh to get. We can explore
+some of those features here.&lt;/p&gt;
+&lt;p&gt;Having learned our lesson about sub directories above, lets create a directory
+for our exploration of HTTPProxy.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir http-proxy
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; http-proxy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As we did earlier we&amp;rsquo;ll start by deploying a nginx &lt;strong&gt;Pod&lt;/strong&gt; and a &lt;strong&gt;Service&lt;/strong&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a namespace&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create namespace http-proxy -o yaml &amp;gt; http-proxy-namespace.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a Deployment containing a basic nginx pod&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy create deployment --image&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;nginx &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  nginx -o yaml &amp;gt; http-proxy-nginx-deployment.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a service for the deployment&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy expose deployment nginx --port &lt;span class=&#34;m&#34;&gt;80&lt;/span&gt; -o yaml &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  &amp;gt; http-proxy-nginx-service.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Now that we have the Deployment and Service created we can create the HTTPProxy
+resource. Unfortunately we can&amp;rsquo;t just sling a &lt;code&gt;kubectl create httpproxy&lt;/code&gt; like we
+could with the other resources so we&amp;rsquo;ll need to get creative.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a HTTPProxy manifest&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; http-proxy.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;apiVersion: projectcontour.io/v1
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;kind: HTTPProxy
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;metadata:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  name: www
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  namespace: http-proxy
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;spec:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  virtualhost:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    fqdn: www.$INGRESS_HOST
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  routes:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    - conditions:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      - prefix: /
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      services:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        - name: nginx
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          port: 80
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Apply the HTTPProxy manifest&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -n http-proxy -f http-proxy.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Wait a few moments and then attempt to access the nginx service&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -s www.3.13.150.109.xip.io &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep h1
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;rate-limiting&#34;&gt;Rate Limiting&lt;/h4&gt;
+&lt;p&gt;Now that your nginx is working via &lt;strong&gt;HTTPProxy&lt;/strong&gt; we can look at some of the more
+advanced features. Let&amp;rsquo;s start with Rate limiting. Contour 1.12.0 supports doing
+&lt;em&gt;local&lt;/em&gt; rate limiting, which means that each Envoy &lt;strong&gt;Pod&lt;/strong&gt; will have its own
+limits, vs a &lt;em&gt;global&lt;/em&gt; rate limit which would need further coordination between
+the Envoy &lt;strong&gt;Pods&lt;/strong&gt;. You can also set the Rate limit for the virtualhost, or for
+a specific route.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s create a fairly aggressive rate limit so we can see the affects of it
+fairly quickly. The example cluster I am using has three worker nodes, which
+means three Envoy &lt;strong&gt;Pods&lt;/strong&gt; so if I set a rate limit of 2 per minute we should be
+able to hit the limit after 6 requests.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a new &lt;strong&gt;HTTPProxy&lt;/strong&gt; resource with rate limiting enabled&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; rate-limit.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;apiVersion: projectcontour.io/v1
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;kind: HTTPProxy
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;metadata:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  name: rate
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  namespace: http-proxy
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;spec:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  virtualhost:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    fqdn: rate.$INGRESS_HOST
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    rateLimitPolicy:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      local:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        requests: 2
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        unit: minute
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  routes:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    - conditions:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      - prefix: /
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      services:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        - name: nginx
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          port: 80
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Apply the new rate limited manifest:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy apply -f rate-limit.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Wait a few moments and then fire up a while loop to connecting to the service
+and watch it hit the limit after a few hits.&lt;/p&gt;
+&lt;p&gt;Note: You&amp;rsquo;ll need to hit CTRL-C to break the while loop.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; true&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; curl -s rate.&lt;span class=&#34;nv&#34;&gt;$INGRESS_HOST&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -E &lt;span class=&#34;s1&#34;&gt;&amp;#39;h1|rate&amp;#39;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;done&lt;/span&gt;
+
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+local_rate_limited
+local_rate_limited
+local_rate_limited
+^C
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;That&amp;rsquo;s it, rate limiting is enabled. This is incredibly useful if you have a
+service with known limitations or you want to restrict any one user from
+overwhelming the service.&lt;/p&gt;
+&lt;h4 id=&#34;weighted-routing&#34;&gt;Weighted routing&lt;/h4&gt;
+&lt;p&gt;The &lt;strong&gt;HTTPProxy&lt;/strong&gt; resource can also route a Virtual Host to multiple services,
+this is a great feature if you want to perform Blue/Green deployments, or you
+want to send a small percentage of requests to a special debug endpoint. Let&amp;rsquo;s
+explore Weighted routing by adding an Apache service to receive 10% of the
+requests.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a Deployment containing a basic httpd pod&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy create deployment --image&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;httpd &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  httpd -o yaml &amp;gt; http-proxy-httpd-deployment.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a service for the deployment&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy expose deployment httpd --port &lt;span class=&#34;m&#34;&gt;80&lt;/span&gt; -o yaml &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  &amp;gt; http-proxy-httpd-service.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ensure the new &lt;strong&gt;Pod&lt;/strong&gt; is available beside the existing nginx one.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get pods -n http-proxy
+NAME                     READY   STATUS    RESTARTS   AGE
+httpd-757fb56c8d-kz476   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          23s
+nginx-6799fc88d8-jxvj7   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          163m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;strong&gt;HTTPProxy&lt;/strong&gt; resource to perform weighted routing across the two services&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; weighted.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;apiVersion: projectcontour.io/v1
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;kind: HTTPProxy
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;metadata:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  name: weight
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  namespace: http-proxy
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;spec:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  virtualhost:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    fqdn: weight.$INGRESS_HOST
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  routes:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    - conditions:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      - prefix: /
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      services:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        - name: httpd
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          port: 80
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          weight: 10
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        - name: nginx
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          port: 80
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          weight: 90
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Apply the new resource&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy apply -f weighted.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Test the weighting&lt;/p&gt;
+&lt;p&gt;Note: It&amp;rsquo;s not clear in the documentation, but it appears that the weighting
+is applied per Envoy &lt;strong&gt;Pod&lt;/strong&gt;, so it might not be exactly 10% for small test
+runs, but would statistically work out over time.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; true&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; curl -s weight.&lt;span class=&#34;nv&#34;&gt;$INGRESS_HOST&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep h1 &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;done&lt;/span&gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;Welcome to nginx!&amp;lt;/h1&amp;gt;
+&amp;lt;html&amp;gt;&amp;lt;body&amp;gt;&amp;lt;h1&amp;gt;It works!&amp;lt;/h1&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+^C
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;That&amp;rsquo;s it! we&amp;rsquo;ve successfully done a walk through of some of the new features of
+Contour 1.12.0 and tested out both Rate Limiting and Weighted Routing. Let&amp;rsquo;s
+clean up.&lt;/p&gt;
+&lt;h4 id=&#34;cleanup&#34;&gt;Cleanup&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Delete your http-proxy namespace and resources&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n http-proxy delete -f .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Uninstall Contour&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ..
+kubectl delete -f contour.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;As you can see Contour 1.12.0 is more than just an Ingress Controller as it
+brings some of the more advanced features of a service mesh but without all the
+extra resources required. Next time you find yourself looking to run Istio,
+remember to check in with Contour and see if it will do what you need.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

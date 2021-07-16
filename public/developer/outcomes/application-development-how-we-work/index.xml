@@ -1,0 +1,229 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – How VMware Tanzu Labs Works and Why</title>
+    <link>/outcomes/application-development-how-we-work/</link>
+    <description>Recent content in How VMware Tanzu Labs Works and Why on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/outcomes/application-development-how-we-work/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Outcomes: Our Foundational Principles</title>
+      
+      <link>/outcomes/application-development-how-we-work/principles/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development-how-we-work/principles/</guid>
+      <description>
+
+        
+        &lt;p&gt;Within Tanzu Labs, we work with an unpredictable assortment of companies, industries, governments, countries, cities, cultures, and people. &lt;strong&gt;We help nearly every industry in the world refactor, reimagine, and build every kind of software product using any technology stack.&lt;/strong&gt; We work with countless unique embedded company cultures – some welcoming, some hostile, some ambivalent, yet nearly all have given us a mandate to help them rethink not only how they build products but how they build and manage teams. Sometimes they ask us to help them rethink their entire company culture. Sometimes they ask us to help them design their offices – really, their physical offices!&lt;/p&gt;
+&lt;p&gt;Wow. That&amp;rsquo;s a lot of anything and everything.&lt;/p&gt;
+&lt;p&gt;In a world where we work with anyone, anywhere, anytime, upon anything, &lt;strong&gt;what is our &amp;ldquo;north star&amp;rdquo; that guides how we approach so many diverse situations?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The answer is our &lt;strong&gt;foundational principles&lt;/strong&gt;. Within Tanzu Labs, we&amp;rsquo;ve developed six principles which complement our &lt;a href=&#34;https://www.vmware.com/radius/vmwares-culture-built-epic2-values/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware EPIC&lt;sub&gt;2&lt;/sub&gt; values&lt;/a&gt; with an eye towards how we work with clients and each other:&lt;/p&gt;
+&lt;h3 id=&#34;-empower-teams&#34;&gt;⚡️ Empower Teams&lt;/h3&gt;
+&lt;p&gt;Diverse teams with shared context, psychological safety, and decision-making authority move faster.&lt;/p&gt;
+&lt;h3 id=&#34;-start-simple&#34;&gt;🌱 Start Simple&lt;/h3&gt;
+&lt;p&gt;Learn just enough to begin and let the work inform the direction.&lt;/p&gt;
+&lt;h3 id=&#34;-embrace-change&#34;&gt;🦋 Embrace Change&lt;/h3&gt;
+&lt;p&gt;Expect change and turn it into opportunity.&lt;/p&gt;
+&lt;h3 id=&#34;-deliver-early-and-often&#34;&gt;🚀 Deliver Early and Often&lt;/h3&gt;
+&lt;p&gt;Ship value to users and measure impact to lower risk.&lt;/p&gt;
+&lt;h3 id=&#34;-improve-continuously&#34;&gt;🔬 Improve Continuously&lt;/h3&gt;
+&lt;p&gt;We are always learning and humbled by what we don&amp;rsquo;t know.&lt;/p&gt;
+&lt;h3 id=&#34;-give-back&#34;&gt;❤️ Give Back&lt;/h3&gt;
+&lt;p&gt;Share our time, tools, code, and approach with internal and open source communities to maximize impact.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;With our foundational principles and VMware EPIC&lt;sub&gt;2&lt;/sub&gt; values established, we&amp;rsquo;ve set the stage for learning how we approach modern app development, and why we approach it this way, and why you should consider adopting this ideas, too.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: We Consult Through Empathy</title>
+      
+      <link>/outcomes/application-development-how-we-work/empathy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development-how-we-work/empathy/</guid>
+      <description>
+
+        
+        &lt;p&gt;Our mission is to &lt;strong&gt;catalyze enterprise transformation through software&lt;/strong&gt;. But that isn&amp;rsquo;t easy. In fact, it&amp;rsquo;s really hard. That&amp;rsquo;s because &lt;em&gt;enterprises don&amp;rsquo;t really transform – people do.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;When we&amp;rsquo;re on a consulting engagement, we&amp;rsquo;re influencing the way humans act, the way teams collaborate, and the way organizations provide incentives, manage, fund, and measure success. Those are tall orders, and the most important thing to know is this: &lt;strong&gt;we don&amp;rsquo;t have all the answers.&lt;/strong&gt; No one does. As the saying goes, &amp;ldquo;Everybody thinks their way is the best. Everybody is wrong.&amp;rdquo; That&amp;rsquo;s why we believe in &lt;em&gt;improving continuously&lt;/em&gt; 🔬 &amp;ndash; we are always learning and humbled by what we don&amp;rsquo;t know.&lt;/p&gt;
+&lt;p&gt;Most of our clients show up with experience building software from a detailed, inflexible plan. &lt;strong&gt;They believe they know exactly what they want.&lt;/strong&gt; They often have a budget, a timeline and specific scope. &lt;strong&gt;Our job begins by &lt;em&gt;deeply empathizing&lt;/em&gt; with this view.&lt;/strong&gt; Without decades of Agile software development experience we might make the same assumptions. As consultants, we listen to our client as they share their story. We let them know they are heard.&lt;/p&gt;
+&lt;p&gt;From there, &lt;strong&gt;we begin to offer a different way of thinking about developing software products.&lt;/strong&gt; That driving from their users&#39; needs directs their efforts toward real value; that &lt;em&gt;delivering value to users early and often lets them measure impact to lower risk&lt;/em&gt; 🚀, far lower risk than sticking to an inflexible, predetermined plan. That learning happens through a system of feedback loops, by &lt;em&gt;starting simply in order to learn just enough to begin and letting the work inform the direction&lt;/em&gt; 🌱. We show our clients that &lt;em&gt;empowered, diverse teams with shared context, psychological safety, and decision-making authority move faster&lt;/em&gt; ⚡️. We need to be able to articulate all this from where they are at in their learning journey—from their point of view, and help them &lt;em&gt;expect and embrace change and turn it into opportunity&lt;/em&gt; 🦋.&lt;/p&gt;
+&lt;p&gt;Very few of us walk in the door with these skills. Getting there means learning how to negotiate difficult conversations, facilitate large groups of stakeholders, and inspire confidence in our clients and in each other. It&amp;rsquo;s a two-way street. &lt;strong&gt;We learn just as much from our clients as they from us.&lt;/strong&gt; Advising them requires patient repetition, and our own &lt;em&gt;continuous improvement means we are always learning and humbled by what we don&amp;rsquo;t know&lt;/em&gt; 🔬. It also requires that we study and deeply understand the principles and values we hold, in order to internalize and learn to recognize how, why and when they do and &lt;em&gt;don&amp;rsquo;t&lt;/em&gt; work. &lt;strong&gt;Sometimes &amp;ldquo;breaking the rules&amp;rdquo; is the right choice in the right situation.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Therefore, first and foremost, at Tanzu Labs we must develop ourselves as consultants. &amp;ldquo;Consultant&amp;rdquo; is a loaded word in our industry, and not all the connotations are positive. Google Dictionary defines &amp;ldquo;consultant&amp;rdquo; as &lt;em&gt;&amp;ldquo;a person who provides expert advice professionally.&amp;quot;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Although that definition certainly applies to us in Tanzu Labs, when we say consultant, we really mean this: &lt;em&gt;&lt;strong&gt;a deeply empathetic human being committed to helping others.&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: We Care About More Than Engineering</title>
+      
+      <link>/outcomes/application-development-how-we-work/more-than-engineering/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development-how-we-work/more-than-engineering/</guid>
+      <description>
+
+        
+        &lt;p&gt;For many years, Tanzu Labs only employed engineers. We expected our clients to bring the product manager (PM) and product designer (PD) roles to the team. We didn&amp;rsquo;t have any expertise in Lean Product Design or User Centered Design (UCD). We could help our clients &amp;ldquo;build it right&amp;rdquo;, but we didn&amp;rsquo;t concern ourselves with helping them discover the right thing to build – which our clients often did not know how to do. This too often led to a demoralizing outcome: we helped clients build very well-built &lt;em&gt;wrong&lt;/em&gt; things for their business.&lt;/p&gt;
+&lt;p&gt;Great code doesn&amp;rsquo;t make great software. &lt;strong&gt;It doesn&amp;rsquo;t matter if we &amp;ldquo;build it right&amp;rdquo; if we&amp;rsquo;re building the &lt;em&gt;wrong thing&lt;/em&gt; in the first place.&lt;/strong&gt; All the clean code in the world won&amp;rsquo;t save a product that isn&amp;rsquo;t actually solving problems for its users.&lt;/p&gt;
+&lt;p&gt;This all changed around the end of 2012. We hired product management and product design leadership into our organization and built up in-house expertise on Lean Product Design and UCD. The effect was nothing short of transformational for us. &lt;strong&gt;We bring a complete, whole agile offering to the table, which is an order of magnitude more valuable than just agile engineering alone &amp;ndash; the &lt;a href=&#34;/outcomes/application-development/balanced-teams/&#34;&gt;balanced team&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The balanced team is a powerful force multiplier for both product or services organizations. Balanced teams can clearly define problems, articulate assumptions, form hypotheses, run experiments, establish &lt;a href=&#34;https://en.wikipedia.org/wiki/Performance_indicator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Key Performance Indicators&lt;/a&gt;, and validate learnings through software. In effect, balanced teams can help organizations not just &amp;ldquo;build the thing right&amp;rdquo;, but &amp;ldquo;build the &lt;em&gt;right&lt;/em&gt; thing.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;Our product management and product design practices in Tanzu Labs help our clients find the right thing to build, and our engineers complete the trusted partnership to help implement the vision. &lt;strong&gt;Great products are desirable to users, viable to the business, and feasible for the engineers, and it takes all members of the balanced team to enable these outcomes.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/outcomes/application-development/balanced-teams.jpeg&#34; alt=&#34;Balanced Team Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Furthermore, &lt;strong&gt;we&amp;rsquo;re here to help our clients innovate.&lt;/strong&gt; We can&amp;rsquo;t contribute to that if we don&amp;rsquo;t understand the problem they are – that is, &lt;strong&gt;&lt;em&gt;we all are&lt;/em&gt;&lt;/strong&gt; – trying to solve, or the people we are trying to solve it for, or the business we&amp;rsquo;re trying to solve it with.&lt;/p&gt;
+&lt;p&gt;Our clients bring domain expertise, but they&amp;rsquo;re often so far into the details that they need us to help them step back and understand the bigger picture. When you&amp;rsquo;re down in the details, it&amp;rsquo;s easy to get focused on optimizing a local maxima, instead of stepping back and seeing the global optimizations. That&amp;rsquo;s where innovation lies, and it takes all three roles to do that.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;We must develop empathy for our users and our clients.&lt;/strong&gt; We must understand the problems they&amp;rsquo;re trying to solve. We must understand the hypothesis we&amp;rsquo;re testing at any given time, and how we&amp;rsquo;re validating our learnings. We participate in user research and synthesis. We support our amazing product managers and product designers, because it&amp;rsquo;s only when all three roles work together that we truly help our clients.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;In sum: we don&amp;rsquo;t just &amp;ldquo;build it right&amp;rdquo;; we &amp;ldquo;build the &lt;em&gt;right thing right.&lt;/em&gt;&amp;quot;&lt;/strong&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: We Generalize (in technologies and domains)</title>
+      
+      <link>/outcomes/application-development-how-we-work/generalize-in-technologies-and-domains/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development-how-we-work/generalize-in-technologies-and-domains/</guid>
+      <description>
+
+        
+        &lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;I only work in Healthcare&amp;rdquo;.
+&amp;ldquo;I only design for iOS.&amp;rdquo;
+&amp;ldquo;I only write Java.&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;These are not phrases we say.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Our mission is to &lt;em&gt;catalyze enterprise transformation through software.&lt;/em&gt;&lt;/strong&gt; Well, the world is big and full of diverse organizations. There are countless technologies and industries out there, with a baffling array of software languages, design systems, frameworks, platforms, user experience metaphors, and more. When clients come to us, &lt;strong&gt;we don&amp;rsquo;t force a single technology stack or design system upon them.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This means that we always have to be ready to apply our craft in a variety of languages, tech stacks, design systems, and industries. Languages like Java, Kotlin, Javascript, Go, and dozens more. Backend web frameworks like Spring MVC, Ruby on Rails, Express, and Phoenix. Batch and ETL frameworks. Distributed systems frameworks. Unit, functional, and system testing frameworks. And of course we have to know how to leverage cloud technologies like Kubernetes, Docker, our many Tanzu offerings, AWS, GCP, and Azure. And that&amp;rsquo;s not even diving into build tools, CI/CD systems, databases, and message queues!&lt;/p&gt;
+&lt;p&gt;This may sound daunting. You might be saying, &amp;ldquo;there&amp;rsquo;s no way one person could know all of those things.&amp;rdquo; And yet, there are many of us who have learned all of these things, and more. &lt;strong&gt;Within Tanzu Labs, we have a truly unique opportunity to work in a wide variety of business domains, design systems, languages, and technologies.&lt;/strong&gt; And our learning and pairing culture helps us spread knowledge incredibly fast.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The more business domains, languages, frameworks, and technologies we&amp;rsquo;re exposed to, the easier learning new ones becomes.&lt;/strong&gt; In reality, they have more similarities than differences. And we also hone the most essential skill that anyone should have: &lt;strong&gt;&lt;em&gt;we learn how to learn.&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;An avowed specialist—someone who focuses exclusively on a narrow set of skills—is by and large a liability for us as a consulting organization. &lt;strong&gt;If someone only specializes in one or two technologies, industries, or design systems, they  limit the number of clients they can help,&lt;/strong&gt; and there is no guarantee that we&amp;rsquo;ll have projects available that match their narrow skill set.&lt;/p&gt;
+&lt;p&gt;If an organization is full of specialists, the organization is limited in its ability to react to an ever changing list of challenges; this is true for product as well as services orgs.&lt;/p&gt;
+&lt;p&gt;To be clear, we do turn down projects, but we want to do so because we and the prospective client are not a good fit for one another, not because we can&amp;rsquo;t – &lt;em&gt;or refuse to!&lt;/em&gt; – work in their tech stack or learn their business. For a services org, allocations (the process wherein leadership decides who works on what) is already an incredibly challenging problem even with an office of generalists. &lt;strong&gt;When everyone in an office specializes, instead of generalizing, allocations become impossible.&lt;/strong&gt; These are the reasons why Tanzu Labs advocates so hard for full-stack development and domain generalists.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Within Tanzu Labs, we have an intrinsic passion for exploring our profession.&lt;/strong&gt; We try out new languages, frameworks, and problem-solving techniques with each other. And we write blog posts. And we attend meetups (or organize them ourselves!). And we give talks in the offices or for our regions. And we present at conferences. We don&amp;rsquo;t just do all of these things for VMware; we do it for ourselves, and our career, and &lt;strong&gt;for the community&lt;/strong&gt; ❤️.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: We Specialize (in craft)</title>
+      
+      <link>/outcomes/application-development-how-we-work/specialize-in-craft/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development-how-we-work/specialize-in-craft/</guid>
+      <description>
+
+        
+        &lt;p&gt;Before you read this section, we want to emphasize this: &lt;strong&gt;&lt;em&gt;we don&amp;rsquo;t expect anyone to know everything described here day one.&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Craft isn&amp;rsquo;t something we either know or don&amp;rsquo;t know &amp;ndash; craft is a lifelong process. It&amp;rsquo;s a combination of skills, experiences, and wisdom that grows day over day, year over year — and remember, we&amp;rsquo;re all on this journey together.&lt;/p&gt;
+&lt;p&gt;Each discipline might specialize in their craft differently. Learn about:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Craft &lt;strong&gt;For Engineers&lt;/strong&gt; (coming soon).&lt;/li&gt;
+&lt;li&gt;Craft &lt;strong&gt;For Product Designers&lt;/strong&gt; (coming soon).&lt;/li&gt;
+&lt;li&gt;Craft &lt;strong&gt;For Product Managers&lt;/strong&gt; (coming soon).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We must hone our craft responsibly. We all teach each other our craft, and improve our craft based not only on our experiences, but the experiences of others. We lean on each other for guidance and wisdom when we&amp;rsquo;re unsure if a design pattern, architecture, metric, or UX flow is appropriate.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: We Share Knowledge</title>
+      
+      <link>/outcomes/application-development-how-we-work/share-knowledge/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development-how-we-work/share-knowledge/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;strong&gt;We are committed to helping others.&lt;/strong&gt; This requires communication, and most importantly, empathy. We learn how to work so well &lt;em&gt;with&lt;/em&gt; our clients and each other that we make progress better together than either of us would alone.&lt;/p&gt;
+&lt;p&gt;For engineers and often all disciplines, this starts with pairing. &lt;a href=&#34;/outcomes/application-development/pair-programming/&#34;&gt;Pairing is a process of collaborative problem solving&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Though pairing is often associated with engineering (pair programming), &lt;strong&gt;PMs and designers are very often paired with client or company counterparts, too.&lt;/strong&gt; When we pair effectively, we learn at an order of magnitude faster than when we work alone. This means that we have a commitment to share our knowledge with our pairs.&lt;/p&gt;
+&lt;p&gt;For all of us, we&amp;rsquo;re also part of teams. We share what we know and have learned with our whole team, and we offer our skills to our teams whenever they are valuable.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;And&lt;/em&gt; we&amp;rsquo;re also part of an office, regional group, and/or large multi-project effort. Our team might have solved a problem that another &amp;ldquo;near by&amp;rdquo; team is currently experiencing. &lt;strong&gt;We share our learnings with our peers on other teams, so that they don&amp;rsquo;t reinvent the wheel we&amp;rsquo;ve already invented.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;And&lt;/em&gt; we&amp;rsquo;re also part of a global practice that spans the world. Teams in one office might have solved problems that teams in other offices or areas are running into. We work continuously to share knowledge and experiences between offices, regions, and countries, and we want each of us to be a part of that effort — &lt;strong&gt;our collective only works when each of us remembers to reach beyond our local tribes and form a truly global hive mind.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;And&lt;/em&gt; we&amp;rsquo;re also part of a global company that&amp;rsquo;s more than just our consulting division. &lt;strong&gt;Our Tanzu R&amp;amp;D organization is continuing to iterate on &lt;a href=&#34;https://en.wikipedia.org/wiki/Extreme_programming&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;XP&lt;/a&gt;, Lean, and User Centered Design at scale — and we have to understand those evolutionary steps to apply them with everyone with whom we work.&lt;/strong&gt; They&amp;rsquo;re also building a set of products that help our companies address organizational and operational challenges at scale; we have to understand the value of those products, and how to effectively wield them.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;And&lt;/em&gt; we&amp;rsquo;re also part of a global product development community, of which VMware is only one small part. &lt;strong&gt;We encourage each other to give back to the community, to share our thoughts, our knowledge, our craft.&lt;/strong&gt; We encourage our Labs team members to write blog posts (we&amp;rsquo;ll publish them), give conference talks (we&amp;rsquo;ll pay for it), attend meetups — or even start meetups (we&amp;rsquo;ll host them!). We encourage everyone to &lt;em&gt;give back and share our time, tools, code, and approach with internal and open source communities to maximize impact&lt;/em&gt; ❤️.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: We Maintain a Healthy Work/Life Balance</title>
+      
+      <link>/outcomes/application-development-how-we-work/work-life-balance/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development-how-we-work/work-life-balance/</guid>
+      <description>
+
+        
+        &lt;p&gt;Within Tanzu Labs, &lt;strong&gt;we value work/life balance and sustainable pace of work.&lt;/strong&gt; There are many organizations in our industry where burn-out is just a fact of life, along with the associated high turnover. We&amp;rsquo;re not one of them. We maintain a healthy work/life balance, not only for ourselves, but as a &lt;strong&gt;role model for other companies.&lt;/strong&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: We&#39;re Supported</title>
+      
+      <link>/outcomes/application-development-how-we-work/support-each-other/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development-how-we-work/support-each-other/</guid>
+      <description>
+
+        
+        &lt;p&gt;We don&amp;rsquo;t have traditional command-and-control line management structures within Tanzu Labs. &lt;strong&gt;We have coaching managers.&lt;/strong&gt; They help our people get to where they want to go in their careers.&lt;/p&gt;
+&lt;p&gt;We believe that the most valuable feedback we can get along that journey comes from our peers — the people that we work with day in, day out. &lt;strong&gt;Our managers help us get that feedback from our peers, and encourage us to give those same peers the feedback they need, too.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Everyone who joins Tanzu Labs has one-one-ones scheduled with their manager. Our managers help us with all of the questions we have about the expectations set forth in these articles, because &lt;strong&gt;we use this very learning series for our own onboarding&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Our managers work with us to understand where we&amp;rsquo;re at in our careers, and help us come up with a plan for where we want to be. They help us get the books we recommend, and connect us with other amazing people that we should meet and pair with. They show us how to &lt;em&gt;give back&lt;/em&gt; ❤️ beyond just our immediate pairs, projects, and teams. They connect us to the global community at VMware Tanzu Labs.&lt;/p&gt;
+&lt;p&gt;Most importantly, our managers are there with us for our journey, every step of the way.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Thank you!</title>
+      
+      <link>/outcomes/application-development-how-we-work/thank-you/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/application-development-how-we-work/thank-you/</guid>
+      <description>
+
+        
+        &lt;p&gt;Thank you for reading our story and learning about how we approach product development, helping each other and our clients, and why we do what we do.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;re transforming the way the world builds software by catalyzing enterprise transformation through software; it&amp;rsquo;s a journey that is simultaneously amazing, inspiring, challenging, and fun.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;re continuously inspired and humbled to work with the amazing people that join our organization, and the amazing clients we have the opportunity to work with.&lt;/p&gt;
+&lt;p&gt;We hope you&amp;rsquo;ve learned that our way of doing this really quite simple, and that you can adopt these simple ideas, with or without working with us. We hope you saw your organization and yourselves in these words. &lt;a href=&#34;https://github.com/vmware-tanzu/tanzu-dev-portal/issues&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Feedback welcomed!&lt;/a&gt; 🔬&lt;/p&gt;
+&lt;p&gt;Now, let&amp;rsquo;s go build something amazing!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

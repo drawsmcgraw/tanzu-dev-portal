@@ -1,0 +1,676 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – SpringOne Tour</title>
+    <link>/tv/springone-tour/</link>
+    <description>Recent content in SpringOne Tour on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/tv/springone-tour/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>SpringOne Tour: SpringOne Tour December</title>
+      
+      <link>/tv/springone-tour/0021/</link>
+      <pubDate>Wed, 08 Dec 2021 10:00:00 -0800</pubDate>
+      
+      <guid>/tv/springone-tour/0021/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tour-December.png" width="640" />]]>
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: SpringOne Tour November EMEA</title>
+      
+      <link>/tv/springone-tour/0020/</link>
+      <pubDate>Wed, 17 Nov 2021 10:00:00 -0800</pubDate>
+      
+      <guid>/tv/springone-tour/0020/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tour-November.png" width="640" />]]>
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Do or Do Not, There is No Try{} in Production</title>
+      
+      <link>/tv/springone-tour/0018/</link>
+      <pubDate>Wed, 14 Jul 2021 10:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0018/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/S1T-Twitter-FB-July.png" width="640" />]]>
+        
+        &lt;h3 id=&#34;day-1-livestream&#34;&gt;Day 1 Livestream&lt;/h3&gt;
+&lt;div class=&#39;flex align-items-center&#39;&gt;
+	&lt;h5&gt;July 14 &amp;bullet; 10:00 AM&amp;ndash;12:00 PM PT
+	&lt;!-- &lt;strong&gt;&lt;a class=&#39;ml-3 lightbox&#39; href=&#39;#day-1-reminder&#39;&gt;&lt;i class=&#39;fa fa-calendar-check mr-1&#39;&gt;&lt;/i&gt;Add to calendar&lt;/a&gt;&lt;/strong&gt; --&gt;
+	&lt;/h5&gt;
+&lt;/div&gt;
+&lt;p&gt;You’ve arrived at production, the happiest place on earth! But as you’re finishing up your celebratory cup of coffee, management bursts through the door: “We have new requirements!” And so the cycle continues; change the only constant.&lt;/p&gt;
+&lt;p&gt;In this episode, learn how to safely modify your code through testing, so you can take your application from check-in to “hey, check that out!”&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#39;btn mt-2&#39; href=&#39;https://www.twitch.tv/vmwaretanzu&#39;&gt;Watch Day 1 on Twitch&lt;/a&gt;&lt;/p&gt;
+&lt;!-- &lt;div id=&#39;day-1-reminder&#39; class=&#39;p-5&#39; style=&#39;display: none&#39;&gt;
+	&lt;h3 class=&#39;-text-white mb-3 text-center&#39;&gt;Add to calendar&lt;/h3&gt;
+  &lt;div class=&#39;d-flex jc-between&#39;&gt;
+      &lt;script type=&#34;text/javascript&#34;&gt;
+          cal_single = ics();
+          cal_single.addEvent(&#39;Do or Do Not, There is No Try{} in Production on Twitch&#39;, &#39;https://www.twitch.tv/vmwaretanzu&#39;, &#39;Twitch&#39;, &#39;07/14/2021 10:00 am PDT&#39;, &#39;07/14/2021 12:00 pm PDT&#39;);
+      &lt;/script&gt;
+      &lt;a href=&#34;#&#34;
+         onclick=&#34;javascript:cal_single.download(&#39;Do or Do Not, There is No Try\{\} in Production Day 1 on Twitch&#39;)&#34;
+         class=&#39;btn mr-2 mb-2&#39;&gt;Outlook/iCal&lt;/a&gt; &lt;a
+          href=&#34;https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Do+or+Do+Not%2C+There+is+No+Try%7B%7D+in+Production+Day+1+Livestream&amp;details=https%3A%2F%2Fwww.twitch.tv%2Fvmwaretanzu&amp;dates=20210714T170000Z%2F20210714T190000Z&#34;
+          class=&#39;btn mb-2&#39;&gt;Google Calendar&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt; --&gt;
+&lt;br&gt;
+&lt;h3 id=&#34;day-2-workshop&#34;&gt;Day 2 Workshop&lt;/h3&gt;
+&lt;h5 id=&#34;july-15-bullet-1000-amndash130-pm-pt&#34;&gt;July 15 • 10:00 AM–1:30 PM PT&lt;/h5&gt;
+&lt;p&gt;Join us for a hands-on session covering unit and integration testing techniques using Spring Boot, API contracts, database schema management, and testcontainers, followed by a Kubernetes-native build &amp;amp; deploy supply chain powered by kpack and ArgoCD. You’ll have your own test environment so you can follow along as we work through the deployment of a microservice-based application.&lt;/p&gt;
+&lt;!-- &lt;a class=&#39;btn mt-2 lightbox&#39; href=&#39;#register&#39;&gt;Register for Workshop&lt;/a&gt;
+
+&lt;div id=&#34;register&#34; class=&#39;p-5&#39; style=&#34;display:none&#34;&gt;
+	&lt;h3 class=&#39;-text-white mb-3 hide&#39;&gt;Register&lt;/h3&gt;
+	&lt;script src=&#34;https://connect.tanzu.vmware.com/js/forms2/js/forms2.min.js&#34;&gt;&lt;/script&gt;
+	&lt;form id=&#34;mktoForm_8250&#34;&gt;&lt;/form&gt;
+	&lt;script&gt;
+	  MktoForms2.setOptions({formXDPath : &#34;/rs/pivotal/images/marketo-xdframe-relative.html&#34;});
+	  MktoForms2.loadForm(&#34;https://connect.tanzu.vmware.com&#34;, &#34;625-IUJ-009&#34;, 8250, function(form){
+			form.onSuccess(function(values, followUpUrl) {
+				form.getFormElem().hide();
+				$(&#39;.hide&#39;).hide();
+				$(&#39;.confirmation&#39;).show();
+				return false;
+			});
+	  });
+	&lt;/script&gt;
+	&lt;div class=&#39;confirmation&#39; style=&#34;display:none&#34;&gt;
+		&lt;h3 class=&#34;-text-white mt-0&#34;&gt;Thank you!&lt;/h3&gt;
+		&lt;p&gt;Join us on July 15 using this link:&lt;br/&gt; &lt;span class=&#39;-text-white zoom-link&#39;&gt;https://VMware.zoom.us/j/98899426924?pwd=ejhNczJ1cFNmejNtM1ZsSzhKbVgrQT09&lt;/span&gt;&lt;/p&gt;
+		&lt;p&gt;
+			&lt;strong&gt;Add this workshop to your calendar:&lt;/strong&gt;
+			&lt;br/&gt;
+			&lt;strong&gt;
+	      &lt;script type=&#34;text/javascript&#34;&gt;
+	          cal_single2 = ics();
+	          cal_single2.addEvent(&#39;Do or Do Not, There is No Try\{\} in Production Workshop&#39;, &#39;https://VMware.zoom.us/j/98899426924?pwd=ejhNczJ1cFNmejNtM1ZsSzhKbVgrQT09&#39;, &#39;Zoom&#39;, &#39;07/15/2021 10:00 am PDT&#39;, &#39;07/15/2021 1:30 pm PDT&#39;);
+	      &lt;/script&gt;
+				&lt;a href=&#34;#&#34; onclick=&#34;javascript:cal_single2.download(&#39;Do or Do Not, There is No Try\{\} in Production Day 2 Workshop&#39;)&#34;&gt;Outlook/iCal&lt;/a&gt;
+	      &amp;nbsp;&amp;bullet;&amp;nbsp;
+	      &lt;a href=&#34;https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Do+or+Do+Not%2C+There+is+No+Try%7B%7D+in+Production+Day+2+Workshop&amp;details=https%3A%2F%2FVMware.zoom.us%2Fj%2F98899426924%3Fpwd%3DejhNczJ1cFNmejNtM1ZsSzhKbVgrQT09&amp;dates=20210715T170000Z%2F20210715T203000Z&#34;&gt;Google&lt;/a&gt;
+	    &lt;/strong&gt;
+	  &lt;/p&gt;
+	&lt;/div&gt;
+&lt;/div&gt; --&gt;&lt;blockquote&gt;
+&lt;/blockquote&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Booternetes II: The YAML Strikes Back (Europe)</title>
+      
+      <link>/tv/springone-tour/0017/</link>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0017/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/S1T-BootII-Europe-FB-TW.png" width="640" />]]>
+        
+        &lt;div class=&#39;flex align-items-center&#39;&gt;
+	&lt;h5&gt;June 15 &amp;bullet; 09:00&amp;ndash;13:15 CEST&lt;/h5&gt;
+&lt;/div&gt;
+&lt;p&gt;As Luke started his Jedi training, he realized he wasn’t on Tatooine anymore; he was now part of a larger system, the Force. In this installment of SpringOne Tour, we’re going to teach our cloud native Spring Boot applications how to wield the Force by building on abstractions that know about and incorporate Kubernetes itself.&lt;/p&gt;
+&lt;p&gt;Join VMware Tanzu team members Michael Coté, Olga Maciaszek-Sharma, and Marcin Grzejszczak for Booternetes II: The YAML Strikes Back. (And yes, that’s #booternetes.)&lt;/p&gt;
+&lt;p&gt;And, stick around for Tanzu team members and experts Jakub Pilimon, Jonatan Ivanov, Nenad Momcilovic, and Timo Salm for an interactive workshop on where you’ll learn to apply some of these concepts in practice.&lt;/p&gt;
+&lt;!-- &lt;a class=&#39;btn mt-2 lightbox&#39; href=&#39;#register&#39;&gt;Register for Workshop&lt;/a&gt; --&gt;
+&lt;div id=&#34;register&#34; class=&#39;p-5&#39; style=&#34;display:none&#34;&gt;
+	&lt;h3 class=&#39;-text-white mb-3 hide&#39;&gt;Register&lt;/h3&gt;
+	&lt;script src=&#34;https://connect.tanzu.vmware.com/js/forms2/js/forms2.min.js&#34;&gt;&lt;/script&gt;
+	&lt;form id=&#34;mktoForm_8248&#34;&gt;&lt;/form&gt;
+	&lt;script&gt;
+	  MktoForms2.setOptions({formXDPath : &#34;/rs/pivotal/images/marketo-xdframe-relative.html&#34;});
+	  MktoForms2.loadForm(&#34;https://connect.tanzu.vmware.com&#34;, &#34;625-IUJ-009&#34;, 8248, function(form){
+			form.onSuccess(function(values, followUpUrl) {
+				form.getFormElem().hide();
+				$(&#39;.hide&#39;).hide();
+				$(&#39;.confirmation&#39;).show();
+				return false;
+			});
+	  });
+	&lt;/script&gt;
+	&lt;div class=&#39;confirmation&#39; style=&#34;display:none&#34;&gt;
+		&lt;h3 class=&#34;-text-white mt-0&#34;&gt;Thank you!&lt;/h3&gt;
+		&lt;p&gt;Join us on June 15 using this link:&lt;br/&gt; &lt;span class=&#39;-text-white zoom-link&#39;&gt;https://vmware.zoom.us/j/91244076795?pwd=UGt5UG5qUGplNmVCUjA0bW12aEFLUT09&lt;/span&gt;&lt;/p&gt;
+&lt;!-- 		&lt;p&gt;
+			&lt;strong&gt;Add this workshop to your calendar:&lt;/strong&gt;
+			&lt;br/&gt;
+			&lt;strong&gt;
+	      &lt;script type=&#34;text/javascript&#34;&gt;
+	          cal_single2 = ics();
+	          cal_single2.addEvent(&#39;Booternetes II: The YAML Strikes Back (Europe) Workshop&#39;, &#39;https://vmware.zoom.us/j/91244076795?pwd=UGt5UG5qUGplNmVCUjA0bW12aEFLUT09&#39;, &#39;Zoom&#39;, &#39;06/15/2021 12:00 am PDT&#39;, &#39;06/15/2021 04:15 am PDT&#39;);
+	      &lt;/script&gt;
+				&lt;a href=&#34;#&#34; onclick=&#34;javascript:cal_single2.download(&#39;Booternetes II: The YAML Strikes Back (Europe) Workshop&#39;)&#34;&gt;Outlook/iCal&lt;/a&gt;
+	      &amp;nbsp;&amp;bullet;&amp;nbsp;
+	      &lt;a href=&#34;https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Booternetes+II%3A+The+YAML+Strikes+Back+%28Europe%29&amp;details=https%3A%2F%2Fvmware.zoom.us%2Fj%2F91244076795%3Fpwd%3DUGt5UG5qUGplNmVCUjA0bW12aEFLUT09&amp;dates=20210615T070000Z%2F20210615T111500Z&#34;&gt;Google&lt;/a&gt;
+	    &lt;/strong&gt;
+	  &lt;/p&gt; --&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Booternetes II: The YAML Strikes Back</title>
+      
+      <link>/tv/springone-tour/0016/</link>
+      <pubDate>Wed, 12 May 2021 10:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0016/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/S1T-BootII-FB-TW.png" width="640" />]]>
+        
+        &lt;h3 id=&#34;day-1-livestream&#34;&gt;Day 1 Livestream&lt;/h3&gt;
+&lt;div class=&#39;flex align-items-center&#39;&gt;
+	&lt;h5&gt;May 12 &amp;bullet; 10:00 AM&amp;ndash;12:00 PM PT
+	&lt;!-- &lt;strong&gt;&lt;a class=&#39;ml-3 lightbox&#39; href=&#39;#day-1-reminder&#39;&gt;&lt;i class=&#39;fa fa-calendar-check mr-1&#39;&gt;&lt;/i&gt;Add to calendar&lt;/a&gt;&lt;/strong&gt; --&gt;
+	&lt;/h5&gt;
+&lt;/div&gt;
+&lt;p&gt;As Luke took his first steps into a larger world at the start of his Jedi training he realized he was part of a larger system, the Force. In this installment of SpringOne Tour, we’re going to  teach our cloud native Spring Boot applications how to wield the Force by building on abstractions that know about and incorporate Kubernetes itself.&lt;/p&gt;
+&lt;p&gt;On day one, join VMware Tanzu team members Josh Long, Mario Gray, Tiffany Jernigan, Dave Turanski, Chris Sterling, Nate Schutta, and special guest Joe Beda, co-creator of Kubernetes, for Booternetes II: The YAML Strikes Back.&lt;/p&gt;
+&lt;!-- &lt;a class=&#39;btn mt-2&#39; href=&#39;https://www.twitch.tv/vmwaretanzu&#39;&gt;Watch Day 1 on Twitch&lt;/a&gt;
+
+&lt;div id=&#39;day-1-reminder&#39; class=&#39;p-5&#39; style=&#39;display: none&#39;&gt;
+	&lt;h3 class=&#39;-text-white mb-3 text-center&#39;&gt;Add to calendar&lt;/h3&gt;
+  &lt;div class=&#39;flex jc-between&#39;&gt;
+      &lt;script type=&#34;text/javascript&#34;&gt;
+          cal_single = ics();
+          cal_single.addEvent(&#39;Booternetes II: The YAML Strikes Back on Twitch&#39;, &#39;https://www.twitch.tv/vmwaretanzu&#39;, &#39;Twitch&#39;, &#39;05/12/2021 10:00 am PDT&#39;, &#39;05/12/2021 12:00 pm PDT&#39;);
+      &lt;/script&gt;
+      &lt;a href=&#34;#&#34;
+         onclick=&#34;javascript:cal_single.download(&#39;Booternetes II: The YAML Strikes Back Day 1 on Twitch&#39;)&#34;
+         class=&#39;btn mr-2 mb-2&#39;&gt;Outlook/iCal&lt;/a&gt; &lt;a
+          href=&#34;https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Booternetes+II%3A+The+YAML+Strikes+Back+Day+1&amp;details=https%3A%2F%2Fwww.twitch.tv%2Fvmwaretanzu&amp;dates=20210512T170000Z%2F20210512T190000Z&#34;
+          class=&#39;btn mb-2&#39;&gt;Google Calendar&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;br&gt; --&gt;
+&lt;h3 id=&#34;day-2-workshop&#34;&gt;Day 2 Workshop&lt;/h3&gt;
+&lt;h5 id=&#34;may-13-bullet-1000-amndash130-pm-pt&#34;&gt;May 13 • 10:00 AM–1:30 PM PT&lt;/h5&gt;
+&lt;p&gt;Join Tanzu team members Cora Iberkleid, Ryan Baxter, David Turanski, Jonatan Ivanov, and Ivan Tarin for an interactive workshop on where you&amp;rsquo;ll learn to apply some of these concepts in practice.&lt;/p&gt;
+&lt;!-- &lt;a class=&#39;btn mt-2 lightbox&#39; href=&#39;#register&#39;&gt;Register for Workshop&lt;/a&gt;
+
+&lt;div id=&#34;register&#34; class=&#39;p-5&#39; style=&#34;display:none&#34;&gt;
+	&lt;h3 class=&#39;-text-white mb-3 hide&#39;&gt;Register&lt;/h3&gt;
+	&lt;script src=&#34;https://connect.tanzu.vmware.com/js/forms2/js/forms2.min.js&#34;&gt;&lt;/script&gt;
+	&lt;form id=&#34;mktoForm_8246&#34;&gt;&lt;/form&gt;
+	&lt;script&gt;
+	  MktoForms2.setOptions({formXDPath : &#34;/rs/pivotal/images/marketo-xdframe-relative.html&#34;});
+	  MktoForms2.loadForm(&#34;https://connect.tanzu.vmware.com&#34;, &#34;625-IUJ-009&#34;, 8246, function(form){
+			form.onSuccess(function(values, followUpUrl) {
+				form.getFormElem().hide();
+				$(&#39;.hide&#39;).hide();
+				$(&#39;.confirmation&#39;).show();
+				return false;
+			});
+	  });
+	&lt;/script&gt;
+	&lt;div class=&#39;confirmation&#39; style=&#34;display:none&#34;&gt;
+		&lt;h3 class=&#34;-text-white mt-0&#34;&gt;Thank you!&lt;/h3&gt;
+		&lt;p&gt;Join us on May 13 using this link:&lt;br/&gt; &lt;span class=&#39;-text-white zoom-link&#39;&gt;https://vmware.zoom.us/j/91063935722?pwd=VnNMOURkeEh4T3N4VDFXdHgzREdGZz09&lt;/span&gt;&lt;/p&gt;
+		&lt;p&gt;
+			&lt;strong&gt;Add this workshop to your calendar:&lt;/strong&gt;
+			&lt;br/&gt;
+			&lt;strong&gt;
+	      &lt;script type=&#34;text/javascript&#34;&gt;
+	          cal_single2 = ics();
+	          cal_single2.addEvent(&#39;Booternetes II: The YAML Strikes Back Workshop&#39;, &#39;https://vmware.zoom.us/j/91063935722?pwd=VnNMOURkeEh4T3N4VDFXdHgzREdGZz09&#39;, &#39;Zoom&#39;, &#39;05/13/2021 10:00 am PDT&#39;, &#39;05/13/2021 1:30 pm PDT&#39;);
+	      &lt;/script&gt;
+				&lt;a href=&#34;#&#34; onclick=&#34;javascript:cal_single2.download(&#39;Booternetes II: The YAML Strikes Back Day 2 Workshop&#39;)&#34;&gt;Outlook/iCal&lt;/a&gt;
+	      &amp;nbsp;&amp;bullet;&amp;nbsp;
+	      &lt;a href=&#34;https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Booternetes+II%3A+The+YAML+Strikes+Back+Day+2&amp;details=https%3A%2F%2Fvmware.zoom.us%2Fj%2F91063935722%3Fpwd%3DVnNMOURkeEh4T3N4VDFXdHgzREdGZz09&amp;dates=20210513T170000Z%2F20210513T203000Z&#34;&gt;Google&lt;/a&gt;
+	    &lt;/strong&gt;
+	  &lt;/p&gt;
+	&lt;/div&gt;
+&lt;/div&gt; --&gt;&lt;blockquote&gt;
+&lt;/blockquote&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Booternetes Europe</title>
+      
+      <link>/tv/springone-tour/0015/</link>
+      <pubDate>Wed, 28 Apr 2021 10:00:00 +0100</pubDate>
+      
+      <guid>/tv/springone-tour/0015/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/S1T-Facebook-1200x628-March-EU.png" width="640" />]]>
+        
+        &lt;h3 id=&#34;booternetes-europe&#34;&gt;Booternetes Europe&lt;/h3&gt;
+&lt;h5 id=&#34;april-28-bullet-1000ndash1415-cest&#34;&gt;April 28 • 10:00–14:15 CEST&lt;/h5&gt;
+&lt;br/&gt;
+&lt;h5 id=&#34;1000ndash1045&#34;&gt;10:00–10:45&lt;/h5&gt;
+&lt;p&gt;We’ll kick off SpringOne Tour with a look at some application modernization strategies driving production outcomes with Spring on Kubernetes. (And yes, that’s #booternetes.)&lt;/p&gt;
+&lt;h5 id=&#34;1045ndash1415&#34;&gt;10:45–14:15&lt;/h5&gt;
+&lt;p&gt;Then get ready to put your Kubernetes knowledge to practice in a hands-on workshop. We’ll cover tools and best practices for getting your Spring apps to Kubernetes quickly and easily. We’ll start at everyone’s (second) favorite place on the internet—start.spring.io—and walk through the process of creating new apps all the way through to automated deployments directly to Kubernetes. By the end of this session, you’ll have all the knowledge you need to target Kubernetes as your production environment.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Workshop registration is closed&lt;/strong&gt;&lt;/p&gt;
+&lt;!-- #### Agenda
+
+&lt;table&gt;
+	&lt;tr&gt;&lt;td class=&#39;pr-3&#39;&gt;10:00&amp;ndash;10:45&lt;/td&gt;&lt;td&gt;Presentation&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td class=&#39;pr-3&#39;&gt;10:45&amp;ndash;14:15&lt;/td&gt;&lt;td&gt;Workshop&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt; --&gt;
+&lt;!-- &lt;a class=&#39;btn mt-2 lightbox&#39; href=&#39;#register&#39;&gt;Register&lt;/a&gt;
+
+&lt;div id=&#34;register&#34; class=&#39;p-5&#39; style=&#34;display:none&#34;&gt;
+	&lt;h3 class=&#39;-text-white mb-3 hide&#39;&gt;Register&lt;/h3&gt;
+	&lt;script src=&#34;https://connect.tanzu.vmware.com/js/forms2/js/forms2.min.js&#34;&gt;&lt;/script&gt;
+	&lt;form id=&#34;mktoForm_8089&#34;&gt;&lt;/form&gt;
+	&lt;script&gt;
+	  MktoForms2.setOptions({formXDPath : &#34;/rs/pivotal/images/marketo-xdframe-relative.html&#34;});
+	  MktoForms2.loadForm(&#34;https://connect.tanzu.vmware.com&#34;, &#34;625-IUJ-009&#34;, 8089, function(form){
+			form.onSuccess(function(values, followUpUrl) {
+				form.getFormElem().hide();
+				$(&#39;.hide&#39;).hide();
+				$(&#39;.confirmation&#39;).show();
+				return false;
+			});
+	  });
+	&lt;/script&gt;
+	&lt;div class=&#39;confirmation&#39; style=&#34;display:none&#34;&gt;
+		&lt;h3 class=&#34;-text-white mt-0&#34;&gt;Thank you!&lt;/h3&gt;
+		&lt;p&gt;Join us on April 28 using this link:&lt;br/&gt; &lt;span class=&#39;-text-white zoom-link&#39;&gt;https://VMware.zoom.us/j/99719270039?pwd=cS9IUzFjeFdDYXdZRWxtY3Nnc3ptQT09&lt;/span&gt;&lt;/p&gt;
+		&lt;p&gt;
+			&lt;strong&gt;Add this workshop to your calendar:&lt;/strong&gt;
+			&lt;br/&gt;
+			&lt;strong&gt;
+	      &lt;script type=&#34;text/javascript&#34;&gt;
+	          cal_single = ics();
+	          cal_single.addEvent(&#39;Booternetes Europe&#39;, &#39;https://VMware.zoom.us/j/99719270039?pwd=cS9IUzFjeFdDYXdZRWxtY3Nnc3ptQT09&#39;, &#39;Zoom&#39;, &#39;04/28/2021 1:00 am PDT&#39;, &#39;04/28/2021 5:15 am PDT&#39;);
+	      &lt;/script&gt;
+				&lt;a href=&#34;#&#34; onclick=&#34;javascript:cal_single.download(&#39;Booternetes Europe&#39;)&#34;&gt;Outlook/iCal&lt;/a&gt;
+	      &amp;nbsp;&amp;bullet;&amp;nbsp;
+	      &lt;a href=&#34;https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Booternetes+Europe&amp;details=https%3A%2F%2FVMware.zoom.us%2Fj%2F99719270039%3Fpwd%3DcS9IUzFjeFdDYXdZRWxtY3Nnc3ptQT09&amp;location=Zoom&amp;dates=20210428T080000Z%2F20210428T121500Z&#34;&gt;Google&lt;/a&gt;
+	    &lt;/strong&gt;
+	  &lt;/p&gt;
+	&lt;/div&gt;
+&lt;/div&gt; --&gt;&lt;blockquote&gt;
+&lt;/blockquote&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Booternetes</title>
+      
+      <link>/tv/springone-tour/0014/</link>
+      <pubDate>Wed, 10 Mar 2021 10:00:00 -0800</pubDate>
+      
+      <guid>/tv/springone-tour/0014/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/S1T-Facebook-1200x628-March.png" width="640" />]]>
+        
+        &lt;h3 id=&#34;day-1-livestream&#34;&gt;Day 1 Livestream&lt;/h3&gt;
+&lt;div class=&#39;flex align-items-center&#39;&gt;
+	&lt;h5&gt;March 10 &amp;bullet; 10:00 AM&amp;ndash;12:00 PM PT
+	&lt;!-- &lt;strong&gt;&lt;a class=&#39;ml-3 lightbox&#39; href=&#39;#day-1-reminder&#39;&gt;&lt;i class=&#39;fa fa-calendar-check mr-1&#39;&gt;&lt;/i&gt;Add to calendar&lt;/a&gt;&lt;/strong&gt; --&gt;&lt;/h5&gt;
+&lt;/div&gt;
+&lt;p&gt;Production is the happiest place on earth, but the journey there is long and few make it. TechRepublic estimated in 2008 that 68 percent of software projects fail, and there’s nothing funny about that, so we’re going to talk about something else. Join VMware developer advocates Josh Long, Mark Heckler, Nate Schutta, Paul Czarkowski, Cora Iberkleid, and Tiffany Jernigan as we build software with Spring Boot and then explore one of computing’s hardest problems (after vertical layouts in CSS): designing and deploying for production on Kubernetes. (And yes, that’s #booternetes.)&lt;/p&gt;
+&lt;!-- &lt;a class=&#39;btn mt-2&#39; href=&#39;https://www.twitch.tv/vmwaretanzu&#39;&gt;Watch Day 1 on Twitch&lt;/a&gt; --&gt;
+&lt;!-- &lt;div id=&#39;day-1-reminder&#39; class=&#39;p-5&#39; style=&#39;display: none&#39;&gt;
+	&lt;h3 class=&#39;-text-white mb-3 text-center&#39;&gt;Add to calendar&lt;/h3&gt;
+  &lt;div class=&#39;flex jc-between&#39;&gt;
+      &lt;script type=&#34;text/javascript&#34;&gt;
+          cal_single = ics();
+          cal_single.addEvent(&#39;Booternetes Day 1 on Twitch&#39;, &#39;https://www.twitch.tv/vmwaretanzu&#39;, &#39;Twitch&#39;, &#39;03/10/2021 10:00 am PST&#39;, &#39;03/10/2021 12:00 pm PST&#39;);
+      &lt;/script&gt;
+      &lt;a href=&#34;#&#34;
+         onclick=&#34;javascript:cal_single.download(&#39;Booternetes Day 1 on Twitch&#39;)&#34;
+         class=&#39;btn mr-2 mb-2&#39;&gt;Outlook/iCal&lt;/a&gt; &lt;a
+          href=&#34;https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Booternetes+Day+1+on+Twitch&amp;details=https%3A%2F%2Fwww.twitch.tv%2Fvmwaretanzu&amp;location=Twitch&amp;dates=20210310T180000Z%2F20210310T200000Z&#34;
+          class=&#39;btn mb-2&#39;&gt;Google Calendar&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt; --&gt;
+&lt;br&gt;
+&lt;h3 id=&#34;day-2-workshop&#34;&gt;Day 2 Workshop&lt;/h3&gt;
+&lt;h5 id=&#34;march-11-bullet-1000-amndash130-pm-pt&#34;&gt;March 11 • 10:00 AM–1:30 PM PT&lt;/h5&gt;
+&lt;p&gt;We’ll kick off the exciting second day of SpringOne Tour with a quick look at Kubernetes. We’ll cover the basic Kubernetes concepts you’ll need for the workshop, such as pods, deployments, and load balancing.&lt;/p&gt;
+&lt;p&gt;Then get ready to put your Kubernetes knowledge to practice in a hands-on workshop. We’ll cover tools and best practices for getting your Spring apps to Kubernetes quickly and easily. We’ll start at everyone’s (second) favorite place on the internet, start.spring.io, and walk through the process of creating new apps all the way through to automated deployments directly to Kubernetes. By the end of this session, you’ll have all the knowledge you need to target Kubernetes as your production environment.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Workshop registration is closed&lt;/strong&gt;&lt;/p&gt;
+&lt;!-- &lt;a class=&#39;btn mt-2 lightbox&#39; href=&#39;#register&#39;&gt;Register for Workshop&lt;/a&gt; --&gt;
+&lt;!-- &lt;div id=&#34;register&#34; class=&#39;p-5&#39; style=&#34;display:none&#34;&gt;
+	&lt;h3 class=&#39;-text-white mb-3 hide&#39;&gt;Register&lt;/h3&gt;
+	&lt;script src=&#34;https://connect.tanzu.vmware.com/js/forms2/js/forms2.min.js&#34;&gt;&lt;/script&gt;
+	&lt;form id=&#34;mktoForm_8081&#34;&gt;&lt;/form&gt;
+	&lt;script&gt;
+	  MktoForms2.setOptions({formXDPath : &#34;/rs/pivotal/images/marketo-xdframe-relative.html&#34;});
+	  MktoForms2.loadForm(&#34;https://connect.tanzu.vmware.com&#34;, &#34;625-IUJ-009&#34;, 8081, function(form){
+			form.onSuccess(function(values, followUpUrl) {
+				form.getFormElem().hide();
+				$(&#39;.hide&#39;).hide();
+				$(&#39;.confirmation&#39;).show();
+				return false;
+			});
+	  });
+	&lt;/script&gt;
+	&lt;div class=&#39;confirmation&#39; style=&#34;display:none&#34;&gt;
+		&lt;h3 class=&#34;-text-white mt-0&#34;&gt;Thank you!&lt;/h3&gt;
+		&lt;p&gt;Join us on March 11 using this link:&lt;br/&gt; &lt;span class=&#39;-text-white zoom-link&#39;&gt;https://VMware.zoom.us/j/91830717008?pwd=NjBpbXBKREJDZWV2ZUovZ1ovTGlNQT09&lt;/span&gt;&lt;/p&gt;
+		&lt;p&gt;
+			&lt;strong&gt;Add this workshop to your calendar:&lt;/strong&gt;
+			&lt;br/&gt;
+			&lt;strong&gt;
+	      &lt;script type=&#34;text/javascript&#34;&gt;
+	          cal_single2 = ics();
+	          cal_single2.addEvent(&#39;Booternetes Day 2 Workshop&#39;, &#39;https://VMware.zoom.us/j/91830717008?pwd=NjBpbXBKREJDZWV2ZUovZ1ovTGlNQT09&#39;, &#39;Zoom&#39;, &#39;03/11/2021 10:00 am PST&#39;, &#39;03/11/2021 1:30 pm PST&#39;);
+	      &lt;/script&gt;
+				&lt;a href=&#34;#&#34; onclick=&#34;javascript:cal_single2.download(&#39;Booternetes Day 2 Workshop&#39;)&#34;&gt;Outlook/iCal&lt;/a&gt;
+	      &amp;nbsp;&amp;bullet;&amp;nbsp;
+	      &lt;a href=&#34;https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Booternetes+Day+2+Workshop&amp;details=https%3A%2F%2FVMware.zoom.us%2Fj%2F91830717008%3Fpwd%3DNjBpbXBKREJDZWV2ZUovZ1ovTGlNQT09&amp;location=Zoom&amp;dates=20210311T180000Z%2F20210311T213000Z&#34;&gt;Google&lt;/a&gt;
+	    &lt;/strong&gt;
+	  &lt;/p&gt;
+	&lt;/div&gt;
+&lt;/div&gt; --&gt;&lt;blockquote&gt;
+&lt;/blockquote&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Nov Day 2 - Win a Spring Testing Trophy</title>
+      
+      <link>/tv/springone-tour/0013/</link>
+      <pubDate>Thu, 19 Nov 2020 09:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0013/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tanzu-S1T-nov-day2-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Traditionally we tend to design a test suite following the Testing Pyramid model to get a good balance between confidence and feedback speed. But the Testing Pyramid emphasizes low-level, isolated unit tests to increase speed but this actually makes it harder to refactor and change the code. The Testing Pyramid actually slows you down in the agile world!&lt;/p&gt;
+&lt;p&gt;The Testing Trophy on the other hand, focuses more on high-level integration tests and introduces static analysis as the base. This strategy gives developers more freedom to iterate and refactor, and helps documenting boundaries between modules. With the right tools and designing your test suite with love, you can achieve high maintainability without sacrificing on development speed.&lt;/p&gt;
+&lt;p&gt;In this talk, we will discuss why we should embrace the Testing Trophy in Spring, and explore some of the tools and libraries available in the Spring ecosystem that help you build a test suite that makes refactoring a delight without SLOWING YOU DOWN!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Nov Day 1 - Win a Spring Testing Trophy</title>
+      
+      <link>/tv/springone-tour/0012/</link>
+      <pubDate>Wed, 18 Nov 2020 09:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0012/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tanzu-S1T-nov-day1-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Join Bella Bai and Alexey Nesterov.&lt;/p&gt;
+&lt;p&gt;Traditionally we tend to design a test suite following the Testing Pyramid model to get a good balance between confidence and feedback speed. But the Testing Pyramid emphasizes low-level, isolated unit tests to increase speed but this actually makes it harder to refactor and change the code. The Testing Pyramid actually slows you down in the agile world!&lt;/p&gt;
+&lt;p&gt;The Testing Trophy on the other hand, focuses more on high-level integration tests and introduces static analysis as the base. This strategy gives developers more freedom to iterate and refactor, and helps documenting boundaries between modules. With the right tools and designing your test suite with love, you can achieve high maintainability without sacrificing on development speed.&lt;/p&gt;
+&lt;p&gt;In this talk, we will discuss why we should embrace the Testing Trophy in Spring, and explore some of the tools and libraries available in the Spring ecosystem that help you build a test suite that makes refactoring a delight without SLOWING YOU DOWN!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Oct Day 2 - Spring Boot Teppanyaki</title>
+      
+      <link>/tv/springone-tour/0011/</link>
+      <pubDate>Thu, 22 Oct 2020 09:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0011/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tanzu-S1T-oct-day2-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;A grill-side chat with the chefs of Spring Boot including: Greg Turnquist, Violeta Georgiva, and Dave Syer. The team will discuss all spring Spring Boot and answer any questions you may have.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Oct Day 1 - Spring Boot Omakase</title>
+      
+      <link>/tv/springone-tour/0010/</link>
+      <pubDate>Wed, 21 Oct 2020 09:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0010/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tanzu-S1T-oct-day1-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;A fast-paced &amp;ldquo;chef’s choice&amp;rdquo; dive into fun &amp;amp; useful topics!&lt;/p&gt;
+&lt;p&gt;Spring Boot has revolutionized the Java space and continues to do so, evolving constantly to increase developers’ superpowers and advance the state of production-grade software development.&lt;/p&gt;
+&lt;p&gt;Presenting a dynamic technology before vastly different audiences often limits what can be proposed &amp;amp; presented. Let’s fix that!&lt;/p&gt;
+&lt;p&gt;This session is an omakase, a &amp;ldquo;chef’s choice&amp;rdquo; of key points and latest/coolest capabilities for developers in the Spring Boot ecosystem. Known by French chefs as m’étonner (&amp;ldquo;Astonish me!&amp;quot;), the goal is to combine useful patterns and new possibilities in one fast-paced live-coding adventure from which everyone leaves with something tasty to chew on. Come for the apps, stay for dessert, leave satisfied &amp;amp; excited for the next &amp;ldquo;course&amp;rdquo; of production software!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: SpringOne 2020: A Look Back</title>
+      
+      <link>/tv/springone-tour/0009/</link>
+      <pubDate>Wed, 23 Sep 2020 09:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0009/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tanzu-S1T-springone-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Join some of our most beloved advocates and Spring team members as they discuss their favorite aspects of SpringOne 2020. This fireside chat will include Michael Coté, Brian Clozel, Glenn Renfro, Tiffany Jernigan and Cora Iberkleid talking about the specific content they found valuable and why. If you missed the show live or weren’t able to tune in to all the things, this is a good way for you to create a custom playlist pertaining to your particular interests!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Data Processing With Spring - Day 2</title>
+      
+      <link>/tv/springone-tour/0008/</link>
+      <pubDate>Thu, 20 Aug 2020 09:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0008/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tanzu-S1T-DataProcessing-day2-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Streams, batches, and microservices. Oh My! Data integration and related workloads are at the foundation of all enterprise workloads. They ingest streams of events. They process large batches. How do we develop applications to address these kind of workloads while taking advantage of modern cloud infrastructure to deploy and monitor them?&lt;/p&gt;
+&lt;p&gt;While Radio Shack may have left us, their slogan of &amp;ldquo;You&amp;rsquo;ve got questions, we&amp;rsquo;ve got answers&amp;rdquo; is the theme for the day. Bring your questions about these workloads and let&amp;rsquo;s chat. No slides, no demos, no pitches. Just good, honest conversation between devs.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Data Processing With Spring - Day 1</title>
+      
+      <link>/tv/springone-tour/0007/</link>
+      <pubDate>Wed, 19 Aug 2020 09:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0007/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tanzu-S1T-DataProcessing-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Streams, batches, and microservices. Oh My! Data integration and related workloads are at the foundation of all enterprise workloads. They ingest streams of events. They process large batches. How do we develop applications to address these kind of workloads while taking advantage of modern cloud infrastructure to deploy and monitor them?&lt;/p&gt;
+&lt;p&gt;We will look at Spring Cloud Stream and Spring Cloud Function and how they relate to stream processing as well as Spring Cloud Task and Spring Batch and how they relate to handling finite workloads. In both cases, we will be sure to dig into the newer features that make your life easier in the deployment of these mission critical workloads. We will also look at orchestrating and monitoring these applications via Spring Cloud Data Flow and related tools.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Spring Tips and Reactive Spring - Day 2</title>
+      
+      <link>/tv/springone-tour/0006/</link>
+      <pubDate>Thu, 23 Jul 2020 09:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0006/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tanzu-S1T-Reactive-day2-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;See more at - &lt;a href=&#34;https://springonetour.io/&#34;&gt;https://springonetour.io/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Day 2: Spring Tips: Configuration&lt;/p&gt;
+&lt;p&gt;Hi, Spring fans! Spring is an inversion-of-control container. Inversion of control insulates objects from the knowledge of how a collaborating object on which they depend are created. It also insulates objects from their environment, letting them exist blissfully unaware of where individual configuration properties such as passwords and URLs originate.&lt;/p&gt;
+&lt;p&gt;In this talk, we’re going to explore the Environment which connects objects to configuration properties. We’ll also look at PropertySources, profiles, @ConfigurationProperties, the @Value annotation, the Spring Cloud Config Server and Spring Cloud Vault for HashiCorp Vault.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Spring Tips and Reactive Spring - Day 1</title>
+      
+      <link>/tv/springone-tour/0005/</link>
+      <pubDate>Wed, 22 Jul 2020 09:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0005/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tanzu-S1T-Reactive-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;See more at - &lt;a href=&#34;https://springonetour.io/&#34;&gt;https://springonetour.io/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Day 1, Part I: Spring Tips: Configuration&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Hi, Spring fans! Spring is an inversion-of-control container. Inversion of control insulates objects from the knowledge of how a collaborating object on which they depend are created. It also insulates objects from their environment, letting them exist blissfully unaware of where individual configuration properties–like passwords, URLs, etc.–originate. In this talk, we’re going to explore the Environment which connects objects to configuration properties. We’ll also look at PropertySources, profiles, @ConfigurationProperties, the @Value annotation, the Spring Cloud Config Server and Spring Cloud Vault for HashiCorp Vault.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Day 1, Part II: Reactive Spring&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Microservices and big data increasingly confront us with the limitations of traditional input/output. In traditional IO, work that is IO-bound dominates threads. This wouldn&amp;rsquo;t be such a big deal if we could add more threads cheaply, but threads are expensive on the JVM, and most other platforms. Even if threads were cheap and infinitely scalable, we&amp;rsquo;d still be confronted with the faulty nature of networks. Things break, and they often do so in subtle but non-exceptional ways. Traditional approaches to integration bury the faulty nature of networks behind overly simplifying abstractions. We need something better.&lt;/p&gt;
+&lt;p&gt;Spring Framework 5 is here! It introduces the Spring developer to a growing world of support for reactive programming across the Spring portfolio, starting with a new Netty-based web runtime, component model and module called Spring WebFlux, and then continuing to Spring Data Kay, Spring Security 5.0, Spring Boot 2.0 and Spring Cloud Finchley. Sure, it sounds like a lot, but don&amp;rsquo;t worry! Join me, your guide, Spring developer advocate Josh Long, and we&amp;rsquo;ll explore the wacky, wonderful world of Reactive Spring together.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: The CI/CD Experience: Kubernetes Edition - Day 2</title>
+      
+      <link>/tv/springone-tour/0004/</link>
+      <pubDate>Tue, 30 Jun 2020 09:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0004/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tanzu-S1T-CICD-d2-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;See more at - &lt;a href=&#34;https://springonetour.io/&#34;&gt;https://springonetour.io/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A followup to &lt;a href=&#34;../0003&#34;&gt;The CI/CD Experience: Kubernetes Edition - Day 1&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;With Kubernetes, everything from deployment to monitoring to scaling is more standardized and inherently easier to automate. This presents the possibility to achieve a more effective and comprehensive Continuous Integration (CI) and Continuous Delivery (CD) experience. We can incorporate the practice of infrastructure-as-code and take advantage of a flourishing ecosystem of tools to improve and fully automate our application deployment strategies. In this session, we&amp;rsquo;ll tour the landscape of new Kubernetes-centric tooling, including Tekton, Kustomize, and ArgoCD. We&amp;rsquo;ll also explore how GitOps can be leveraged for CI/CD.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: The CI/CD Experience: Kubernetes Edition - Day 1</title>
+      
+      <link>/tv/springone-tour/0003/</link>
+      <pubDate>Mon, 29 Jun 2020 09:00:00 -0700</pubDate>
+      
+      <guid>/tv/springone-tour/0003/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/Tanzu-S1T-CICD-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;See more at - &lt;a href=&#34;https://springonetour.io/&#34;&gt;https://springonetour.io/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;With Kubernetes, everything from deployment to monitoring to scaling is more standardized and inherently easier to automate. This presents the possibility to achieve a more effective and comprehensive Continuous Integration (CI) and Continuous Delivery (CD) experience. We can incorporate the practice of infrastructure-as-code and take advantage of a flourishing ecosystem of tools to improve and fully automate our application deployment strategies. In this session, we&amp;rsquo;ll tour the landscape of new Kubernetes-centric tooling, including Tekton, Kustomize, and ArgoCD. We&amp;rsquo;ll also explore how GitOps can be leveraged for CI/CD.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Cloud Native Architecture - Day 2</title>
+      
+      <link>/tv/springone-tour/0002/</link>
+      <pubDate>Thu, 21 May 2020 21:55:47 +0000</pubDate>
+      
+      <guid>/tv/springone-tour/0002/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/0002.jpg" width="640" />]]>
+        
+        &lt;p&gt;See more at - &lt;a href=&#34;https://springonetour.io/&#34;&gt;https://springonetour.io/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A followup to &lt;a href=&#34;../0001&#34;&gt;Cloud Native Architecture - Day 1&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;It seems like a new cloud native technology or project is launched every week, and though there are technical changes required for building and operating cloud native applications, technology alone isn’t a silver bullet. It turns out that how you build your applications is critical to enable seamless scaling and resiliency to failures. What do you have to do to ensure your applications can fully leverage the power and flexibility the cloud offers?&lt;/p&gt;
+&lt;p&gt;The 12-Factor principles have been around for a decade and have proven to be core, foundational principles for cloud native applications. But they require changes to how you design your applications, the way teams collaborate on code, and more. Understanding the 12-Factor principles is a strong foundation for adopting cloud native patterns and practices.&lt;/p&gt;
+&lt;p&gt;Starting with an architectural kata, Nate and Jakub will event storm a possible solution stopping along the way to identify key quality attributes, fitness functions, and architectural patterns required to deliver a solution. Distributed architectures have similar problems and rather than “roll our own solutions,” we’ll leverage Spring Cloud to solve common challenges while lessening technical complexity.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>SpringOne Tour: Cloud Native Architecture - Day 1</title>
+      
+      <link>/tv/springone-tour/0001/</link>
+      <pubDate>Wed, 20 May 2020 19:48:16 +0000</pubDate>
+      
+      <guid>/tv/springone-tour/0001/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/springone-tour/0001.jpg" width="640" />]]>
+        
+        &lt;p&gt;See more at - &lt;a href=&#34;https://springonetour.io/&#34;&gt;https://springonetour.io/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;It seems like a new cloud native technology or project is launched every week, and though there are technical changes required for building and operating cloud native applications, technology alone isn’t a silver bullet. It turns out that how you build your applications is critical to enable seamless scaling and resiliency to failures. What do you have to do to ensure your applications can fully leverage the power and flexibility the cloud offers?&lt;/p&gt;
+&lt;p&gt;The 12-Factor principles have been around for a decade and have proven to be core, foundational principles for cloud native applications. But they require changes to how you design your applications, the way teams collaborate on code, and more. Understanding the 12-Factor principles is a strong foundation for adopting cloud native patterns and practices.&lt;/p&gt;
+&lt;p&gt;Starting with an architectural kata, Nate and Jakub will event storm a possible solution stopping along the way to identify key quality attributes, fitness functions, and architectural patterns required to deliver a solution. Distributed architectures have similar problems and rather than “roll our own solutions,” we’ll leverage Spring Cloud to solve common challenges while lessening technical complexity.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

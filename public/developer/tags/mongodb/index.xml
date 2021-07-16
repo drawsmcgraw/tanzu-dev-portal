@@ -1,0 +1,803 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – MongoDB</title>
+    <link>/tags/mongodb/</link>
+    <description>Recent content in MongoDB on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 04 Sep 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/mongodb/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Develop a REST API with Bitnami&#39;s Node.js and MongoDB Containers</title>
+      
+      <link>/guides/microservices/develop-rest-api-nodejs-mongodb-containers/</link>
+      <pubDate>Tue, 24 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/microservices/develop-rest-api-nodejs-mongodb-containers/</guid>
+      <description>
+
+        
+        &lt;p&gt;For developers building cloud-native applications and APIs for Kubernetes, Bitnami offers a variety of &lt;a href=&#34;https://bitnami.com/stacks/containers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;containers&lt;/a&gt; and &lt;a href=&#34;https://github.com/bitnami/charts/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm charts&lt;/a&gt; to ease the process. These ready-to-use assets make it easier to develop and deploy applications consistently, follow best practices and focus on code rather than infrastructure configuration. Bitnami containers and charts are also always secure, optimized and up-to-date, so you can rest assured that your applications always have access to the latest language features and security fixes.&lt;/p&gt;
+&lt;p&gt;To illustrate these benefits, this two-part series will walk you through the process of developing and deploying a sample Node.js REST API locally using Bitnami containers. Then, once your API is reasonably stable or ready, it will show you how to make it available to a wider group of reviewers or users by deploying it on Kubernetes using Bitnami Helm charts.&lt;/p&gt;
+&lt;p&gt;In this first part, you will create and run a sample REST API locally on your development system using the Sails framework. You will also create a local MongoDB service for API data storage, and integrate and test your REST API with this MongoDB service. To perform these tasks, you can either use your existing Node.js development environment or, if you don&amp;rsquo;t have one, you can use the following Bitnami container images:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js container image&lt;/a&gt; contains the Node.js runtime together with all required dependencies and development tools.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s MongoDB container image&lt;/a&gt; contains the official MongoDB Community binaries together with support for persistence, SSL and replica sets.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and prerequisites&lt;/h2&gt;
+&lt;p&gt;This guide assumes that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have Docker installed and configured. &lt;a href=&#34;https://docs.docker.com/engine/installation/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about installing Docker&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a basic understanding of Node.js and REST API concepts. Learn more about &lt;a href=&#34;https://nodejs.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Node.js&lt;/a&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Representational_state_transfer&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;REST&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-1-create-a-skeleton-nodejs-application&#34;&gt;Step 1: Create a skeleton Node.js application&lt;/h2&gt;
+&lt;p&gt;The first step is to create a skeleton Node.js application. This article will use the Bitnami Node.js container image and the popular &lt;a href=&#34;https://sailsjs.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Sails MVC framework&lt;/a&gt;; however, there are multiple tools and methods to do this and you should feel free to use a different approach or a different framework. For example, if you already have a Node.js development environment, you can use that instead and skip the Docker commands below.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Begin by creating a directory for your application and making it the current working directory:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir myapp
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; myapp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use the following Docker commands to create and start a &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Node.js container&lt;/a&gt; on your host:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker create -v &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;pwd&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;:/app -t --net&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;host&amp;#34;&lt;/span&gt; --name node bitnami/node:13
+docker start node
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;em&gt;-v&lt;/em&gt; argument to the first command tells Docker to mount the host&amp;rsquo;s current directory into the container&amp;rsquo;s &lt;em&gt;/app&lt;/em&gt; path, so that the effects of commands run in the container are seen on the host. The &lt;em&gt;&amp;ndash;net=&amp;ldquo;host&amp;rdquo;&lt;/em&gt; parameter tells Docker to use the host&amp;rsquo;s network stack for the container. The container is named &lt;em&gt;node&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Once the container is running, connect to the container console with the command below. This will give you a command shell and allow you to use the Node.js tools available in the image for subsequent tasks.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it node /bin/bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install Sails and then use the Sails CLI to create the scaffolding for a skeleton application. When prompted for the application type, choose an &amp;ldquo;Empty&amp;rdquo; application.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;npm install -g sails
+sails new .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the application scaffolding has been generated, start the application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sails lift
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;By default, a Sails application starts in development mode and runs at port 1337. Browse to http://DOCKER-HOST-ADDRESS:1337, where DOCKER-HOST-ADDRESS is the IP address of your host, and confirm that you see the Sails welcome page shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/sails-welcome.png&#34; alt=&#34;Sails default page&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Exit the container console. This will terminate the Sails application process, although the container will continue to run in the background.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-2-create-and-start-a-local-mongodb-service&#34;&gt;Step 2: Create and start a local MongoDB service&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.mongodb.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MongoDB&lt;/a&gt; is a scalable and popular data storage accompaniment for Node.js applications. &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s MongoDB image&lt;/a&gt; makes it easy to create a local MongoDB service which can be used to store, retrieve and modify data related to your REST API. Alternatively, if you already have the MongoDB server and a MongoDB database on your host, you can use that instead and skip the Docker commands below.&lt;/p&gt;
+&lt;p&gt;Create and start a MongoDB database service using the &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami MongoDB container&lt;/a&gt; on your host.  If you wish, you can replace the database credentials and other variables shown below with your own values, but make a note of them as you will need them in the next step.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker create -e &lt;span class=&#34;nv&#34;&gt;MONGODB_USERNAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;myapp -e &lt;span class=&#34;nv&#34;&gt;MONGODB_PASSWORD&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;myapp -e &lt;span class=&#34;nv&#34;&gt;MONGODB_DATABASE&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mydb -e &lt;span class=&#34;nv&#34;&gt;MONGODB_ROOT_PASSWORD&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;root --net&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;host&amp;#34;&lt;/span&gt; --name mongodb bitnami/mongodb
+docker start mongodb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The environment variables passed to the first command set the administrator password for the MongoDB instance and also create a new database named &lt;em&gt;mydb&lt;/em&gt; with corresponding user credentials. This database will be used to store data for the REST API. As before, the &lt;em&gt;&amp;ndash;net=&amp;ldquo;host&amp;rdquo;&lt;/em&gt; parameter tells Docker to use the host&amp;rsquo;s network stack for this container as well. The container is named &lt;em&gt;mongodb&lt;/em&gt; and, once started, the MongoDB service will be available on the Docker host at port 27017.&lt;/p&gt;
+&lt;h2 id=&#34;step-3-create-and-configure-a-rest-api-endpoint&#34;&gt;Step 3: Create and configure a REST API endpoint&lt;/h2&gt;
+&lt;p&gt;At this point, you have a skeleton Node.js application and a MongoDB database service. You can now start creating your REST API. As before, if you&amp;rsquo;re using an existing Node.js development environment, skip the Docker commands below.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Connect to the container console again with the command below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it node /bin/bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Sails comes with a built-in &lt;a href=&#34;https://sailsjs.com/documentation/concepts/extending-sails/generators/available-generators&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;generator for API endpoints&lt;/a&gt;. Use this to generate the scaffolding for a new sample REST API endpoint for Item objects. By default, this endpoint will be exposed at the &lt;em&gt;/item&lt;/em&gt; URI.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sails generate api item
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install the MongoDB adapter for Sails:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;npm install sails-mongo --save  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Exit the Docker container once the installation is complete.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Follow the &lt;a href=&#34;https://sailsjs.com/documentation/tutorials/using-mongo-db&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;steps outlined in the Sails documentation to configure the generated application to use MongoDB&lt;/a&gt; for data storage. First, edit the &lt;em&gt;myapp/config/datastores.js&lt;/em&gt; file and modify the default data store entry as shown below.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;k&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nx&#34;&gt;adapter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;sails-mongo&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nx&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;mongodb://myapp:myapp@localhost/mydb&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you used different values when creating the MongoDB container, or if you&amp;rsquo;re using a different MongoDB installation, remember to replace the values shown above as needed.&lt;/p&gt;
+&lt;p&gt;Then, update the &lt;em&gt;id&lt;/em&gt; and &lt;em&gt;migrate&lt;/em&gt; attributes in the &lt;em&gt;myapp/config/models.js&lt;/em&gt; file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;nx&#34;&gt;migrate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;alter&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;string&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;columnName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;_id&amp;#39;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a data model for the REST API Item object. For this article, use a simple model with just two attributes: a &lt;em&gt;name&lt;/em&gt; and a &lt;em&gt;quantity&lt;/em&gt;. Edit the &lt;em&gt;myapp/api/models/Item.js&lt;/em&gt; and update it to look like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;nx&#34;&gt;module&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;exports&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+
+  &lt;span class=&#34;nx&#34;&gt;attributes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;string&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;quantity&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;number&amp;#39;&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Connect to the container console again. Start the application and put it in the background:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it node /bin/bash
+sails lift &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Exit the Docker container once the application starts.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As before, the application will start in development mode and become available at port 1337 of the host.&lt;/p&gt;
+&lt;h2 id=&#34;step-4-test-the-rest-api&#34;&gt;Step 4: Test the REST API&lt;/h2&gt;
+&lt;p&gt;Your REST API is now active and configured to use MongoDB. You can now proceed to test it from your host, by sending it various types of HTTP requests and inspecting the responses. If you&amp;rsquo;re using the Bitnami containers, remember that they are using the host&amp;rsquo;s network stack and so will be available at ports 1337 (Node.js) and 27017 (MongoDB) respectively.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;At the host console, send a POST request to the API using &lt;em&gt;curl&lt;/em&gt; to create a new item record:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -X POST -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;name&amp;#34;:&amp;#34;milk&amp;#34;,&amp;#34;quantity&amp;#34;:&amp;#34;10&amp;#34;}&amp;#39;&lt;/span&gt; http://localhost:1337/item
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/api-post.png&#34; alt=&#34;POST request&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check if the item record was created with a GET request:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl http://localhost:1337/item
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/api-get.png&#34; alt=&#34;GET request&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;You can also connect to the running MongoDB container and use the &lt;em&gt;mongo&lt;/em&gt; CLI to see the data in the MongoDB database.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it mongodb /bin/bash
+mongo --authenticationDatabase mydb -u myapp -p myapp mydb --eval &lt;span class=&#34;s2&#34;&gt;&amp;#34;db.item.find()&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/db-get.png&#34; alt=&#34;Database check&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Modify the item record with a PUT request. Replace the ID placeholder in the command below with the document&amp;rsquo;s unique identifier from the previous commands.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -X PUT -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;name&amp;#34;:&amp;#34;milk&amp;#34;,&amp;#34;quantity&amp;#34;:&amp;#34;5&amp;#34;}&amp;#39;&lt;/span&gt; http://localhost:1337/item/ID
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/api-put.png&#34; alt=&#34;PUT request&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Delete the item record with a DELETE request:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -X DELETE http://localhost:1337/item/ID
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/api-delete.png&#34; alt=&#34;DELETE request&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;You can also connect to the running MongoDB container and use the &lt;em&gt;mongo&lt;/em&gt; CLI to confirm that the data has been deleted from the MongoDB database:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it mongodb /bin/bash
+mongo --authenticationDatabase mydb -u myapp -p myapp mydb --eval &lt;span class=&#34;s2&#34;&gt;&amp;#34;db.item.count()&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/develop-rest-api-nodejs-mongodb-containers/db-delete.png&#34; alt=&#34;Database check&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;At this point, you have a working Node.js REST API integrated with a MongoDB database. However, it&amp;rsquo;s currently only available on your local machine and only while the containers are running. This is fine for local development, but becomes a bottleneck when you want to make it available to others for review and testing.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s where the &lt;a href=&#34;/guides/microservices/deploy-rest-api-nodejs-mongodb-charts/&#34;&gt;second part of this series&lt;/a&gt; comes in. Continue adding features to your API and once you&amp;rsquo;re happy with it, proceed to the concluding article and learn how to make your REST API available to a larger group by containerizing it, deploying it on Kubernetes and connecting it to a MongoDB service also running on Kubernetes.&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;p&gt;To learn more about the topics discussed in this article, use the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js container image&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s MongoDB container image&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://sailsjs.com/documentation/reference&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Sails documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.mongodb.com/manual/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MongoDB documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Deploy a REST API on Kubernetes with Bitnami&#39;s Helm Charts</title>
+      
+      <link>/guides/microservices/deploy-rest-api-nodejs-mongodb-charts/</link>
+      <pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/microservices/deploy-rest-api-nodejs-mongodb-charts/</guid>
+      <description>
+
+        
+        &lt;p&gt;In the &lt;a href=&#34;/guides/microservices/develop-rest-api-nodejs-mongodb-containers/&#34;&gt;first part of this series&lt;/a&gt;, you developed and integrated a sample REST API with a MongoDB database running on your local system. In this second and concluding part, you will transition your API from your local system to a Kubernetes environment, thereby making it available to a wider audience for review, test and usage.&lt;/p&gt;
+&lt;p&gt;To achieve this, you will use the following Helm charts and containers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js Helm chart&lt;/a&gt;, which lets you quickly deploy a Node.js application on Kubernetes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s MongoDB Helm chart&lt;/a&gt;, which gives you a fully-functional, secure and replicated MongoDB database cluster on Kubernetes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As with container images, &lt;a href=&#34;https://github.com/bitnami/charts/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Helm charts&lt;/a&gt; are secure and packaged according to current best practices, so you can use them immediately with your preferred Kubernetes provider or environment.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and Prerequisites&lt;/h2&gt;
+&lt;p&gt;This guide makes the following assumptions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have a Docker environment installed and configured. &lt;a href=&#34;https://docs.docker.com/engine/installation/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about installing Docker&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Docker Hub account. &lt;a href=&#34;https://hub.docker.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Register for a free account&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Kubernetes cluster running with Helm v3.x and &lt;em&gt;kubectl&lt;/em&gt; installed. &lt;a href=&#34;https://docs.bitnami.com/kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about getting started with Kubernetes and Helm using different cloud providers&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a basic understanding of Node.js and REST API concepts. Learn more about &lt;a href=&#34;https://nodejs.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Node.js&lt;/a&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Representational_state_transfer&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;REST APIs&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-1-deploy-a-mongodb-service-on-kubernetes&#34;&gt;Step 1: Deploy a MongoDB service on Kubernetes&lt;/h2&gt;
+&lt;p&gt;The first step is to deploy MongoDB on your Kubernetes cluster. The easiest way to do this is with &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s MongoDB Helm chart&lt;/a&gt;, which gives you a ready-to-use deployment with minimal effort and within a few minutes.&lt;/p&gt;
+&lt;p&gt;Use the commands below to deploy MongoDB on your Kubernetes cluster. If you wish, you can also replace the database name and credentials shown below with your own values, but make a note of them as you will need them in subsequent steps.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install mongodb bitnami/mongodb --set &lt;span class=&#34;nv&#34;&gt;mongodbRootPassword&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;root --set &lt;span class=&#34;nv&#34;&gt;mongodbUsername&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;myapp --set &lt;span class=&#34;nv&#34;&gt;mongodbPassword&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;myapp --set &lt;span class=&#34;nv&#34;&gt;mongodbDatabase&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mydb --set replicaSet.enabled&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The parameters passed to the chart define the MongoDB administrator password and also create a new database named &lt;em&gt;mydb&lt;/em&gt; with corresponding user credentials.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the Bitnami MongoDB Helm chart&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Wait for the deployment to complete before proceeding to the next step.&lt;/p&gt;
+&lt;h2 id=&#34;step-2-adapt-the-application-source-code&#34;&gt;Step 2: Adapt the application source code&lt;/h2&gt;
+&lt;p&gt;Next, you must adapt your application&amp;rsquo;s source code to read MongoDB connection parameters from the Kubernetes environment. This is a necessary prelude to deploying the application with Bitnami&amp;rsquo;s Node.js Helm chart.&lt;/p&gt;
+&lt;p&gt;Edit the &lt;em&gt;myapp/config/datastores.js&lt;/em&gt; file and modify the default data store entry to look like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;k&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nx&#34;&gt;adapter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;sails-mongo&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nx&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb://&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;process&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;DATABASE_USER&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;:&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;process&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;DATABASE_PASSWORD&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;@&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;process&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;DATABASE_HOST&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;process&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;DATABASE_NAME&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;These values will be injected into the application&amp;rsquo;s environment by the Helm chart at deployment time.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js Helm chart&lt;/a&gt; starts the application using the &lt;em&gt;npm start&lt;/em&gt; command. By default, this will start the Sails application in production mode. Since this is a development deployment, modify the application&amp;rsquo;s &lt;em&gt;package.json&lt;/em&gt; file so that the &lt;em&gt;start&lt;/em&gt; command looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;err&#34;&gt;...&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;scripts&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;#34;start&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;node app.js&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;err&#34;&gt;...&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;step-3-create-and-publish-a-docker-image-of-the-application&#34;&gt;Step 3: Create and publish a Docker image of the application&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js Helm chart&lt;/a&gt; has the ability to pull a container image of your Node.js application from a registry such as Docker Hub. Therefore, before you can use the chart, you must create and publish a Docker image of the application by following these steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Create a file named &lt;em&gt;Dockerfile&lt;/em&gt; in the application&amp;rsquo;s working directory, and fill it with the following content:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;FROM bitnami/node:13
+
+&lt;span class=&#34;c1&#34;&gt;# Copy the application code&lt;/span&gt;
+COPY . /app
+
+&lt;span class=&#34;c1&#34;&gt;# Set working directory&lt;/span&gt;
+WORKDIR /app
+
+&lt;span class=&#34;c1&#34;&gt;# Create a non-root user&lt;/span&gt;
+RUN useradd -r -u &lt;span class=&#34;m&#34;&gt;1001&lt;/span&gt; -g root nonroot
+RUN chown -R nonroot /app
+USER nonroot
+
+&lt;span class=&#34;c1&#34;&gt;# Set the application port to 3000&lt;/span&gt;
+ENV &lt;span class=&#34;nv&#34;&gt;PORT&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;3000&amp;#34;&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Start the application&lt;/span&gt;
+CMD &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;node&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;app.js&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This &lt;em&gt;Dockerfile&lt;/em&gt; uses the &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node/tree/master/13/debian-10&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Node.js 13.x development image&lt;/a&gt; to copy the application files from the current directory. It also creates a non-root user account that the application will run under. For security reasons, it&amp;rsquo;s recommended to always run your application using a non-root user account. Finally, it sets the application to run on port 3000 (the default port expected by the Bitnami Node.js Helm chart) and starts the Node.js server.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The Dockerfile used above produces a development image which contains additional development tools and dependencies. For production scenarios, you should instead use &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node/tree/master/13-prod/debian-10&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js 13.x production image&lt;/a&gt; with a multi-stage build process, as described in this &lt;a href=&#34;https://docs.bitnami.com/tutorials/deploy-custom-nodejs-app-bitnami-containers/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;tutorial on creating a production-ready image of a Node.js application&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Build the image using the command below. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker build -t DOCKER-USERNAME/myapp:1.0 .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result of this command is a development image containing the application, the Node.js runtime and all the related dependencies and development tools.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to Docker Hub and publish the image. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker login
+docker push DOCKER-USERNAME/myapp:1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-4-deploy-the-rest-api-on-kubernetes&#34;&gt;Step 4: Deploy the REST API on Kubernetes&lt;/h2&gt;
+&lt;p&gt;By default, Bitnami&amp;rsquo;s Node.js Helm chart installs its own preconfigured MongoDB service. While this is useful in some scenarios, it must be disabled in this case, as you will be connecting your Node.js application to the MongoDB deployment created in &lt;a href=&#34;#step-1-deploy-a-mongodb-service-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;. When disabling this default behavior, it is mandatory to pass the chart, as alternative, a Kubernetes secret containing the details of the MongoDB deployment it should use.&lt;/p&gt;
+&lt;p&gt;Follow the steps below to create the Kubernetes secret.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Obtain the cluster IP address of the MongoDB deployment created in &lt;a href=&#34;#step-1-deploy-a-mongodb-service-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get svc &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep mongodb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a Kubernetes secret containing the MongoDB service&amp;rsquo;s IP address, port, database name and access credentials. Replace the MONGODB-IP-ADDRESS placeholder with the cluster IP address obtained from the previous command. If you used different database credentials or values when deploying the chart in &lt;a href=&#34;#step-1-deploy-a-mongodb-service-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;, replace the values shown below appropriately.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create secret generic my-mongodb --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;host&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;MONGODB-IP-ADDRESS --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;myapp --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;myapp --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;database&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mydb --from-literal&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;27017&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will create a Kubernetes secret named &lt;em&gt;my-mongodb&lt;/em&gt; with the values needed for the Helm chart to successfully integrate with the MongoDB deployment.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Deploy the REST API using Bitnami&amp;rsquo;s Node.js Helm chart and the MongoDB secret. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install node bitnami/node &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set image.repository&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;DOCKER-USERNAME/myapp &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set image.tag&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;1.0 &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set &lt;span class=&#34;nv&#34;&gt;getAppFromExternalRepository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set mongodb.install&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set externaldb.secretName&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;my-mongodb &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set service.type&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;LoadBalancer 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s take a closer look at this command:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;em&gt;service.type=LoadBalancer&lt;/em&gt; parameter makes the application available at a public IP address.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;getAppFromExternalRepository=false&lt;/em&gt; parameter controls whether the chart will retrieve the application from an external repository. In this case, since the application is already published as a container image, such retrieval is not necessary.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;image.repository&lt;/em&gt; and &lt;em&gt;image.tag&lt;/em&gt; parameters tell the chart which container image and version to pull from the registry. The values assigned to these parameters should match the image published in &lt;a href=&#34;#step-3-create-and-publish-a-docker-image-of-the-application&#34;&gt;Step 3&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;mongodb.install=false&lt;/em&gt; parameter disables the built-in MongoDB chart, and the &lt;em&gt;externaldb.secretName&lt;/em&gt; parameter names the secret holding details of the alternate MongoDB deployment to use.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the Bitnami Node.js Helm chart&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Wait for the deployment to complete. Obtain the public IP address of the load balancer service:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get svc &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep node
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-5-test-the-rest-api&#34;&gt;Step 5: Test the REST API&lt;/h2&gt;
+&lt;p&gt;Your REST API is now deployed on Kubernetes. You can proceed to test it by sending it various types of HTTP requests and inspecting the responses. Replace the SERVICE-IP-ADDRESS placeholder in the commands below with the public IP address of the load balancer service obtained at the end of the previous step.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Send a POST request to the API to create a new item record:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -X POST -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;name&amp;#34;:&amp;#34;eggs&amp;#34;,&amp;#34;quantity&amp;#34;:&amp;#34;12&amp;#34;}&amp;#39;&lt;/span&gt; http://SERVICE-IP-ADDRESS/item
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/deploy-rest-api-nodejs-mongodb-charts/api-post.png&#34; alt=&#34;POST request&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check if the item record was created with a GET request:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl http://SERVICE-IP-ADDRESS/item
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/deploy-rest-api-nodejs-mongodb-charts/api-get.png&#34; alt=&#34;GET request&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;You can also connect to the MongoDB deployment on Kubernetes to confirm that the record exists. If you used different database credentials or values when deploying the chart in &lt;a href=&#34;#step-1-deploy-a-mongodb-service-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;, replace the values shown below appropriately.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl run --namespace default mongodb-client --rm --tty -i --restart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Never&amp;#39;&lt;/span&gt; --image docker.io/bitnami/mongodb:4.2.3-debian-10-r31 --command -- mongo mydb --host mongodb --authenticationDatabase mydb -u myapp -p myapp --eval &lt;span class=&#34;s2&#34;&gt;&amp;#34;db.item.find()&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see output similar to that shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/deploy-rest-api-nodejs-mongodb-charts/db-get.png&#34; alt=&#34;Database check&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Your Node.js REST API is now running on Kubernetes and available for public review. You can now continue adding features to your API, upgrading the application and scaling out the database using normal Kubernetes procedures, which you can learn more about in our tutorial on &lt;a href=&#34;https://docs.bitnami.com/kubernetes/how-to/deploy-application-kubernetes-helm/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;deploying, scaling and upgrading applications on Kubernetes&lt;/a&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;As you continue developing and deploying your REST API, consider using a tool like Skaffold, which continuously monitors your application source code and deploys the latest version automatically on Kubernetes. &lt;a href=&#34;https://docs.bitnami.com/tutorials/continuously-develop-express-application-kubernetes-bitnami-skaffold-octant/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about building a continuous development pipeline for a Node.js application with Skaffold&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Node.js Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami MongoDB Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Node.js container image&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Integrate Spring Cloud Data Flow Applications with a Scalable MongoDB Deployment on Kubernetes</title>
+      
+      <link>/guides/spring/scdf-mongodb/</link>
+      <pubDate>Fri, 04 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/scdf-mongodb/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://dataflow.spring.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Data Flow&lt;/a&gt; is a framework for creating data streaming applications and batch data processing pipelines. It is commonly used to develop and test microservices, and it comes with built-in support for popular data sources and data storage services. It is available under an Apache license.&lt;/p&gt;
+&lt;p&gt;For developers looking to quickly build data processing applications on Kubernetes using Spring, the easiest way is with &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/spring-cloud-dataflow&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Spring Cloud Data Flow Helm chart&lt;/a&gt;. This chart bootstraps a Spring Cloud Data Flow deployment on a Kubernetes cluster using the Helm package manager. It is also secure, updated and packaged in accordance with current best practices.&lt;/p&gt;
+&lt;p&gt;This article walks you through the process of deploying Spring Cloud Data Flow on Kubernetes using the Bitnami Spring Cloud Data Flow Helm chart. It also shows you how to connect your deployment with a MongoDB database service (also running on Kubernetes) and create a simple Spring Cloud Data Flow stream that accepts data input over HTTP and saves the data to the MongoDB service.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and Prerequisites&lt;/h2&gt;
+&lt;p&gt;This article assumes that you have a Kubernetes cluster running with Helm v3.x and &lt;em&gt;kubectl&lt;/em&gt; installed. &lt;a href=&#34;https://docs.bitnami.com/kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about getting started with Kubernetes and Helm using different cloud providers&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1: Deploy MongoDB on Kubernetes&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you already have a MongoDB deployment, you can use that instead and skip to &lt;a href=&#34;#step-2-deploy-spring-cloud-data-flow-on-kubernetes&#34;&gt;Step 2&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The first step is to deploy a MongoDB service on Kubernetes. The simplest way to do this is with &lt;a href=&#34;https://github.com/helm/charts/tree/master/stable/mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s MongoDB Helm chart&lt;/a&gt;. Follow the steps below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Add the Bitnami chart repository to Helm:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Execute the following command to deploy MongoDB. The command below will also create a new database named &lt;em&gt;mydb&lt;/em&gt; and a user account named &lt;em&gt;user&lt;/em&gt; with full privileges on that database. Remember to replace the MONGODB-ROOT-PASSWORD placeholder with a custom password for the MongoDB administrator account and the MONGODB-USER-PASSWORD placeholder with a custom password for the &lt;em&gt;user&lt;/em&gt; account.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install mongodb bitnami/mongodb &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set auth.rootPassword&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;MONGODB-ROOT-PASSWORD &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set auth.database&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mydb &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set auth.username&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;user &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set auth.password&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;MONGODB-USER-PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wait for a few minutes until the chart is deployed. Note the DNS name for the service in the cluster. In this example, it will be &lt;em&gt;mongodb.default.svc.cluster.local&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/mongodb.png&#34; alt=&#34;MongoDB deployment&#34;  /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the Bitnami MongoDB Helm chart&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-2-deploy-spring-cloud-data-flow-on-kubernetes&#34;&gt;Step 2: Deploy Spring Cloud Data Flow on Kubernetes&lt;/h2&gt;
+&lt;p&gt;The next step is to deploy Spring Cloud Data Flow on the same cluster using Bitnami&amp;rsquo;s Helm chart and configure it for use. Follow the steps below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Execute the following command to deploy the chart:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install spring bitnami/spring-cloud-dataflow
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wait for a few minutes until the chart is deployed.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/spring-cloud-dataflow#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the Bitnami Spring Cloud Data Flow Helm chart&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Forward the Spring Cloud Data Flow server port:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;export SERVICE_PORT=$(kubectl get --namespace default -o jsonpath=&amp;quot;{.spec.ports[0].port}&amp;quot; services spring-spring-cloud-dataflow-server)
+kubectl port-forward --namespace default svc/spring-spring-cloud-dataflow-server ${SERVICE_PORT}:${SERVICE_PORT} --address=0.0.0.0 &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Browse to http://IP-ADDRESS:8080/dashboard, where IP-ADDRESS should be the IP address of the &lt;em&gt;kubectl&lt;/em&gt; host. You will see the Spring Cloud Data Flow dashboard.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;On the &amp;ldquo;Applications&amp;rdquo; page, click the &amp;ldquo;Add Application(s)&amp;rdquo; button.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Select the option to &amp;ldquo;Bulk import application coordinates from an HTTP URI location&amp;rdquo;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Select the &amp;ldquo;Stream Apps (RabbitMQ/Docker)&amp;rdquo; category. The import URL will be prefilled for you.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click &amp;ldquo;Import the application(s)&amp;rdquo; to start the import process.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/import-apps.png&#34; alt=&#34;Import process&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Navigate back to the &amp;ldquo;Applications&amp;rdquo; page. Confirm that you see the imported applications, as shown below.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/apps.png&#34; alt=&#34;Imported applications&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-3-create-a-spring-cloud-data-flow-stream&#34;&gt;Step 3: Create a Spring Cloud Data Flow stream&lt;/h2&gt;
+&lt;p&gt;The next step is to create a stream that accepts input over HTTP and then streams that data to MongoDB using Spring Cloud Data Flow. Follow these steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Navigate to the &amp;ldquo;Streams&amp;rdquo; page.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Create stream(s)&amp;rdquo; button.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the &amp;ldquo;Stream definition&amp;rdquo; box, define an HTTP (source) to MongoDB (sink) stream by entering the values below:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http | mongodb
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Create stream(s)&amp;rdquo; button to proceed.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/create-stream.png&#34; alt=&#34;Stream creation&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Enter a name for the stream when prompted. Click the &amp;ldquo;Create the stream&amp;rdquo; button to save the new stream. In this example, the stream is named &lt;em&gt;mystream&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/name-stream.png&#34; alt=&#34;Stream naming&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Navigate back to the &amp;ldquo;Streams&amp;rdquo; page. Confirm that you see the new stream in the list of streams.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Deploy&amp;rdquo; button to deploy the new stream.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/list-streams.png&#34; alt=&#34;Stream list&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the &amp;ldquo;Deploy Stream Definition&amp;rdquo; page, configure the deployment parameters for the stream as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In the &lt;em&gt;http&lt;/em&gt; source column, find the &amp;ldquo;Deployment Platform&amp;rdquo; section and set the &lt;em&gt;create-load-balancer&lt;/em&gt; property to true. This makes the HTTP input endpoint for the stream available at a public IP address. Click &amp;ldquo;Update&amp;rdquo; once done.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/source.png&#34; alt=&#34;HTTP source configuration&#34;  /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In the &lt;em&gt;mongodb&lt;/em&gt; sink column, find the &amp;ldquo;Application Properties&amp;rdquo; section and set the following properties, which should match those configured in &lt;a href=&#34;#step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;. Replace the MONGODB-USER-PASSWORD placeholder with the password defined for the &lt;em&gt;user&lt;/em&gt; account in &lt;a href=&#34;#step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;. Click &amp;ldquo;Update&amp;rdquo; once done.
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;username&lt;/em&gt;: &lt;em&gt;user&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;authentication-database&lt;/em&gt;: &lt;em&gt;mydb&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;database&lt;/em&gt;: &lt;em&gt;mydb&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;password&lt;/em&gt;: MONGODB-USER-PASSWORD&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;collection&lt;/em&gt;: &lt;em&gt;spring&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;host&lt;/em&gt;: &lt;em&gt;mongodb.default.svc.cluster.local&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/sink.png&#34; alt=&#34;MongoDB sink configuration&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Deploy stream&amp;rdquo; button to deploy the stream.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Wait for a few minutes until the chart is deployed. Once deployed, the &amp;ldquo;Streams&amp;rdquo; page will reflect the running deployment.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/list-streams-2.png&#34; alt=&#34;Stream status&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;You can also check the status of the deployment using the &lt;em&gt;kubectl get pods&lt;/em&gt; command.&lt;/p&gt;
+&lt;h2 id=&#34;step-4-test-the-integration&#34;&gt;Step 4: Test the integration&lt;/h2&gt;
+&lt;p&gt;Once the stream is deployed, you can proceed to test it, by sending it input over HTTP and then checking the MongoDB database to verify if the input was correctly saved. Follow these steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Obtain the load balancer IP address for the HTTP input endpoint:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get svc &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep mystream
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Send a JSON-formatted HTTP request to the endpoint. Replace the STREAM-IP-ADDRESS placeholder in the command below with the load balancer IP address.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl http://STREAM-IP-ADDRESS:8080 -X POST -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-type: application/json&amp;#34;&lt;/span&gt; -d &lt;span class=&#34;s2&#34;&gt;&amp;#34;{\&amp;#34;label\&amp;#34;: \&amp;#34;eggs\&amp;#34;}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Connect to the MongoDB database service and query the &lt;em&gt;mydb&lt;/em&gt; database and &lt;em&gt;spring&lt;/em&gt; collection. Replace the MONGODB-USER-PASSWORD placeholder with the password defined for the &lt;em&gt;user&lt;/em&gt; account in &lt;a href=&#34;#step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl run --namespace default mongodb-client --rm --tty -i --restart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Never&amp;#39;&lt;/span&gt; --image docker.io/bitnami/mongodb:4.2.8-debian-10-r39 --command -- bash
+mongo admin --host &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb&amp;#34;&lt;/span&gt; --authenticationDatabase mydb -u user -p MONGODB-USER-PASSWORD
+use mydb
+db.spring.find&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here is an example of the output you should see:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/query-results.png&#34; alt=&#34;MongoDB query results&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;This confirms that the integration is working successfully and that data sent to the Spring Cloud Data Flow endpoint is being successfully streamed and saved to the MongoDB database service.&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;p&gt;To learn more about the topics discussed in this guide, use the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/spring-cloud-dataflow&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Spring Cloud Data Flow Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/helm/charts/tree/master/stable/mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami MongoDB Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://dataflow.spring.io/docs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Data Flow documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/event-streaming/scs-what-is/&#34;&gt;Spring Cloud Stream guide&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Build a Scalable, Fault-Tolerant Messaging Cluster on Kubernetes with Apache Kafka and MongoDB</title>
+      
+      <link>/guides/messaging-and-integration/kafka-mongodb/</link>
+      <pubDate>Wed, 29 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/messaging-and-integration/kafka-mongodb/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://kafka.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Kafka&lt;/a&gt; is a popular open source tool for real-time publish/subscribe messaging. It uses a scalable, fault-tolerant cluster for message storage, and it can also be integrated with other open source data-oriented solutions such as &lt;a href=&#34;https://hadoop.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Hadoop&lt;/a&gt;, &lt;a href=&#34;https://spark.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Spark&lt;/a&gt; or &lt;a href=&#34;https://hbase.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache HBase&lt;/a&gt; for real-time analysis and rendering of streaming data.&lt;/p&gt;
+&lt;p&gt;Apache Kafka provides a &lt;a href=&#34;https://kafka.apache.org/documentation/#connectapi&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Connect API&lt;/a&gt;, which allows external storage systems to be integrated with Kafka. One such example is the &lt;a href=&#34;https://www.mongodb.com/kafka-connector&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MongoDB Kafka Connector&lt;/a&gt;, which allows Kafka messages to be stored in MongoDB, or MongoDB data to be published to Kafka. This integration allows users to combine Kafka&amp;rsquo;s real-time messaging features with the powerful document-oriented data querying capabilities of MongoDB.&lt;/p&gt;
+&lt;p&gt;Bitnami offers secure and up-to-date Helm charts for &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/kafka&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Kafka&lt;/a&gt; and &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MongoDB&lt;/a&gt;. These charts can be used to deploy and integrate Apache Kafka and MongoDB on Kubernetes, adding improved scalability and reliability and ensuring that the deployments conform to current best practices. This article walks you through the integration.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and prerequisites&lt;/h2&gt;
+&lt;p&gt;This article explains the process of integrating Apache Kafka and MongoDB on Kubernetes, such that messages published on Kafka topics are automatically stored as documents in a MongoDB collection using a sink connector. It assumes that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have a Docker environment installed and configured. &lt;a href=&#34;https://docs.docker.com/engine/installation/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about installing Docker&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Docker Hub account. &lt;a href=&#34;https://hub.docker.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Register for a free account&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have a Kubernetes cluster running with Helm v3.x and &lt;em&gt;kubectl&lt;/em&gt; installed. &lt;a href=&#34;https://docs.bitnami.com/kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about getting started with Kubernetes and Helm using different cloud providers&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1: Deploy MongoDB on Kubernetes&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you already have a MongoDB deployment, you can use that instead and skip to &lt;a href=&#34;#step-2-create-and-publish-a-custom-mongodb-kafka-connector-image&#34;&gt;Step 2&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The first step is to deploy a MongoDB service on Kubernetes. The simplest way to do this is with Bitnami&amp;rsquo;s MongoDB Helm chart. Follow the steps below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Add the Bitnami chart repository to Helm:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Execute the following command to deploy MongoDB. Remember to replace the MONGODB-ROOT-PASSWORD placeholder with a custom password for the MongoDB administrator account.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install mongodb bitnami/mongodb --set auth.rootPassword&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;MONGODB-ROOT-PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wait for a few minutes until the chart is deployed.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the Bitnami MongoDB Helm chart&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use the commands shown in the &amp;ldquo;Notes&amp;rdquo; section to create a MongoDB client and connect to the MongoDB service. Remember to replace the MONGODB-ROOT-PASSWORD placeholder with the password defined at deployment time.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl run --namespace default mongodb-client --rm --tty -i --restart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Never&amp;#39;&lt;/span&gt; --image docker.io/bitnami/mongodb:4.2.8-debian-10-r39 --command -- bash
+mongo admin --host &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb&amp;#34;&lt;/span&gt; --authenticationDatabase admin -u root -p MONGODB-ROOT-PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;At the MongoDB command prompt, create a new MongoDB database and user, and grant the user access to the database. The commands below create a new database named &lt;em&gt;mydb&lt;/em&gt; and a user account named &lt;em&gt;user&lt;/em&gt; with full privileges on that database. Replace the MONGODB-USER-PASSWORD placeholder with a custom password.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;use mydb
+db.createUser&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    user: &lt;span class=&#34;s2&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt;,
+    pwd: &lt;span class=&#34;s2&#34;&gt;&amp;#34;MONGODB-USER-PASSWORD&amp;#34;&lt;/span&gt;,
+    roles: &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; role: &lt;span class=&#34;s2&#34;&gt;&amp;#34;dbOwner&amp;#34;&lt;/span&gt;, db: &lt;span class=&#34;s2&#34;&gt;&amp;#34;mydb&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Exit the MongoDB CLI and terminate the client pod.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-2-create-and-publish-a-custom-mongodb-kafka-connector-image&#34;&gt;Step 2: Create and publish a custom MongoDB Kafka Connector image&lt;/h2&gt;
+&lt;p&gt;The next step is to create a container image with the MongoDB Connector for Apache Kafka. This image should also include the Kafka Connect application, which takes care of streaming data between Apache Kafka and other storage systems (such as MongoDB). Follow these steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Create a file named &lt;em&gt;Dockerfile&lt;/em&gt; with the following content:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;FROM bitnami/kafka:latest
+
+RUN mkdir -p /opt/bitnami/kafka/plugins &amp;amp;&amp;amp; \
+    cd /opt/bitnami/kafka/plugins &amp;amp;&amp;amp; \
+    curl --remote-name --location --silent https://search.maven.org/remotecontent?filepath=org/mongodb/kafka/mongo-kafka-connect/1.2.0/mongo-kafka-connect-1.2.0-all.jar
+
+CMD /opt/bitnami/kafka/bin/connect-standalone.sh /opt/bitnami/kafka/config/connect-standalone.properties /opt/bitnami/kafka/config/mongo.properties
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This &lt;em&gt;Dockerfile&lt;/em&gt; uses Bitnami&amp;rsquo;s Kafka container image as its base image. This is because the Bitnami Kafka container image already contains a working Apache Kafka environment, including the Kafka Connect application and other required dependencies, configuration files and libraries.&lt;/p&gt;
+&lt;p&gt;After selecting the base image, this &lt;em&gt;Dockerfile&lt;/em&gt; performs two main actions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It downloads the latest version of the MongoDB Connector for Apache Kafka and adds it to the image.&lt;/li&gt;
+&lt;li&gt;It starts the Kafka Connect application in &amp;ldquo;standalone mode&amp;rdquo;, passing it a set of configuration files. These files contain the information needed for Kafka Connect to integrate with both Apache Kafka and MongoDB. The files are not included in the image at this point; instead, they will be defined using a Kubernetes &lt;em&gt;ConfigMap&lt;/em&gt; in a later step.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;At the time of writing, the latest version of the MongoDB Connector for Apache Kafka is v1.2.0. Replace this with the most recent version when using the Dockerfile shown above. You can find the latest version on &lt;a href=&#34;https://github.com/mongodb/mongo-kafka/releases&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;the project&amp;rsquo;s GitHub page&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Build the image using the command below. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker build -t DOCKER-USERNAME/mykafka:1.0 .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result of this command is a Docker image containing Apache Kafka, Kafka Connect, the MongoDB Connector for Apache Kafka and all the related dependencies.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to Docker Hub and publish the image. Replace the DOCKER-USERNAME placeholder in the command below with your Docker account username.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker login
+docker push DOCKER-USERNAME/mykafka:1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-3-deploy-apache-kafka-and-kafka-connect-on-kubernetes&#34;&gt;Step 3: Deploy Apache Kafka and Kafka Connect on Kubernetes&lt;/h2&gt;
+&lt;p&gt;The next step is to deploy Apache Kafka and the custom Kafka Connect container on Kubernetes. Although you can do this as two separate deployments, an easier way is to combine the two steps into one using the Bitnami Kafka Helm chart. This chart supports an &lt;em&gt;extraDeploy&lt;/em&gt; parameter which lets you deploy a set of extra objects with your Apache Kafka deployment.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Begin by creating the following &lt;em&gt;values.yml&lt;/em&gt; file holding the values that will be supplied to the Helm chart. Replace the KAFKA-USERNAME and KAFKA-PASSWORD with a custom username and password for Kafka client authentication. Replace the DOCKER-USERNAME placeholder with your Docker account username and the MONGODB-USER-PASSWORD placeholder with the password set for the MongoDB &lt;em&gt;user&lt;/em&gt; account in &lt;a href=&#34;#step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;auth:
+  clientProtocol: sasl
+  interBrokerProtocol: plaintext
+  jaas:
+    clientUser: KAFKA-USERNAME
+    clientPassword: KAFKA-PASSWORD
+extraDeploy: |-
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: {{ include &amp;quot;kafka.fullname&amp;quot; . }}-connect
+      labels: {{- include &amp;quot;kafka.labels&amp;quot; . | nindent 6 }}
+        app.kubernetes.io/component: connector
+    spec:
+      replicas: 1
+      selector:
+        matchLabels: {{- include &amp;quot;kafka.matchLabels&amp;quot; . | nindent 8 }}
+          app.kubernetes.io/component: connector
+      template:
+        metadata:
+          labels: {{- include &amp;quot;kafka.labels&amp;quot; . | nindent 10 }}
+            app.kubernetes.io/component: connector
+        spec:
+          containers:
+            - name: connect
+              image: DOCKER-USERNAME/mykafka:1.0
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/bash
+                - -ec
+                - |
+                  /opt/bitnami/kafka/bin/connect-standalone.sh /config/connect-standalone.properties /config/mongodb.properties
+              ports:
+                - name: connector
+                  containerPort: 8083
+              volumeMounts:
+                - name: configuration
+                  mountPath: /config
+          volumes:
+            - name: configuration
+              configMap:
+                name: {{ include &amp;quot;kafka.fullname&amp;quot; . }}-connect
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: {{ include &amp;quot;kafka.fullname&amp;quot; . }}-connect
+      labels: {{- include &amp;quot;kafka.labels&amp;quot; . | nindent 6 }}
+        app.kubernetes.io/component: connector
+    data:
+      connect-standalone.properties: |-
+        bootstrap.servers = {{ include &amp;quot;kafka.fullname&amp;quot; . }}-0.{{ include &amp;quot;kafka.fullname&amp;quot; . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}:{{ .Values.service.port }}
+        key.converter=org.apache.kafka.connect.json.JsonConverter
+        value.converter=org.apache.kafka.connect.json.JsonConverter
+        key.converter.schemas.enable=true
+        value.converter.schemas.enable=true
+        offset.storage.file.filename=/tmp/connect.offsets
+        offset.flush.interval.ms=10000
+        plugin.path=/opt/bitnami/kafka/plugins
+        sasl.mechanism=PLAIN
+        security.protocol=SASL_PLAINTEXT
+        sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
+          username=&amp;quot;KAFKA-USERNAME&amp;quot; \
+          password=&amp;quot;KAFKA-PASSWORD&amp;quot;;
+        consumer.sasl.mechanism=PLAIN
+        consumer.security.protocol=SASL_PLAINTEXT
+        consumer.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
+          username=&amp;quot;KAFKA-USERNAME&amp;quot; \
+          password=&amp;quot;KAFKA-PASSWORD&amp;quot;;
+      mongodb.properties: |-
+        connection.uri=mongodb://user:MONGODB-ROOT-PASSWORD@mongodb.default.svc.cluster.local:27017/mydb
+        name=mongo-sink
+        topics=mytopic
+        connector.class=com.mongodb.kafka.connect.MongoSinkConnector
+        tasks.max=1
+        key.converter=org.apache.kafka.connect.json.JsonConverter
+        value.converter=org.apache.kafka.connect.json.JsonConverter
+        key.converter.schemas.enable=false
+        value.converter.schemas.enable=false
+        database=mydb
+        collection=sink
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{ include &amp;quot;kafka.fullname&amp;quot; . }}-connect
+      labels: {{- include &amp;quot;kafka.labels&amp;quot; . | nindent 6 }}
+        app.kubernetes.io/component: connector
+    spec:
+      ports:
+        - protocol: TCP
+          port: 8083
+          targetPort: connector
+      selector: {{- include &amp;quot;kafka.matchLabels&amp;quot; . | nindent 6 }}
+        app.kubernetes.io/component: connector
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This file contains a lot of information, so let&amp;rsquo;s step through it in detail:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;em&gt;auth&lt;/em&gt; parameters define the protocol that Kafka will use for client and inter-broker communication. It also specifies the username and password for JAAS-based client authentication.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;em&gt;extraDeploy&lt;/em&gt; parameter creates an additional deployment using the custom Kafka Connect image created in &lt;a href=&#34;#step-2-create-and-publish-a-custom-mongodb-kafka-connector-image&#34;&gt;Step 2&lt;/a&gt;. It also mounts a configuration volume at the &lt;em&gt;/config&lt;/em&gt; mount point. This volume will hold the configuration files for Kafka Connect.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The file defines an additional &lt;em&gt;ConfigMap&lt;/em&gt; which is mounted at &lt;em&gt;/config&lt;/em&gt; and holds two minimal configuration files:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;em&gt;connect-standalone.properties&lt;/em&gt; file defines the standalone mode configuration for Kafka Connect. It specifies the host name of the Apache Kafka server and the client credentials to use when connecting to it. It also tells Kafka Connect which converter to use (JSON) when serializing messages for MongoDB.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;mongodb.properties&lt;/em&gt; file contains additional configuration for the MongoDB sink connector. This configuration includes the MongoDB connection URI, database and collection to use for the saved messages. It also specifies the converter to use for the data (JSON again). In particular, note the &lt;em&gt;topics&lt;/em&gt; parameter, which specifies the list of topics to monitor/save in MongoDB.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Find additional properties to control how data is handled by the sink connector in the official &lt;a href=&#34;https://docs.mongodb.com/kafka-connector/master/kafka-sink/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kafka Sink Connector documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once the configuration file has been created, deploy Apache Kafka on Kubernetes using the Helm chart:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install kafka bitnami/kafka -f values.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wait for a few minutes until the chart is deployed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Confirm that the Apache Kafka and Kafka Connect pods are running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get pods
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see something like the output below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/messaging-and-integration/kafka-mongodb/pods.png&#34; alt=&#34;Running pods&#34;  /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/kafka#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the Bitnami Apache Kafka Helm chart&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-4-test-the-integration&#34;&gt;Step 4: Test the integration&lt;/h2&gt;
+&lt;p&gt;You can now proceed to test the integration, by publishing messages to the Apache Kafka topic &lt;em&gt;mytopic&lt;/em&gt; and then checking if the messages were streamed and saved to MongoDB. Follow the steps below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;em&gt;kafka_jaas.conf&lt;/em&gt; file with the content below. Replace the KAFKA-USER and KAFKA-PASSWORD placeholders with the values used in &lt;a href=&#34;#step-3-deploy-apache-kafka-and-kafka-connect-on-kubernetes&#34;&gt;Step 3&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;KafkaClient &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    org.apache.kafka.common.security.plain.PlainLoginModule required
+    &lt;span class=&#34;nv&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;KAFKA-USER&amp;#34;&lt;/span&gt;
+    &lt;span class=&#34;nv&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;KAFKA-PASSWORD&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;em&gt;client.properties&lt;/em&gt; file with the content below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;security.protocol&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;SASL_PLAINTEXT
+sasl.mechanism&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;PLAIN
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create an Apache Kafka client pod and copy the files above to it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl run kafka-client --restart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Never&amp;#39;&lt;/span&gt; --image docker.io/bitnami/kafka:2.5.0-debian-10-r96 --namespace default --command -- sleep infinity
+kubectl cp --namespace default client.properties kafka-client:/tmp/client.properties
+kubectl cp --namespace default kafka_jaas.conf kafka-client:/tmp/kafka_jaas.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to the Apache Kafka client pod console:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; --tty -i kafka-client --namespace default -- bash
+&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;KAFKA_OPTS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;-Djava.security.auth.login.config=/tmp/kafka_jaas.conf&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;At the pod console, publish one or more messages to the &lt;em&gt;mytopic&lt;/em&gt; topic. Ensure that the messages are formatted in JSON, as shown in the example below.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kafka-console-producer.sh --producer.config /tmp/client.properties --broker-list kafka-0.kafka-headless.default.svc.cluster.local:9092 --topic mytopic
+&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;hello&amp;#34;&lt;/span&gt;:&lt;span class=&#34;s2&#34;&gt;&amp;#34;world&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;foo&amp;#34;&lt;/span&gt;:&lt;span class=&#34;s2&#34;&gt;&amp;#34;bar&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Exit the Apache Kafka client pod.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a new MongoDB client pod:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl run --namespace default mongodb-client --rm --tty -i --restart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Never&amp;#39;&lt;/span&gt; --image docker.io/bitnami/mongodb:4.2.8-debian-10-r39 --command -- bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;At the MongoDB client pod console, log in to the MongoDB client pod using the &lt;em&gt;user&lt;/em&gt; account credentials defined in &lt;a href=&#34;#step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mongo admin --host &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb&amp;#34;&lt;/span&gt; --authenticationDatabase mydb -u user -p MONGODB-USER-PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Confirm that the messages sent previously are saved in the &lt;em&gt;sink&lt;/em&gt; collection in the &lt;em&gt;mydb&lt;/em&gt; database:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;use mydb
+db.sink.find&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see the output below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/messaging-and-integration/kafka-mongodb/mongodb.png&#34; alt=&#34;Query results&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;At this point, the integration between Apache Kafka and MongoDB is complete. Messages sent to specified topics in Apache Kafka will be automatically transferred and saved in MongoDB, where they can be further queried, analyzed or modified.&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;p&gt;To learn more about the topics discussed in this guide, use the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/bitnami-docker-node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Apache Kafka Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/node&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami MongoDB Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://kafka.apache.org/documentation/#connectapi&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Kafka Connect API&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.mongodb.com/kafka-connector/master/kafka-sink/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MongoDB Kafka Sink Connector guide &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

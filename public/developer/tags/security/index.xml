@@ -1,0 +1,156 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Security</title>
+    <link>/tags/security/</link>
+    <description>Recent content in Security on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 05 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/security/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Best Practices for Securing and Hardening Container Images</title>
+      
+      <link>/guides/containers/security-best-practices/</link>
+      <pubDate>Fri, 05 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/containers/security-best-practices/</guid>
+      <description>
+
+        
+        &lt;p&gt;When a container is built and/or used, it is important to ensure that the image is built by following best practices in terms of security, efficiency, performance, etc. This article will go over some of the key points Bitnami takes into account when publishing Bitnami containers. It covers image tagging, non-root configuration and arbitrary UIDs, the importance of reducing size and dependencies, and the release process, including CVE scanning and tests.&lt;/p&gt;
+&lt;h2 id=&#34;rolling-and-immutable-tags&#34;&gt;Rolling and immutable tags&lt;/h2&gt;
+&lt;p&gt;A Docker tag is a label used to uniquely identify a Docker image. It allows users to deploy a specific version of an image. A single image can have multiple tags associated with it.&lt;/p&gt;
+&lt;p&gt;Every time Bitnami publishes a new version of an image, the associated tags are also updated to make it easier for users to get the latest version.&lt;/p&gt;
+&lt;h3 id=&#34;rolling-tags&#34;&gt;Rolling tags&lt;/h3&gt;
+&lt;p&gt;Bitnami uses rolling tags (a tag that may not always point to the same image) for its Docker container images. To understand how this works, let&amp;rsquo;s use the Bitnami etcd container image tags as an example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plaintext&#34; data-lang=&#34;plaintext&#34;&gt;3, 3-debian-10, 3.4.13, 3.4.13-debian-10-r8, latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;The &lt;em&gt;latest&lt;/em&gt; tag always points to the latest revision of the etcd image.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;3&lt;/em&gt; tag is a rolling tag that always points to the latest revision of etcd 3.x.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;3.4.13&lt;/em&gt; tag is a rolling tag that points to the latest revision of etcd 3.4.13. It will be updated with different revisions or daily releases but only for etcd 3.4.13.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;3-debian-10&lt;/em&gt; tag points to the latest revision of etcd 3.x for Debian 10, in case there are other distros supported.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When Bitnami releases container images - typically to upgrade system packages - it fixes bugs or improves the system configuration and also updates container tags to point to the latest revision of the image. Therefore, the rolling tags shown above are dynamic; they will always point to the latest revision or daily release of the corresponding image.&lt;/p&gt;
+&lt;p&gt;Continuing with the example above, the &lt;em&gt;3.4.13&lt;/em&gt; tag might point to the etcd 3.4.13 revision 8 today, but it will refer to the etcd 3.4.13 revision 9 when Bitnami next updates the container image.&lt;/p&gt;
+&lt;p&gt;The suffix revision number (&lt;em&gt;rXX&lt;/em&gt;) is incremented every time that Bitnami releases an updated version of the image for the same version of the application. As explained in the next section, suffixed tags are also known as immutable tags.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Any tags that do not explicitly specify a distribution, such as &lt;em&gt;3&lt;/em&gt; or &lt;em&gt;3.4.13&lt;/em&gt;, should be assumed to refer to Debian 10.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;immutable-tags&#34;&gt;Immutable tags&lt;/h3&gt;
+&lt;p&gt;A static, or immutable, tag always points to the same image. This is useful when you depend on a specific revision of an image For example, if you use the tag &lt;em&gt;3.4.13-debian-10-r8&lt;/em&gt;, this tag will always refer to etcd &lt;em&gt;3.4.13 revision 8&lt;/em&gt;. The use of this tag ensures that users get the same image every time.&lt;/p&gt;
+&lt;h3 id=&#34;usage-recommendations&#34;&gt;Usage recommendations&lt;/h3&gt;
+&lt;p&gt;Which tag should you use and when? Follow these guidelines:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If you are using containers in a production environment (such as Kubernetes), use immutable tags. Bitnami uses immutable tags by default in the Bitnami Helm Charts. This ensures that your deployment won&amp;rsquo;t be affected if a new revision inadvertently breaks existing functionality.&lt;/li&gt;
+&lt;li&gt;If you are using containers for development, use rolling tags. This ensures that you are always using the latest version. Rolling tags also make it easier to use a specific version of a development tool (such as &lt;em&gt;bitnami/node:12&lt;/em&gt; for Node.js 12).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;root-and-non-root-containers&#34;&gt;Root and non-root containers&lt;/h2&gt;
+&lt;p&gt;There are two types of Bitnami container images: root and non-root. Non-root images add an extra layer of security and are generally recommended for production environments. However, because they run as a &lt;em&gt;non-root&lt;/em&gt; user, privileged tasks such as installing system packages, editing configuration files, creating system users and groups, and modifying network information, are typically off-limits.&lt;/p&gt;
+&lt;p&gt;This section gives you a quick introduction to non-root container images, explains possible issues you might face using them, and also shows how to modify them to work as root images.&lt;/p&gt;
+&lt;h3 id=&#34;non-root-containers&#34;&gt;Non-root containers&lt;/h3&gt;
+&lt;p&gt;By default, Docker containers are run as &lt;em&gt;root&lt;/em&gt; users. This means that you can do whatever you want in the container, such as install system packages, edit configuration files, bind privilege ports, adjust permissions, create system users and groups, or access networking information.&lt;/p&gt;
+&lt;p&gt;With a non-root container, you can&amp;rsquo;t do any of this. A non-root container must be configured only for its main purpose, for example, run the NGINX server.&lt;/p&gt;
+&lt;p&gt;A non-root container is a container in which the user executing the processes is not the &lt;em&gt;root&lt;/em&gt; user but an unprivileged user, like &lt;em&gt;1001&lt;/em&gt;. This is usually modified through the &lt;code&gt;USER&lt;/code&gt; instruction in the Dockerfile.&lt;/p&gt;
+&lt;h3 id=&#34;advantages-of-non-root-containers&#34;&gt;Advantages of non-root containers&lt;/h3&gt;
+&lt;p&gt;Non-root containers are recommended for the following reasons:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Security: Non-root containers are more secure. If there is a container engine security issue, running the container as an unprivileged user will prevent any malicious code from gaining elevated permissions on the container host. &lt;a href=&#34;https://docs.docker.com/engine/security/security/#other-kernel-security-features&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about Docker&amp;rsquo;s security features&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Platform restrictions: Some Kubernetes distributions (such as &lt;a href=&#34;https://www.openshift.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;OpenShift&lt;/a&gt;) run containers using random UUIDs. This approach is not compatible with root containers, which must always run with the &lt;em&gt;root&lt;/em&gt; user&amp;rsquo;s UUID. In such cases, root-only container images will simply not run and a non-root image is a must. &lt;a href=&#34;https://cookbook.openshift.org/users-and-role-based-access-control/why-do-my-applications-run-as-a-random-user-id.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about random UUIDs&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;disadvantages-of-non-root-containers&#34;&gt;Disadvantages of non-root containers&lt;/h3&gt;
+&lt;p&gt;Non-root containers also have some disadvantages when used for local development:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Write failures on mounted volumes: Docker mounts host volumes preserving the host UUID and GUID. This can lead to permission conflicts with non-root containers, as the user running the container may not have the appropriate privileges to write on the host volume.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write failures on persistent volumes in Kubernetes: Data persistence in Kubernetes is configured using persistent volumes. Kubernetes mounts these volumes with the &lt;em&gt;root&lt;/em&gt; user as the owner; therefore, non-root containers don&amp;rsquo;t have permissions to write to the persistent directory.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Issues with specific utilities or services: Some utilities (e.g. Git) or servers (e.g. PostgreSQL) run additional checks to find the user in the &lt;em&gt;/etc/passwd&lt;/em&gt; file. These checks will fail for non-root container images.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To learn more about these issues, as well as potential solutions for each, &lt;a href=&#34;https://engineering.bitnami.com/articles/running-non-root-containers-on-openshift.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;refer to our detailed blog post on this topic&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Bitnami non-root containers fix the above issues:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;For Kubernetes, Bitnami Helm charts use an &lt;em&gt;initContainer&lt;/em&gt; for changing the volume permissions properly. As the image runs as non-root by default, it is necessary to adjust the ownership of the persistent volume so that the container can write data to it.
+By default, the charts are configured to use Kubernetes Security Context to automatically change the ownership of the volume. However, this feature does not work in all Kubernetes distributions. As an alternative, the charts support using an &lt;em&gt;initContainer&lt;/em&gt; to change the ownership of the volume before mounting it in the final destination. &lt;a href=&#34;https://github.com/bitnami/charts/blob/9353a76a4ddda6bf1da78328496fb649c951e80d/bitnami/rabbitmq/templates/statefulset.yaml#L58&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;See an example of this in action from the Bitnami RabbitMQ chart&lt;/a&gt; you can see how this &lt;em&gt;initContainer&lt;/em&gt; is used.&lt;/li&gt;
+&lt;li&gt;For specific utilities, Bitnami ships the &lt;a href=&#34;https://packages.debian.org/sid/libnss-wrapper&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;em&gt;libnss-wrapper&lt;/em&gt; package&lt;/a&gt;, which defines custom user space files to ensure the software acts correctly. &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-postgresql/blob/master/12/debian-10/rootfs/opt/bitnami/scripts/libpostgresql.sh#L25&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;See an example of this in action from the Bitnami PostgreSQL image&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;use-non-root-containers-as-root-containers&#34;&gt;Use non-root containers as root containers&lt;/h3&gt;
+&lt;p&gt;If you wish to run a Bitnami non-root container image as a root container image, you can do it by adding the line &lt;code&gt;user: root&lt;/code&gt; right after the &lt;code&gt;image:&lt;/code&gt; directive in the container&amp;rsquo;s &lt;em&gt;docker-compose.yml&lt;/em&gt; file. After making this change, restart the container and it will run as the &lt;em&gt;root&lt;/em&gt; user with all privileges instead of an unprivileged user.&lt;/p&gt;
+&lt;p&gt;In Kubernetes, the user that executes the container can be customized by using &lt;a href=&#34;https://kubernetes.io/docs/tasks/configure-pod-container/security-context/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Security Context&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;use-arbitrary-uuids&#34;&gt;Use arbitrary UUIDs&lt;/h3&gt;
+&lt;p&gt;On some platforms like OpenShift, to support running containers with volumes mounted in a secure way, images must run as an arbitrary user ID. When those platforms mount volumes for a container, they configure the volume so it can only be written to by a particular user ID, and then run the image using that same user ID. This ensures the volume is only accessible to the appropriate container, but requires that the image is able to run as an arbitrary user ID.&lt;/p&gt;
+&lt;p&gt;That means a non-root container executing on a platform with this policy can&amp;rsquo;t assume anything about the UUID. These platforms change the default container user to an arbitrary UUID, but the GUID is unmodified and containers are executed as &lt;em&gt;XXX:root&lt;/em&gt; (where &lt;em&gt;XXX&lt;/em&gt; is the arbitrary UUID).&lt;/p&gt;
+&lt;p&gt;Bitnami images are configured with the proper permissions for the user and group in order to meet the requirements of these platforms. They do this by ensuring that the &lt;em&gt;XXX&lt;/em&gt; user belongs to the &lt;em&gt;root&lt;/em&gt; group and that the directories have the appropriate read, write and execution permissions.&lt;/p&gt;
+&lt;h2 id=&#34;execute-one-process-per-container&#34;&gt;Execute one process per container&lt;/h2&gt;
+&lt;p&gt;Each container should have only one concern. Decoupling applications into multiple containers makes it easier to scale horizontally and reuse containers. For instance, a web application stack might consist of three separate containers, each with its own unique image, to manage the web application, database, and an in-memory cache in a decoupled manner.&lt;/p&gt;
+&lt;p&gt;Although all Bitnami images follow this good practice there are cases where two or more processes need to be executed at the same time in the same image. One such case is that of the &lt;a href=&#34;https://github.com/bitnami/bitnami-docker-postgresql-repmgr&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami PostgreSQL with Replication Manager Docker Image&lt;/a&gt; where, apart from the &lt;em&gt;postgres&lt;/em&gt; process, there is a separate process for the &lt;em&gt;repmgr&lt;/em&gt; daemon. There are also other cases where the application spawns additional processes on its own.&lt;/p&gt;
+&lt;p&gt;It is therefore important to take a decision about the number of processes per container keeping in mind the goal of keeping each container as clean and modular as possible.&lt;/p&gt;
+&lt;h2 id=&#34;performance-considerations&#34;&gt;Performance considerations&lt;/h2&gt;
+&lt;p&gt;As indirectly described in the previous section, it is important to follow the &amp;ldquo;Principle of least privilege&amp;rdquo; (POLP), an important concept in computer security. This refers to the practice of limiting access rights for users to the bare minimum permissions they need to perform their work.&lt;/p&gt;
+&lt;p&gt;In the same way, a good security practice is to install and maintain only the minimum necessary dependencies in a container image. It is also important to reduce the size of the images to improve the security, performance, efficiency, and maintainability of the containers.&lt;/p&gt;
+&lt;p&gt;Package installation in Bitnami images (also applicable to already-installed packages) is usually done using the &lt;code&gt;install_packages&lt;/code&gt; script. This tool was created to install system packages in a smart way for container environments. Apart from installing packages only with the required dependencies (no recommended packages or documentation), it also removes the cache and unnecessary package repositories.&lt;/p&gt;
+&lt;h2 id=&#34;daily-builds-and-release-process&#34;&gt;Daily builds and release process&lt;/h2&gt;
+&lt;p&gt;Bitnami automatically re-releases its container catalog every 24 hours. In terms of security, releasing the Bitnami containers on a daily basis ensures that the system packages and components bundled in the image are up-to-date from the package repositories.&lt;/p&gt;
+&lt;p&gt;As explained previously, this approach means that a new immutable tag is produced every day, increasing the revision number. At the same time, rolling tags are updated to point to this new immutable tag.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;For the Bitnami Community Catalog, the release frequency is set to 1 day. However, this can be modified by the customer in the &lt;a href=&#34;https://tanzu.vmware.com/application-catalog&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Application Catalog&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Apart from daily releases, there are other processes that can trigger a new release. For example, if there is a new version (major, minor, or patch) of the main component, Bitnami&amp;rsquo;s tracking system detects this new upstream release and trigger a new release of the Bitnami image, which uses the &lt;em&gt;-r0&lt;/em&gt; tag suffix.&lt;/p&gt;
+&lt;p&gt;Before a new image is released, antivirus scanners and other tests are executed. If these are unsuccessful, the release is blocked. These are discussed in the following sections&lt;/p&gt;
+&lt;h3 id=&#34;cve-and-virus-scanning&#34;&gt;CVE and virus scanning&lt;/h3&gt;
+&lt;p&gt;If you are running development containers to create a proof of concept or for production workloads, you will probably already be aware of CVEs that may affect the container&amp;rsquo;s operating system and packages. There are various tools/scanners to check containers for CVEs, such as &lt;a href=&#34;https://coreos.com/clair/docs/latest/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Clair&lt;/a&gt;, &lt;a href=&#34;https://github.com/anchore/anchore-engine&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Anchore&lt;/a&gt;, &lt;a href=&#34;http://github.com/theupdateframework/notary&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Notary&lt;/a&gt; and others.&lt;/p&gt;
+&lt;p&gt;There are two ways of ensuring the health of containers: using a virus scan or a CVE scan.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The virus scan is executed during the release process. The virus scan performed by Bitnami uses antivirus engines for scanning the files present in the container, stopping the release if a positive is detected.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;While the antivirus scan is a blocking step when releasing a container, the CVE scan is a tool executed periodically to trigger new releases. This tool analyzes the containers bundled by the Bitnami Helm charts. If it finds a CVE, it triggers the release of the affected container.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;verification-and-functional-testing&#34;&gt;Verification and functional testing&lt;/h3&gt;
+&lt;p&gt;During the release process, all containers are tested to work with all deployment technologies with which they are likely to be used:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Docker Compose, using several Docker Compose files to test different features like LDAP, cluster topologies, etc.&lt;/li&gt;
+&lt;li&gt;Helm charts, tested on different Kubernetes platforms such as GKE, AKS, IKS, TKG, etc., and under different scenarios.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Two types of tests are executed for each deployment method:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Verification tests: This type of testing involves inspecting a deployment to check certain properties. For example, checking if a particular file exists on the system and if it has the correct permissions.&lt;/li&gt;
+&lt;li&gt;Functional tests: This type of testing is used to verify that an application is behaving as expected from the user&amp;rsquo;s perspective. For example, if the application must be accessible using a web browser, functional testing uses a headless browser to interact with the application and perform common actions such as logging in and out and adding users.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;fips&#34;&gt;FIPS&lt;/h2&gt;
+&lt;p&gt;If customers require compliance with &lt;a href=&#34;https://csrc.nist.gov/publications/detail/fips/140/2/final&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;FIPS 140-2&lt;/a&gt;, Bitnami containers can ship a FIPS-enabled version of OpenSSL. In a FIPS-enabled kernel, OpenSSL (and the applications using it) will only use FIPS-approved encryption algorithms. In the case of applications that have a FIPS mode (such as Elasticsearch), this would be enabled as well.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;By implementing the above points in the Bitnami build and release process, Bitnami ensures that its container images are built following best practices in terms of security and performance and can be safely used on most platforms as part of production deployments.&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;p&gt;To learn more about the topics discussed in this guide, use the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.bitnami.com/tutorials/understand-rolling-tags-containers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Understand Bitnami&amp;rsquo;s rolling tags for container images&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.bitnami.com/tutorials/work-with-non-root-containers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Work with non-root containers for Bitnami applications&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://engineering.bitnami.com/articles/why-non-root-containers-are-important-for-security.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Why non-root containers are important for security&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://engineering.bitnami.com/articles/best-practices-writing-a-dockerfile.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Best practices writing a Dockerfile&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://engineering.bitnami.com/articles/how-bitnami-continuously-scans-container-images-to-fix-cve-reported-security-issues.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;How Bitnami continuously scans container images to fix CVE-reported security issues&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://engineering.bitnami.com/articles/running-non-root-containers-on-openshift.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Running non-root containers on OpenShift&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

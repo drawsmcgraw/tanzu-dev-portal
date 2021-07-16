@@ -1,0 +1,393 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Videos</title>
+    <link>/videos/</link>
+    <description>Recent content in Videos on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/videos/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Data: Walk through VMware Tanzu RabbitMQ for Kubernetes</title>
+      
+      <link>/data/tanzu-rabbitmq/videos/vmware-tanzu-rabbitmq-for-k8s/</link>
+      <pubDate>Wed, 07 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-rabbitmq/videos/vmware-tanzu-rabbitmq-for-k8s/</guid>
+      <description>
+
+        
+        &lt;p&gt;VMware&amp;rsquo;s Yaron Parasol and Chunyi Lyu walk through VMware Tanzu RabbitMQ for Kubernetes. A custom Kubernetes cluster operator makes it easy to run Tanzu RabbitMQ on any certified Kubernetes distribution, including all of the VMware Tanzu Editions.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Simplify Building Containers w/ Cloud Native Buildpacks</title>
+      
+      <link>/videos/cloudnativebuildpacks-lightboard/</link>
+      <pubDate>Wed, 09 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/cloudnativebuildpacks-lightboard/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Tanzu Observability by Wavefront Terraform Integration</title>
+      
+      <link>/videos/tanzu-observability-terraform/</link>
+      <pubDate>Thu, 08 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/tanzu-observability-terraform/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: What Is Spring?</title>
+      
+      <link>/videos/what-is-spring/</link>
+      <pubDate>Thu, 08 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/what-is-spring/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Python Like A Pro: Building Docker Containers</title>
+      
+      <link>/videos/python-build-containers-for-python-apps-the-easy-way-with-buildpacks/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/python-build-containers-for-python-apps-the-easy-way-with-buildpacks/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Python Like A Pro: Installing Python &amp; Switching Versions</title>
+      
+      <link>/videos/python-installing-python-like-a-pro/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/python-installing-python-like-a-pro/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Python Like A Pro: Managing Global Packages</title>
+      
+      <link>/videos/python-managing-global-deps-like-a-pro-with-pipx/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/python-managing-global-deps-like-a-pro-with-pipx/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Python Like A Pro: Managing Project Packages</title>
+      
+      <link>/videos/python-managing-python-dependencies-like-a-pro/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/python-managing-python-dependencies-like-a-pro/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Python Like A Pro: Run In Production</title>
+      
+      <link>/videos/python-deploy-python-to-production-in-seconds/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/python-deploy-python-to-production-in-seconds/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Creating &amp; Deploying Spring Cloud Stream Apps with Spring Cloud Data Flow</title>
+      
+      <link>/videos/spring-cloud-data-flow-creating-and-deploying-streams/</link>
+      <pubDate>Fri, 17 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-cloud-data-flow-creating-and-deploying-streams/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Creating a http-log stream with Spring Cloud Data Flow</title>
+      
+      <link>/videos/spring-cloud-data-flow-creating-a-http-log-stream/</link>
+      <pubDate>Fri, 17 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-cloud-data-flow-creating-a-http-log-stream/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Getting Started With The Spring Cloud Data Flow CLI Tool</title>
+      
+      <link>/videos/spring-cloud-data-flow-getting-started-with-the-cli/</link>
+      <pubDate>Fri, 17 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-cloud-data-flow-getting-started-with-the-cli/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Installing Spring Cloud Data Flow Locally On Kubernetes With Helm</title>
+      
+      <link>/videos/spring-cloud-data-flow-installing-on-kubernetes/</link>
+      <pubDate>Fri, 17 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-cloud-data-flow-installing-on-kubernetes/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Spring Cloud Stream Processors And Scripted Deployments With Spring Cloud Data Flow</title>
+      
+      <link>/videos/spring-cloud-data-flow-stream-processors-and-scripted-deployments/</link>
+      <pubDate>Fri, 17 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-cloud-data-flow-stream-processors-and-scripted-deployments/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Getting Started with Cloud Foundry for Kubernetes</title>
+      
+      <link>/videos/cf-for-k8s-gs/</link>
+      <pubDate>Wed, 13 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/cf-for-k8s-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Deploying on Cloud Foundry for Kubernetes</title>
+      
+      <link>/videos/cf-for-k8s-deploy/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/cf-for-k8s-deploy/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Getting Started with kpack</title>
+      
+      <link>/videos/kpack-gs/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/kpack-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Getting Started with Kubeapps</title>
+      
+      <link>/videos/kubeapps-gs/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/kubeapps-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Spring Live: Azure Spring Cloud</title>
+      
+      <link>/videos/spring-live-azure-spring-cloud/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-live-azure-spring-cloud/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Spring Live: Build Images with Confidence and Ease with Cloud Native Buildpacks</title>
+      
+      <link>/videos/spring-live-buildpacks/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-live-buildpacks/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Spring Live: Developing fault-tolerant stream processing application with Kafka Streams and Kubernetes</title>
+      
+      <link>/videos/spring-live-kafka-streams/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-live-kafka-streams/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Spring Live: Kubernetes Local Development Workflow</title>
+      
+      <link>/videos/spring-live-k8s-local-dev/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-live-k8s-local-dev/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Spring Live: Processing CloudEvents with Spring and Knative</title>
+      
+      <link>/videos/spring-live-cloudevents-knative/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-live-cloudevents-knative/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Spring Live: Production-Ready Spring Boot Applications</title>
+      
+      <link>/videos/spring-live-prod-ready-spring-boot/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-live-prod-ready-spring-boot/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Spring Live: Reactive-O-Rama</title>
+      
+      <link>/videos/spring-live-reactive/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/spring-live-reactive/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

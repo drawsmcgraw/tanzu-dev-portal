@@ -1,0 +1,236 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – cf-for-k8s</title>
+    <link>/tags/cf-for-k8s/</link>
+    <description>Recent content in cf-for-k8s on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 13 May 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/cf-for-k8s/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Getting Started with Cloud Foundry for Kubernetes</title>
+      
+      <link>/guides/kubernetes/cf4k8s-gs/</link>
+      <pubDate>Wed, 29 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/cf4k8s-gs/</guid>
+      <description>
+
+        
+        &lt;blockquote&gt;
+&lt;p&gt;Updated October 2020: CF CLI version 7+ and 6 CPU availability now required, removed metrics server install, new values added to the install yaml eliminate steps from before, and new Kubernetes rendering file. Overall this simplifies installation from previous iterations.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/cloudfoundry/cf-for-k8s.git&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CF-for-k8s&lt;/a&gt; brings Cloud Foundry to Kubernetes.&lt;/p&gt;
+&lt;p&gt;Cloud Foundry is an open-source, multi-cloud application platform as a service governed by the Cloud Foundry Foundation, a 501 organization.&lt;/p&gt;
+&lt;p&gt;Using Cloud Foundry developers only have to focus on writing and delivering code as CF takes care of the rest. Developers enter &lt;code&gt;cf push&lt;/code&gt; into the command line and their app will be deployed immediately receiving an endpoint. The CF platform will take care of containerizing the source code into a working app with the required dependencies, can be configured to bind to a database, connect to a market place and much more.&lt;/p&gt;
+&lt;p&gt;The cf-for-k8s platform adds a higher level of abstraction to Kubernetes by removing the sharp learning curve required for teams, developers don&amp;rsquo;t have to know Kubernetes they only have to &lt;code&gt;cf push&lt;/code&gt;. Kubernetes adds new possibilities to Cloud Foundry opening up the massive Kubernetes ecosystem.&lt;/p&gt;
+&lt;p&gt;In this guide you&amp;rsquo;ll deploy Cloud Foundry on Kubernetes locally.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before you begin&lt;/h2&gt;
+&lt;h3 id=&#34;machine-requirements&#34;&gt;Machine Requirements&lt;/h3&gt;
+&lt;p&gt;Currently cf-for-k8s supports Kubernetes 1.15.x or 1.16.x, the config yaml file we are using to make our kind cluster will make a cluster with the following requirements, see that your computer can handle them:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;have a minimum of 1 node&lt;/li&gt;
+&lt;li&gt;have a minimum of 6 CPU, 8GB memory per node&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;tools-required&#34;&gt;Tools required&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You will need a few tools before beginning and once set up installation usually takes 10 minutes or less.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;CF CLI version requirement changed to version 7+&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.cloudfoundry.org/cf-cli/install-go-cli.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Foundry CLI&lt;/a&gt; (version 7+) to talk to Cloud Foundry&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew install cloudfoundry/tap/cf-cli
+# verify install 
+cf version
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You will need &lt;code&gt;kubectl&lt;/code&gt; to interact with your cluster &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl install instructions&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew install kubectl
+# verify install 
+kubectl version --client
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;KinD (Kubernetes in Docker) to instantiate your local cluster &lt;a href=&#34;https://kind.sigs.k8s.io/docs/user/quick-start/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kind install instructions&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew install kind
+# verify install 
+kind version
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://bosh.io/docs/cli-v2-install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bosh CLI&lt;/a&gt; the &lt;code&gt;./hack/generate-values.sh&lt;/code&gt; script will use the Bosh CLI to generate certificates, keys, and passwords in the file &lt;code&gt;./cf-install-values.yml&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew install cloudfoundry/tap/bosh-cli
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://k14s.io/#install&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kapp&lt;/a&gt; (v0.21.0+) will aid you to deploy cf-for-k8s to your cluster&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac
+&lt;pre&gt;&lt;code&gt;brew tap k14s/tap
+brew install ytt kapp
+kapp --version
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://k14s.io/#install&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ytt&lt;/a&gt; (v0.26.0+) will help create templates to deploy cf-for-k8s&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;on mac you should have this installed from the above command, to verify:
+&lt;pre&gt;&lt;code&gt;ytt version
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://hub.docker.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;DockerHub&lt;/a&gt; is the image registry used in this guide please make an account if you don&amp;rsquo;t have one they are free and quickly made.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;clone-the-cf-for-k8s-repo&#34;&gt;Clone the CF for K8s repo&lt;/h2&gt;
+&lt;p&gt;Clone the repo to preferred location and cd into it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/cloudfoundry/cf-for-k8s.git &amp;amp;&amp;amp; cd cf-for-k8s
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;setup-your-local-k8s-cluster-with-kind&#34;&gt;Setup your local k8s cluster with KinD&lt;/h2&gt;
+&lt;p&gt;Create your cluster using the config yaml from the cf-for-k8s repo obtained above.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kind create cluster --config=./deploy/kind/cluster.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Point your kubeconfig to your new cluster.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl cluster-info --context kind-kind
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;generate-the-yaml-used-to-deploy-cf-for-k8s&#34;&gt;Generate the yaml used to deploy CF for k8s&lt;/h2&gt;
+&lt;p&gt;In this script you use &lt;code&gt;vcap.me&lt;/code&gt; as your CF domain with the flag &lt;code&gt;-d&lt;/code&gt;, this way you can avoid configuring DNS for a domain.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;./hack/generate-values.sh&lt;/code&gt; script will generate certificates, keys, passwords, and configuration needed to deploy into `./cf-install-values.yml&#39;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./hack/generate-values.sh -d vcap.me &amp;gt; ./cf-install-values.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Append the app_registry credentials to your DockerHub registry to the bottom of the &lt;code&gt;./cf-install-values.yml&lt;/code&gt; replacing with your information. You can copy/paste  or use the following command.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The repeated username is a requirement for DockerHub, this setting changes with some container registries. Also, don&amp;rsquo;t forget to add the quotes.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;To use another container registry follow the &lt;a href=&#34;https://github.com/cloudfoundry/cf-for-k8s/blob/master/docs/deploy.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;instructions under step 3&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;cat &amp;gt;&amp;gt; cf-install-values.yml &amp;lt;&amp;lt; EOL
+app_registry:
+  hostname: https://index.docker.io/v1/
+  repository_prefix: &amp;quot;&amp;lt;DockerHub-username&amp;gt;&amp;quot;
+  username: &amp;quot;&amp;lt;DockerHub-username&amp;gt;&amp;quot;
+  password: &amp;quot;&amp;lt;DockerHub-password&amp;gt;&amp;quot;
+EOL
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;There are a few more lines to add to your cf-install-values.yml, like adding a metrics server because KinD doesn&amp;rsquo;t come with one.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat &amp;gt;&amp;gt; cf-install-values.yml &amp;lt;&amp;lt; EOL
+add_metrics_server_components: true
+enable_automount_service_account_token: true
+metrics_server_prefer_internal_kubelet_address: true
+remove_resource_requirements: true
+use_first_party_jwt_tokens: true
+
+load_balancer:
+  enable: false
+EOL
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, use cf-install-values.yml to render the final Kubernetes template to raw Kubernetes configuration.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ytt -f config -f ./cf-install-values.yml &amp;gt; ./cf-for-k8s-rendered.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;deploy-cf-for-k8s&#34;&gt;Deploy CF for k8s&lt;/h2&gt;
+&lt;p&gt;You are ready to deploy cf-for-k8s using the &lt;code&gt;./cf-for-k8s-rendered.yml&lt;/code&gt; file created above. Once you deploy it should take around 10 minutes to finish.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The deployment has a timer and will exit with a timeout error if it takes too long. Assuming all previous steps were followed correctly enter the deployment command again to finish if it exits early.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;kapp deploy -a cf -f ./cf-for-k8s-rendered.yml -y
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;validate-the-deployment&#34;&gt;Validate the deployment&lt;/h2&gt;
+&lt;p&gt;Target your CF CLI to point to the new CF instance.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf api --skip-ssl-validation https://api.vcap.me
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Set the CF_ADMIN_PASSWORD environment variable to the CF administrative password, stored in the cf_admin_password key in the configuration-values/deployment-values.yml file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;CF_ADMIN_PASSWORD=&amp;quot;$(bosh interpolate ./cf-install-values.yml --path /cf_admin_password)&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Log into the installation as the admin user.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf auth admin &amp;quot;$CF_ADMIN_PASSWORD&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Enable Docker&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf enable-feature-flag diego_docker
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;A powerful feature provided by CF is multi-tenancy, where you can create a space for a team, an app or whatever your workflow requires.&lt;/p&gt;
+&lt;p&gt;Create and target an organization and space.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf create-org test-org
+cf create-space -o test-org test-space
+cf target -o test-org -s test-space
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;deploy-an-application-with-cf-push&#34;&gt;Deploy an application with &lt;code&gt;cf push&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;At last you can push the included sample &lt;code&gt;test-node-app&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf push test-node-app -p ./tests/smoke/assets/test-node-app
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;Or you can push any app you wish just cd into the directory and push the app with the following command.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf push APP-NAME
+&lt;/code&gt;&lt;/pre&gt;&lt;/blockquote&gt;
+&lt;p&gt;Once your app stages you can find it in Cloud Foundry with this command.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cf apps
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The output in the terminal should look something as follows.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Getting apps in org test-org / space test-space as admin...
+OK
+
+name            requested state   instances   memory   disk   urls
+test-node-app   started           1/1         1G       1G     test-node-app.vcap.me
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To see the pods that have applications on your Cloud Foundry instance look in the &lt;code&gt;cf-workloads&lt;/code&gt; namespace.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get pods -n cf-workloads
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can now play with cf for k8s and deploy other apps and observe how it affects the Kubernetes infrastructure. Try other cf commands like &lt;code&gt;cf delete test-node-app&lt;/code&gt; and see what changes, enjoy you new cf for k8s instance.&lt;/p&gt;
+&lt;h2 id=&#34;delete-the-cf-for-k8s-deployment&#34;&gt;Delete the cf-for-k8s deployment&lt;/h2&gt;
+&lt;p&gt;You can delete the cf-for-k8s deployment from your cluster by running the following command.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kapp delete -a cf
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;delete-your-kind-cluster&#34;&gt;Delete your Kind cluster&lt;/h2&gt;
+&lt;p&gt;To delete your KinD cluster.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kind delete cluster
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;next-steps&#34;&gt;Next Steps&lt;/h2&gt;
+&lt;p&gt;Learn more about Cloud Foundry with the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/cloudfoundry/cf-for-k8s.git&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cf-for-k8s GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cloudfoundry.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cloudfoundry.org&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://katacoda.com/cloudfoundry-tutorials/scenarios/trycf&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Online CF Tutorial&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Getting Started with Cloud Foundry for Kubernetes</title>
+      
+      <link>/videos/cf-for-k8s-gs/</link>
+      <pubDate>Wed, 13 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/cf-for-k8s-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Deploying on Cloud Foundry for Kubernetes</title>
+      
+      <link>/videos/cf-for-k8s-deploy/</link>
+      <pubDate>Wed, 06 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/cf-for-k8s-deploy/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

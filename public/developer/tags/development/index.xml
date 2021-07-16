@@ -1,0 +1,893 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Development</title>
+    <link>/tags/development/</link>
+    <description>Recent content in Development on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 01 Jun 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/development/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Blog: Tanzu Developer Celebrates Its 1st Birthday with Some Great New Features!</title>
+      
+      <link>/blog/tanzu-developer-celebrates-its-1st-birthday-with-some-great-new-features/</link>
+      <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/tanzu-developer-celebrates-its-1st-birthday-with-some-great-new-features/</guid>
+      <description>
+
+        
+        &lt;p&gt;My, how time flies. &lt;a href=&#34;/blog/a-place-to-build-apps-and-build-skills/&#34;&gt;It seems like just yesterday&lt;/a&gt; that the Tanzu Developer Center launched. Our initial showing had what we believed at the time to be a wide array of content, from &lt;a href=&#34;/guides&#34;&gt;guides&lt;/a&gt; to &lt;a href=&#34;/videos&#34;&gt;videos&lt;/a&gt; to &lt;a href=&#34;/samples&#34;&gt;code samples&lt;/a&gt;. Over the last 12 months, though, we’ve really seen our content grow.&lt;/p&gt;
+&lt;h2 id=&#34;tanzutv&#34;&gt;Tanzu.TV&lt;/h2&gt;
+&lt;p&gt;With shows that run monthly, weekly—even daily—each and every episode is always a great time. &lt;a href=&#34;/tv/tanzu-tuesdays/&#34;&gt;Tanzu Tuesdays&lt;/a&gt;, for example, hosted by &lt;a href=&#34;/team/tiffany-jernigan/&#34;&gt;Tiffany Jernigan&lt;/a&gt;, features a new guest every week who takes you into a deep-dive of a topic of their choosing, complete with live demos and coding. &lt;a href=&#34;/tv/code/&#34;&gt;Code&lt;/a&gt;, on the other hand, is a weekly show hosted by the Spring developer advocates, who walk you through complex, real-world scenarios and show you the tools and techniques you can use to solve them. Make sure to check out all of our shows on &lt;a href=&#34;/tv&#34;&gt;Tanzu.TV&lt;/a&gt;!&lt;/p&gt;
+&lt;h2 id=&#34;workshops&#34;&gt;Workshops&lt;/h2&gt;
+&lt;p&gt;In September of 2020, &lt;a href=&#34;/blog/highlights-of-the-springone-2020-self-paced-workshops-and-their-new-home/&#34;&gt;we launched self-paced workshops on the Tanzu Developer Center&lt;/a&gt;. Complete with your own personal environment right in the browser, these workshops offer hands-on instructions for working with new technologies and techniques. For example, our &lt;a href=&#34;/workshops/lab-k8s-fundamentals/&#34;&gt;Kubernetes Fundamentals Workshop&lt;/a&gt; teaches you how to prepare and deploy your applications on Kubernetes without having to set up your own cluster or install anything locally.&lt;/p&gt;
+&lt;h2 id=&#34;vmware-tanzu-labs-practices&#34;&gt;VMware Tanzu Labs Practices&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/labs&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu Labs&lt;/a&gt; has actually been around for a long, &lt;em&gt;long&lt;/em&gt; time. &lt;a href=&#34;https://tanzu.vmware.com/content/blog/vmware-tanzu-labs-new-name&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Previously known as VMware Pivotal Labs&lt;/a&gt;, this organization has been providing agile software development and consulting services for more than 30 years. Over that time, its practitioners have picked up a trick or two, practices which they happily &lt;a href=&#34;https://tanzu.vmware.com/content/blog-tag-devops-best-practices/kubernetes-guides-software-development-practices-vmware-tanzu-labs-open-source&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;share on the Tanzu Developer Center for free&lt;/a&gt;. These practices comprise a wealth of knowledge gleaned from building modern applications, developing products, modernizing existing applications, and working with distributed teams. &lt;a href=&#34;/practices&#34;&gt;Check out the practices today&lt;/a&gt;!&lt;/p&gt;
+&lt;h2 id=&#34;new-outcome-architectures&#34;&gt;NEW! Outcome Architectures&lt;/h2&gt;
+&lt;p&gt;Today, we’re introducing &lt;a href=&#34;/outcomes&#34;&gt;outcome architectures&lt;/a&gt;. These outcomes not only address the “why” in the form of strategy content, but the “how” in the form of practical—and proven—tactical references. This new style of content pieces together guides and workshops in a sequential order, building a larger narrative to accomplish a larger goal. We’ve chosen to launch with two outcomes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;/outcomes/secure-software-supply-chain/&#34;&gt;Secure software supply chains&lt;/a&gt; – A secure software supply chain is a full suite of software that will move your code from a developer’s laptop through source control and, eventually, onto production systems. This is not a one-way transaction. This supply chain, when implemented properly, will become a closed-loop system, whereby the same tools that will drive code to production will also help to address critical production events.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;/outcomes/application-observability/&#34;&gt;Application observability&lt;/a&gt; – Software systems commonly comprise a multitude of microservices spanning a variety of cloud and on-premise environments, with dependencies on external services and tools. These systems require constant change in order to accommodate new features and keep up with critical security patches, but change introduces risk. A strong observability culture is essential to managing this risk and making sense of these complex systems.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As you may have noticed, there is something conspicuously absent from the site: patterns. Patterns were a good fit for what the site was a year ago. We started with a dozen or so pieces of content, all fitting into neat little buckets; the intention was to build out content pattern by pattern. Today, however, we have well over 200 guides, blogs, practices, videos, and samples, and that number is growing faster than ever. We’re working on a more flexible way to discover content on the site, and believe that outcomes are a great starting point.&lt;/p&gt;
+&lt;h2 id=&#34;thank-you&#34;&gt;Thank You!&lt;/h2&gt;
+&lt;p&gt;It’s been such a pleasure to work on this content over the past year, and we’re encouraged each and every time we hear that someone got something useful out of it. The Tanzu Developer Center is an ever-growing project with content constantly being added, and we can’t wait to see what the next year brings. We appreciate everyone who has visited us over these last 12 months, and if you’re new here, we encourage you to take a look around! We have &lt;em&gt;a lot&lt;/em&gt; planned and we’re so excited to bring new content and features to you!&lt;/p&gt;
+&lt;p&gt;From &lt;a href=&#34;/team&#34;&gt;all of us who have written content for the site&lt;/a&gt;, thank you!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: Using Knative Eventing for Better Observability</title>
+      
+      <link>/blog/using-knative-eventing-for-better-observability/</link>
+      <pubDate>Mon, 22 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/using-knative-eventing-for-better-observability/</guid>
+      <description>
+
+        
+        &lt;p&gt;If you’re using one of the great observability tools out there, you probably already mark your data with important events that may affect it—deployments, configuration changes, code commits, and more. But what about changes Kubernetes makes on its own, like autoscaling events?&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://knative.dev&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Knative&lt;/a&gt; is a Kubernetes-based platform used to deploy and manage serverless workloads. It has two components: serving and eventing, both of which can be deployed independently. In this post, we’re going to focus on eventing here, which can automatically mark events in your data or trigger other events based on your needs.&lt;/p&gt;
+&lt;h3 id=&#34;knative-eventing&#34;&gt;Knative Eventing&lt;/h3&gt;
+&lt;p&gt;The eventing component of Knative is a loosely coupled system of event producers and consumers that allows for multiple modes of usage and event transformation.&lt;/p&gt;
+&lt;p&gt;Among the other components in this system are the &lt;a href=&#34;https://knative.dev/docs/eventing/broker/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;broker&lt;/a&gt;, which routes the events over &lt;a href=&#34;https://knative.dev/docs/eventing/channels/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;channels&lt;/a&gt;, and &lt;a href=&#34;https://knative.dev/docs/eventing/triggers/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;triggers&lt;/a&gt;, which subscribe specific consumers to events. For our example, we’re going to keep things very simple, with a single broker using a single&lt;a href=&#34;https://github.com/knative/eventing/blob/release-0.20/config/channels/in-memory-channel/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt; in-memory channel, &lt;/a&gt;which itself is not to be used in production.&lt;/p&gt;
+&lt;h3 id=&#34;kubernetes-events&#34;&gt;Kubernetes Events&lt;/h3&gt;
+&lt;p&gt;If we want Kubernetes events as a source, we can use the &lt;a href=&#34;https://knative.dev/docs/eventing/samples/kubernetes-event-source/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;API server source&lt;/a&gt; as an event producer. This will publish any changes seen by the API server to the channel we’re using, and we can consume that event with a small golang application and forward to the observability tool of our choice.&lt;/p&gt;
+&lt;p&gt;In this case, we’re going to specifically watch for horizontal pod autoscaler (HPA) messages. Anytime the HPA scales our example app up or down, we’ll send a API call to mark an event.&lt;/p&gt;
+&lt;h3 id=&#34;eventing-in-action&#34;&gt;Eventing in Action&lt;/h3&gt;
+&lt;p&gt;We’re going to use Kind to deploy a Knative eventing setup and then deploy a sample application with an autoscaler so we can see when it scales up or down. To do this, we will need to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Have &lt;a href=&#34;https://kind.sigs.k8s.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kind&lt;/a&gt; installed&lt;/li&gt;
+&lt;li&gt;Clone this repo &lt;a href=&#34;https://github.com/tybritten/hpa-sender&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;https://github.com/tybritten/hpa-sender&lt;/a&gt; \&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The first thing we need to do is create the Kind cluster. If you’re not comfortable with curling to bash, you can download it first and inspect it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/01-kind.sh &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, we need to install all the Knative eventing components, starting with the CRD and core components:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f https://github.com/knative/eventing/releases/download/v0.19.0/eventing-crds.yaml
+kubectl apply -f https://github.com/knative/eventing/releases/download/v0.19.0/eventing-core.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As mentioned earlier, we need a channel; we’re going to use the simple in-memory channel and corresponding broker:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f https://github.com/knative/eventing/releases/download/v0.19.0/in-memory-channel.yaml
+kubectl apply -f https://github.com/knative/eventing/releases/download/v0.19.0/mt-channel-broker.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Lastly, we need to install the metrics server (and apply a patch) for the HPA:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.6/components.yaml
+kubectl patch deployment metrics-server -n kube-system -p &lt;span class=&#34;s1&#34;&gt;&amp;#39;{&amp;#34;spec&amp;#34;:{&amp;#34;template&amp;#34;:{&amp;#34;spec&amp;#34;:{&amp;#34;containers&amp;#34;:[{&amp;#34;name&amp;#34;:&amp;#34;metrics-server&amp;#34;,&amp;#34;args&amp;#34;:[&amp;#34;--cert-dir=/tmp&amp;#34;, &amp;#34;--secure-port=4443&amp;#34;, &amp;#34;--kubelet-insecure-tls&amp;#34;,&amp;#34;--kubelet-preferred-address-types=InternalIP&amp;#34;]}]}}}}&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let’s check to make sure everything is up and running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get all -n knative-eventing
+NAME                                        READY   STATUS    RESTARTS   AGE
+pod/eventing-controller-66c877b879-vx6dp    1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          7m15s
+pod/eventing-webhook-644c5c7667-pr5x7       1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          7m15s
+pod/imc-controller-587f98f97d-l6s9r         1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          6m56s
+pod/imc-dispatcher-6db95d7857-n6249         1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          6m56s
+pod/mt-broker-controller-76b65f7c96-tpktv   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          6m51s
+pod/mt-broker-filter-6bd64f8c65-wd7hm       1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          6m51s
+pod/mt-broker-ingress-7d8595d747-77n77      1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          6m51s
+
+NAME                       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;           AGE
+service/broker-filter      ClusterIP   10.96.126.148   &amp;lt;none&amp;gt;        80/TCP,9092/TCP   6m51s
+service/broker-ingress     ClusterIP   10.96.98.183    &amp;lt;none&amp;gt;        80/TCP,9092/TCP   6m51s
+service/eventing-webhook   ClusterIP   10.96.211.233   &amp;lt;none&amp;gt;        443/TCP           7m15s
+service/imc-dispatcher     ClusterIP   10.96.72.204    &amp;lt;none&amp;gt;        80/TCP            6m56s
+
+NAME                                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/eventing-controller     1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           7m15s
+deployment.apps/eventing-webhook        1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           7m15s
+deployment.apps/imc-controller          1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           6m56s
+deployment.apps/imc-dispatcher          1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           6m56s
+deployment.apps/mt-broker-controller    1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           6m51s
+deployment.apps/mt-broker-filter        1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           6m51s
+deployment.apps/mt-broker-ingress       1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           6m51s
+deployment.apps/pingsource-mt-adapter   0/0     &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;           7m15s
+
+NAME                                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/eventing-controller-66c877b879     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       7m15s
+replicaset.apps/eventing-webhook-644c5c7667        &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       7m15s
+replicaset.apps/imc-controller-587f98f97d          &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       6m56s
+replicaset.apps/imc-dispatcher-6db95d7857          &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       6m56s
+replicaset.apps/mt-broker-controller-76b65f7c96    &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       6m51s
+replicaset.apps/mt-broker-filter-6bd64f8c65        &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       6m51s
+replicaset.apps/mt-broker-ingress-7d8595d747       &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       6m51s
+replicaset.apps/pingsource-mt-adapter-5d85796c74   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;       7m15s
+
+NAME                                                     REFERENCE                      TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/broker-filter-hpa    Deployment/mt-broker-filter    2%/70%    &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;10&lt;/span&gt;        &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;          6m51s
+horizontalpodautoscaler.autoscaling/broker-ingress-hpa   Deployment/mt-broker-ingress   2%/70%    &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;10&lt;/span&gt;        &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;          6m51s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we want to add the API event sender. First we need a broker in the default namespace where the application will be:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;broker&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;knative-eventing&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We then need a service account (with a cluster role and role binding) for the API source to use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ServiceAccount&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;events-sa&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterRole&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;event-watcher&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;rules&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;apiGroups&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;resources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;events&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;verbs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;list&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;watch&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterRoleBinding&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;k8s-ra-event-watcher&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;roleRef&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiGroup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterRole&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;event-watcher&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;subjects&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ServiceAccount&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;events-sa&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we need our API server source:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;sources.knative.dev/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ApiServerSource&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;testevents&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;serviceAccountName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;events-sa&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;mode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Resource&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;resources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Event&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;sink&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ref&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Broker&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;knative-eventing&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can apply these all together from a file in the &lt;code&gt;kind-example&lt;/code&gt; folder in the repo:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f k8s-events.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We now have an API source and a broker reader for an event consumer:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get all
+NAME                                                                  READY   STATUS    RESTARTS   AGE
+pod/apiserversource-testevents-bbeb355d-72a6-4e81-b0a8-02d9b0dtq8gn   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          6s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;   AGE
+service/kubernetes   ClusterIP   10.96.0.1    &amp;lt;none&amp;gt;        443/TCP   42m
+
+NAME                                                                              READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/apiserversource-testevents-bbeb355d-72a6-4e81-b0a8-02d9b0d31525   1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           6s
+
+NAME                                                                                        DESIRED   CURRENT   READY   AGE
+replicaset.apps/apiserversource-testevents-bbeb355d-72a6-4e81-b0a8-02d9b0d31525-7685c896c   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       6s
+
+NAME                                                              TYPE                                    SOURCE                  SCHEMA   BROKER    DESCRIPTION   READY   REASON
+eventtype.eventing.knative.dev/2c7c2c1b3399bde6269acf3b7fe28c3a   dev.knative.apiserver.resource.add      https://10.96.0.1:443            default                 False   BrokerDoesNotExist
+eventtype.eventing.knative.dev/5c1186d11f693b2c331a9c31246588e0   dev.knative.apiserver.resource.delete   https://10.96.0.1:443            default                 False   BrokerDoesNotExist
+eventtype.eventing.knative.dev/b6426fa883a42e3e23ace1cebabfdd5e   dev.knative.apiserver.resource.update   https://10.96.0.1:443            default                 False   BrokerDoesNotExist
+
+NAME                                             SINK                                                                                AGE   READY   REASON
+apiserversource.sources.knative.dev/testevents   http://broker-ingress.knative-eventing.svc.cluster.local/knative-eventing/default   7s    True
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can now use any number of consumers, the most simple being the Knative event-display container (&lt;code&gt;gcr.io/knative-releases/knative.dev/eventing-contrib/cmd/event_display)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For this example, I’ve created and published a container using the code in the repo. We’re going to deploy it along with another role that gives it access to the horizontal pod autoscalers, as well as a trigger to send the events to the container:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ServiceAccount&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;knative-eventing&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterRole&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;rules&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;apiGroups&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;autoscaling&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# &amp;#34;&amp;#34; indicates the core API group&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;resources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;secrets&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;horizontalpodautoscalers&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;verbs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;get&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;watch&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;list&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterRoleBinding&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;roleRef&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiGroup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterRole&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;subjects&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ServiceAccount&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;knative-eventing&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;apps/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;knative-eventing&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;replicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;matchLabels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;serviceAccountName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;vmtyler/hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;containerPort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8080&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Service&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;knative-eventing&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;protocol&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;TCP&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;80&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;targetPort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8080&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Trigger&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;hpa-sender-trigger&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;knative-eventing&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;broker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;subscriber&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;uri&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;http://hpa-sender.knative-eventing.svc.cluster.local&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can apply these all together from a file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f hpa-sender-deployment.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;hpa-sender-configuration&#34;&gt;HPA-Sender Configuration&lt;/h4&gt;
+&lt;p&gt;The way the hpa-sender container works is pretty simple; it:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Watches the API server events related to HPAs&lt;/li&gt;
+&lt;li&gt;Retrieves the specific HPA referenced in the event from the API server&lt;/li&gt;
+&lt;li&gt;Checks if the HPA has an annotation for hpa-sender with a secret location as namespace/secretname&lt;/li&gt;
+&lt;li&gt;Retrieves the secret, which includes configuration for where to send the event, if it has the annotation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So to use this app, we need a secret with the configuration necessary for our event destination, and we have to annotate our HPA.&lt;/p&gt;
+&lt;h4 id=&#34;sample-app-and-hpa-secret&#34;&gt;Sample App and HPA Secret&lt;/h4&gt;
+&lt;p&gt;The first thing we need to do is create the secret with the necessary configuration. (There are some sample ones in the repo.) We’re going to use &lt;a href=&#34;https://tanzu.vmware.com/observability&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu Observability by Wavefront&lt;/a&gt; as our destination:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Secret&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;php-apache-hpe&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Opaque&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;stringData&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;https://WAVEFRONTHOSTNAME/api/v2/event&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;headers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    {
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      &amp;#34;Authorization&amp;#34;: &amp;#34;Bearer &amp;lt;wavefront_api_token&amp;gt;&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    }&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    {
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      &amp;#34;name&amp;#34;: &amp;#34;HPA Scaling&amp;#34;,
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      &amp;#34;annotations&amp;#34;: {
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;        &amp;#34;severity&amp;#34;: &amp;#34;info&amp;#34;,
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;        &amp;#34;type&amp;#34;: &amp;#34;scaling&amp;#34;,
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;        &amp;#34;details&amp;#34;: &amp;#34;_message_&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      },
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      &amp;#34;tags&amp;#34; : [
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;        &amp;#34;Scale&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      ],
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      &amp;#34;startTime&amp;#34;: 0,
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      &amp;#34;endTime&amp;#34;: 0
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    }&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We’ll put our WaveFront host name in there along with our API token. In the body, you’ll see a &lt;em&gt;message&lt;/em&gt;, which is what hpa-sender will replace with the actual HPA message.&lt;/p&gt;
+&lt;p&gt;For our sample app, we’ll use a basic php-apache image:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;apps/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;php-apache&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;matchLabels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;run&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;php-apache&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;replicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;run&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;php-apache&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;php-apache&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;k8s.gcr.io/hpa-example&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;containerPort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;80&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;resources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;limits&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;              &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;cpu&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;500m&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;requests&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;              &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;cpu&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;200m&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Service&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;php-apache&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;run&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;php-apache&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;80&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;run&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;php-apache&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;autoscaling/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;HorizontalPodAutoscaler&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;annotations&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;hpa-event&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default/php-apache-hpe&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;php-apache&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;maxReplicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;minReplicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;scaleTargetRef&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;apps/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;php-apache&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;targetCPUUtilizationPercentage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;50&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;currentCPUUtilizationPercentage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;currentReplicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;desiredReplicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You will see on the HPA that it has an annotation of &lt;code&gt;hpa-event: default/php-apache-hpe &lt;/code&gt;enabling the hpa-sender and pointing to the secret with the configuration.&lt;/p&gt;
+&lt;p&gt;We can apply these all together from a single file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f hpa-app.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To check on the app and the HPA, we can run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl get pods
+NAME                                                              READY   STATUS    RESTARTS   AGE
+apiserversource-testevents-bbeb355d-72a6-4e81-b0a8-02d9b0dtq8gn   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          74m
+php-apache-d4cf67d68-crmsr
+
+$ kubectl get hpa
+NAME         REFERENCE               TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+php-apache   Deployment/php-apache   &amp;lt;unknown&amp;gt;/50%   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;          47s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we can cause the load to go up or down by following &lt;a href=&#34;https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/run-application/horizontal-pod-autoscale-walkthrough/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;these instructions&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl run -i --tty load-generator --image&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;busybox /bin/sh
+
+Hit enter &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;command&lt;/span&gt; prompt
+
+$ &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; true&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; wget -q -O- http://php-apache.default.svc.cluster.local&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will trigger events to our URL:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/using-knative-eventing-for-better-observability/wavefront_event_knative.png&#34; alt=&#34;WaveFront Event Screenshot&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Now we have events marking these scaling occurrences on our application’s performance charts.&lt;/p&gt;
+&lt;p&gt;This is just one use case for Knative eventing with the Kubernetes API Source, but you can imagine the possibilities enabled by this very customizable, pluggable framework. We didn’t even need to deploy the Knative serving component to do it! If you want to see me go through these steps in more detail, and also walk through how the HPA-Sender works, watch this episode of Tanzu.TV:
+
+&lt;div class=&#34;youtube-video-shortcode&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/9lBaKKe-59E&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: The Hate for YAML: The Hammer or the Nail?</title>
+      
+      <link>/blog/the-hate-for-yaml-the-hammer-or-the-nail/</link>
+      <pubDate>Tue, 19 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/the-hate-for-yaml-the-hammer-or-the-nail/</guid>
+      <description>
+
+        
+        &lt;p&gt;Those four letters that strike dread in the hearts of every Kubernetes user. That short acronym that pierces like a knife in the dark. The aura of terror that follows it, enveloping everyone and everything as its reach seems to grow to the ends of time itself.&lt;/p&gt;
+&lt;p&gt;YAML.&lt;/p&gt;
+&lt;p&gt;Alright, maybe that’s a bit dramatic, but there’s no doubt that YAML has developed a reputation for being a pain, namely due to the combination of semantics and empty space that gets deserialized to typed values by a library that you hope follows the same logic as others. This has fostered frustration among developers and operators no matter what the context. But is the issue as simple as “YAML is a pain”? Or is it a bit more nuanced than that?&lt;/p&gt;
+&lt;p&gt;Last year, at &lt;a href=&#34;https://www.softwarecircus.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Software Circus: Nightmares on Cloud Street&lt;/a&gt;, &lt;a href=&#34;https://twitter.com/jbeda&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Joe Beda&lt;/a&gt; gave a talk on this very subject titled &lt;a href=&#34;https://www.youtube.com/watch?v=8PpgqEqkQWA&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;I’m Sorry About The YAML&lt;/a&gt;. In it, he explores the factors that contribute to YAML’s reputation, or the so-called “two wolves” inside the hatred of YAML—the frustration with YAML itself and the problem that it’s being used to solve—and how they contribute to each other.&lt;/p&gt;
+&lt;h2 id=&#34;the-problem-with-the-hammer&#34;&gt;The Problem with the Hammer&lt;/h2&gt;
+&lt;p&gt;Beda starts by talking about YAML itself, both writing it and reading it. Of course, the first thing that comes to mind is the meaningful use of blank space. Opinions run high in this discussion, as it’s a situation with which Python developers are intimately familiar. Indeed, there’s a very real scenario where missing a couple of spaces can drastically change your data while still being valid YAML. Consider the following two examples:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;foo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;bar&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;baz&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;foo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;bar&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;baz&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It’s easy to spot the difference in such a small example, but potentially even easier to overlook two missing spaces when this YAML is hundreds or thousands of lines long. To be fair, this issue isn&amp;rsquo;t completely unique to YAML. In JSON for example, you could easily place a key in a wrong node, or misspell a key in an array of objects. Both of these can of course be mitigated with tools such as schema validators.&lt;/p&gt;
+&lt;p&gt;There is some behavior that isn’t as obvious, though. Take the following YAML, for example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;country_codes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;united_states&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;us&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ireland&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ie&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;norway&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;no&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let’s try loading it using the standard library in Ruby, which will parse the YAML and then print it out as JSON.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-ruby&#34; data-lang=&#34;ruby&#34;&gt;&lt;span class=&#34;nb&#34;&gt;require&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;yaml&amp;#39;&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;doc&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt;-ENDYAML
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&lt;/span&gt;&lt;span class=&#34;ss&#34;&gt;country_codes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+  &lt;span class=&#34;ss&#34;&gt;united_states&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;us&lt;/span&gt;
+  &lt;span class=&#34;ss&#34;&gt;ireland&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ie&lt;/span&gt;
+  &lt;span class=&#34;ss&#34;&gt;norway&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;no&lt;/span&gt;
+&lt;span class=&#34;no&#34;&gt;ENDYAML&lt;/span&gt;
+
+&lt;span class=&#34;nb&#34;&gt;puts&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;YAML&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;load&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;doc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;country_codes&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;united_states&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;us&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;ireland&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;ie&amp;#34;&lt;/span&gt;, &lt;span class=&#34;s2&#34;&gt;&amp;#34;norway&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt;false&lt;span class=&#34;o&#34;&gt;}}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is what Beda calls the “Norway Problem.” YAML’s specification doesn’t require quoting strings, which can cause some unintended behavior from any given library in your language of choice. In the &lt;a href=&#34;https://yaml.org/type/bool.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;official YAML specification&lt;/a&gt;, “no” is a valid value to represent a boolean that is “false”. And it isn’t limited to just this niche case. Consider the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1.2.0&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;version&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;1.2.0&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It makes sense that this is being parsed as a string. After all, what else could it be interpreted as? Well, what if we represent the same thing, but in a slightly different way?&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1.2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;version&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt;1.2&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With no schema validation or context, the YAML specification clearly states that this should be &lt;a href=&#34;https://yaml.org/type/float.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;interpreted as a float&lt;/a&gt;. You and I probably even agree that both of these scenarios make sense, but this ambiguity leaves a non-zero margin of error, especially when you put it in the context of something as complex as Kubernetes.&lt;/p&gt;
+&lt;h2 id=&#34;yamls-attack-surface&#34;&gt;YAML’s Attack Surface&lt;/h2&gt;
+&lt;p&gt;Things can also get tricky when you start deserializing anything more complex than a 1:1 representation of data and logic.&lt;/p&gt;
+&lt;p&gt;In YAML, you can reference one structure from another, which is very, very handy when you know that values from one portion of a YAML document will need to be referenced later. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;&amp;amp;speaker&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Joe Beda&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;presentation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Nightmare on Cloud Street&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;speaker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;*speaker&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This YAML defined the anchor “speaker” with the value “Joe Beda”, which is then referenced later in the line &lt;code&gt; speaker: *speaker&lt;/code&gt;. When this YAML is expanded, this becomes:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Joe Beda&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;presentation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; 
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Nightmare on Cloud Street&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;speaker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Joe Beda&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;But as they say, “With great power comes a great opportunity for someone with malicious intent to exploit.” Take a look at the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;&amp;amp;a&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;&amp;amp;b&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;*a,*a,*a]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;&amp;amp;c&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;*b,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;*b,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;*b]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is a little weird to look at, but try to think it through. We’ve set the anchor “a” to an array containing three values. Then we give the anchor “b” a value that references the anchor “a”, three times. We then reference the “b” anchor three more times in “c” anchor. If you run this through the Ruby code from earlier to translate it to JSON, we get the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;],&lt;/span&gt;
+ &lt;span class=&#34;nt&#34;&gt;&amp;#34;b&amp;#34;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;],&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;],&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]],&lt;/span&gt;
+ &lt;span class=&#34;nt&#34;&gt;&amp;#34;c&amp;#34;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;=&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;[[[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;],&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;],&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]],&lt;/span&gt;
+   &lt;span class=&#34;p&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;],&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;],&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]],&lt;/span&gt;
+   &lt;span class=&#34;p&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;],&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;],&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]]]}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is a play on a fairly old trick that utilizes recursion to expand a rather small amount of data into something that’s magnitudes larger. You can see that by the third line of our YAML, we turned an array with three items into one with one with 27. This issue was addressed in Kubernetes directly in &lt;a href=&#34;https://github.com/kubernetes/kubernetes/issues/83253&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CVE-2019-11253&lt;/a&gt; to prevent a maliciously crafted piece of YAML from crashing the kube-apiserver.&lt;/p&gt;
+&lt;h2 id=&#34;the-problem-with-the-nail&#34;&gt;The Problem with the Nail&lt;/h2&gt;
+&lt;p&gt;Beda did mention there was a second wolf in this conversation, and with it comes the nuance of YAML’s use in the context of Kubernetes.&lt;/p&gt;
+&lt;p&gt;First and foremost, Kubernetes resources can be complex, and in turn make the YAML very verbose. Another word that could be used is “explicit.” In machine-to-machine communication, explicitness is great. It doesn’t matter if it’s 100 lines of YAML or 1,000, the difference when being parsed and passed around to different machines and APIs, all while making sure those APIs are responsible for making too many assumptions, is completely negligible. That YAML has to come from somewhere, though, and often that “somewhere” is actually “someone.” Such explicitness means an additional burden of complexity for the user.&lt;/p&gt;
+&lt;p&gt;Kubernetes also does &lt;em&gt;a lot&lt;/em&gt;. In fact, it can solve so many problems that it can actually make the simpler problems harder. Beda gives a great analogy referencing a popular word processor that often received complaints for being too “bloated.” People would say, “It has all of these features and I only ever use 20 percent of them.” Beda describes the research the development team undertook to figure out how users leveraged those features: They concluded that while any individual user would only leverage a small percentage of features—say, 10 percent—different collections of users would leverage a different 10 percent, and most features actually received significant usage.&lt;/p&gt;
+&lt;p&gt;The same can be said for Kubernetes. It has a long tail of features and fields in the YAML that users are writing, which some may find too verbose, explicit, or repetitive. While you may not use those features, they may be well-utilized by others.&lt;/p&gt;
+&lt;p&gt;So with your YAML written, you head to the command line, run &lt;code&gt;kubectl apply&lt;/code&gt;, and don’t receive any errors. Everything must be perfect! Well, maybe not. Even with valid YAML, any of the above scenarios could lead to the Kubernetes API server initially accepting something, but then as different pods and containers are stood up and volumes are claimed, one fat-fingered configuration throws it all out the window. And that means your development loop is now significantly longer than you’d initially expected, a frustrating experience to say the least.&lt;/p&gt;
+&lt;h2 id=&#34;how-do-we-improve&#34;&gt;How Do We Improve?&lt;/h2&gt;
+&lt;p&gt;As Beda notes, “There are no silver bullets” to this problem. There are a lot of opinions, but at the end of the day, there’s no one-size-fits-all solution. Maybe if it were something that was focused on in the early days of Kubernetes the conversation would be different, but hindsight truly is 20/20.&lt;/p&gt;
+&lt;p&gt;That said, with such a strong community, you have a seemingly limitless choice of tools and solutions. From generators to validators to templating systems, it feels like a new option is appearing every day.&lt;/p&gt;
+&lt;p&gt;Beda also points out a common trap that some can fall into: mixing up config and code. That is, the difference between using an existing solution such as YAML vs. writing your own DSL. It’s really easy to say that something as complex as Kubernetes could have its own language to create and configure objects, but now you’ve layered a whole new complexity onto an existing one.&lt;/p&gt;
+&lt;p&gt;He references a short, but relevant, piece by Mike Hadlow titled &lt;a href=&#34;http://mikehadlow.blogspot.com/2012/05/configuration-complexity-clock.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Configuration Complexity Clock&lt;/a&gt; in which Hadlow walks through, from start to finish, what happens in a case such as this, and expands on it. Basically, if you create your own configuration DSL, you’ve traded a common general purpose language with a widely known skill set for something that nobody knows. You’ve also traded a potential fleet of testing tools for ones you now need to write yourself. Meanwhile, if you hide concepts, you’re potentially limiting features on one hand. On the other hand, if you’re embracing them, you’re no better off than you were at the start.&lt;/p&gt;
+&lt;p&gt;Beda instead advocates embracing the tools that have emerged organically from the Kubernetes community itself. He also points out the benefit of taking a Unix-like toolchain mindset of breaking down a problem into smaller chunks and feeding each one into the next. If an individual doesn’t like a piece of the chain, they can replace it with a similar solution of their own. For example, &lt;a href=&#34;https://carvel.dev/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Carvel&lt;/a&gt; aims to accomplish this approach, providing a collection of single-purpose, composable tools that you can chain together. If you&amp;rsquo;d like to learn more about Carvel, there&amp;rsquo;s a great &lt;a href=&#34;/tv/tgik/142/&#34;&gt;TGIK episode&lt;/a&gt; that covers the different tools and how they can work together.&lt;/p&gt;
+&lt;p&gt;So what’s the verdict? Is YAML the worst thing in the world? Is the hate overblown? Well, it’s your opinion and yours alone, just be sure to really reflect on why, exactly, you hold that opinion. Beda’s talk made me realize just how nuanced the common jokes about the pain of YAML really are, so if you have a spare half hour, be sure to &lt;a href=&#34;https://www.youtube.com/watch?v=8PpgqEqkQWA&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;watch it&lt;/a&gt;. Even if you’re a diehard YAML advocate, he still does a great job of putting into words the things that likely haven&amp;rsquo;t even crossed many people’s minds.&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/8PpgqEqkQWA&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Building and Deploying a Cloud Native Application</title>
+      
+      <link>/workshops/cnd-deploy-practices/</link>
+      <pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/cnd-deploy-practices/</guid>
+      <description>
+
+        
+        &lt;p&gt;This is a workshop for developers and application operators
+new to cloud native concepts who wish to learn the basics of
+building and deploying a web application to a container
+orchestration platform.&lt;/p&gt;
+&lt;p&gt;In this workshop you will be presented:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The essence of &lt;em&gt;Cloud Native&lt;/em&gt; in a modern technology
+and practices context&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Why &lt;em&gt;Cloud Native&lt;/em&gt; practices are important to you,
+your employers and your customers&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You will also:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Build a simple blocking web application.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Containerize it for running on a container orchestration platform.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Deploy the application to a container orchestration platform.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Access your application in the public internet as an end-user.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Monitor the state of your application on the platform.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This workshop is the first in a series of workshops that explore
+cloud-native development and application operations practices.&lt;/p&gt;
+&lt;p&gt;The workshop also provides foundational background for other Tanzu
+Developer Center Spring, Spring Boot or Kubernetes content.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Configuring a Cloud Native Application</title>
+      
+      <link>/workshops/cnd-config-practices/</link>
+      <pubDate>Thu, 22 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/cnd-config-practices/</guid>
+      <description>
+
+        
+        &lt;p&gt;This is a workshop for developers and application operators
+new to cloud native concepts who wish to learn the basics of
+handling environmental configuration separately from a web application
+codebase using modern orchestration platform tools.&lt;/p&gt;
+&lt;p&gt;After completing the workshop, you will be able to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Explain configuration requirements of Cloud Native applications&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Explain configuration options available to Cloud Native applications&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Explain the concept of &lt;em&gt;Configuration Drift&lt;/em&gt;,
+why it can be a problem,
+and how to avoid it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This workshop is the second in a series of workshops that explore
+cloud-native development and application operations practices.&lt;/p&gt;
+&lt;p&gt;The workshop also provides foundational background for other Tanzu
+Developer Center Spring, Spring Boot or Kubernetes content.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Workshops: Getting Started with Carvel (formerly k14s)</title>
+      
+      <link>/workshops/lab-getting-started-with-carvel/</link>
+      <pubDate>Thu, 04 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/workshops/lab-getting-started-with-carvel/</guid>
+      <description>
+
+        
+        &lt;p&gt;Carvel&amp;rsquo;s GitHub contains several tools we created as a result of working with complex, multi-purpose tools like Helm. We believe that working with simple, single-purpose tools that easily interoperate with one another results in a better, workflow compared to the all-in-one approach chosen by Helm. We have found this approach to be easier to understand and debug.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Python Like A Pro: Managing Global Packages</title>
+      
+      <link>/guides/python/gs-python-installing-global-packages/</link>
+      <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/python/gs-python-installing-global-packages/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;why-you-need-this-guide&#34;&gt;Why You Need This Guide&lt;/h2&gt;
+&lt;p&gt;There are loads of super-useful Python-based tools available in the &lt;a href=&#34;https://pip.pypa.io/en/stable/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Python Package Installer&lt;/a&gt; &amp;mdash; also known as &amp;lsquo;pip&amp;rsquo;. &lt;a href=&#34;http://www.mypy-lang.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MyPy&lt;/a&gt; the static type checker, &lt;a href=&#34;https://flake8.pycqa.org/en/latest/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Flake8&lt;/a&gt; the awesome code linter, &lt;a href=&#34;https://black.readthedocs.io/en/stable/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Black&lt;/a&gt; the &amp;lsquo;uncompromising code formatter,&amp;rsquo; and &lt;a href=&#34;https://nicolargo.github.io/glances/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Glances&lt;/a&gt; the &amp;lsquo;eye on your system,&amp;rsquo; are all great examples. These are Python packages that are useful globally, across all your Python projects, and beyond!&lt;/p&gt;
+&lt;p&gt;But, as detailed in &lt;a href=&#34;https://packaging.python.org/guides/installing-stand-alone-command-line-tools/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pip&amp;rsquo;s CLI tools documentation&lt;/a&gt;, &amp;ldquo;&lt;em&gt;installing packages and their dependencies to the same global environment can cause version conflicts, and break dependencies that the operating system has on Python packages&lt;/em&gt;.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;Unsurprisingly, the bright folks in &amp;lsquo;python-land&amp;rsquo; have a solution to this problem &amp;mdash; in the form of &lt;a href=&#34;https://pipxproject.github.io/pipx/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;PipX&lt;/a&gt;. PipX is a tool that allows the installation of Python packages in an isolated environment. Because PipX isolates them, their installation won&amp;rsquo;t disrupt each other or your system.&lt;/p&gt;
+&lt;p&gt;Follow the steps below to get started with PipX.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-start&#34;&gt;Before You Start&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://ubuntu.com/download/desktop&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ubuntu 20.04 LTS&lt;/a&gt; provides the reference baseline operating system for this guide. Many Python developers use Linux, and Ubuntu is the most popular Linux distribution. Microsoft also distributes Ubuntu as part of the &lt;a href=&#34;https://ubuntu.com/wsl&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Windows Subsystem for Linux&lt;/a&gt;, so it&amp;rsquo;s available to most Windows 10 users. On Mac OS, most of the tools shown here are available from Homebrew.&lt;/p&gt;
+&lt;p&gt;When following this guide, it helps if you&amp;rsquo;re starting from a clean system. That way, any existing or additional Python installs can&amp;rsquo;t cause issues or confusion as you follow the steps below. If your system isn&amp;rsquo;t clean, try following this guide in a new virtual machine first, so you know what to expect when you try it for real.&lt;/p&gt;
+&lt;p&gt;Finally, if you&amp;rsquo;d prefer to watch a video on this guide, scroll down to the bottom of the page and hit &amp;lsquo;play.&amp;rsquo;&lt;/p&gt;
+&lt;h3 id=&#34;step-1-install-pip-and-pipx&#34;&gt;Step 1: Install Pip And PipX&lt;/h3&gt;
+&lt;p&gt;To install &lt;a href=&#34;https://pipxproject.github.io/pipx/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;PipX&lt;/a&gt;, you first need to install &lt;a href=&#34;https://pip.pypa.io/en/stable/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pip&lt;/a&gt; into your system&amp;rsquo;s Python environment. In Ubuntu &amp;mdash; and WSL environments based upon Ubuntu &amp;mdash; that means adding some packages from the built-in Ubuntu package manager like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo apt install python3-pip python3-venv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now those packages are installed, go ahead and install &lt;a href=&#34;https://pipxproject.github.io/pipx/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pipx&lt;/a&gt; using pip, the system version of Python, and the following commands:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now close your terminal for those changes to take effect.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;step-2-install-a-global-command-line-package-with-pipx&#34;&gt;Step 2: Install A Global Command Line Package With PipX&lt;/h3&gt;
+&lt;p&gt;Open a new terminal window and test that &lt;code&gt;pipx&lt;/code&gt; works by calling up pipx&amp;rsquo;s built-in help.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pipx --help
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The help details all the PipX commands. Now try installing the &lt;a href=&#34;https://nicolargo.github.io/glances/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Glances&lt;/a&gt; package globally using &lt;code&gt;pipx install&lt;/code&gt; as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pipx install glances
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After you see the message confirming the installation is complete, run the glances command-line tool by typing &lt;code&gt;glances&lt;/code&gt; at the prompt as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;glances
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The Glances tool will start and show you various live statistics about your computer.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/python/screenshots/gs-python-global-packages-screenshot-python-glances.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;What&amp;rsquo;s cool about &lt;a href=&#34;https://nicolargo.github.io/glances/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Glances&lt;/a&gt; is that it&amp;rsquo;s cross-platform, can run in the terminal, but also offers a way for you to access the machine stats over the network using a web browser. Pretty neat!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Quit glances by issuing the stop command &lt;code&gt;Ctrl-C&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To check the installation of Glances has not altered your system&amp;rsquo;s &lt;code&gt;pip&lt;/code&gt; packages, use the &lt;code&gt;pip list&lt;/code&gt; command.  Glances will &lt;em&gt;not&lt;/em&gt; appear on this list.&lt;/p&gt;
+&lt;p&gt;To see a list of tools installed by &lt;code&gt;pipx&lt;/code&gt;, use the &lt;code&gt;pipx list&lt;/code&gt; command. You will see that Glances &lt;em&gt;is&lt;/em&gt; present on this list.&lt;/p&gt;
+&lt;h3 id=&#34;step-3-run-a-tool-without-installation-with-pipx&#34;&gt;Step 3: Run A Tool Without Installation With PipX&lt;/h3&gt;
+&lt;p&gt;When you&amp;rsquo;re unsure if a package is right for you, PipX offers a way to try the package without installing it. Let&amp;rsquo;s try this feature using the fun &amp;mdash; but mostly useless &amp;mdash; &lt;code&gt;pycowsay&lt;/code&gt; package:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pipx run pycowsay mooooooo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first argument after &lt;code&gt;pipx run&lt;/code&gt; is always assumed to be the name of the package you would like to run. PipX will download &lt;code&gt;pycowsay&lt;/code&gt; and run it in a temporary virtual environment. Any arguments after the package name go straight to the package you&amp;rsquo;re running. The result of the command is the classic cow saying &lt;code&gt;moooooo&lt;/code&gt; as seen in the screenshot below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/python/screenshots/gs-python-global-packages-screenshot-python-pycowsay.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;If you decide that &lt;code&gt;pycowsay&lt;/code&gt; is definitely for you, you can install it permanently using the &lt;code&gt;pipx install&lt;/code&gt; command you saw in Step 2.&lt;/p&gt;
+&lt;h2 id=&#34;keep-leaning&#34;&gt;Keep Leaning&lt;/h2&gt;
+&lt;p&gt;To find out more about PipX, check out the &lt;a href=&#34;https://pipxproject.github.io/pipx/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;PipX website&lt;/a&gt;, the &lt;a href=&#34;https://pipxproject.github.io/pipx/docs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;PipX docs&lt;/a&gt; or try &lt;code&gt;pipx --help&lt;/code&gt;. To get help on a specific command type &lt;code&gt;pipx &amp;lt;command&amp;gt; --help&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you liked this guide, you might like the others in our &amp;lsquo;Python Like A Pro&amp;rsquo; series:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;Install Python Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-managing-python-packages&#34;&gt;Managing Python Project Dependencies Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;Build Python Docker Containers Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cf-gs&#34;&gt;Run Python In Production Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here&amp;rsquo;s the video to accompany this guide.&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/CKtaKhKOo-Y&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Python Like A Pro: Managing Project Dependencies</title>
+      
+      <link>/guides/python/gs-managing-python-packages/</link>
+      <pubDate>Wed, 19 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/python/gs-managing-python-packages/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;why-do-you-need-this-guide&#34;&gt;Why Do You Need This Guide?&lt;/h2&gt;
+&lt;p&gt;Suppose you&amp;rsquo;ve already mastered the fine art of &lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;installing multiple versions of Python&lt;/a&gt; on your computer using &lt;a href=&#34;https://github.com/pyenv/pyenv&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Pyenv&lt;/a&gt;. In that case, you&amp;rsquo;re probably keen to control your Python projects and the packages they use.&lt;/p&gt;
+&lt;p&gt;For a pro-developer, this means mastering some additional tools &amp;mdash; tools designed to help you maintain a healthy degree of separation between your &amp;lsquo;system&amp;rsquo; dependencies and your project dependencies. Without these tools, your system quickly becomes a tangled mess of incompatible packages that break your projects and disrupt your flow.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;This guide follows on where &amp;lsquo;&lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;Python Like A Pro: Installing Python&lt;/a&gt;&amp;rsquo; left off. To complete it, you&amp;rsquo;ll need the &lt;code&gt;pyenv&lt;/code&gt; tool installed on your system and Python 3.8.5 and Python 2.7.18, both installed using the &lt;code&gt;pyenv install&lt;/code&gt; command as discussed in that earlier guide.&lt;/p&gt;
+&lt;p&gt;Check you have Pyenv and the Python versions required using the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv versions
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If successful, you&amp;rsquo;ll see output similar to that below, confirming that &lt;code&gt;pyenv&lt;/code&gt; is working and that Python 3.8.5 and 2.7.18 are available. If not successful, go back to the &lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;earlier guide&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;* system &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt; by /home/ben/.pyenv/version&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  2.7.18
+  3.8.5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, if you&amp;rsquo;d prefer to watch a video on this guide, scroll down to the bottom of the page and hit &amp;lsquo;play.&amp;rsquo;&lt;/p&gt;
+&lt;h2 id=&#34;managing-python-project-dependencies&#34;&gt;Managing Python Project Dependencies&lt;/h2&gt;
+&lt;p&gt;As a rule of thumb, it&amp;rsquo;s best if each Python project you work on has its own set of dependencies, both on the version of Python it needs, but also on any dependencies you install via &lt;a href=&#34;https://pip.pypa.io/en/stable/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pip&lt;/a&gt;. This model is especially true if your work involves tens or even hundreds of Python projects &amp;mdash; like a microservices project.&lt;/p&gt;
+&lt;p&gt;In the past, giving each Python project its independence was difficult. There was no built-in way to achieve isolation between &lt;em&gt;all&lt;/em&gt; your Python projects.  Fortunately, the &lt;a href=&#34;https://github.com/pyenv/pyenv-virtualenv&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Pyenv &amp;lsquo;VirtualEnv&amp;rsquo;&lt;/a&gt; project can fix this issue, and it works with all Python versions including version 2.&lt;/p&gt;
+&lt;p&gt;Pyenv-virtualenv lets you:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;isolate Python projects using a workspace known as a &amp;lsquo;virtual environment.&amp;rsquo;&lt;/li&gt;
+&lt;li&gt;link a Python project to a specific Python version.&lt;/li&gt;
+&lt;li&gt;isolate the pip dependencies within a Python project.&lt;/li&gt;
+&lt;li&gt;automatically switch to the correct virtual environment for the current project.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Let&amp;rsquo;s get &amp;lsquo;hands-on&amp;rsquo; and take a closer look at &lt;code&gt;pyenv virtualenv&lt;/code&gt; in action.&lt;/p&gt;
+&lt;h3 id=&#34;step-1-create-a-python-385-project&#34;&gt;Step 1: Create A Python 3.8.5 Project&lt;/h3&gt;
+&lt;p&gt;Make a new folder and in this folder begin a new Python 3 project by adding a ready-made Python program file like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir python-3-project
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; python-3-project
+curl https://raw.githubusercontent.com/benwilcock/buildpacks-python-demo/master/web.py -o web.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;To see the sample code in the hello world program you just downloaded, use &lt;code&gt;cat web.py&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Now, still within the &lt;code&gt;python-3-project&lt;/code&gt; folder, create a new Python 3.8.5 virtual environment using &lt;code&gt;pyenv virtualenv &amp;lt;version&amp;gt; &amp;lt;project-name&amp;gt;&lt;/code&gt; like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv virtualenv 3.8.5 py3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then, activate the new &lt;code&gt;py3&lt;/code&gt; virtual environment within the &lt;code&gt;python-3-project&lt;/code&gt; folder as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv &lt;span class=&#34;nb&#34;&gt;local&lt;/span&gt; py3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;At this point, your prompt may change slightly to confirm that the virtual environment is active. The folder will contain a new hidden file called &lt;code&gt;.python-version&lt;/code&gt;. This file contains the name of the virtual environment currently active for this folder &amp;mdash; in this case, &lt;code&gt;py3&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# .python-version&lt;/span&gt;
+py3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;step-2-add-some-package-dependencies&#34;&gt;Step 2: Add Some Package Dependencies&lt;/h3&gt;
+&lt;p&gt;From this point on, any dependencies you install while in this folder will be specific to the &lt;code&gt;py3&lt;/code&gt; virtual environment. Add the &lt;a href=&#34;https://palletsprojects.com/p/flask/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Flask&lt;/a&gt; and &lt;a href=&#34;https://gunicorn.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Gunicorn&lt;/a&gt; packages as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pip install Flask gunicorn
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, when you list the currently installed pip packages with &lt;code&gt;pip list&lt;/code&gt;, the list displayed includes Flask and Gunicorn. The version of Gunicorn should be &lt;code&gt;20.x.x&lt;/code&gt; or higher because this was the first version designed exclusively for Python 3. Freeze the pip installed packages and their versions into a file with the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pip freeze &amp;gt; requirements.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The contents of the &lt;code&gt;requirements.txt&lt;/code&gt; file should be similar to those shown below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# requirements.txt&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;click&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;7.1.2
+&lt;span class=&#34;nv&#34;&gt;Flask&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;1.1.2
+&lt;span class=&#34;nv&#34;&gt;gunicorn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;20.0.4
+&lt;span class=&#34;nv&#34;&gt;itsdangerous&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;1.1.0
+&lt;span class=&#34;nv&#34;&gt;Jinja2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;2.11.2
+&lt;span class=&#34;nv&#34;&gt;MarkupSafe&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;1.1.1
+&lt;span class=&#34;nv&#34;&gt;Werkzeug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;1.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;step-3-test-the-application&#34;&gt;Step 3: Test The Application&lt;/h3&gt;
+&lt;p&gt;Use Gunicorn and Flask to run the &lt;code&gt;web.py&lt;/code&gt; application as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gunicorn --bind&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0.0.0.0:8080 web:app
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When Gunicorn starts, it reports its version as &lt;code&gt;20.x.x&lt;/code&gt; like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2020-08-19 10:37:08 +0100&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;11875&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;INFO&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; Starting gunicorn 20.0.4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, point your browser to &lt;code&gt;http://localhost:8080&lt;/code&gt; and you&amp;rsquo;ll be greeted with the legend &lt;strong&gt;&amp;ldquo;Hello, World!&amp;quot;&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;step-4-leave-the-project-folder&#34;&gt;Step 4: Leave The Project Folder&lt;/h3&gt;
+&lt;p&gt;Finally, leave the &lt;code&gt;python-3-project&lt;/code&gt; folder.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ..
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;py3&lt;/code&gt; virtual environment will deactivate itself, and your regular command prompt will reappear. The command &lt;code&gt;pyenv version&lt;/code&gt; will confirm which version of Python is currently active now you&amp;rsquo;ve left the &lt;code&gt;python-3-project&lt;/code&gt; folder.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# result of &amp;#39;pyenv version&amp;#39; (in my case)&lt;/span&gt;
+system &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt; by /home/ben/.pyenv/version&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Should you ever move back into the &lt;code&gt;python-3-project&lt;/code&gt; folder, pyenv will automatically activate the &lt;code&gt;py3&lt;/code&gt; virtual environment.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;step-5-rinse-and-repeat-with-python-2817&#34;&gt;Step 5: Rinse And Repeat With Python 2.8.17&lt;/h3&gt;
+&lt;p&gt;Repeat steps 1-4 above, but this time, create a folder called &lt;code&gt;python-2-project&lt;/code&gt; and use Python version 2.7.18 as the basis of your virtual environment. The updated commands for step 1 are as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir python-2-project
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; python-2-project
+pyenv virtualenv 2.8.17 py2
+pyenv &lt;span class=&#34;nb&#34;&gt;local&lt;/span&gt; py2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In step 2, install the same packages via &lt;code&gt;pip&lt;/code&gt;, but this time notice how the version of Gunicorn that pip installs changes to &lt;code&gt;19.x.x&lt;/code&gt;. Version 19 of Gunicorn was the last version to support Python 2.&lt;/p&gt;
+&lt;p&gt;In step 3, run your app in Gunicorn as before, but this time, you&amp;rsquo;ll notice that it&amp;rsquo;s Gunicorn version &lt;code&gt;19.x.x&lt;/code&gt; that has started:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2020-08-19 11:14:52 +0000&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;15150&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;INFO&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; Starting gunicorn 19.10.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;To discover more of what &lt;code&gt;pyenv&lt;/code&gt; can do for you, check out the &lt;a href=&#34;https://github.com/pyenv/pyenv&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pyenv website&lt;/a&gt; or try &lt;code&gt;pyenv --help&lt;/code&gt;. To get help on a specific command in pyenv type &lt;code&gt;pyenv &amp;lt;command&amp;gt; --help&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you liked this guide, you might find these others in our &amp;lsquo;Python Like A Pro&amp;rsquo; series useful:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;Install Python Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-installing-global-packages&#34;&gt;Managing Python Global Packages Like A Pro&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;Build Python Docker Containers Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cf-gs&#34;&gt;Run Python In Production Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here’s the video to accompany this guide:&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/7Id2EU0zjw8&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Python Like A Pro: How to Install Python</title>
+      
+      <link>/guides/python/gs-python-like-a-pro/</link>
+      <pubDate>Fri, 14 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/python/gs-python-like-a-pro/</guid>
+      <description>
+
+        
+        &lt;h3 id=&#34;why-do-you-need-this-guide&#34;&gt;Why do you need this guide?&lt;/h3&gt;
+&lt;p&gt;As a professional Python developer, you&amp;rsquo;ll be asked to work on a wide variety of projects. The tools you&amp;rsquo;ll use to do that work may need to change on a project-by-project basis. One day you may be maintaining some legacy code written in Python 2; the next day, you may be prototyping in the very latest version of Python 3.&lt;/p&gt;
+&lt;p&gt;And here lies the problem. The &lt;a href=&#34;https://www.jetbrains.com/lp/python-developers-survey-2019/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;2019 Python Developers Survey&lt;/a&gt; found that 66% of Python developers get their Python interpreter either from their operating system or from a downloaded installer. For these developers, switching between Python versions is not easy and could result in a broken system.&lt;/p&gt;
+&lt;p&gt;So in this guide, you&amp;rsquo;ll learn how to install many different versions of Python at the same time and discover how to switch between them with ease.&lt;/p&gt;
+&lt;h3 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h3&gt;
+&lt;p&gt;There&amp;rsquo;s a lot of different OS and package management choices out there.  But in the &lt;a href=&#34;https://www.jetbrains.com/lp/python-developers-survey-2019/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Python Survey&lt;/a&gt; mentioned earlier, Linux was shown to be the most popular OS. &lt;a href=&#34;https://ubuntu.com/download/desktop&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ubuntu 20.04&lt;/a&gt; has been chosen as the baseline for this guide because it&amp;rsquo;s the latest LTS of the most popular Linux distribution. Ubuntu is also used in the &lt;a href=&#34;https://ubuntu.com/wsl&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Windows Subsystem for Linux&lt;/a&gt;, so it&amp;rsquo;s available to most Windows 10 based developers. On Mac OS, most of the tools shown here can be added via Homebrew.&lt;/p&gt;
+&lt;p&gt;When following this guide, it helps if you&amp;rsquo;re starting from a clean system. That way, any existing or additional Python installs can&amp;rsquo;t cause issues or confusion as you follow the steps below. If your system isn&amp;rsquo;t clean, try following this guide in a new Ubuntu virtual machine first, just so you know what to expect.&lt;/p&gt;
+&lt;p&gt;Finally, if you&amp;rsquo;d prefer to watch a video on this guide, scroll down to the bottom of the page and hit &amp;lsquo;play.&amp;rsquo;&lt;/p&gt;
+&lt;h3 id=&#34;installing-python-like-a-pro&#34;&gt;Installing Python Like A Pro&lt;/h3&gt;
+&lt;p&gt;Having the ability to install and switch between Python versions in seconds &amp;mdash; without affecting your operating system &amp;mdash; will make your job much easier. Fortunately, there&amp;rsquo;s a tool that can help.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/pyenv/pyenv&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Pyenv&lt;/a&gt; is an open-source command-line tool that&amp;rsquo;s easy to install and takes care of the messy business of installing and managing multiple Python versions.&lt;/p&gt;
+&lt;p&gt;Pyenv lets you:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;install multiple versions of Python at the same time.&lt;/li&gt;
+&lt;li&gt;change your global version at any time.&lt;/li&gt;
+&lt;li&gt;use different Python versions &amp;lsquo;per-project&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;override your Python version with an environment variable.&lt;/li&gt;
+&lt;li&gt;search for commands present in multiple versions of Python at once.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Follow the steps below to install the &lt;code&gt;pyenv&lt;/code&gt; tool on your system.&lt;/p&gt;
+&lt;h4 id=&#34;step-1-getting-your-system-ready&#34;&gt;Step 1: Getting Your System Ready&lt;/h4&gt;
+&lt;p&gt;Ubuntu 20.04 ships with version 3.8.2 of Python pre-installed as the &amp;lsquo;system&amp;rsquo; version of Python. You&amp;rsquo;ll want to keep this, but it&amp;rsquo;s helpful to make it respond to all &lt;code&gt;python&lt;/code&gt; commands. By default, it will only respond to &lt;code&gt;python3&lt;/code&gt;. To fix this, you can install the &lt;code&gt;python-is-python3&lt;/code&gt; command like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo apt install python-is-python3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you&amp;rsquo;re not using Ubuntu 20.04, your system may already respond to the command &lt;code&gt;python&lt;/code&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;step-2-installing-pyenv&#34;&gt;Step 2: Installing Pyenv&lt;/h4&gt;
+&lt;p&gt;Installation is simple. A script in the open-source &lt;a href=&#34;https://github.com/pyenv/pyenv-installer&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pyenv-installer&lt;/a&gt; project installs everything you need onto your computer.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://pyenv.run &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After the script has run, you&amp;rsquo;ll need to add the following lines to the bottom of your &lt;code&gt;.bashrc&lt;/code&gt; file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;PATH&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$HOME&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;/.pyenv/bin:&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$PATH&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;eval&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;pyenv init -&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;eval&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;pyenv virtualenv-init -&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;If you&amp;rsquo;re new to Linux, you can do this by opening the Terminal application and typing &lt;code&gt;nano .bashrc&lt;/code&gt;. Nano uses arrows to navigate, &lt;code&gt;ctrl-o&lt;/code&gt; to write the changes out, and &lt;code&gt;ctrl-x&lt;/code&gt; to quit.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Once that&amp;rsquo;s done, close your terminal session (type &lt;code&gt;exit&lt;/code&gt;) and then open a new terminal.&lt;/p&gt;
+&lt;p&gt;Next, we need to add some system libraries so that Pyenv can build Python directly from the Python source code. This list may change from time to time, so always check for the latest advice in the &lt;a href=&#34;https://github.com/pyenv/pyenv/wiki/Common-build-problems&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Pyenv Wiki&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can check if your installation is ready with the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv doctor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If this command reports, &lt;code&gt;&amp;quot;Congratulations! You are ready to build pythons!&amp;quot;&lt;/code&gt; then you&amp;rsquo;re good to go.&lt;/p&gt;
+&lt;h4 id=&#34;step-3-installing-python-385&#34;&gt;Step 3: Installing Python 3.8.5&lt;/h4&gt;
+&lt;p&gt;First of all, to see the full list of the available Python versions &amp;mdash; there are a lot &amp;mdash; type the following command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv install --list
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s install the very latest version of Python &amp;mdash; which is 3.8.5 &amp;mdash; using the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv install 3.8.5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Pyenv will now download, build, and install the requested version of Python.&lt;/p&gt;
+&lt;p&gt;Finally, tell &lt;code&gt;pyenv&lt;/code&gt; to rehash its list of &amp;lsquo;shims&amp;rsquo; to make sure the new version of Python you just added is ready for use. Shims are the programs &lt;code&gt;pyenv&lt;/code&gt; uses to redirect your Python calls. Rehashing instructs &lt;code&gt;pyenv&lt;/code&gt; to install shims for all Python binaries known to &lt;code&gt;pyenv&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv rehash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;step-4-switching-between-python-versions&#34;&gt;Step 4: Switching Between Python Versions&lt;/h4&gt;
+&lt;p&gt;Now that Python 3.8.5 is installed, let&amp;rsquo;s take a look at the Python versions that &lt;code&gt;pyenv&lt;/code&gt; reports are available for use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv versions
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Your versions list might look something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;* system &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt; by /home/ben/.pyenv/version&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  3.8.5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;*&lt;/code&gt; next to &amp;lsquo;system&amp;rsquo; tells you that the system version of Python is currently the global default. To change the global default to the 3.8.5 release that you just installed, type:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv global 3.8.5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To check which version of Python your system is now using globally, ask Python for its version number like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;python -V
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The answer should be &amp;lsquo;Python 3.8.5.&amp;rsquo;&lt;/p&gt;
+&lt;p&gt;To switch back to your system version of Python, you can use the special &amp;lsquo;system&amp;rsquo; keyword like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv global system
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And that&amp;rsquo;s it. You can now install and switch between many different versions of Python any time you like!&lt;/p&gt;
+&lt;h3 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h3&gt;
+&lt;p&gt;To find out more about what pyenv can do for you, check out the &lt;a href=&#34;https://github.com/pyenv/pyenv&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;website&lt;/a&gt; or try &lt;code&gt;pyenv --help&lt;/code&gt;. To get help on a specific command type &lt;code&gt;pyenv &amp;lt;command&amp;gt; --help&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you liked this guide, you might find these others in our &amp;lsquo;Python Like A Pro&amp;rsquo; series useful:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-managing-python-packages&#34;&gt;Managing Python Project Dependencies Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-installing-global-packages&#34;&gt;Managing Python Global Packages Like A Pro&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;Build Python Docker Containers Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cf-gs&#34;&gt;Run Python In Production Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here&amp;rsquo;s the video to accompany this guide:&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/nXbe6Hmb_k0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

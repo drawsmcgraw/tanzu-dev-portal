@@ -1,0 +1,1516 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Kickoff</title>
+    <link>/tags/kickoff/</link>
+    <description>Recent content in Kickoff on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 15 Jun 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/kickoff/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Practices: 2x2 Prioritization</title>
+      
+      <link>/practices/2x2/</link>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/2x2/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Preparation: As a group, agree on 2 relevant prioritization criteria.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Examples: Impact vs. Likeliness, Value vs. Complexity, Risk vs. Ease of Mitigation&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create 2 perpendicular intersecting axes and label each axis with one of the chosen criteria.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/2x2/2x2-empty.png&#34; alt=&#34;Empty two by two grid&#34;  /&gt;&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Label the axes such that the top-right quadrant represents the most important/highest-priority. This is a convention that will make it easier when using this practice repeatedly.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Start by selecting an option at random and place it near the center.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Choose another option and, as a group, position it relative to other options on the grid, vertically and horizontally.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Avoid placing any 2 options on the same row or column. Each option should be clearly placed in a unique horizontal and vertical position on each axis to avoid any ambiguity.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Repeat step 4 until every option is positioned on the grid. The highest priority options should be in the top-right quadrant.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If the options are weighted towards a particular half or quadrant, you can reposition the options so that roughly half are on either side of each axis. This will remove ambiguity and make it easier to make prioritization decisions.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/practices/2x2/2x2-populated.png&#34; alt=&#34;Populated two by two grid&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You know you are done when your group has decided on an option (or options) to focus on.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;If there are too many priority solutions in the top right quadrant, re-draw the axes within that quadrant to further separate the solutions. Remember that this is possible because the axes are relative, not absolute. Keep adjusting until you land somewhere manageable.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/2x2/2x2-regrid.png&#34; alt=&#34;Re-drawn two by two axis grid&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Too many options can make this practice more difficult and time consuming. If there are 20+ items, consider spending time removing options that are irrelevant to the criterion selected.
+Involve people who can evaluate against the chosen prioritization criteria (e.g. a Designer should speak to usability, while an engineer should speak to technical complexity).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Develop the prompt for the 2x2 before the X/Y axes. If the axes don’t resonate with the prompt, the group will struggle with placement and focus.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When choosing qualifiers for the X and Y axes, consider:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Choose a less debatable qualifier for the Y axis. A qualifier with a stronger yes/no statement will help people with initial placement and allow the group to disqualify items (get them below the X axis) with less debate.&lt;/li&gt;
+&lt;li&gt;You want debate to happen along the X axis, so choose a qualifier which leaves more room for debate.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/insight-prioritization&#34;&gt;Insight Prioritization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/problem-prioritization&#34;&gt;Problem Prioritization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/solution-prioritization&#34;&gt;Solution Prioritization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Stack Ranking (coming soon.)&lt;/p&gt;
+&lt;p&gt;Dump and Sort (coming soon.)&lt;/p&gt;
+&lt;p&gt;Affinity Mapping (coming soon.)&lt;/p&gt;
+&lt;h2 id=&#34;variations&#34;&gt;Variations&lt;/h2&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/example-2.jpg&#34; alt=&#34;Two by two chart plotting problems by frequency and intensity&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/example-3.jpg&#34; alt=&#34;A group of people discusses priority in front of a whiteboard with two by two chart on it&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/problem-prioritization/example-5.jpg&#34; alt=&#34;Two by two chart with top problems prioritized&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/solution-prioritization/example-6.jpg&#34; alt=&#34;Digital two by two with prioritized solutions&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.productplan.com/glossary/2x2-prioritization-matrix/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;2×2 Prioritization Matrix from ProductPlan&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: 3 Column Retrospective</title>
+      
+      <link>/practices/3-column-retro/</link>
+      <pubDate>Mon, 03 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/3-column-retro/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; For distributed teams, use &lt;a href=&#34;https://miro.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Miro&lt;/a&gt; or a similar &amp;ldquo;digital whiteboard&amp;rdquo; and adapt the in-person aspects to the digital world, such as drawing and using sticky notes.&lt;/p&gt;
+&lt;p&gt;There are many online tools that support team retrospectives. We&amp;rsquo;ve listed several in the &lt;a href=&#34;#variations&#34;&gt;&amp;ldquo;For Remote Teams&amp;rdquo; section&lt;/a&gt; below.&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Draw three columns on the whiteboard or digital workspace:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What went well (“I’m glad that”)&lt;/li&gt;
+&lt;li&gt;Questions (“I’m wondering about”)&lt;/li&gt;
+&lt;li&gt;Opportunities (“It wasn’t so great that”)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Give each person 10 minutes to add items under each column, 1 idea per card. There is no limit to how many cards people can add, and everyone should feel free to freely add items to voice their ideas and concerns.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Give members 5 minutes to vote on the cards they feel are most important to discuss.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Start on a column and begin discussing the highest voted card (facilitators may choose to start on ‘What went well’ to start the retro on a positive note, but it is up to the individual where to begin). Be sure to give the author of the card time to further elaborate what he/she wrote.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For items which require follow-ups, add a card to the ‘Action Items’ section/column, asking for volunteers to be accountable for each action.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Ask for volunteers in pairs, so that no one person is responsible for an action item by themselves.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Move to the next column and discuss the highest rated card.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Continue steps 5-7 until all cards have been covered, or only 5 minutes remain.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: End this part of the retrospective with a “What went well” item. This ensures the retrospective discussion ends on a positive note.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For the remaining 5 minutes, review the Action Items, making sure each item has a person or pair assigned.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h3&gt;
+&lt;p&gt;Success is when the core team has a shared understanding of:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The most important things that happened during   the week, Sprint, project planning iteration, or whichever time-span is the subject of the retrospective&lt;/li&gt;
+&lt;li&gt;The challenges they are currently facing&lt;/li&gt;
+&lt;li&gt;The actionable steps they will take to try and improve&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;If this is the first retrospective run with the team, provide background and set the expectation on what a retrospective entails.&lt;/li&gt;
+&lt;li&gt;Keep conversations constructive and respectful&lt;/li&gt;
+&lt;li&gt;Consider holding retros on Wednesday. This will provide a couple of benefits. First, the action items can be acted upon immediately (next day) as opposed the following Monday. This will better track progress amongst team members. Second, members tend to be more engaged mid-week compared to end-of-week, providing greater engagement from every individual.&lt;/li&gt;
+&lt;li&gt;To successfully manage action items, start with a verb, be specific, include an achievable target date, and ensure there’s at least one owner&lt;/li&gt;
+&lt;li&gt;It’s important to manage the action Items from each retro - there is no benefit in performing retrospectives if the team does not act upon it to improve team dynamics&lt;/li&gt;
+&lt;li&gt;While some may choose to run a retrospective every two weeks, a weekly cadence provides an optimal feedback loop frequency for the team to proactively improve team dynamics.&lt;/li&gt;
+&lt;li&gt;Timebox discussion on each card to ensure you can cover as many cards in the retrospective.&lt;/li&gt;
+&lt;li&gt;To better keep track of Action Items from previous retrospectives, consider creating a Kanban board (‘Backlog’, ‘In Progress’, ‘Done’) on a whiteboard visible to the entire team (or on a Miro board if it is done remotely)&lt;/li&gt;
+&lt;li&gt;If possible, create a different environment when running the retro so that members can actively disconnect from the daily work tasks and solely focus on the retrospective. This may include moving to a different floor or providing snacks to the team.&lt;/li&gt;
+&lt;li&gt;At the end of the retrospective, consider asking the team whether there was any card not discussed which any individual feels strongly about.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/futurespective&#34;&gt;&amp;ldquo;Sailboat&amp;rdquo; Futurespective&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;variations&#34;&gt;Variations&lt;/h2&gt;
+&lt;h4 id=&#34;for-remote-teams&#34;&gt;For Remote Teams&lt;/h4&gt;
+&lt;p&gt;There are many free retrospective tools available.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://miro.com/miroverse/atlassian-team-plays-retrospective/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Team Retrospective Miro Template&lt;/a&gt; from Atlassian&lt;/li&gt;
+&lt;li&gt;Trello Template - &lt;a href=&#34;https://trello.com/b/0DnfRtxv/template-glad-sad-mad&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Glad, Sad, Mad&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/pivotal/postfacto&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Postfacto&lt;/a&gt; - open source and deployable by you.&lt;/li&gt;
+&lt;li&gt;Spreadsheets - You can always make a simple 3-column retro board using Google Sheets or Excel.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/3-column-retro/retro-3.png&#34; alt=&#34;3 Column Retrospective in Action&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Sometimes it&amp;rsquo;s worth paying for something that&amp;rsquo;s being actively maintained and enhanced. Here are a few options.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Pricing&lt;/th&gt;
+&lt;th&gt;Notes&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://funretro.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Fun Retro&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;GBP £84/month for 6 teams (£14/team/month)&lt;/td&gt;
+&lt;td&gt;Established tool.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.teamretro.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;TeamRetro&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $90/month for 6 teams ($15/team/month)&lt;/td&gt;
+&lt;td&gt;Established and feature-rich tool.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.retrium.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Retrium&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $29/team/month&lt;/td&gt;
+&lt;td&gt;Established and feature-rich tool.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.scatterspoke.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ScatterSpoke&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $225/100 users/month ($2.25/user/month)&lt;/td&gt;
+&lt;td&gt;Established and feature-rich.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.neatro.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Neatro&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $17/team/month&lt;/td&gt;
+&lt;td&gt;Simple UI.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.parabol.co/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Parabol&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $6/user/month&lt;/td&gt;
+&lt;td&gt;Open-sourced. Established.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.goreflect.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;goReflect&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;USD $2.67/user/month&lt;/td&gt;
+&lt;td&gt;Simple UI.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://reetro.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Reetro&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Free to sign up, used to have paid upgraded features.&lt;/td&gt;
+&lt;td&gt;Less established than other options.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;h4 id=&#34;example-using-postfacto&#34;&gt;Example using Postfacto&lt;/h4&gt;
+&lt;p&gt;There are many free retrospective tools available.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/3-column-retro/retro-1.png&#34; alt=&#34;3 Column Retrospective in Action&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;3-column-retro-with-fun-themes-using-miro&#34;&gt;3-Column Retro with fun themes using Miro&lt;/h4&gt;
+&lt;p&gt;Online tools like this allow for people to get more engaged with fun themes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/3-column-retro/retro-2.png&#34; alt=&#34;3 Column Retrospective in Miro&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://pragprog.com/titles/dlret/agile-retrospectives/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Agile Retrospectives - Making Good Teams Great&lt;/a&gt;  by Esther Derby and Diana Larsen, Foreword by Ken Schwaber&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/blog/how-to-run-a-really-good-retrospective&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;How to Run a Really Good Retrospective&lt;/a&gt; - Blog Post by Nicola Rushton&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/videos/measure-success-in-agile-retrospectives-enrico-teotti&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Measure Success in Agile Retrospectives&lt;/a&gt; – Video by Enrico Teotti&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Value Stream Map</title>
+      
+      <link>/practices/value-stream-map/</link>
+      <pubDate>Wed, 28 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/value-stream-map/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Explain the purpose of the workshop.&lt;/p&gt;
+&lt;p&gt;Using product development lifecycle as an example, you might say something like:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“To identify our product development life cycle, we’ll follow a feature from the moment user gives feedback (e.g. a story is written) to its deployment on production. We’ll focus on the current deployment process before the future state, because understanding what’s happening now will surface real blockers and stakeholders faster than an idealized workflow. Additionally, we want to discover not only the steps, but also the roles and the lead time of each steps.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Start with the current product development process. On one end of the whiteboard or section of the digital collaboration board, write the first step of your chosen value stream. On the other end, write the last step.&lt;/p&gt;
+&lt;p&gt;For product development life cycle, put “User Feedback” as a first step and “Release to Prod” as a last step.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If the team having trouble determining the end point, ask a question like &amp;ldquo;when would we consider the job done for this journey?&amp;rdquo;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have the group identify the high-level steps that take place from beginning to end in the value stream, being as detailed as possible. Write each step on a sticky note and place it in order on the whiteboard. Iterate as needed.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Ideally you’ll move from start to end but don’t get hung up on the order because you can easily move the sticky notes around. The idea is just to start generating as a team.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once the group is satisfied they’ve captured all of the high-level steps in the right order, loop through the flow again. This time, capture the following information about each step on another sticky note or on the whiteboard:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What happens at this step?&lt;/li&gt;
+&lt;li&gt;Where does it happen?&lt;/li&gt;
+&lt;li&gt;Who is responsible for this step? (e.g. is it automated or manual; when do they need to be involved; are they an employee or third party)&lt;/li&gt;
+&lt;li&gt;When can this step happen? (e.g. what must happen before it can proceed)&lt;/li&gt;
+&lt;li&gt;How long does this step take? (e.g. process time)&lt;/li&gt;
+&lt;li&gt;How much lead time is required?&lt;/li&gt;
+&lt;li&gt;What works well or is painful about this step?&lt;/li&gt;
+&lt;li&gt;How do we know this step is done?&lt;/li&gt;
+&lt;li&gt;How long does the whole value stream take and how does the team feel about it?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: These are example questions. Use whatever “lens data” that’s appropriate for your content to shape your picture of the problem. Care about handoffs? Capture them explicitly. Want to visualize system touch-points? Add in &lt;strong&gt;Service Blueprint&lt;/strong&gt;-type details. In short, capture what matters.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have the team take a step back to review the flow and adjust anything that feels incorrect.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When the value stream map feels the right visualization of current processes, calculate the total lead time for the whole process and discuss it with the team to find area that can be improved.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Repeat steps 2-6 for the &amp;ldquo;to be&amp;rdquo; process.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h3&gt;
+&lt;p&gt;You know you’re done when you have a visual value stream on the whiteboard and the team feels confident it accurately represents the current process.&lt;/p&gt;
+&lt;h2 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h2&gt;
+&lt;p&gt;Some teams are sensitive to the idea of calling out “waste” in their processes. Another way to frame the purpose of this activity is to call it an opportunity to increase efficiency.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The Seven Wastes of Product Development&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Partially done work (because we cannot release it)&lt;/li&gt;
+&lt;li&gt;Extra features (because they are unnecessary right now or perhaps always)&lt;/li&gt;
+&lt;li&gt;Relearning (because this takes time away from learning new things and releasing working software)&lt;/li&gt;
+&lt;li&gt;Hand-offs (because this leads to waiting, and adds communication)&lt;/li&gt;
+&lt;li&gt;Delays (because this slows the team down)&lt;/li&gt;
+&lt;li&gt;Task switching (because it leads to context switching which reduces our focus and slows us down)&lt;/li&gt;
+&lt;li&gt;Defects (because this adds work cycles)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/event-storming&#34;&gt;Event Storming&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/service-blueprint&#34;&gt;Service Blueprint&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;Path-to-production exercise&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;Example of a &lt;strong&gt;product development life cycle&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/value-stream-map/value-stream-map-3.jpg&#34; alt=&#34;Value Stream Map image&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.oreilly.com/library/view/value-stream-mapping/9780071828918/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Value Stream Mapping: How to Visualize Work and Align Leadership for Organizational Transformation&lt;/a&gt; by Mike Osterling &amp;amp; Karen Martin&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://codepunk.io/the-seven-wastes-of-software-development/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Seven Wastes of Software Development&lt;/a&gt; - Blog post by Michael Szul&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.researchgate.net/publication/313360479_Software_Development_Waste&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Software Development Waste&lt;/a&gt; - Conference paper by Todd Sedano&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.amazon.com/Lean-Software-Development-Agile-Toolkit/dp/0321150783&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Lean Software Development: An Agile Toolkit&lt;/a&gt; by Mary Poppendieck &amp;amp; Tom Poppendieck&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://cloud.vmware.com/community/2020/12/02/devops-processes-value-stream-mapping/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;DevOps Processes: Value Stream Mapping&lt;/a&gt; by Mandy Storbakken&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: &#34;Sailboat&#34; Futurespective</title>
+      
+      <link>/practices/futurespective/</link>
+      <pubDate>Fri, 16 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/futurespective/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Write or reveal the following prompt for the group:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Imagine that it’s half a year from now and you just heard back from the users of your product that they are extremely happy with it. In short - it’s everything they expected, and more.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Ask the team to take 10 minutes to write down one idea per sticky note what that goal or vision would look like.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Take 5 minutes to discuss and vote on the top 1 goal members have ideated on.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write or reveal the following prompt for the group to consider:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Imagine the actions you have done to achieve the said goal or vision. Which practices did you use and how did you do them? How did you work together as a team, with your stakeholders, customers, and users? What have you tried that worked out well?”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Ask the team to take 10 minutes to write down these positive practices.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write or reveal the following prompt for the group:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Next, imagine the problems (anchors) that you had along the way and how you dealt with them.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Take 10 minutes for members to scribble down the problems and/or impediments the team has experienced in the imaginary past.&lt;/p&gt;
+&lt;p&gt;Ask the team to take 10 minutes to write down ways they dealt with the problems.&lt;/p&gt;
+&lt;p&gt;In other words, what can the team do today to mitigate or minimize problems that may occur in the future that could impede on achieving the goal or vision?&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You know you are done when the team has a group of positive practices and assigned actions upon at the end of the exercise.&lt;/p&gt;
+&lt;h2 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Use futurespective templates (Sailboat, racecar, etc.) to help the team better visualize the exercise&lt;/li&gt;
+&lt;li&gt;Some Futurespectives may have additional sections (example: risks that may occur which should be proactively dealt with) to further facilitate the conversation on how to achieve the goal or vision.&lt;/li&gt;
+&lt;li&gt;Consider discussing the difference between a retrospective and futurespective at the beginning to avoid any confusion during the exercise&lt;/li&gt;
+&lt;li&gt;Templates (public): &lt;a href=&#34;https://metroretro.io/templates/the-sailboat-retrospective&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Public Trello Board with many Retrospective types, including Futurespectives.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;variations&#34;&gt;Variations&lt;/h2&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment.&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/futurespective/example.png&#34; alt=&#34;Design Studio Example&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://metroretro.io/templates/the-speed-car-and-the-abyss&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Speed Car Futurespective Miro Template&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Boris</title>
+      
+      <link>/practices/boris/</link>
+      <pubDate>Thu, 11 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/boris/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;After &lt;a href=&#34;/practices/event-storming&#34;&gt;Event Storming&lt;/a&gt;, using one color of sticky notes create one for each bounded context. Place on the board in a blob.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Create a legend identifying the bounded context, topic/queue, external system, UI.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/practices/boris/legend.jpeg&#34; alt=&#34;Example of Boris legend with stickies&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Discuss a thin slice of the flow and map out how each of the bounded contexts communicate with one another to complete the flow. Start with the happy path then move to unhappy paths.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If mapping more than one slice through the system, use different colored arrows for each. From a happy path perspective, how should the “to be” bounded contexts communicate with each other? From a non-happy path perspective, how should the “to be” system communicate with each other during a failure?&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If the event message payload is discussed, push to use the smallest message possible with the least number of unique keys to identify a unique bounded context through a synchronous web service lookup (“lean events, rich APIs”)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Draw a line from system to system as they talk, using different colors for &lt;strong&gt;synchronous&lt;/strong&gt; and &lt;strong&gt;asynchronous&lt;/strong&gt; communication. Add arrows to indicate if it is pushing or pulling.&lt;/p&gt;
+&lt;p&gt;Questions to think about:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What are the inputs and outputs for this bounded context?&lt;/li&gt;
+&lt;li&gt;Should the communication be through events or web services?&lt;/li&gt;
+&lt;li&gt;What are some of the cross cutting integrations that need to be included (e.g. notifications, monitoring, balancing, accounting, etc)?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/boris/step-3.jpg&#34; alt=&#34;Example of Boris diagram with sync and async flows&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Indicate if a queue is needed by adding them in a new sticky note of the same color for a queue/topic. Add in the lines for what systems are talking to it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Using a new sticky note of a different color, indicate if there are external systems as part of the flow. Add in the lines for how it is communicated with in the flow.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create SNAP lists on large sheets.&lt;/p&gt;
+&lt;p&gt;SNAP takes the understanding from the Boris diagram to understand the specific needs of every bounded context under the new proposed architecture. The SNAP exercise should be done for each bounded context and call out APIs, data needed, UIs, and risks that would apply to that bounded context. The backlog for the product will be created based upon the items identified.&lt;/p&gt;
+&lt;p&gt;Questions to think about:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What APIs need to be built for the Bounded context?&lt;/li&gt;
+&lt;li&gt;What External Systems integrate with the bounded context?&lt;/li&gt;
+&lt;li&gt;What data elements should the bounded context include?&lt;/li&gt;
+&lt;li&gt;Is there a UI for the bounded context?&lt;/li&gt;
+&lt;li&gt;What are the major risks for the bounded context?&lt;/li&gt;
+&lt;li&gt;What backlog stories need to be created to account for the work?&lt;/li&gt;
+&lt;li&gt;It helps to identify someone to be in charge of recording things on the SNAP sheets so that they can grow as things come out in general conversation during Boris.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/boris/snap.jpg&#34; alt=&#34;Example of SNAP output for a given context&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;As you discuss the flow and the interactions with the system you can add information to each bounded context&amp;rsquo;s sheet&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Move on to the next flow indicating this in a new color&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Add info on the new flow to the larger bounded context sheet on a new sticky note color&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Call out specific areas that are missing on the bounded context sheets that are missing.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;At the end of a Boris exercise, Services, APIs, Data and Event Choreography and a backlog of work starts becoming obvious.&lt;/p&gt;
+&lt;p&gt;SNAP is used to quickly document the outcomes of a Boris in real-time. Information is often grouped into APIs, Data, Pub/Sub, External Systems/UI, Stories, and Risks. The key artifact is a poster-sized sticky paper on a conference room wall or similar from a digital workspace, with one SNAP per node or service depicted on Boris. Typically there will be one SNAP per node or service depicted on Boris. Each SNAP consists of documentation about six categories: APIs, Data, External Systems/UI, Pub/Sub, Stories and Risks.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;Boris, &lt;a href=&#34;/practices/event-storming&#34;&gt;Event Storming&lt;/a&gt; and other techniques are part of the &lt;a href=&#34;/practices/swift-method&#34;&gt;Swift Method&lt;/a&gt; that we use for identifying the “real” problems in a large scale system and discover the North Star direction for your modernized system. Let the solution present itself through rhetorical questions. Practice a fine balance between driving to a solution vs organic evolution of the target architecture. Do not pre-optimize during the Boris exercise.&lt;/p&gt;
+&lt;h5 id=&#34;challenges-playbook&#34;&gt;Challenges Playbook&lt;/h5&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Challenge: It isn’t clear when to move from &lt;a href=&#34;/practices/event-storming&#34;&gt;Event Storming&lt;/a&gt; to Boris to SNAP.&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Once the room has slowed down putting business events up and have had at least one round of explicitly putting up pain points, you can try identifying the aggregate boundaries. If this proves difficult, you can step back and see if there are more events that might inform things.&lt;/p&gt;
+&lt;p&gt;Boris and SNAP are often done in parallel, with SNAP as a form of cataloging the conversation that’s happening organically around the Boris diagram.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Challenge: Sometimes we don’t have a clear bounded context at the end of an &lt;a href=&#34;/practices/event-storming&#34;&gt;Event Storming&lt;/a&gt; session.&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;This might mean you’re too zoomed in (you’re only looking at one process or part of a process inside a bounded context) or too zoomed out (you’ve mapped all or a large part of your whole company). Ask the room if this is true, and you can usually zoom in with the room you have at the moment. If you feel like you’re too zoomed in, you may need to come back for a second session with more stakeholders of the surrounding events.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Challenge: We don’t always end up with consensus on the ubiquitous language after a session.&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;This might be ok as long as the bounded context’s internal engineering and business teams agree on the vocabulary. If there is still fuzziness, you can look for points to collect up all of the nouns and/or verbs and workshop them together (either as a round during the session or with a dedicated session afterwards with the core team).&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Challenge: Many folks in the room aren’t engaged, or the conversation is only happening between one or two people.&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Ask folks to put away their laptops and phones. Set expectations on involvement early. Run rounds of the &lt;a href=&#34;/practices/event-storming&#34;&gt;Event Storming&lt;/a&gt; or Boris where you’re calling specific segments of your audience to layer on their particular perspective if whole-group mobbing is causing some voices to get lost. Remember, if you did the prep work to specifically identify why each person is in the room, you need something from each of them. You can use those identified reasons as a way to call on folks that aren’t participating to add a specific kind of information.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Challenge: It’s difficult to know who all we need for each phase of the process.&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;See the section on who to invite in the prep work section. Aim for a real or temporarily-imagined balanced team plus folks to represent your stakeholders and consumers.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Challenge: It’s difficult to find someone with facilitation experience to help run a session as the organization scales.&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;In many ways this is true about any practice, so similar wisdom and optimization can be applied here. See the prep step on identifying facilitators and being deliberate in this process rather than expecting everyone to show up without a specific role.&lt;/p&gt;
+&lt;p&gt;Also acknowledge that it will take several sessions to go through the “I do, we do, you do” process - more opportunities to facilitate can help mitigate this.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;Boris is an activity within the &lt;a href=&#34;/practices/swift-method&#34;&gt;Swift Method&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/event-storming&#34;&gt;Event Storming&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://miro.com/app/board/o9J_kzaSk0E=/&#34; target=&#34;_blank&#34;&gt;Event Storming and Boris Training Miro board&lt;/a&gt; for a detailed description of Boris and the &lt;a href=&#34;/practices/swift-method&#34;&gt;Swift Method&lt;/a&gt; of modernization for an Uber Eats-style application&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=7-fRtd8LUwA&#34; target=&#34;_blank&#34;&gt;Swift Method: Event Storming, Boris the Spider and Other Techniques&lt;/a&gt; (YouTube video) talk at ExploreDDD 2019 by Shaun Anderson&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=s5qeE4qii6M&#34; target=&#34;_blank&#34;&gt;A Deep Dive into Modernization Patterns to Get Your Mission Critical Applications to the Cloud&lt;/a&gt; (YouTube video)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/slides/the-modern-family-modernizing-applications-to-pivotal-cloud-foundry-getting-out-of-the-big-ball-of-mud&#34; target=&#34;_blank&#34;&gt;Tools to Slay the Fire Breathing Monoliths in Your Enterprise&lt;/a&gt; (blog post)&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Event Storming</title>
+      
+      <link>/practices/event-storming/</link>
+      <pubDate>Thu, 11 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/event-storming/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Explain the goal of Event Storming to the group. Project the image below if necessary. Identify a legend to include a description for events, bounded contexts, services, and pain points. Draw out a legend for all the stickies and explain basic Domain Driven Design (DDD) terms.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/event-storming/step-1.png&#34; alt=&#34;Gamestorming flow (credit: Dave Gray)&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Define “domain event” for the group:&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Example: &amp;ldquo;A &amp;lsquo;Domain Event&amp;rsquo; represents a state transition in the domain. It’s expressed as a verb in the past tense, such as &amp;lsquo;Order Placed&amp;rsquo; or &amp;lsquo;Refund Initiated&amp;rsquo;.”&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have the group &amp;ldquo;storm the business&amp;rdquo; process by writing a series of domain events on orange sticky notes, one per note.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Identify the beginning and end of the event storming session in order to create a sequence of events&lt;/li&gt;
+&lt;li&gt;Think about an event in the past tense&lt;/li&gt;
+&lt;li&gt;Focus on the happy path to begin with&lt;/li&gt;
+&lt;li&gt;Turn sticky notes sideways 45 degrees to indicate there are questions or a need for clarification&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/event-storming/example-2.jpg&#34; alt=&#34;Multiple event stickies encircled in a sample bounded context&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Place the domain events on the wall in time order from left to right&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;As you go through the storming session, you will uncover different aspects of the existing business process. Capture them as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mark &lt;strong&gt;trouble spots&lt;/strong&gt; with red sticky notes&lt;/li&gt;
+&lt;li&gt;Highlight &lt;strong&gt;external systems&lt;/strong&gt; with a new color sticky note and place them near the actions/events they trigger&lt;/li&gt;
+&lt;li&gt;Represent &lt;strong&gt;parallel processing&lt;/strong&gt; using vertical space&lt;/li&gt;
+&lt;li&gt;Highlight anything caused by a &lt;strong&gt;set time period&lt;/strong&gt; (like batch processes or cron jobs) in a new color sticky note and place them next to triggers they control&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/event-storming/example-1.png&#34; alt=&#34;Event Storming output leading to service node input for Boris&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;After all the events are posted, pair with the domain experts to post a locally ordered sequence of events and enforce a timeline. Crowdsource feedback as you go.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Enforcing a timeline triggers long awaited conversations and eventually STRUCTURE will emerge.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Crowdsourced feedback may uncover missing elements. Add more stickies as needed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;With the timeline enforced, look for bounded contexts (aka &amp;ldquo;domain aggregates&amp;rdquo;). Find groupings of events to see what they are acting on and transferring to the next part. Identify pivotal events that indicate a transition across subdomains.&lt;/p&gt;
+&lt;p&gt;Usually you&amp;rsquo;ll see a big group followed by fewer stickies then a larger group of stickies to indicate the transfer to a new bounded context. Look for vertical swim lanes of events that may indicate bounded contexts or business capabilities.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Draw boundaries and lines with arrows to show flow on the modeling surface. Use solid lines for bounded contexts. Draw lines with arrowheads to show direction of domain events flowing between bounded contexts.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If you want to start bounding models with less permanence use stickies to mark general areas and withhold drawing boundaries with permanent markers until your confidence justifies it.&lt;/p&gt;
+&lt;p&gt;You can also crowd-source identification of the nouns present on the event-storming board and place them to the side. Clumping these nouns together into related trees of data can help you form your aggregates.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;These event clumps or common groupings give us our notional service candidates (actors or aggregates depending on how rigid the team is with DDD definitions)  These will be used during the &lt;a href=&#34;/practices/boris&#34;&gt;Boris&lt;/a&gt; exercise.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Optional:&lt;/strong&gt; Identify the various views  that your users will need to carry out their actions, and important roles for various users. Use bright yellow stickies to identify user roles or &lt;a href=&#34;/practices/personas&#34;&gt;personas&lt;/a&gt;. Enrich the event storming with incremental notations using stickies for user roles, personas, money, or whatever is important in the domain.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;At the conclusion, be sure to take a lot of pictures so you can capture the output for later use&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You know you’ve finished when you have:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Identified bounded contexts and aligned domains&lt;/li&gt;
+&lt;li&gt;Mapped each bounded context with a business subdomain (it’s typically 1:1)&lt;/li&gt;
+&lt;li&gt;Manifested each bounded context/subdomain as a service in the target architecture&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;Event Storming is a group exercise to scientifically explore the domains and problem areas of a monolithic application.&lt;/strong&gt; The most concise description of the process of event storming comes from &lt;a href=&#34;https://www.oreilly.com/library/view/domain-driven-design-distilled/9780134434964/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Vaughn Vernon&amp;rsquo;s &lt;em&gt;Domain-Driven Design Distilled&lt;/em&gt;&lt;/a&gt; book and the color around the process inspired from &lt;a href=&#34;https://www.eventstorming.com/book/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Alberto Brandolini&amp;rsquo;s book &lt;em&gt;Event Storming&lt;/em&gt;&lt;/a&gt; has been improved on by VMware.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Event Storming is a technique used to visualize complex systems and processes.&lt;/strong&gt; This could range from monoliths to value streams. Event Storming &amp;ndash; inspired from &lt;a href=&#34;https://gamestorming.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;gamestorming&lt;/a&gt; &amp;ndash; is a technique for harnessing and capturing the information captured in a group’s minds. It surfaces conflicts and different perspectives of a complex system and bubbles up the top constraints and problem spots. As an event storming facilitator you have one job - create a safe environment for the exchange and output of ideas and data. The job is 50% technical facilitation and 50% soft people facilitation where you are reading body language. &lt;strong&gt;A single facilitator can typically orchestrate groups of 15-20.&lt;/strong&gt; For a group of 30 or more you need two facilitators.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Event Storming is usually conducted in two phases.&lt;/strong&gt; A high level event storm to identify the domains and then a subsequent ES into a top constraint - the core domain.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The implementation of Event Storming is stickies.&lt;/strong&gt; In its simplest form Event Storming is basically a facilitated group story telling. The stickies represent domain events -  or things that happened in the past. The trouble spots are identified by red stickies. The color of the stickies does not matter. What does matter is that you start simple and then add the notation incrementally. Start simple and then add the information in layers. Event Storming can serve many goals - break down a monolith into constituent bounded contexts, create a value stream - as a way to onboard employees, etc.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;There is no ONE correct style of Event Storming.&lt;/strong&gt; Every session is different from another based on the desired goals and outcomes. So don’t worry about getting it right- just do it and roll your own style. Multiple iterations of this activity may be needed a varying levels of abstraction to realize the outcomes needed&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;An Event Storming is only successful if the right people are involved.&lt;/strong&gt; This is a mix of business domain experts, customer executives, stakeholders, business analysts, software developers, architects, testers, and folks who support the product in production. Subject matter experts, product owners and developers that knows and understands the application domain. This process enables cross perspective conversation throughout the team as well as a standard definition of the terms used by both technical and non-technical team members.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Running a Cinderella exercise prior to Event Storming can be a great ice-breaker!&lt;/strong&gt; This exercise maps out the story of Cinderella. The PM will choose a start and end point and ask participants to scribe events that happened in the movie. Afterwards, storytelling will confirm everyone&amp;rsquo;s recollection of the movie. This exercise provides the team with a safe environment to learn about Event Storming without getting into the actual exercise.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;Event Storming is an activity within the &lt;a href=&#34;/practices/swift-method&#34;&gt;Swift Method&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/boris&#34;&gt;Boris&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=by8SdfF56vI&#34; target=&#34;_blank&#34;&gt;Deconstructing Monoliths With Domain Driven Design&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://miro.com/app/board/o9J_kzaSk0E=/&#34; target=&#34;_blank&#34;&gt;WeBeFoods Example Mock (via Miro)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;Motivation for the Event Storming exercise:&lt;br&gt;
+&lt;a href=&#34;https://www.amazon.com/Gamestorming-Playbook-Innovators-Rulebreakers-Changemakers/dp/0596804172&#34; target=&#34;_blank&#34;&gt;Gamestorming: A Playbook for Innovators, Rulebreakers, and Changemakers&lt;/a&gt; by Dave Gray, Sunni Brown, and James Macanufo&lt;/p&gt;
+&lt;p&gt;Children’s book-style big picture presentation on Event Storming:&lt;br&gt;
+&lt;a href=&#34;https://speakerdeck.com/rkelapure/event-storming&#34; target=&#34;_blank&#34;&gt;Event Storming: Games Are Not Just for Kids&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://leanpub.com/introducing_eventstorming&#34; target=&#34;_blank&#34;&gt;Event Storming&lt;/a&gt; by Alberto Brandolini (with related info at &lt;a href=&#34;https://www.eventstorming.com/&#34; target=&#34;_blank&#34;&gt;EventStorming.com&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;Domain Driven Design (DDD) - provides the theoretical underpinnings of decomposing monoliths. &lt;a href=&#34;https://www.amazon.com/Domain-Driven-Design-Distilled-Vaughn-Vernon/dp/0134434420&#34; target=&#34;_blank&#34;&gt;Domain-Driven Design Distilled&lt;/a&gt; by Vaughn Vernon is the perfect book to understand the science of DDD and how ES fits into the grander scheme of things - how do the ES artifacts translate into software design, architecture and an actual backlog.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Swift Method</title>
+      
+      <link>/practices/swift-method/</link>
+      <pubDate>Thu, 11 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/swift-method/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;/practices/event-storming&#34;&gt;Event Storm&lt;/a&gt; the system, using language that business and technical people understand.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Conduct a &lt;a href=&#34;/practices/boris&#34;&gt;Boris&lt;/a&gt; exercise that models the relationships between capabilities in a system. Conduct a SNAP that documents the technical capabilities identified during Boris in real time.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/boris/snap.jpg&#34; alt=&#34;SNAP analysis&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Identify thin slices of modernization.&lt;/p&gt;
+&lt;p&gt;Thin slices are short domain event flows. Vertical slices are identified by choosing short, domain event flows in the core domain and leveraging the services coming out of &lt;a href=&#34;/practices/boris&#34;&gt;Boris&lt;/a&gt; to produce those events. Think of them as the architectural components required to produce those events. Thin slices are informed by &lt;a href=&#34;/practices/event-storming&#34;&gt;Event Storming&lt;/a&gt;, &lt;a href=&#34;/practices/boris&#34;&gt;Boris&lt;/a&gt; and SNAP activities.
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: A vertical slice touches every layer of the architecture but implements only a sliver of functionality. For example, the vertical slice, “Allow a user to login with a password,” might add username and password fields to a user interface, implement server-side logic, and update the last login field on the database record. Slicing vertically is one of the toughest mind shifts to make for a team new to agile because it requires developers to interact with areas of the app with which they may be less familiar.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Prioritize the thin slices, with an eye to balancing business value, technical risk, and effort. The goal is to incrementally move the system toward behaving “the way it wants to;” the implementation of each successive slice gets us that much closer to this goal.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The thin slices become actionable when captured in the backlog as MVPs (Minimum Viable Products) or collections of stories. In some cases, VMware Tanzu Labs will partner with the customer team to identify and prioritize the thin slices, with an eye to balancing business value, technical risk, and effort.
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: In order to determine the right MVPs for your system you have to consider thin vertical end to end slices where these domains interact with one another. The MVPs map a path from &lt;a href=&#34;https://tanzu.vmware.com/content/blog/strangling-a-monolith-by-focusing-on-roi&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;ldquo;strangling the monolith&amp;rdquo;&lt;/a&gt; and leveraging tactical patterns to interact with the new domains and services.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;As you define the slices, leverage tactical implementation patterns  like &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer&#34; target=&#34;_blank&#34;&gt;anti-corruption layer&lt;/a&gt;, &lt;a href=&#34;https://en.wikipedia.org/wiki/Facade_pattern&#34; target=&#34;_blank&#34;&gt;Facade&lt;/a&gt;, &lt;a href=&#34;https://www.swiftbird.us/docket-choreography&#34; target=&#34;_blank&#34;&gt;Docket Based Choreography&lt;/a&gt;, and &lt;a href=&#34;https://martinfowler.com/bliki/StranglerFigApplication.html&#34; target=&#34;_blank&#34;&gt;Strangler&lt;/a&gt; so that the newer or strangled services coexist together with the older legacy system&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a backlog of prioritized user stories tied back to &lt;em&gt;&lt;strong&gt;goals&lt;/strong&gt;&lt;/em&gt; (practice coming soon) / OKRs. Map user stories to MVP or releases.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: User story impact mapping is a technique that can be applied for mapping stories to MVPs and releases. Here&amp;rsquo;s a &lt;a href=&#34;https://blog.eriksen.com.br/en/mapping-domain-knowledge&#34; target=&#34;_blank&#34;&gt;blog post&lt;/a&gt; that explains how to combine User Story Mapping with DDD.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Start hands-on experimentation, feedback, and iterative progress.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Quickly discover current system capabilities, create an aspirational target architecture, identify underlying areas of concern and agree on prioritization&lt;/li&gt;
+&lt;li&gt;Discuss and understand notional solutions, tactical fixes, potential trade-offs, framed in an incremental, measured way&lt;/li&gt;
+&lt;li&gt;Architectural work to validate / invalidate assumptions and help inform solutions / fixes&lt;/li&gt;
+&lt;li&gt;Develop approach to incrementally modernize services&lt;/li&gt;
+&lt;li&gt;Definition of solution(s) with associated business outcomes using an “everything on the table” approach&lt;/li&gt;
+&lt;li&gt;A  plan of tactical steps that starts small, scales &amp;amp; enables customer developers and architects to move forward confidently.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;A good facilitator should be able to drive out how a system should be designed based on supporting the business capabilities from a DDD perspective.&lt;/p&gt;
+&lt;p&gt;This notional architecture now represents a good first cut direction of the system. When used as a tool for modernizing existing systems, &lt;a href=&#34;/practices/boris&#34;&gt;Boris&lt;/a&gt; reveals the likely target architecture. Other activities in the Swift Method help define how to get from Current State to Modernized.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;Swift Method contains many activities, including:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/event-storming&#34;&gt;Event Storming&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/boris&#34;&gt;Boris&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://miro.com/app/board/o9J_kzaSk0E=/&#34; target=&#34;_blank&#34;&gt;Event Storming and Boris Training Miro board&lt;/a&gt; for a detailed description of &lt;a href=&#34;/practices/boris&#34;&gt;Boris&lt;/a&gt; and the Swift Method of modernization for an Uber Eats-style application&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/swift-method/example-1.png&#34; alt=&#34;Visual of the Swift Method&amp;amp;rsquo;s various steps and how they flow into one another&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/white-papers/tackle-application-modernization-in-days-and-weeks-not-months-and-years&#34; target=&#34;_blank&#34;&gt;Tackle Application Modernization in Days and Weeks, Not Months and Years&lt;/a&gt; (white paper)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=7-fRtd8LUwA&#34; target=&#34;_blank&#34;&gt;Swift Method: Event Storming, Boris the Spider and Other Techniques&lt;/a&gt; (YouTube video) talk at ExploreDDD 2019 by Shaun Anderson&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=s5qeE4qii6M&#34; target=&#34;_blank&#34;&gt;A Deep Dive into Modernization Patterns to Get Your Mission Critical Applications to the Cloud&lt;/a&gt; (YouTube video)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/slides/the-modern-family-modernizing-applications-to-pivotal-cloud-foundry-getting-out-of-the-big-ball-of-mud&#34; target=&#34;_blank&#34;&gt;Tools to Slay the Fire Breathing Monoliths in Your Enterprise&lt;/a&gt; (blog post)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.eventstorming.com/&#34; target=&#34;_blank&#34;&gt;EventStorming.com&lt;/a&gt; (website)&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Assumptions</title>
+      
+      <link>/practices/assumptions/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/assumptions/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; For distributed teams, use &lt;a href=&#34;https://miro.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Miro&lt;/a&gt; or a similar &amp;ldquo;digital whiteboard&amp;rdquo; and adapt the in-person aspects to the digital world, such as drawing and using sticky notes. For example: draw a digital 2x2 matrix rather than using a real whiteboard.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Define &amp;ldquo;assumption&amp;rdquo; for the team and explain why the team is doing this workshop&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;em&gt;&amp;ldquo;Assumptions are things that we believe to be true BUT which are not based on facts or evidence. Capturing them now will help us determine which questions we need to answer with research.&amp;quot;&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ask the team to generate assumptions for 3-5 minutes&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If the group is large (e.g. if this is during a Kickoff), err on the side of giving less time; otherwise, you&amp;rsquo;ll end up with an enormous number of sticky notes that will take a long time to sift through.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ask the team to make &lt;strong&gt;2 equal piles&lt;/strong&gt; of sticky notes: one with the most important assumptions, one with the least important&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have each person discard the pile of the least important assumptions. If using real sticky notes, rip them up &amp;ndash; how cathartic!&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Make a vertical line on the whiteboard marked &lt;strong&gt;&amp;ldquo;Higher Risk&amp;rdquo;&lt;/strong&gt; at the top and &lt;strong&gt;&amp;ldquo;Lower Risk&amp;rdquo;&lt;/strong&gt; at the bottom. If in person, use the painter&amp;rsquo;s tape or dry erase markers.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: &amp;ldquo;Risk&amp;rdquo; is meant to indicate the negative impact to the project that an assumption could have if it turns out to be wrong.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;As a group, share out and stack rank each assumption along the line, with no 2 sticky notes occupying the same vertical space.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If duplicate ideas surface, simply stack them on top of one another or discard the extras.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once that is complete make a horizontal line on the whiteboard, marked &lt;strong&gt;&amp;ldquo;Know A Lot&amp;rdquo;&lt;/strong&gt; on the left and &lt;strong&gt;&amp;ldquo;Know Little&amp;rdquo;&lt;/strong&gt; on the right.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Spread out each assumption horizontally along the new axis, being sure not to move anything vertically since riskiness was addressed earlier.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;At the end of the exercise, you&amp;rsquo;ll have a strong idea of which assumptions (top right quadrant) you&amp;rsquo;ll need to take action on, and—if time allows—can outline specifically what actions to take and who will own them&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If you don’t have time to address all quadrants, that&amp;rsquo;s okay; begin above the horizontal axis so that you&amp;rsquo;ll be sure to address the riskiest assumptions first&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Finally, memorialize the 2x2 in some way, such as a photo, screenshot, or saved to a shared workspace.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success happens when you have a fully arranged 2x2 grid that maps out the riskiest assumptions that must be addressed with research&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;This exercise could go long if there are many assumptions or you&amp;rsquo;re having trouble ranking each assumption. Your job is to keep discussions brief and remind the team that (a) there is no &amp;ldquo;right&amp;rdquo; answer and (b) the rankings are relative—the research we do will help us uncover anything we might have missed. Do your best to keep momentum moving forward.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;Exploratory Interviews - Coming soon!&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/assumptions/example-2.jpg&#34; alt=&#34;Image of a two by two chart plotting assumptions by likelihood to kill business and amount of evidence&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Draw Toast</title>
+      
+      <link>/practices/draw-toast/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/draw-toast/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;Paraphrased from &lt;a href=&#34;http://www.drawtoast.com/&#34; target=&#34;_blank&#34;&gt;DrawToast.com&lt;/a&gt;. Draw Toast is part of Tom Wujec&amp;rsquo;s Wicked Problem Solving™ toolkit to help you get playfully clear about what&amp;rsquo;s important in your organization. This work is licensed under a &lt;a href=&#34;https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US&#34; target=&#34;_blank&#34;&gt;Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Hand out paper and writing utensils to all the participants&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; For distributed teams, use &lt;a href=&#34;https://miro.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Miro&lt;/a&gt; or a similar &amp;ldquo;digital whiteboard&amp;rdquo; and adapt the in-person aspects to the digital world, such as drawing and using sticky notes.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;#variations&#34;&gt;More remote tips below in the Variations section&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Hand out markers and paper to everyone and ask participants to &lt;strong&gt;draw each step in the process of making toast&lt;/strong&gt;. Give them 2-3 minutes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have each person hold up their drawing for all to see and quickly explain their thought process. As facilitator, when relevant, point out trends or divergences that emerge. A follow up might be to ask how some could be made more lean or who thought it through in more steps versus just a few steps.&lt;/p&gt;
+&lt;p&gt;Some great questions to ask about individual drawings during Step 3 include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Could you tell me more about how you chose what to draw?&lt;/li&gt;
+&lt;li&gt;Why did you draw it the way you did?&lt;/li&gt;
+&lt;li&gt;How did you decide where to start?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now that everyone can see how even a simple prompt has led to so much differentiation between each drawing, tie this point back to the group:&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Example: &lt;em&gt;&amp;ldquo;Even on a simple, daily activity we are all familiar with getting alignment and holding a shared vision is difficult. In software building it is even more difficult and that’s why we’re here today—to create alignment, understand the degrees of complexity, and find ways to work toward common goals.&amp;quot;&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You’ll know you’re successful when you see the diversity in thought that each person put in to such a simple, daily activity everyone is familiar with.&lt;/p&gt;
+&lt;p&gt;You’ll know you’re even more successful when you can use this as an analogy throughout the project to point out how complex software building really is and how critical alignment is. For example, you might remind participants &lt;em&gt;&amp;ldquo;Just like when we were drawing toast, everyone has a different idea in their mind and we need to get those ideas out so we can get some alignment.&amp;quot;&lt;/em&gt;&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;Sometimes people say “Do I have to draw? I don’t know how to draw.” Generally, it’s okay to encourage that person to draw and let them know no one will pass judgement on their drawing, but if they really hold out and want to write something out that’s okay too. Generally people who choose not to draw regret not drawing when everyone else in the room has done drawings.&lt;/p&gt;
+&lt;p&gt;If short on time, have everyone tape theirs up and just ask participants to take a look during a break.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;h4 id=&#34;for-remote-teams&#34;&gt;For Remote Teams&lt;/h4&gt;
+&lt;p&gt;You can still facilitate this workshop even if the team is remote.&lt;/p&gt;
+&lt;p&gt;While many on-line collaboration solutions have drawing features, we suggest keeping thing low-tech: use paper and cameras.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Have people draw upon actual paper as described above.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Next, have them take a photo on their phone and upload the photo to the collaboration space.&lt;/p&gt;
+&lt;p&gt;Alternatively, people can send the photos to the facilitator via chat app, email, or even text message. They can even hold up their drawings to their webcam &amp;ndash; the facilitator can take a screenshot, then add the image to the collaboration space.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here&amp;rsquo;s a good example using a digital drawing tablet:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/draw-toast/example-6.jpg&#34; alt=&#34;Digital Drawing Toast&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/draw-toast/example-5.jpg&#34; alt=&#34;Drawing Toast&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/draw-toast/example-3.jpg&#34; alt=&#34;Drawing Toast&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/draw-toast/example-4.jpg&#34; alt=&#34;Drawing Toast&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/draw-toast/example-1.jpg&#34; alt=&#34;Drawing Toast&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.drawtoast.com/&#34; target=&#34;_blank&#34;&gt;DrawToast.com&lt;/a&gt; has a wealth of information including a TED talk and examples of others&#39; work on this subject. One particularly helpful resource is &lt;a href=&#34;http://www.drawtoast.com/downloads/DrawToast%20Systems%20Thinking%20Guide.pdf&#34; target=&#34;_blank&#34;&gt;A Primer in Systems Thinking&lt;/a&gt; (PDF).&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Goals &amp; Anti-Goals</title>
+      
+      <link>/practices/goals-anti-goals/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/goals-anti-goals/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Draw 4 columns on the whiteboard, one for each type of goal. Put anti-goal column off to the side to introduce it later.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Write out goal types on board along with prompts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Product goals&lt;/strong&gt; - “What impact do we want to have on our product space?”&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Business goals&lt;/strong&gt; - “What does success look like from a business perspective? Are there any important dates that we need to consider?”&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Project / Consulting engagement goals&lt;/strong&gt; - “As a team, what do we want to accomplish during our time together?”&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Anti-goals&lt;/strong&gt; - “What do we want to accomplish someday that would distract the team today?”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Give 7 minutes of brainstorming time. Ask everyone to write as many ideas as possible, 1 per sticky note.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In 2 minutes, have each person pick their top 2 goals for each category and rip up everything else. Remember to mention that this is okay!&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Go around the room and have everyone share out the 8 goals they selected. Have a co-facilitator put the sticky notes on the board in the right columns.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;As each person shares out, ask other people if they have a duplicate. Group these similar goals together.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When everyone has shared, hand out 6 dots per person and have everyone dot vote on their top 2 product, business, and project/consulting engagement goals (there’s no need to vote on the anti-goals). Circle the top 2 goals that emerge.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Confirm with key stakeholder(s) if there’s anything else really important that we’ve missed. If so, circle those as well or write them down.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is when the core team and stakeholders have a clear and shared understanding of the top product, business, project/consulting engagement, and anti-goals.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;If you have a lot of people in your Kickoff (e.g. 15+), consider asking everyone to organize themselves into groups of 3-4 people. This will simplify the process of sharing out and affinity mapping the generated goals.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/goals-anti-goals/example-3.jpg&#34; alt=&#34;Whiteboard with business, product, project, consulting engagement, and anti-goals written out&#34;  /&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Lean Business Canvas</title>
+      
+      <link>/practices/lean-business-canvas/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/lean-business-canvas/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Draw the lean business canvas on the whiteboard&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/lean-business-canvas/step-1.png&#34; alt=&#34;Lean business canvas template&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Explain the lean business canvas, one section at a time, using a common business as an example (e.g. “yelp”)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;After the explanation, start to ideate by having each participant write what they think should fill into &lt;strong&gt;one section&lt;/strong&gt; (starting with the “Problem”)&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If you are working with a larger group, instead of asking each person to fill in the canvas, you can split into groups of three.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;After 2-3 minutes, go around the room and “de-duplicate” the ideas (e.g. when Joe reads his sticky note and Sally wrote the same thing, Sally will not read that when her turn comes around)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Put all the &amp;ldquo;de-duplicated&amp;rdquo; stickies on the board (outside of the canvas) and proceed to “dot vote”&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The single or few stickies that have the most dots should be moved to the section they belong in.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Repeat steps 4-6 for each section in the following order:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Problem&lt;/li&gt;
+&lt;li&gt;Customer segments&lt;/li&gt;
+&lt;li&gt;Value proposition&lt;/li&gt;
+&lt;li&gt;Solution&lt;/li&gt;
+&lt;li&gt;Channels&lt;/li&gt;
+&lt;li&gt;Revenue streams&lt;/li&gt;
+&lt;li&gt;Cost structure&lt;/li&gt;
+&lt;li&gt;Customer metrics&lt;/li&gt;
+&lt;li&gt;Business metrics&lt;/li&gt;
+&lt;li&gt;Unfair advantage&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/lean-business-canvas/step-7.png&#34; alt=&#34;Lean business canvas template with order specified&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is when you have agreement and understanding of the product market fit, what value we’re delivering from a customer perspective, and an idea of how to sustain this business.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;If the group is small, dot voting may be unnecessary.&lt;/li&gt;
+&lt;li&gt;later sections may not need as much (or any) ideation time since participants may be able to shout out a shared set of answers.&lt;/li&gt;
+&lt;li&gt;Revenue is one way to measure success, that box could be renamed to &lt;strong&gt;Outcomes&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Update this business model week over week, it’s meant to be used over time.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/molecule-map&#34;&gt;Molecule Map&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/practices/personas&#34;&gt;Personas&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/lean-business-canvas/example-1.jpg&#34; alt=&#34;Sample filled out canvas&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.strategyzer.com/books/business-model-generation&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Business Model Generation book&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.innovationtactics.com/business-model-canvas-yelp/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Business Model Canvas Yelp&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Molecule Map</title>
+      
+      <link>/practices/molecule-map/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/molecule-map/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Review the &lt;a href=&#34;https://tanzu.vmware.com/content/vmware-tanzu-developer-center-slides/molecule&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Crafting a Molecule&lt;/a&gt; presentation and familiarize yourself with the concept, how to arrive at solutions, and how to identify anti-patterns.&lt;/p&gt;
+&lt;iframe src=&#34;//www.slideshare.net/slideshow/embed_code/key/1wtb5448ncVV6E&#34; width=&#34;595&#34; height=&#34;485&#34; frameborder=&#34;0&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34; style=&#34;border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;&#34; allowfullscreen&gt; &lt;/iframe&gt; &lt;div style=&#34;margin-bottom:5px&#34;&gt; &lt;strong&gt; &lt;a href=&#34;//www.slideshare.net/VMwareTanzu/molecule-242998322&#34; title=&#34;Molecule&#34; target=&#34;_blank&#34;&gt;Molecule&lt;/a&gt; &lt;/strong&gt; from &lt;strong&gt;&lt;a href=&#34;https://www.slideshare.net/VMwareTanzu&#34; target=&#34;_blank&#34;&gt;VMware Tanzu Developer Center Slides&lt;/a&gt;&lt;/strong&gt; &lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Draw an example molecule on the physical or digital whiteboard&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Persona — Who are we helping? (use the &lt;a href=&#34;/practices/personas&#34;&gt;Personas&lt;/a&gt; practice) practice if you haven&amp;rsquo;t created one yet)&lt;/li&gt;
+&lt;li&gt;Problem — What is one of their problems?&lt;/li&gt;
+&lt;li&gt;Solution — What is our solution?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/molecule-map/step-1.png&#34; alt=&#34;Blank Molecule Map&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Get into groups of 3 or ask each person to draw 3 circles on a piece of paper and draw multiple molecules. Come up with as many solutions as possible.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; Many video chat systems support &amp;ldquo;breakout rooms&amp;rdquo; or similar means to temporarily divide large groups into smaller groups for closer collaboration.&lt;/p&gt;
+&lt;p&gt;Also, feel free to use real paper and hold it up to the camera when the group is remote.&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/practices/molecule-map/step-2.png&#34; alt=&#34;Filled Molecule Map&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tape or upload molecules onto the board. Treat these as assumptions to go validate.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Silent read &amp;amp; dot vote to get down to 1 molecule&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is when you have agreement on the problem and solution (aka snapshot)to move forward with as a team. You’re doing it right when you are thinking of users as humans.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/molecule-map/example-1.jpg&#34; alt=&#34;Close up of a detailed molecule map drawn on a whiteboard with persona in the center&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/molecule-map/example-2.jpg&#34; alt=&#34;Close up of a molecule map drawn on a whiteboard&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Persona Ecosystem Map</title>
+      
+      <link>/practices/persona-ecosystem-map/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/persona-ecosystem-map/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Draw the primary persona on the whiteboard&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If necessary, you can split into groups first&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For each additional persona, draw:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A person&lt;/li&gt;
+&lt;li&gt;Their name&lt;/li&gt;
+&lt;li&gt;Write what keeps them up at night or a sentence that describes their goal&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Draw arrows connecting other personas that work with the primary persona&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: If desired, clarify the relationships by using verbs with arrows like &amp;ldquo;supports&amp;rdquo;, &amp;ldquo;reports to&amp;rdquo;, or &amp;ldquo;is supported by&amp;rdquo;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;The team has a shared understanding of all the users, what they care about, and how they relate to one another&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;Coming soon!&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Personas</title>
+      
+      <link>/practices/personas/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/personas/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; For distributed teams, use &lt;a href=&#34;https://miro.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Miro&lt;/a&gt; or a similar &amp;ldquo;digital whiteboard&amp;rdquo; and adapt the in-person aspects to the digital world, such as drawing and using sticky notes.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;#variations&#34;&gt;More remote tips below in the Variations section&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Divide room into small groups and give a piece of paper to each group&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;p&gt;Tip: If the group is small, you can also do this exercise individually&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; Many video chat systems support &amp;ldquo;breakout rooms&amp;rdquo; or similar means to temporarily divide large groups into smaller groups for closer collaboration.&lt;/p&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Define “persona” for the room and remind all participants this is a provisional persona—through research, what we think we know about this person will change and evolve&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Example: &amp;ldquo;A persona is a composite user used to create empathy on the team and allows you to understand the users well and design a product for them.”&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have each group (or person) fold paper into quadrants&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Draw a template on the board with the following in each quadrant:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Top left → drawing of person in a place, doing an action, with a name, face, emotion, and thought&lt;/li&gt;
+&lt;li&gt;Bottom left → demographics (facts like name, age, role, income, location, gender)&lt;/li&gt;
+&lt;li&gt;Top right → behaviors (things they do, likes, dislikes, hobbies)&lt;/li&gt;
+&lt;li&gt;Bottom right → needs and goals (wants, pains, hopes)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Have the teams (or individuals) work silently for 7-8 minutes to fill out paper according to the template&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ask each team to send a representative (or have each individual come) to the board to hang the persona and describe the person they created for the group&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Give each person four dots so that they can place a dot on the quadrant that they think best explains the user (so four dots in total, one on each quadrant across all papers)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tape together the highest scoring quadrants into one &amp;ldquo;master persona&amp;rdquo; and reads it to the group&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: It&amp;rsquo;s helpful to have scissors handy in case you need to cut quadrants apart in order to reassemble&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is when you&amp;rsquo;ve created a &amp;ldquo;master persona&amp;rdquo; and everyone in the room feels like it represents the target audience as best as possible.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;h4 id=&#34;for-remote-teams&#34;&gt;For Remote Teams&lt;/h4&gt;
+&lt;p&gt;You can still facilitate this workshop even if the team is remote.&lt;/p&gt;
+&lt;p&gt;While many on-line collaboration solutions have drawing features, we suggest keeping thing low-tech: use paper and cameras.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Have people draw upon actual paper as described above.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Next, have them take a photo on their phone and upload the photo to the collaboration space.&lt;/p&gt;
+&lt;p&gt;Alternatively, people can send the photos to the facilitator via chat app, email, or even text message. They can even hold up their drawings to their webcam &amp;ndash; the facilitator can take a screenshot, then add the image to the collaboration space.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/personas/example-1.png&#34; alt=&#34;Team member presenting a persona while everyone watches and listens&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/personas/example-2.png&#34; alt=&#34;Example of a paper-based persona showing the four winning quadrants&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/personas/example-3.png&#34; alt=&#34;Example of a paper-based persona&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/personas/example-5.jpg&#34; alt=&#34;Example of a digital persona template&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Risks &amp; Mitigations</title>
+      
+      <link>/practices/risks-and-mitigations/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/risks-and-mitigations/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Have the group silently write project risks and obstacles this team may face. One item per sticky note.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Provide an example of a risk or obstacle. For example, &amp;ldquo;We will be launching code at a different pace than other teams - there may be dependencies and blockers.&amp;rdquo;
+Tip: It may help to list the different types of risks. Business risks (&amp;ldquo;Compliance standards may alter our delivery approach&amp;rdquo;) and team risks (&amp;ldquo;Members are situated in different time zones&amp;rdquo;) should be considered along with technical risks.&amp;quot;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ask each person to select their top 5 risks and obstacles&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Split the group into pairs. Ask each pair to plot their risks together on the axes they draw.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;&lt;strong&gt;Remote Tip:&lt;/strong&gt; Many video chat systems support &amp;ldquo;breakout rooms&amp;rdquo; or similar means to temporarily divide large groups into smaller groups for closer collaboration.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Each pair should grab one sheet of paper or section of the digital whiteboard and draw axes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;X-axis: &lt;strong&gt;Easy to Mitigate&lt;/strong&gt; to &lt;strong&gt;Hard to Mitigate&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Y-axis: &lt;strong&gt;Low Risk&lt;/strong&gt; to &lt;strong&gt;High Risk&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Check in on the groups and move each group forward if they are moving faster than others&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/practices/risks-and-mitigations/step-3.png&#34; alt=&#34;2x2 with labeled axes&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Instruct each team to choose the top 2 risks from the high risk section that they would like to share out&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ask the teams to brainstorm &lt;strong&gt;one&lt;/strong&gt; (1) mitigation strategy for each of their top 2 risks&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Go around the room and have each pair read &lt;strong&gt;one&lt;/strong&gt; (1) risk and &lt;strong&gt;one&lt;/strong&gt; (1) mitigation strategy.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Group similar risks/mitigations into categories. For example, &amp;ldquo;technical risks&amp;rdquo;, &amp;ldquo;business risks&amp;rdquo;, &amp;ldquo;product risks&amp;rdquo;, etc.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;Success is when you have a shared understanding of the biggest risks and have a set of actions items to get started with&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Ensure that there is equal representation of different disciplines present&lt;/li&gt;
+&lt;li&gt;Try to time box explanations in order to keep things succinct&lt;/li&gt;
+&lt;li&gt;Create a space in which people feel comfortable being honest by setting up the right context for the session&lt;/li&gt;
+&lt;li&gt;Curtail finger pointing or unkind feedback&lt;/li&gt;
+&lt;li&gt;Ensure that the actions are actionable and not too general e.g., “Don’t do this…”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/risks-and-mitigations/example-2.jpg&#34; alt=&#34;Whiteboard table showing risks in one column and related mitigation strategies in another&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Stakeholder Map</title>
+      
+      <link>/practices/stakeholder-map/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/stakeholder-map/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Provide all attendees at Kickoff with a large sticky note and have them write their:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Name&lt;/li&gt;
+&lt;li&gt;Title&lt;/li&gt;
+&lt;li&gt;Department&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Organize the sticky notes on the whiteboard before starting activity, placing the core team in the center, surrounded by clustered departments and project sponsors&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Note: A core team member is someone who will be working on the project full-time&lt;/p&gt;
+&lt;/div&gt;
+
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: Creating a &amp;ldquo;straw man&amp;rdquo; version of the stakeholder map makes it easier for participants to edit what they see vs. create a map from scratch&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Make sure people have name tags beforehand, it helps when calling on people&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Walk through each &amp;ldquo;straw man&amp;rdquo; group and ask participants how they could support the core team&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create circles for departments and teams and connect people and/or teams with lines and directional arrows&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Star key points of contact, especially if a department circle contains multiple people&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You&amp;rsquo;ve succeeded when there exists a shared understanding of stakeholders involved so that teams can establish relationships, dive deeper where necessary and communicate appropriately.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;This exercise has a tendency to go long. Your job is to keep each description brief and give the team people to follow up with.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;h3 id=&#34;variations&#34;&gt;Variations&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;preceding&#34;&gt;Preceding&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h3 id=&#34;following&#34;&gt;Following&lt;/h3&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;Coming soon!&lt;/p&gt;
+&lt;h3 id=&#34;recommended-reading&#34;&gt;Recommended reading&lt;/h3&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Practices: Team Values</title>
+      
+      <link>/practices/team-values/</link>
+      <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/team-values/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;how-to-use-this-method&#34;&gt;How to Use this Method&lt;/h2&gt;
+&lt;h3 id=&#34;sample-agenda--prompts&#34;&gt;Sample Agenda &amp;amp; Prompts&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Write the following prompts on the whiteboard:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;&amp;ldquo;We believe&amp;hellip;&amp;quot;&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&amp;ldquo;We value&amp;hellip;&amp;quot;&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&amp;ldquo;We respect&amp;hellip;&amp;quot;&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&amp;ldquo;We ____________&amp;hellip;&amp;quot;&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set a timer for 6 minutes and have the team silently generate value statements using the prompts on the board. Each value statement should be on its own sticky note.&lt;/p&gt;
+
+&lt;div class=&#34;callout td-box--gray-darkest p-3 mx-5 border-bottom border-right border-left border-top&#34;&gt;
+    &lt;p&gt;Tip: You can play some light background music (ideally instrumental) to help relax the atmosphere during generation&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Go around the room individually and ask each team member to share a value statement and their thinking behind it (especially if it’s not obvious). Collect any similar value statements from other team members and place the groups/themes in rows on the whiteboard&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/team-values/step-3.png&#34; alt=&#34;Illustration of team value sticky notes clustered into groups&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Repeat until all sticky notes have been shared and are grouped on the whiteboard&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Thank the team for the great content and explain that they will be typed up and summarized. Take a picture of the output.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Post-Workshop Actions&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Type up the sticky notes written by the team, keeping them grouped. Be sure this document is in the team’s shared drive/folder&lt;/li&gt;
+&lt;li&gt;Summarize each group with one value statement. This might be an umbrella sentence that describes the group or one of the value statements in that group.&lt;/li&gt;
+&lt;li&gt;Take the list of summarized value statements and compile them into a single document. Print it out and hang it up in the team area.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;successexpected-outcomes&#34;&gt;Success/Expected Outcomes&lt;/h4&gt;
+&lt;p&gt;You know you’re done when you’ve created a set of agreed on team values that can be put up in the team area and referred to during the project and/or consulting engagement.&lt;/p&gt;
+&lt;h4 id=&#34;facilitator-notes--tips&#34;&gt;Facilitator Notes &amp;amp; Tips&lt;/h4&gt;
+&lt;p&gt;Every member of the “core” team should be involved in this activity. A helpful way to think about the “core” team is it’s the folks who will be working full time together, ideally co-located, for the lifecycle of the project and/or consulting engagement.&lt;/p&gt;
+&lt;p&gt;These team values can be leveraged again at the end of the project and/or consulting engagement if you decide to do a How We Work transition activity. This will allow the team to adjust their values and identify aligned practices they’ve done during the engagement to keep doing after they return home.&lt;/p&gt;
+&lt;h2 id=&#34;related-practices&#34;&gt;Related Practices&lt;/h2&gt;
+&lt;p&gt;Coming soon: How We Work&lt;/p&gt;
+&lt;h2 id=&#34;real-world-examples&#34;&gt;Real World Examples&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/team-values/example-1.png&#34; alt=&#34;Typed up list of grouped team values with a summarized value statement for each group&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/practices/team-values/example-2.jpeg&#34; alt=&#34;Summarized value statements up on the wall in team project area&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;recommended-reading&#34;&gt;Recommended Reading&lt;/h2&gt;
+&lt;p&gt;None at the moment&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

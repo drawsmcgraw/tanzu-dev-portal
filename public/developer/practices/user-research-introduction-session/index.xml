@@ -1,0 +1,351 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – User Research Introduction Session</title>
+    <link>/practices/user-research-introduction-session/</link>
+    <description>Recent content in User Research Introduction Session on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 14 May 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/practices/user-research-introduction-session/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Practices: User Research: Biases, DOs &amp; DON’Ts</title>
+      
+      <link>/practices/user-research-introduction-session/dos-and-donts/</link>
+      <pubDate>Wed, 09 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/practices/user-research-introduction-session/dos-and-donts/</guid>
+      <description>
+
+        
+        &lt;p&gt;Biases to be aware of during interviews as well as several “dos &amp;amp; don’ts” to consider while conducting research.&lt;/p&gt;
+&lt;h3 id=&#34;research-is-not&#34;&gt;RESEARCH IS NOT&amp;hellip;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;A demo to sell a product&lt;/li&gt;
+&lt;li&gt;Word for word everything the user wants, sometimes known as “Requirements Gathering”. We look for pains, gaps and needs. We dig deeper to ask why they want something, when they last needed it &amp;amp; build a timeline for such functionality.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;research-biases&#34;&gt;RESEARCH BIASES&lt;/h3&gt;
+&lt;p&gt;Biases can and will interfere with gathering valuable and accurate research. Be aware of the following biases:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Social Desirability Bias (participant)
+&lt;ul&gt;
+&lt;li&gt;Answer questions in a way that will lead to them being liked &amp;amp; accepted&lt;br&gt;
+&lt;em&gt;To counteract&lt;/em&gt;: positive reinforcement of criticism or negative feedback&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Sponsor Bias (participant)
+&lt;ul&gt;
+&lt;li&gt;Feelings about the sponsor, such as a company, client, or stakeholder, may bias their answers&lt;br&gt;
+&lt;em&gt;To counteract&lt;/em&gt;: Stay neutral about sponsor feedback&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Confirmation Bias
+&lt;ul&gt;
+&lt;li&gt;Using participants answer to confirm their own belief. We tend to remember points that support our hypothesis and filter out points that disprove.&lt;br&gt;
+&lt;em&gt;To counteract&lt;/em&gt;: Re-evaluate participant&amp;rsquo;s expressions, perform &lt;a href=&#34;/practices/research-synthesis/&#34;&gt;research synthesis&lt;/a&gt; as a group, challenge preexisting assumptions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Leading question and wording Bias
+&lt;ul&gt;
+&lt;li&gt;Elaborating on a participant&amp;rsquo;s answer puts words into their mouth&lt;br&gt;
+&lt;em&gt;To counteract&lt;/em&gt;: Use participant’s own words, avoid summarizing and ask them to summarize once more instead&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;research-interview-dos-and-donts&#34;&gt;RESEARCH INTERVIEW DOS AND DON&amp;rsquo;TS&lt;/h3&gt;
+&lt;p&gt;Below is a list of interview dos and don’ts that you can go over with your team to help them craft questions that draw insightful information from people.&lt;/p&gt;
+&lt;h4 id=&#34;do-start-the-interview-with-simple-questions&#34;&gt;Do: Start the interview with simple questions.&lt;/h4&gt;
+&lt;h5 id=&#34;dont-start-with-hard-questions-ease-into-them&#34;&gt;Don’t start with hard questions. Ease into them.&lt;/h5&gt;
+&lt;p&gt;Starting with easy topics will help people get relaxed, comfortable, and talking.&lt;/p&gt;
+
+
+
+
+
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Good Question&lt;/th&gt;
+&lt;th&gt;Bad Question&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Tell me a little bit about what you do?&lt;/td&gt;
+&lt;td&gt;You answered that you hate __ in our recruiting survey. Why do you hate ___ ?&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;do-ask-open-ended-questions-with-what-how-and-why&#34;&gt;Do: Ask open-ended questions with “What”, “How” and “Why”.&lt;/h4&gt;
+&lt;h5 id=&#34;dont-ask-leading-questions-or-lead-users-through-tasks&#34;&gt;Don’t ask leading questions or lead users through tasks.&lt;/h5&gt;
+&lt;h5 id=&#34;dont-ask-questions-with-did-is-or-would-that-provide-only-yes-or-no-answers&#34;&gt;Don’t ask questions with “Did”, “Is”, or “Would” that provide only yes or no answers.&lt;/h5&gt;
+&lt;p&gt;The goal is to hear people speak in their own words as much as possible. It’s very easy for people to say they would buy your product until they actually have to pay. Past behavior is the best predictor of future behavior.&lt;/p&gt;
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Good Question&lt;/th&gt;
+&lt;th&gt;Bad Question&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;How are you doing?&lt;/td&gt;
+&lt;td&gt;Are you having a good day?&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Can you tell me the whole story of? Then what?&lt;/td&gt;
+&lt;td&gt;Do you like this and find this helpful?&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Why did you do that?&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;How did you do that?&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;do-seek-concrete-stories-past-actions--behaviors&#34;&gt;Do: Seek concrete stories, past actions &amp;amp; behaviors.&lt;/h4&gt;
+&lt;h5 id=&#34;dont-seek-generalizations-or-ask-about-future-behavior&#34;&gt;Don’t seek generalizations or ask about future behavior.&lt;/h5&gt;
+&lt;p&gt;The goal is to understand what happened in their past to give us clues about why they think or feel things today.&lt;/p&gt;
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Good Question&lt;/th&gt;
+&lt;th&gt;Bad Question&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Can you talk about the last time you used this?&lt;/td&gt;
+&lt;td&gt;Do you typically do this?&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;What did you do that time and why was it different?&lt;/td&gt;
+&lt;td&gt;What do you normally do?&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;What do you think about this product?&lt;/td&gt;
+&lt;td&gt;Would you pay for this?&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Tell me about the last time you had a painful experience with this product.&lt;/td&gt;
+&lt;td&gt;What do you want?&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;do-give-people-time-to-answer-the-question&#34;&gt;Do: Give people time to answer the question.&lt;/h4&gt;
+&lt;h5 id=&#34;dont-fill-in-silence-with-more-questions&#34;&gt;Don’t fill in silence with more questions.&lt;/h5&gt;
+&lt;p&gt;The goal is to give people space to think because being interviewed is difficult. You can also use silence as a way to extract even more information that people may be hesitant to give. Related, also feel free to move forward if the conversation is digressing or come back to the question if someone is having a hard time answering.&lt;/p&gt;
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Good Behavior&lt;/th&gt;
+&lt;th&gt;Bad Behavior&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;em&gt;Silence&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;Interrupting while interviewee is speaking&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;do-nod-and-say-less-the-interviewee-is-always-right&#34;&gt;Do: Nod and say less. The interviewee is always right.&lt;/h4&gt;
+&lt;h5 id=&#34;dont-correct-or-contradict-a-research-participant-if-they-do-something-wrong&#34;&gt;Don’t correct or contradict a research participant if they do something &amp;ldquo;wrong&amp;rdquo;.&lt;/h5&gt;
+&lt;p&gt;The goal is to get people speaking as honestly as possible and to encourage them to feel it’s okay when they don’t understand how to use something in an interview. Correcting interviewees makes them feel that they are being tested and they can easily become afraid to speak their mind for fear of looking dumb.&lt;/p&gt;
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Good Interviewer Behavior&lt;/th&gt;
+&lt;th&gt;Bad Interviewer Behavior&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;User: This part doesn’t make sense. Is it supposed to do that?&lt;br&gt;&lt;br&gt;Interviewer: What do you think it should do?&lt;br&gt;&lt;br&gt;User: I think it would swap out all the pictures.&lt;br&gt;&lt;br&gt;Interviewer: There is no actual answer here, we want to learn about what you expect. Thanks!&lt;/td&gt;
+&lt;td&gt;User: This part doesn’t make sense. Is it supposed to do that?&lt;br&gt;&lt;br&gt;Interviewer: Oh, it&amp;rsquo;s a slideshow and it&amp;rsquo;s just broken in the prototype. You’re supposed to tap on the arrow and the next image should enter the page.&lt;br&gt;&lt;br&gt;User: Oh I didn’t see that, sorry.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;do-actively-listen-and-dig-deeper-with-why-questions&#34;&gt;Do: Actively listen and dig deeper with “why” questions.&lt;/h4&gt;
+&lt;h5 id=&#34;dont-ignore-users-when-they-are-struggling-in-silence-or-they-show-surprise&#34;&gt;Don’t ignore users when they are struggling in silence, or they show surprise.&lt;/h5&gt;
+&lt;h5 id=&#34;dig-deeper-and-ask-why-they-are-reacting-a-certain-way&#34;&gt;Dig deeper and ask why they are reacting a certain way.&lt;/h5&gt;
+&lt;p&gt;The goal is to pay attention to the user as they are speaking and feel comfortable going off script when you see or hear something interesting. It can be easy to read straight off the script without asking follow up questions but it means that we miss out on something that may be valuable for us to know.&lt;/p&gt;
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Good Interviewer Behavior&lt;/th&gt;
+&lt;th&gt;Bad Interviewer Behavior&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Interviewer: What do you think this page does?&lt;br&gt;&lt;br&gt; User: Oh! I like that. Anyway, I think this page tells me my sleep duration.&lt;br&gt;&lt;br&gt; Interviewer: Let’s rewind for a second, what did you mean by “Oh! I like that.”?&lt;/td&gt;
+&lt;td&gt;Interviewer: What do you think this page does?&lt;br&gt;&lt;br&gt; User: Oh! I like that. Anyway, I think this page tells me my sleep duration.&lt;br&gt;&lt;br&gt; Interviewer: Great, what would you do next?&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;do-stay-neutral-about-the-product-you-are-showing&#34;&gt;Do: Stay neutral about the product you are showing.&lt;/h4&gt;
+&lt;h5 id=&#34;dont-talk-about-or-sell-your-product&#34;&gt;Don’t talk about or sell your product.&lt;/h5&gt;
+&lt;p&gt;The goal with research is to have as unbiased feedback as possible. For example, interviewees should feel . Talking about your opinion, or even telling them what the product is supposed to do will subtly encourage interviewees to agree with you. Interviewees will feel inclined to be polite and make you feel good about your product to begin with.&lt;/p&gt;
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Good Interviewer Behavior&lt;/th&gt;
+&lt;th&gt;Bad Interviewer Behavior&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Interviewer: We’re interested in having you test drive an idea that&amp;rsquo;s related to sleep cycles.&lt;/td&gt;
+&lt;td&gt;Interviewer: We’re working on this mobile app that gives you an easy way to look at how much sleep you’re getting at night.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;do-wrap-up-with-broad-questions&#34;&gt;Do: Wrap up with broad questions.&lt;/h4&gt;
+&lt;h5 id=&#34;dont-wrap-up-without-having-interviewees-reflect-on-their-experience&#34;&gt;Don’t wrap up without having interviewees reflect on their experience.&lt;/h5&gt;
+&lt;p&gt;Interviewees will have more to say. You can capture many interesting insights during the wrap-up.&lt;/p&gt;
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Good Interviewer Behavior&lt;/th&gt;
+&lt;th&gt;Bad Interviewer Behavior&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;How was this experience for you? Is there anything else pertaining to sleep that you’ve been thinking about lately?&lt;/td&gt;
+&lt;td&gt;We’ve got no more questions for you. Thanks, bye!&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;interview-practice-silent-quiz&#34;&gt;INTERVIEW PRACTICE SILENT QUIZ&lt;/h3&gt;
+&lt;p&gt;Here are 3 “bad” questions. Turn them into good questions.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Was that helpful for you?&lt;/li&gt;
+&lt;li&gt;What do you want?&lt;/li&gt;
+&lt;li&gt;How do you like this?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;interview-practice&#34;&gt;INTERVIEW PRACTICE&lt;/h2&gt;
+&lt;p&gt;Interview each other by only using “Tell me more about…” or “Why?”&lt;/p&gt;
+&lt;p&gt;Remember to regroup and learn from mistakes. Perfection is impossible.&lt;/p&gt;
+&lt;h2 id=&#34;research-sample-structure&#34;&gt;RESEARCH SAMPLE STRUCTURE&lt;/h2&gt;
+&lt;h3 id=&#34;introduction&#34;&gt;Introduction&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Introduce yourself and note taker.&lt;/li&gt;
+&lt;li&gt;Explain how long the interview will take and the general format.&lt;/li&gt;
+&lt;li&gt;State the goal is just to have a discussion about their experience with ______ .&lt;/li&gt;
+&lt;li&gt;No right or wrong answers to questions, the only right answer is their opinion. Let him/her know nothing they say will offend you.&lt;/li&gt;
+&lt;li&gt;Mention they should feel free to ask questions anytime; they’ll have time at the end for questions too.&lt;/li&gt;
+&lt;li&gt;Have you signed the Non Disclosure Agreement?&lt;/li&gt;
+&lt;li&gt;Do you mind if we record the session?&lt;/li&gt;
+&lt;li&gt;Any questions before we begin?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;storytelling-questions&#34;&gt;Storytelling Questions&lt;/h4&gt;
+&lt;p&gt;&lt;em&gt;These questions are generally asked during Exploratory Research.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Use these questions to explore these topics:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Who, What, Where, When, Why, How&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tell me about what you do. What are your top responsibilities?&lt;/li&gt;
+&lt;li&gt;Tell me about the last time…? And then what happened? Why (or how) did you do that?&lt;/li&gt;
+&lt;li&gt;Tell me about a time that was difficult…?&lt;/li&gt;
+&lt;li&gt;Your favorite moment…?&lt;/li&gt;
+&lt;li&gt;What reasons helped you choose…?&lt;/li&gt;
+&lt;li&gt;Anything else around phones?&lt;/li&gt;
+&lt;li&gt;If you had a magic wand, what would you&amp;hellip;?&lt;/li&gt;
+&lt;li&gt;Scenarios/activities&lt;/li&gt;
+&lt;li&gt;Real world context&lt;/li&gt;
+&lt;li&gt;Pains and Joys&lt;/li&gt;
+&lt;li&gt;First time, last time&lt;/li&gt;
+&lt;li&gt;Best time, worst time&lt;/li&gt;
+&lt;li&gt;Wish list&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;reactionary-questions&#34;&gt;Reactionary Questions&lt;/h3&gt;
+&lt;p&gt;These questions are asked generally during Validation and Usability Research.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Can you describe the things you’re reading? What do you see?&lt;/li&gt;
+&lt;li&gt;What do you think this page does? What can you do here?&lt;/li&gt;
+&lt;li&gt;What questions are coming to your mind as you’re looking at this page?&lt;/li&gt;
+&lt;li&gt;Before clicking on anything, what would you do next?&lt;/li&gt;
+&lt;li&gt;What do you think would happen next?&lt;/li&gt;
+&lt;li&gt;Why do you think that?&lt;/li&gt;
+&lt;li&gt;When you mentioned ___, what did you mean?&lt;/li&gt;
+&lt;li&gt;So what happened there?&lt;/li&gt;
+&lt;li&gt;Was that what you expected? Why or why not?&lt;/li&gt;
+&lt;li&gt;So what goes through your mind as you look at this?&lt;/li&gt;
+&lt;li&gt;Which part of the page were you looking at?&lt;/li&gt;
+&lt;li&gt;Did you find what you were looking for?&lt;/li&gt;
+&lt;li&gt;What would you do next? Why?&lt;/li&gt;
+&lt;li&gt;Is there anything else you would do at this point?&lt;/li&gt;
+&lt;li&gt;Is there any other way to do that?&lt;/li&gt;
+&lt;li&gt;What did you think of that?&lt;/li&gt;
+&lt;li&gt;In what ways would you want this changed to make it better for you?&lt;/li&gt;
+&lt;li&gt;What additional info would have helped?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;wrap-up-questions&#34;&gt;Wrap Up Questions&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;We&amp;rsquo;ve been talking about ___ for awhile, has this brought up anything you’ve been thinking lately?&lt;/li&gt;
+&lt;li&gt;What were the top 2 things that worked well and didn’t work well?&lt;/li&gt;
+&lt;li&gt;What was not clear? What would you change?&lt;/li&gt;
+&lt;li&gt;What impact would this have given your situation?&lt;/li&gt;
+&lt;li&gt;What does this remind you of?&lt;/li&gt;
+&lt;li&gt;If we waved a magic wand to make this service better for you, what would that be?&lt;/li&gt;
+&lt;li&gt;Is there anything else regarding &amp;hellip; that you’ve been thinking of?&lt;/li&gt;
+&lt;li&gt;What do you like/dislike about this?&lt;/li&gt;
+&lt;li&gt;If you had 3 wishes to make this better for you, what would they be? Why?&lt;/li&gt;
+&lt;li&gt;How would you describe this to a friend?&lt;/li&gt;
+&lt;li&gt;Under what circumstances would you use this? Why?&lt;/li&gt;
+&lt;li&gt;Can you describe to me what you see on this page?&lt;/li&gt;
+&lt;li&gt;Which parts of this page are most/least important to you?&lt;/li&gt;
+&lt;li&gt;What do you think this &lt;em&gt;[point to a UI element]&lt;/em&gt; might do?&lt;/li&gt;
+&lt;li&gt;What does this &lt;em&gt;[point to a UI element]&lt;/em&gt; means?&lt;/li&gt;
+&lt;li&gt;If you wanted to _______, how would you. . .?&lt;/li&gt;
+&lt;/ul&gt;
+
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

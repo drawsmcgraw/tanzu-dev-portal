@@ -1,0 +1,81 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Spring Session</title>
+    <link>/tags/spring-session/</link>
+    <description>Recent content in Spring Session on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 24 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/spring-session/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Offload HTTP Sessions with Spring Session and Redis</title>
+      
+      <link>/guides/spring/offload-http-sessions-spring-session/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/offload-http-sessions-spring-session/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://spring.io/projects/spring-session&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Session&lt;/a&gt; frees session management from the limitations of HTTP data stored in server memory. Session data can be shared between services in a cloud without being tied to a single container, multiple sessions can be supported in the same browser, and session ids can be included and sent in a header.&lt;/p&gt;
+&lt;p&gt;Spring Session allows the replacement of &lt;code&gt;HttpSession&lt;/code&gt; in an application container neutral way, with support for providing session IDs in headers to work with RESTful APIs. Spring Session offers multiple mechanisms to persist data such as JDBC, GemFire, MongoDB, and Redis. This guide illustrates the use of Redis to persist session data in a Cloud Foundry environment, but the same approach will work in any cloud environment.&lt;/p&gt;
+&lt;p&gt;By persisting sessions, multiple application instances can serve the same sessions and individual instances can crash without impacting other application instances or user workflows.&lt;/p&gt;
+&lt;h2 id=&#34;configure-the-service-to-bind-to-the-application&#34;&gt;Configure the Service to Bind to the Application&lt;/h2&gt;
+&lt;p&gt;By default, an &lt;a href=&#34;http://tomcat.apache.org&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Tomcat&lt;/a&gt; web server instance is configured to store all sessions and associated data in memory. Under certain circumstances it is desirable to persist sessions using a repository. You can configure Tomcat to do so by binding an appropriate service.&lt;/p&gt;
+&lt;p&gt;The Tanzu Application Service GO Router uses the &lt;code&gt;jsessionid&lt;/code&gt; plus a &lt;code&gt;vcap_id&lt;/code&gt; to establish sticky sessions. Session replication breaks with sticky sessions at the GO router which is one of the reasons Spring Session is used. By default Spring Session creates a custom &lt;code&gt;SESSION&lt;/code&gt; cookie to house an application’s HTTP session. See the &lt;a href=&#34;https://docs.pivotal.io/pivotalcf/concepts/http-routing.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;documentation&lt;/a&gt;).&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Ensure your session object implements &lt;a href=&#34;https://docs.oracle.com/javase/tutorial/jndi/objects/serial.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;java.io.Serializable&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This guide was customized for Spring 3.2.18 and XML Configuration. It is highly recommended to &lt;a href=&#34;/guides/spring/bootifying-java-apps&#34;&gt;bootify your application&lt;/a&gt; and leverage the Spring Boot Starter modules to help stay current with Spring versions.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;cloud-foundry-platform-and-redis-service-creation&#34;&gt;Cloud Foundry Platform and Redis Service Creation&lt;/h3&gt;
+&lt;p&gt;To enable &lt;em&gt;Redis-based session replication&lt;/em&gt;, simply bind a Redis service containing a name, label, or tag that has &lt;code&gt;session-replication&lt;/code&gt; as a substring in Cloud Foundry. To utilize the Redis service &lt;a href=&#34;https://docs.pivotal.io/redis/2-2/using.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;follow the corresponding instructions&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;manual-definition-for-session-replication-with-redis&#34;&gt;Manual Definition for Session Replication with Redis&lt;/h3&gt;
+&lt;p&gt;Spring Session can better handle the object’s marshalling/unmarshalling than the Tomcat HttpSession. This requires the following dependencies.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.session&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-session-data-redis&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;Corn-SR2&lt;span class=&#34;nt&#34;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;1. Define the session configuration in your &lt;code&gt;web.xml&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;lt;filter&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;filter-name&amp;gt;&lt;/span&gt;springSessionRepositoryFilter&lt;span class=&#34;nt&#34;&gt;&amp;lt;/filter-name&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;filter-class&amp;gt;&lt;/span&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;span class=&#34;nt&#34;&gt;&amp;lt;/filter-class&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;/filter&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;filter-mapping&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;filter-name&amp;gt;&lt;/span&gt;springSessionRepositoryFilter&lt;span class=&#34;nt&#34;&gt;&amp;lt;/filter-name&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;url-pattern&amp;gt;&lt;/span&gt;/*&lt;span class=&#34;nt&#34;&gt;&amp;lt;/url-pattern&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;dispatcher&amp;gt;&lt;/span&gt;REQUEST&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dispatcher&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;dispatcher&amp;gt;&lt;/span&gt;ERROR&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dispatcher&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;/filter-mapping&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;For the session replication to work with spring security, you need to place the spring session filter above the spring security filter.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;For the session replication to work with Apache Struts, you need to place the spring session filter above the Struts filter.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;2. Define the following in your Spring &lt;code&gt;application-context.xml&lt;/code&gt;:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;  ...
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;context:annotation-config/&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration&amp;#34;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;org.springframework.data.redis.connection.jedis.JedisConnectionFactory&amp;#34;&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;util:constant&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;static-field=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;org.springframework.session.data.redis.config.ConfigureRedisAction.NO_OP&amp;#34;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That’s it. With the Redis service bound and session replication defined, sessions are automatically persisted in Redis.&lt;/p&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;The Spring Session documentation provides a number of &lt;a href=&#34;https://docs.spring.io/spring-session/docs/current/reference/html5/#samples&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;sample applications&lt;/a&gt; showing how to use Spring Session with Redis and JDBC as well as other use cases. Several more examples, including an HttpSession Quick Start guide, can be found &lt;a href=&#34;https://spring.io/projects/spring-session-data-redis#samples&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Baeldung’s &lt;a href=&#34;https://www.baeldung.com/spring-session&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Guide to Spring Session&lt;/a&gt; provides an additional example combining the use of Spring Session and Redis in Spring Boot and Spring environments.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

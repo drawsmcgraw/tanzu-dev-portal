@@ -1,0 +1,199 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Spring Cloud Data Flow</title>
+    <link>/tags/spring-cloud-data-flow/</link>
+    <description>Recent content in Spring Cloud Data Flow on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 04 Sep 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/spring-cloud-data-flow/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Integrate Spring Cloud Data Flow Applications with a Scalable MongoDB Deployment on Kubernetes</title>
+      
+      <link>/guides/spring/scdf-mongodb/</link>
+      <pubDate>Fri, 04 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/scdf-mongodb/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://dataflow.spring.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Data Flow&lt;/a&gt; is a framework for creating data streaming applications and batch data processing pipelines. It is commonly used to develop and test microservices, and it comes with built-in support for popular data sources and data storage services. It is available under an Apache license.&lt;/p&gt;
+&lt;p&gt;For developers looking to quickly build data processing applications on Kubernetes using Spring, the easiest way is with &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/spring-cloud-dataflow&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Spring Cloud Data Flow Helm chart&lt;/a&gt;. This chart bootstraps a Spring Cloud Data Flow deployment on a Kubernetes cluster using the Helm package manager. It is also secure, updated and packaged in accordance with current best practices.&lt;/p&gt;
+&lt;p&gt;This article walks you through the process of deploying Spring Cloud Data Flow on Kubernetes using the Bitnami Spring Cloud Data Flow Helm chart. It also shows you how to connect your deployment with a MongoDB database service (also running on Kubernetes) and create a simple Spring Cloud Data Flow stream that accepts data input over HTTP and saves the data to the MongoDB service.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and Prerequisites&lt;/h2&gt;
+&lt;p&gt;This article assumes that you have a Kubernetes cluster running with Helm v3.x and &lt;em&gt;kubectl&lt;/em&gt; installed. &lt;a href=&#34;https://docs.bitnami.com/kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn more about getting started with Kubernetes and Helm using different cloud providers&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1: Deploy MongoDB on Kubernetes&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you already have a MongoDB deployment, you can use that instead and skip to &lt;a href=&#34;#step-2-deploy-spring-cloud-data-flow-on-kubernetes&#34;&gt;Step 2&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The first step is to deploy a MongoDB service on Kubernetes. The simplest way to do this is with &lt;a href=&#34;https://github.com/helm/charts/tree/master/stable/mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s MongoDB Helm chart&lt;/a&gt;. Follow the steps below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Add the Bitnami chart repository to Helm:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Execute the following command to deploy MongoDB. The command below will also create a new database named &lt;em&gt;mydb&lt;/em&gt; and a user account named &lt;em&gt;user&lt;/em&gt; with full privileges on that database. Remember to replace the MONGODB-ROOT-PASSWORD placeholder with a custom password for the MongoDB administrator account and the MONGODB-USER-PASSWORD placeholder with a custom password for the &lt;em&gt;user&lt;/em&gt; account.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install mongodb bitnami/mongodb &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set auth.rootPassword&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;MONGODB-ROOT-PASSWORD &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set auth.database&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mydb &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set auth.username&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;user &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set auth.password&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;MONGODB-USER-PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wait for a few minutes until the chart is deployed. Note the DNS name for the service in the cluster. In this example, it will be &lt;em&gt;mongodb.default.svc.cluster.local&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/mongodb.png&#34; alt=&#34;MongoDB deployment&#34;  /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mongodb#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the Bitnami MongoDB Helm chart&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-2-deploy-spring-cloud-data-flow-on-kubernetes&#34;&gt;Step 2: Deploy Spring Cloud Data Flow on Kubernetes&lt;/h2&gt;
+&lt;p&gt;The next step is to deploy Spring Cloud Data Flow on the same cluster using Bitnami&amp;rsquo;s Helm chart and configure it for use. Follow the steps below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Execute the following command to deploy the chart:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install spring bitnami/spring-cloud-dataflow
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wait for a few minutes until the chart is deployed.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;See the &lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/spring-cloud-dataflow#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete list of parameters supported by the Bitnami Spring Cloud Data Flow Helm chart&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Forward the Spring Cloud Data Flow server port:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;export SERVICE_PORT=$(kubectl get --namespace default -o jsonpath=&amp;quot;{.spec.ports[0].port}&amp;quot; services spring-spring-cloud-dataflow-server)
+kubectl port-forward --namespace default svc/spring-spring-cloud-dataflow-server ${SERVICE_PORT}:${SERVICE_PORT} --address=0.0.0.0 &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Browse to http://IP-ADDRESS:8080/dashboard, where IP-ADDRESS should be the IP address of the &lt;em&gt;kubectl&lt;/em&gt; host. You will see the Spring Cloud Data Flow dashboard.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;On the &amp;ldquo;Applications&amp;rdquo; page, click the &amp;ldquo;Add Application(s)&amp;rdquo; button.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Select the option to &amp;ldquo;Bulk import application coordinates from an HTTP URI location&amp;rdquo;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Select the &amp;ldquo;Stream Apps (RabbitMQ/Docker)&amp;rdquo; category. The import URL will be prefilled for you.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click &amp;ldquo;Import the application(s)&amp;rdquo; to start the import process.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/import-apps.png&#34; alt=&#34;Import process&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Navigate back to the &amp;ldquo;Applications&amp;rdquo; page. Confirm that you see the imported applications, as shown below.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/apps.png&#34; alt=&#34;Imported applications&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-3-create-a-spring-cloud-data-flow-stream&#34;&gt;Step 3: Create a Spring Cloud Data Flow stream&lt;/h2&gt;
+&lt;p&gt;The next step is to create a stream that accepts input over HTTP and then streams that data to MongoDB using Spring Cloud Data Flow. Follow these steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Navigate to the &amp;ldquo;Streams&amp;rdquo; page.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Create stream(s)&amp;rdquo; button.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the &amp;ldquo;Stream definition&amp;rdquo; box, define an HTTP (source) to MongoDB (sink) stream by entering the values below:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http | mongodb
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Create stream(s)&amp;rdquo; button to proceed.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/create-stream.png&#34; alt=&#34;Stream creation&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Enter a name for the stream when prompted. Click the &amp;ldquo;Create the stream&amp;rdquo; button to save the new stream. In this example, the stream is named &lt;em&gt;mystream&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/name-stream.png&#34; alt=&#34;Stream naming&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Navigate back to the &amp;ldquo;Streams&amp;rdquo; page. Confirm that you see the new stream in the list of streams.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Deploy&amp;rdquo; button to deploy the new stream.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/list-streams.png&#34; alt=&#34;Stream list&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the &amp;ldquo;Deploy Stream Definition&amp;rdquo; page, configure the deployment parameters for the stream as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In the &lt;em&gt;http&lt;/em&gt; source column, find the &amp;ldquo;Deployment Platform&amp;rdquo; section and set the &lt;em&gt;create-load-balancer&lt;/em&gt; property to true. This makes the HTTP input endpoint for the stream available at a public IP address. Click &amp;ldquo;Update&amp;rdquo; once done.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/source.png&#34; alt=&#34;HTTP source configuration&#34;  /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In the &lt;em&gt;mongodb&lt;/em&gt; sink column, find the &amp;ldquo;Application Properties&amp;rdquo; section and set the following properties, which should match those configured in &lt;a href=&#34;#step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;. Replace the MONGODB-USER-PASSWORD placeholder with the password defined for the &lt;em&gt;user&lt;/em&gt; account in &lt;a href=&#34;#step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;. Click &amp;ldquo;Update&amp;rdquo; once done.
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;username&lt;/em&gt;: &lt;em&gt;user&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;authentication-database&lt;/em&gt;: &lt;em&gt;mydb&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;database&lt;/em&gt;: &lt;em&gt;mydb&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;password&lt;/em&gt;: MONGODB-USER-PASSWORD&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;collection&lt;/em&gt;: &lt;em&gt;spring&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;host&lt;/em&gt;: &lt;em&gt;mongodb.default.svc.cluster.local&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/sink.png&#34; alt=&#34;MongoDB sink configuration&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click the &amp;ldquo;Deploy stream&amp;rdquo; button to deploy the stream.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Wait for a few minutes until the chart is deployed. Once deployed, the &amp;ldquo;Streams&amp;rdquo; page will reflect the running deployment.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/list-streams-2.png&#34; alt=&#34;Stream status&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;You can also check the status of the deployment using the &lt;em&gt;kubectl get pods&lt;/em&gt; command.&lt;/p&gt;
+&lt;h2 id=&#34;step-4-test-the-integration&#34;&gt;Step 4: Test the integration&lt;/h2&gt;
+&lt;p&gt;Once the stream is deployed, you can proceed to test it, by sending it input over HTTP and then checking the MongoDB database to verify if the input was correctly saved. Follow these steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Obtain the load balancer IP address for the HTTP input endpoint:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get svc &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep mystream
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Send a JSON-formatted HTTP request to the endpoint. Replace the STREAM-IP-ADDRESS placeholder in the command below with the load balancer IP address.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl http://STREAM-IP-ADDRESS:8080 -X POST -H &lt;span class=&#34;s2&#34;&gt;&amp;#34;Content-type: application/json&amp;#34;&lt;/span&gt; -d &lt;span class=&#34;s2&#34;&gt;&amp;#34;{\&amp;#34;label\&amp;#34;: \&amp;#34;eggs\&amp;#34;}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Connect to the MongoDB database service and query the &lt;em&gt;mydb&lt;/em&gt; database and &lt;em&gt;spring&lt;/em&gt; collection. Replace the MONGODB-USER-PASSWORD placeholder with the password defined for the &lt;em&gt;user&lt;/em&gt; account in &lt;a href=&#34;#step-1-deploy-mongodb-on-kubernetes&#34;&gt;Step 1&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl run --namespace default mongodb-client --rm --tty -i --restart&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Never&amp;#39;&lt;/span&gt; --image docker.io/bitnami/mongodb:4.2.8-debian-10-r39 --command -- bash
+mongo admin --host &lt;span class=&#34;s2&#34;&gt;&amp;#34;mongodb&amp;#34;&lt;/span&gt; --authenticationDatabase mydb -u user -p MONGODB-USER-PASSWORD
+use mydb
+db.spring.find&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here is an example of the output you should see:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/scdf-mongodb/query-results.png&#34; alt=&#34;MongoDB query results&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;This confirms that the integration is working successfully and that data sent to the Spring Cloud Data Flow endpoint is being successfully streamed and saved to the MongoDB database service.&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;p&gt;To learn more about the topics discussed in this guide, use the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/spring-cloud-dataflow&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Spring Cloud Data Flow Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/helm/charts/tree/master/stable/mongodb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami MongoDB Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://dataflow.spring.io/docs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Data Flow documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/event-streaming/scs-what-is/&#34;&gt;Spring Cloud Stream guide&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Cloud Data Flow Sample</title>
+      
+      <link>/samples/spring-cloud-data-flow-demo/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-cloud-data-flow-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

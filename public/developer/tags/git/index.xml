@@ -1,0 +1,452 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Git</title>
+    <link>/tags/git/</link>
+    <description>Recent content in Git on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 24 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Git Playbook</title>
+      
+      <link>/guides/agile/git-playbook/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/agile/git-playbook/</guid>
+      <description>
+
+        
+        &lt;p&gt;Git is a free and open source version control system that is widely used in the open source community, including well known git repositories such as GitHub and GitLab. If you are unfamiliar with Git, it’s worth taking a few moments to familiarize yourself with it.  A simple guide can be found at &lt;a href=&#34;http://rogerdudler.github.io/git-guide/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://rogerdudler.github.io/git-guide/&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;gitflow&#34;&gt;Gitflow&lt;/h2&gt;
+&lt;p&gt;Gitflow enables you to work on your own feature branch in isolation before committing to the main project branches, i.e. develop and master.  Features may be driven from your preferred project planning tool as assigned tasks.  Gitflow helps manage the Git history to reflect the progress against specific issues.&lt;/p&gt;
+&lt;h3 id=&#34;install-gitflow&#34;&gt;Install GitFlow&lt;/h3&gt;
+&lt;h4 id=&#34;os-x&#34;&gt;OS X&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;brew install gitflow
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;linux&#34;&gt;Linux&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;apt-get install gitflow
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;windows-via-cygwin&#34;&gt;Windows (via Cygwin)&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;wget&lt;/code&gt; and &lt;code&gt;util-linux&lt;/code&gt; are required to install gitflow.  For more detailed instructions see &lt;a href=&#34;https://github.com/nvie/gitflow/wiki/Windows&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;https://github.com/nvie/gitflow/wiki/Windows&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;wget -q -O - --no-check-certificate https://github.com/nvie/gitflow/raw/develop/contrib/gitflow-installer.sh &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;gitflow-initialization-and-settings&#34;&gt;GitFlow initialization and settings&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;From the local repository directory (e.g. /universal-imports),&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git flow init
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Use the following settings when prompted for the gitflow prefixes,&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;master&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; master
+&lt;span class=&#34;nv&#34;&gt;develop&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; develop
+&lt;span class=&#34;nv&#34;&gt;feature&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; feature/
+&lt;span class=&#34;nv&#34;&gt;release&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; release/
+&lt;span class=&#34;nv&#34;&gt;hotfix&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; hotfix/
+&lt;span class=&#34;nv&#34;&gt;support&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; support/
+&lt;span class=&#34;nv&#34;&gt;versiontag&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; -v
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;gitflow-workflow&#34;&gt;GitFlow workflow&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Before starting a feature branch ensure that you have the latest code from the &lt;code&gt;develop&lt;/code&gt; branch,&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git checkout develop
+git pull
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Start a feature branch by typing, &lt;code&gt;git flow *feature identifier*&lt;/code&gt; For example, if your feature has an ID of 007, you would execute:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git flow feature start &lt;span class=&#34;m&#34;&gt;007&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;
+&lt;p&gt;Now, start committing changes to your feature.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You can propose changes (add it to the Index) using,&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git add &amp;lt;filename&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;or&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git add *
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;To commit these changes to your local repository:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git commit -m &lt;span class=&#34;s2&#34;&gt;&amp;#34;#007 Commit message&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;(Be sure to start the message with your feature ID or feature name.)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Refer to the following &lt;a href=&#34;https://github.com/erlang/otp/wiki/Writing-good-commit-messages&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;guidelines&lt;/a&gt; for writing commit messages.  For example,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; PSE-007: Summarize clearly in one line what the commit is about
+&amp;gt;
+&amp;gt; Describe the problem the commit solves or the use
+&amp;gt; &lt;span class=&#34;k&#34;&gt;case&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; a new feature. Justify why you chose
+&amp;gt; the particular solution.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Optionally, publish a feature branch to the remote server so it can be used by other users,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git flow feature publish &lt;span class=&#34;m&#34;&gt;007&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When done with the feature, use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git flow feature finish &lt;span class=&#34;m&#34;&gt;007&lt;/span&gt;
+git push
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Then delete the remote feature branch (if it was created):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git push origin :feature/007
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Then delete the local branch (if it still exists. git flow will usually delete it for you):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git branch -d feature/007
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;resolve-unstaged-change-warnings&#34;&gt;Resolve Unstaged Change Warnings&lt;/h3&gt;
+&lt;p&gt;Resolve unstaged change warnings using:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git stash
+git push &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;i.e. push your staged commits&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can switch to another branch to work on another feature, etc.
+To bring back your stashed changes:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git stash pop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;avoid-fast-forward-merges&#34;&gt;Avoid Fast-forward Merges&lt;/h3&gt;
+&lt;p&gt;Suppose you are working on &amp;ldquo;feature/007&amp;rdquo; and there have been changes in the meantime to the &amp;ldquo;develop&amp;rdquo; branch.&lt;/p&gt;
+&lt;h4 id=&#34;approach-1---pre-sync-the-target-branch&#34;&gt;Approach 1 - Pre-sync the target branch&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git checkout develop
+git pull
+git checkout feature/007
+git flow feature finish &lt;span class=&#34;m&#34;&gt;007&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;approach-2---merge-the-branches-with-the-no-fast-forward-flag&#34;&gt;Approach 2 - Merge the branches with the &amp;ldquo;no fast-forward&amp;rdquo; flag&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git flow feature start &lt;span class=&#34;m&#34;&gt;007&lt;/span&gt;
+git flow feature publish &lt;span class=&#34;m&#34;&gt;007&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Instead of using &amp;ldquo;git flow feature finish 007&amp;rdquo; (because it causes a fast forward at this point)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git checkout develop
+git pull
+git merge --no-ff feature/007
+git push origin develop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;git-tips-and-tricks&#34;&gt;Git Tips and Tricks&lt;/h2&gt;
+&lt;h3 id=&#34;checkout-a-specific-tag&#34;&gt;Checkout a specific tag&lt;/h3&gt;
+&lt;p&gt;This can be useful if you want to use a specific tagged version for a deployment:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;List the available tags:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git tag -l
+
+...
+v3.10.0
+v3.11.0
+v3.14.0
+v3.15.0
+v3.16.0
+v3.17.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Checkout a specific tag:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git checkout tags/v3.16.0
+
+M	/universal-imports/modules
+Note: checking out &lt;span class=&#34;s1&#34;&gt;&amp;#39;tags/v3.16.0&amp;#39;&lt;/span&gt;.
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;undo-or-rollback-a-git-commit&#34;&gt;Undo or rollback a Git commit&lt;/h3&gt;
+&lt;p&gt;Assuming you have not yet pushed commits to the remote repository, you can rollback to the previous commit:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git reset --soft HEAD^
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To rollback the last three commits,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git reset --hard HEAD~3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;resetting-a-local-branch-to-exactly-match-a-remote-branch&#34;&gt;Resetting a local branch to exactly match a remote branch&lt;/h3&gt;
+&lt;p&gt;Set your local branch to exactly match the remote branch:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git fetch origin
+git reset --hard origin/develop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you want to save your current branch&amp;rsquo;s state before doing this (just in case),&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git commit -a -m &lt;span class=&#34;s2&#34;&gt;&amp;#34;Saving my work, just in case&amp;#34;&lt;/span&gt;
+git branch my-saved-work
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;rollback-a-release-in-the-master-branch-to-a-previous-tag&#34;&gt;Rollback a release in the Master branch to a previous tag&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;WARNING:  This alters history.  Do not try this on the &lt;strong&gt;DEVELOP&lt;/strong&gt; branch.&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Ensure that you are on the &lt;strong&gt;MASTER&lt;/strong&gt; branch,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git checkout master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Find the commit number of the previous tag (e.g. dc7e7b5 3.15.0.RELEASE),&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git log --oneline
+
+ecdd645 Merge branch &lt;span class=&#34;s1&#34;&gt;&amp;#39;release-3.16.0&amp;#39;&lt;/span&gt;
+c023314 3.16.0.RELEASE
+72a9524 Added some changes
+f2e68e5 3.16.0.SNAPSHOT
+3414a30 Merge branch &lt;span class=&#34;s1&#34;&gt;&amp;#39;release-3.15.0&amp;#39;&lt;/span&gt; into develop
+5078f25 Merge branch &lt;span class=&#34;s1&#34;&gt;&amp;#39;release-3.15.0&amp;#39;&lt;/span&gt;
+dc7e7b5 3.15.0.RELEASE
+9e5c0d2 Updated some other changes
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Make the previous tag commit the current one (e.g. 3.15.0.RELEASE),&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git reset --hard dc7e7b5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Remove the other release&amp;rsquo;s now uncommitted changes locally:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git reset HEAD^
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Force push the new HEAD commit to the remote repository:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git push origin +HEAD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you want to still have it in your local repository and only remove it from the remote, instead use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git push origin +HEAD^:master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;merging&#34;&gt;Merging&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Open the Git merge tool:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git mergetool
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Fix any merge issues&amp;hellip;&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;
+&lt;p&gt;Execute the merge:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git merge
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This merges resolved conflicts and resets the merge head appropriately&amp;hellip;&lt;/p&gt;
+&lt;h3 id=&#34;undo-a-failed-merge&#34;&gt;Undo a failed merge&lt;/h3&gt;
+&lt;p&gt;If you see something like the following Git error/warning message: &lt;code&gt;You have not concluded your merge (MERGE_HEAD exists). Please, commit your changes before you can merge.&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git merge --abort
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;If you’re just getting familiar with git and related tools, you may also want to check out the blog &lt;a href=&#34;/blog/how-and-why-to-write-commit-messages-first/&#34;&gt;How and Why to Write Commit Messages First&lt;/a&gt;, and you’ll find more tips in this blog on &lt;a href=&#34;/blog/git-switch-and-restore-an-improved-user-experience/&#34;&gt;Git Switch and Restore&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To learn how to take the next steps when your code is ready, check out &lt;a href=&#34;/blog/from-commit-to-container/&#34;&gt;From Code to Container&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: How — and Why — to Write Commit Messages First</title>
+      
+      <link>/blog/how-and-why-to-write-commit-messages-first/</link>
+      <pubDate>Wed, 19 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/how-and-why-to-write-commit-messages-first/</guid>
+      <description>
+
+        
+        &lt;p&gt;You’re halfway through delivering your feature and you decide to take a look at your diff. Doing so gives you a sinking feeling in your stomach, because you see a lot more changes than you were expecting, some of which were refactorings, like renames or structural changes you wish were separated into their own commits. Teasing apart these smaller commits can be messy and would take too much effort at this point. But if you’d tried to preemptively break them apart at random, you’d have run the risk of overengineering your work or creating unnecessary changes.&lt;/p&gt;
+&lt;p&gt;Writing commit messages first can help pairs navigate between feature delivery and what could be smaller, more atomic commits. It’s analogous to working from “stories” off a backlog or trying to get the next failing test to pass. If you or your pair gets lost in the weeds, pointing back to the story provides a direct and egoless way to get back on track. In test-driven development, pairs stay focused by thinking about small, incremental, falsifiable functionality one failing test at a time. Writing commit messages first can help pairs articulate the space between a feature story and individual tests.&lt;/p&gt;
+&lt;h2 id=&#34;how-to-write-commit-messages-first&#34;&gt;How to Write Commit Messages First&lt;/h2&gt;
+&lt;p&gt;You can use a command line tool such as &lt;a href=&#34;https://github.com/ericTsiliacos/stacker&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Stacker&lt;/a&gt; to keep track of your commit messages, or simply use pencil and paper. The first commit message is easy to write and provides a frictionless start. A lot of thought usually goes into the title or description of a story, so it provides the perfect level of abstraction to communicate the overall “why” for the actual changes needed to deliver the feature. Write down the commit message before changing any code, and work from the assumption that all necessary changes will be committed with this message. When you come across a piece of code that, for example, needs structural changes to make your feature possible, stash or delete your current changes. Then write down the commit message that describes the change you wish was already present so that you can &lt;a href=&#34;https://twitter.com/KentBeck/status/250733358307500032&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;“make the change easy&amp;hellip; then make the easy change.”&lt;/a&gt; The new commit message is causally related to the original commit message in the sense that by working from the original commit message, we naturally discover a smaller commit.&lt;/p&gt;
+&lt;p&gt;Recursively repeat this process with the new commit message as your latest goal until you arrive at work you can commit using the message you wrote beforehand. Unwind to the previously recorded commit message as the next goal until you arrive at delivering the original feature, but now with the minimal necessary changes. Let’s sketch out a short example:&lt;/p&gt;
+&lt;p&gt;We pick up a story from the top of our backlog that asks us to show the user relevant data. We record our commit message first:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Display relevant data to the user.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;As we attempt to figure out where we should make our changes, we find ourselves in a legacy application missing many tests. We then discover a file named apiClient.js, the responsibility of which is to know where and how to fetch data to be displayed to the user. It would appear that our changes would include swapping out the URL path in order to fetch the relevant data.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;kr&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;get&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;“&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;http&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;”&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kr&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;default&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;({&lt;/span&gt;
+	&lt;span class=&#34;nx&#34;&gt;execute&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kr&#34;&gt;async&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; 
+	&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+	    &lt;span class=&#34;kr&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;data&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kr&#34;&gt;await&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;“&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;to&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;irrelevant&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;”&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+		&lt;span class=&#34;c1&#34;&gt;// ...
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;	&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In order to effectively make changes to this code, we’ll need to back it with tests. So we put aside our current task and write a new commit message that reflects the desired state of the code.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Backfill apiClient.js missing tests.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;As we attempt to write unit tests, we find that it’s difficult due to the statically imported HTTP client. We decide that the production code would benefit from having the HTTP client parameterized, so we stash our changes and write down the following new commit message:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“Parameterize http client from client.js.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;At this point, our commit messages would look something like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;parameterize http client from client.js
+ └─┬ backfill apiClient.js missing tests
+   └─┬ display relevant data to the user
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We are able to complete our latest goal using an IDE shortcut, commit using the recorded message, and push the commit independently of our other work. We pick up from the previous commit message and repeat this process until we’ve finished our feature.&lt;/p&gt;
+&lt;h2 id=&#34;why-to-write-commit-messages-first&#34;&gt;Why to Write Commit Messages First&lt;/h2&gt;
+&lt;p&gt;Conceptually, we’ve articulated a slimmed-down version of the &lt;a href=&#34;http://mikadomethod.info/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;“Mikado Method”&lt;/a&gt; or &lt;a href=&#34;https://dzone.com/articles/git-stash-driven-development&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;“Git Stash-Driven Development,”&lt;/a&gt; but what’s important to understand are the affordances of writing our commit messages first. They’re important because, at any moment, you or your pair can take a step back and ask “why” your changes are relevant by looking at the previously recorded commit message, and “what” is needed from the current commit message. It keeps you and your pair accountable. In particular, it forces you to ask whether the current changes really reflect the commit message that you’ve written. When we write our commit messages after our changes, we often mix in work that isn’t relevant to the commit message or we begin to find it difficult to describe our changes.&lt;/p&gt;
+&lt;p&gt;We can use the concepts of cohesion and coupling to help us determine whether or not we currently have a pushable commit or if we should wait for subsequent commits to squash into a single one. A revertible commit exhibits higher cohesion. If reverting to the currently unpushed commit would leave dead code, failing tests, a broken application, or an unreleasable product, then the set of changes do not form a unified whole relative to the rest of the application. The smallest unit of change should be able to stand on its own. A pickable commit, meanwhile, exhibits lower coupling. We need to determine if the commit can be cherry-picked without needing other commits to come along with it that aren’t already pushed. We want to be able to decompose our changes in such a way as to make them shareable.&lt;/p&gt;
+&lt;p&gt;Writing our commit messages first while also thinking about their relative cohesion, and coupling via revertibility and pickability, provides us with a framework for how to think about commit decomposition.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: Git Switch and Restore: an Improved User Experience</title>
+      
+      <link>/blog/git-switch-and-restore-an-improved-user-experience/</link>
+      <pubDate>Tue, 23 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/git-switch-and-restore-an-improved-user-experience/</guid>
+      <description>
+
+        
+        &lt;p&gt;If you&amp;rsquo;re like me and you&amp;rsquo;ve worked with Git for some time, you might have a couple of commands committed to your memory—from &lt;code&gt;git commit&lt;/code&gt; for recording your changes, to &lt;code&gt;git log&lt;/code&gt; for sensing &amp;ldquo;where&amp;rdquo; you are.&lt;/p&gt;
+&lt;p&gt;I have found &lt;code&gt;git checkout&lt;/code&gt; to be a command that I reach for pretty frequently, as it performs more than one operation. But a single command doing more than one thing might produce a suboptimal user experience for someone learning Git. I can almost picture an &lt;a href=&#34;http://xkcd.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;XKCD&lt;/a&gt; strip:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Learner: What do I run to change the branch I&amp;rsquo;m on?&lt;br&gt;
+You: Use &lt;code&gt;git checkout &amp;lt;branch&amp;gt;&lt;/code&gt;.&lt;br&gt;
+Learner: What can I run to discard changes to a file?&lt;br&gt;
+You: Use&amp;hellip;&lt;code&gt;git checkout &amp;lt;file&amp;gt;&lt;/code&gt;.&lt;br&gt;
+Learner: OK&amp;hellip;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Even if you have the commands memorized, there have likely been times when you had to pause after typing a &lt;code&gt;git checkout&lt;/code&gt; command while you tried to match it with the operation you had in mind (e.g., &amp;ldquo;I just typed git checkout &amp;hellip; to do X, but I thought git checkout does Y, does this really do what I want?&amp;quot;)&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s take a look at what &lt;code&gt;git checkout&lt;/code&gt; can do, and an alternative (or two) that can make for a friendlier user experience in Git.&lt;/p&gt;
+&lt;h3 id=&#34;quick-what-does-git-checkout-do&#34;&gt;Quick, what does &lt;code&gt;git checkout&lt;/code&gt; do?&lt;/h3&gt;
+&lt;p&gt;Perhaps you were trying something out and made some changes to the files in your local Git repository, and you now want to discard those changes. You can do so by calling &lt;code&gt;git checkout&lt;/code&gt; with one file path or more:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git checkout app.js
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above sets the specified files paths to their content &lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; in the &lt;strong&gt;&lt;em&gt;index&lt;/em&gt;&lt;/strong&gt;. If instead you&amp;rsquo;d like to set the files to their content in a &lt;strong&gt;&lt;em&gt;tree&lt;/em&gt;&lt;/strong&gt;, like a branch or a commit, specify it before the file paths. If it happens that the branch shares a name with the file, pass the &lt;code&gt;--&lt;/code&gt; to separate the two. &lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git checkout wip app.js
+$ git checkout wip -- app.js
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In other words, &lt;code&gt;git checkout &amp;lt;filepath&amp;gt;&lt;/code&gt; sets &lt;code&gt;&amp;lt;filepath&amp;gt;&lt;/code&gt; to its contents in the index; if &lt;code&gt;&amp;lt;tree&amp;gt;&lt;/code&gt; is provided, &lt;code&gt;git checkout &amp;lt;tree&amp;gt; &amp;lt;filepath&amp;gt;&lt;/code&gt; sets &lt;code&gt;&amp;lt;filepath&amp;gt;&lt;/code&gt; to its contents in &lt;code&gt;&amp;lt;tree&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;branches&#34;&gt;Branches&lt;/h3&gt;
+&lt;p&gt;Say you want to return to a branch that you had been working on previously—&lt;code&gt;wip&lt;/code&gt;. You can run the below to set it to be the branch you&amp;rsquo;re on and &amp;ldquo;checkout&amp;rdquo; &lt;sup id=&#34;fnref:3&#34;&gt;&lt;a href=&#34;#fn:3&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;3&lt;/a&gt;&lt;/sup&gt; its files:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git checkout wip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You might have encountered:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git checkout -
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This checks out the last branch you were on, much like how &lt;code&gt;cd -&lt;/code&gt; in your shell changes you back to the last directory you were in.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s add that our list of what &lt;code&gt;git checkout&lt;/code&gt; does:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;When given a file path, &lt;code&gt;git checkout &amp;lt;filepath&amp;gt;&lt;/code&gt; sets &lt;code&gt;&amp;lt;filepath&amp;gt;&lt;/code&gt; to its contents in the index; if &lt;code&gt;&amp;lt;tree&amp;gt;&lt;/code&gt; is provided, &lt;code&gt;git checkout &amp;lt;tree&amp;gt; &amp;lt;filepath&amp;gt;&lt;/code&gt; sets &lt;code&gt;&amp;lt;filepath&amp;gt;&lt;/code&gt; to its contents in &lt;code&gt;&amp;lt;tree&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;When given a branch, &lt;code&gt;git checkout &amp;lt;branch&amp;gt;&lt;/code&gt; sets the branch we&amp;rsquo;re on to &lt;code&gt;&amp;lt;branch&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;However, instead of saying &amp;ldquo;setting the branch we&amp;rsquo;re on,&amp;rdquo; it&amp;rsquo;s more accurate to say that &lt;code&gt;git checkout&lt;/code&gt; sets &lt;code&gt;HEAD&lt;/code&gt; to point to &lt;code&gt;&amp;lt;branch&amp;gt;&lt;/code&gt;. As the concept of &lt;code&gt;HEAD&lt;/code&gt; is pretty important, let&amp;rsquo;s take a look at what &lt;code&gt;HEAD&lt;/code&gt; is before continuing our exploration of &lt;code&gt;git checkout&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;what-is-head&#34;&gt;What is HEAD?&lt;/h3&gt;
+&lt;p&gt;One of Git&amp;rsquo;s roles is to track content, and it helps us to know what changes we have. But how does Git determine when a file has changed?&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;HEAD&lt;/code&gt; plays a role in this. By setting &lt;code&gt;HEAD&lt;/code&gt; to, for example, a branch, as in the second operation we looked at, Git would report changes by comparing it against the contents of the branch that &lt;code&gt;HEAD&lt;/code&gt; points to &lt;sup id=&#34;fnref:4&#34;&gt;&lt;a href=&#34;#fn:4&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;4&lt;/a&gt;&lt;/sup&gt;. Both &lt;code&gt;HEAD&lt;/code&gt; and the branch would reference the same commit.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/git-switch-and-restore/diagrams/HEAD-diagram.svg&#34; alt=&#34;Commit history illustration with HEAD and branches&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;detached-head&#34;&gt;Detached HEAD&lt;/h3&gt;
+&lt;p&gt;In addition to setting &lt;code&gt;HEAD&lt;/code&gt; to point to a named branch, you can also point it to a commit, which brings us to another &lt;code&gt;git checkout&lt;/code&gt; operation. For example, let&amp;rsquo;s say you see a page to be laid out weirdly, even though you remember it being pixel-perfect when you last worked on it about a week ago, with commit &lt;code&gt;f7884&lt;/code&gt;. To confirm your hypothesis, you can explore your project&amp;rsquo;s state as-of commit &lt;code&gt;f7884&lt;/code&gt; and set the contents of the files in your Git repository correspondingly via:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git checkout f7884
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Apart from setting the contents of your files, it also sets &lt;code&gt;HEAD&lt;/code&gt; to point to the commit &lt;code&gt;f7884&lt;/code&gt;, unlike a branch in the second operation we looked at:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/git-switch-and-restore/diagrams/detached-HEAD.svg&#34; alt=&#34;Commit history illustration in detached HEAD state&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;This is known as a &lt;em&gt;detached HEAD&lt;/em&gt; state. (In fact, you can perform the equivalent operation by invoking &lt;code&gt;git checkout&lt;/code&gt; with the &lt;code&gt;--detach&lt;/code&gt; argument). If you were to make a new commit while in this state, &lt;code&gt;HEAD&lt;/code&gt; would advance accordingly, but these commits would not be reachable through the usual Git references, like branches and tags. For example, if you were in this state and made a new commit to add padding to a header, here&amp;rsquo;s what your Git history would look like:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/git-switch-and-restore/diagrams/detached-HEAD-commit.svg&#34; alt=&#34;Commit history illustration of new commits in detached HEAD state&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;If you were to switch away to another branch, and not point a reference to your new commit, there is a chance your new commit will be lost through garbage collection. &lt;sup id=&#34;fnref:5&#34;&gt;&lt;a href=&#34;#fn:5&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;5&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;h3 id=&#34;an-alternative-or-two&#34;&gt;An alternative (or two)&lt;/h3&gt;
+&lt;p&gt;Phew, there are quite a few things that &lt;code&gt;git checkout&lt;/code&gt; can do!&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;When given a file path, &lt;code&gt;git checkout &amp;lt;filepath&amp;gt;&lt;/code&gt; sets &lt;code&gt;&amp;lt;filepath&amp;gt;&lt;/code&gt; to its contents in the index; if &lt;code&gt;&amp;lt;tree&amp;gt;&lt;/code&gt; is provided, &lt;code&gt;git checkout &amp;lt;tree&amp;gt; &amp;lt;filepath&amp;gt;&lt;/code&gt; sets &lt;code&gt;&amp;lt;filepath&amp;gt;&lt;/code&gt; to its contents in &lt;code&gt;&amp;lt;tree&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;When given a branch, &lt;code&gt;git checkout &amp;lt;branch&amp;gt;&lt;/code&gt; sets &lt;code&gt;HEAD&lt;/code&gt; to point to &lt;code&gt;&amp;lt;branch&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;When given a commit, &lt;code&gt;git checkout &amp;lt;commit&amp;gt;&lt;/code&gt; sets &lt;code&gt;HEAD&lt;/code&gt; to point to &lt;code&gt;&amp;lt;commit&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;That&amp;rsquo;s not all it can do; there are other possible variations through its long/short options, perhaps as a result of Git&amp;rsquo;s growth from its open source contributors.&lt;sup id=&#34;fnref:6&#34;&gt;&lt;a href=&#34;#fn:6&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;6&lt;/a&gt;&lt;/sup&gt; But generally, we see that &lt;code&gt;git checkout&lt;/code&gt; deals with two aspects of the Git repository:&lt;/p&gt;
+&lt;ol type=&#34;A&#34;&gt;
+  &lt;li&gt;Changing &lt;code&gt;HEAD&lt;/code&gt; to point to a branch or a commit, and&lt;/li&gt;
+  &lt;li&gt;Setting the contents of files.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Granted, these aspects are intertwined, with B being a corollary of A. For example, if you were switching a branch (aspect A), you&amp;rsquo;d probably also want Git to set the content of your files to reflect their state in the branch you were switching to (aspect B). But the business of changing the contents of files while leaving &lt;code&gt;HEAD&lt;/code&gt; unchanged, like in &lt;a href=&#34;#quick-what-does-git-checkout-do&#34;&gt;the first operation&lt;/a&gt;, does come across as distinct from &lt;a href=&#34;#branches&#34;&gt;the second&lt;/a&gt; and &lt;a href=&#34;#detached-head&#34;&gt;the third&lt;/a&gt;, where &lt;code&gt;HEAD&lt;/code&gt; gets changed to point to something else, like a branch or a commit. Having a Git command for &amp;ldquo;setting the contents of files&amp;rdquo; and a separate command for &amp;ldquo;changing &lt;code&gt;HEAD&lt;/code&gt;&amp;rdquo; would make for a better user experience, both to someone new to Git looking for a rule of thumb (&amp;ldquo;for X operation, use command X&amp;rdquo;), and to an experienced user of Git (&amp;quot;&amp;lt;types command X from heart and reads it&amp;gt;—yup, reads like what I want to do&amp;rdquo;).&lt;/p&gt;
+&lt;p&gt;Enter &lt;code&gt;git restore&lt;/code&gt; and &lt;code&gt;git switch&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/blogs/git-switch-and-restore/banana-slice.gif&#34; alt=&#34;https://giphy.com/gifs/drone-cut-satisfy-Eeqkz0EAtAdvq&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Now let&amp;rsquo;s run through the three operations again to see how these two commands are used.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;When given a file path, &lt;code&gt;git checkout &amp;lt;filepath&amp;gt;&lt;/code&gt; sets one or more &lt;code&gt;&amp;lt;filepath&amp;gt;&lt;/code&gt; to its contents in the index.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Use &lt;code&gt;git restore&lt;/code&gt; to set the contents of files, but not to change what &lt;code&gt;HEAD&lt;/code&gt; points to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git restore &amp;lt;filepath&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As a mnemonic, think back to our example - we wanted to &lt;em&gt;restore&lt;/em&gt; the contents of &lt;code&gt;&amp;lt;filepath&amp;gt;&lt;/code&gt; to the index and discard changes to those files.&lt;/p&gt;
+&lt;p&gt;For the variation where we&amp;rsquo;d set the files to their content in a tree (&lt;code&gt;git checkout &amp;lt;tree&amp;gt; &amp;lt;filepath&amp;gt;&lt;/code&gt;), use the &lt;code&gt;--source&lt;/code&gt; argument to &lt;code&gt;git restore&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git restore --source &amp;lt;tree&amp;gt; &amp;lt;filepath&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;When given a branch, &lt;code&gt;git checkout &amp;lt;branch&amp;gt;&lt;/code&gt; sets &lt;code&gt;HEAD&lt;/code&gt; to point to &lt;code&gt;&amp;lt;branch&amp;gt;&lt;/code&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Use &lt;code&gt;git switch&lt;/code&gt; to set &lt;code&gt;HEAD&lt;/code&gt; to point to a branch:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git switch &amp;lt;filepath&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A useful mnemonic would be to think that we are &lt;strong&gt;&lt;em&gt;switching&lt;/em&gt;&lt;/strong&gt; to a branch.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;When given a commit, &lt;code&gt;git checkout &amp;lt;commit&amp;gt;&lt;/code&gt; sets &lt;code&gt;HEAD&lt;/code&gt; to point to &lt;code&gt;&amp;lt;commit&amp;gt;&lt;/code&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Similarly use &lt;code&gt;git switch&lt;/code&gt;, but you have to specify &lt;code&gt;--detach&lt;/code&gt;. This helps to call out that you are putting your repository in detached &lt;code&gt;HEAD&lt;/code&gt; state.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git switch --detach &amp;lt;commit&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;sign-me-up---where-can-i-use-them&#34;&gt;Sign me up - where can I use them?&lt;/h3&gt;
+&lt;p&gt;Both &lt;code&gt;git switch&lt;/code&gt; and &lt;code&gt;git restore&lt;/code&gt; were introduced in Git v2.23 &lt;a href=&#34;https://github.com/git/git/blob/master/Documentation/RelNotes/2.23.0.txt#L61&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;released in August 2019&lt;/a&gt;, so you should be able to use them on a machine with an up-to-date installation of Git, without having to install an additional piece of software. Indeed, you may already have encountered references to &lt;code&gt;git switch&lt;/code&gt; and &lt;code&gt;git restore&lt;/code&gt; in the documentation for &lt;code&gt;git checkout&lt;/code&gt;, and in the advice printed by Git when entering detached &lt;code&gt;HEAD&lt;/code&gt; state, among others.&lt;/p&gt;
+&lt;h3 id=&#34;a-rosetta-stone&#34;&gt;A Rosetta Stone&lt;/h3&gt;
+&lt;p&gt;To help you get started with &lt;code&gt;git switch&lt;/code&gt; and &lt;code&gt;git restore&lt;/code&gt;, here&amp;rsquo;s a mapping from a &lt;code&gt;git checkout&lt;/code&gt; invocation you may already be using in your daily workflow to a &lt;code&gt;git switch&lt;/code&gt; or &lt;code&gt;git restore&lt;/code&gt; invocation:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;git checkout&lt;/th&gt;
+&lt;th&gt;Change HEAD to:&lt;/th&gt;
+&lt;th&gt;Which files are changed?&lt;/th&gt;
+&lt;th&gt;git switch/restore&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;git checkout &amp;lt;filepath&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;code&gt;git checkout -- &amp;lt;filepath&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;no change&lt;/td&gt;
+&lt;td&gt;Files listed in &lt;code&gt;&amp;lt;filepath&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;git restore &amp;lt;filepath&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;git checkout &amp;lt;tree&amp;gt; &amp;lt;filepath&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;code&gt;git checkout &amp;lt;tree&amp;gt; -- &amp;lt;filepath&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;no change&lt;/td&gt;
+&lt;td&gt;Files listed in &lt;code&gt;&amp;lt;filepath&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;git restore --source &amp;lt;tree&amp;gt; &amp;lt;filepath&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;git checkout &amp;lt;branch&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt;branch&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;All files in repo&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;git switch &amp;lt;branch&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;git checkout &amp;lt;commit&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;code&gt;git checkout --detach &amp;lt;commit&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt;commit&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;All files in repo&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;git switch --detach &amp;lt;commit&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;12switchrestoressanscheckouts-challenge&#34;&gt;#12SwitchRestoresSansCheckOuts Challenge&lt;/h3&gt;
+&lt;p&gt;Here&amp;rsquo;s my challenge to you: start using &lt;code&gt;git switch&lt;/code&gt; and &lt;code&gt;git restore&lt;/code&gt;! To make things fun, once you&amp;rsquo;ve used them 12 times or more, post a screenshot as proof with the tag &lt;a href=&#34;https://twitter.com/search?q=%2333SwitchRestoresSansCheckOuts&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;#12SwitchRestoresSansCheckOuts&lt;/a&gt;. Here&amp;rsquo;s &lt;a href=&#34;https://twitter.com/rctay/status/1275486248333795328&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;my take on it&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;ve feedback on these commands, feel free to drop an email to the Git mailing list where development happens; see &lt;a href=&#34;https://github.com/git/git/blob/todo/MaintNotes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this note&lt;/a&gt; for details.&lt;/p&gt;
+&lt;p&gt;I hope this improved user experience will be a part of your daily workflow—better yet, of your muscle memory.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Many thanks to &lt;a href=&#34;https://github.com/davebarnes97&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Dave Barnes&lt;/a&gt; and &lt;a href=&#34;https://github.com/lizanys&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Liza&lt;/a&gt; for reading early versions of this post!&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&#34;further-reading&#34;&gt;Further reading&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;a href=&#34;https://git-scm.com/docs/git-checkout&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;documentation page&lt;/a&gt; for &lt;code&gt;git checkout&lt;/code&gt; has a full list of the options it takes; it&amp;rsquo;s also where &lt;a href=&#34;https://git-scm.com/docs/git-checkout#_detached_head&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;detached HEAD&lt;/a&gt; is explained.&lt;/li&gt;
+&lt;li&gt;The Github blog covers this same topic their &lt;a href=&#34;https://github.blog/2019-08-16-highlights-from-git-2-23/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Highlights from Git 2.23&lt;/a&gt; post.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;endnotes&#34;&gt;Endnotes&lt;/h3&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;I used &amp;ldquo;contents of files&amp;rdquo;, when it is more accurate to talk about the &amp;ldquo;working tree&amp;rdquo; as something separate from the index. The &lt;a href=&#34;https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified#_the_three_trees&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;ldquo;Three Trees&amp;rdquo; section&lt;/a&gt; of the freely available Pro Git book explains what they are (with diagrams!)&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;Note that the changes will be staged after running the command - or to use Git parlance, the index is overwritten.&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:3&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;That the &lt;code&gt;git checkout&lt;/code&gt; command does a &amp;ldquo;checkout&amp;rdquo; of branches or files was in fact the description used in its documentation in earlier versions of Git, like in &lt;a href=&#34;https://github.com/git/git/blob/v1.7.0/Documentation/git-checkout.txt&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;v1.7.0&lt;/a&gt;.&amp;#160;&lt;a href=&#34;#fnref:3&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:4&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;When determining what has changed, &lt;code&gt;HEAD&lt;/code&gt; isn&amp;rsquo;t the only factor—it depends on how you ask Git for changes. For example, &lt;code&gt;git diff&lt;/code&gt; uses the index as the point of comparison, so even if your files didn&amp;rsquo;t match their content in &lt;code&gt;HEAD&lt;/code&gt; but had been staged, you&amp;rsquo;d get an empty output. It&amp;rsquo;s also important to note that Git doesn&amp;rsquo;t deal with changes or deltas; each commit is a complete snapshot of your files.&amp;#160;&lt;a href=&#34;#fnref:4&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:5&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;The &lt;a href=&#34;https://git-scm.com/docs/git-checkout#_detached_head&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;detached HEAD&lt;/a&gt; section of the &lt;code&gt;git checkout&lt;/code&gt; documentation gives some commands you can use to &amp;ldquo;recover&amp;rdquo; from this situation.&amp;#160;&lt;a href=&#34;#fnref:5&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:6&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;In a &lt;a href=&#34;https://www.youtube.com/watch?v=qs_xS1Y6nGc&amp;amp;t=12m48s&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;2011 interview on Geek Time&lt;/a&gt; by the Google Open Source Programs Office, Junio C Hamano, the maintainer of Git, responds to the criticism that Git is hard to use:&lt;/p&gt;
+&lt;p&gt;&amp;ldquo;Another thing is because the system wasn’t really designed, but grew organically. So somebody came up with an idea of doing one thing. &amp;lsquo;Oh, this is a good idea, a good feature; let’s add it to this command as this option name&amp;rsquo;. And the option name he chooses just gets stuck, but after a few months, somebody else notices, &amp;lsquo;Oh, this is a similar mode of operation with that existing command.&#39;&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;(This author bears &lt;strong&gt;some&lt;/strong&gt; blame for expanding the plethora of options &lt;code&gt;git checkout&lt;/code&gt; takes, having &lt;a href=&#34;https://github.com/git/git/commit/02ac98374eefbe4a46d4b53a8a78057ad8ad39b7&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;contributed the &lt;code&gt;-B&lt;/code&gt; option&lt;/a&gt;, the &amp;ldquo;forced&amp;rdquo; counterpart to &lt;code&gt;git checkout -b &amp;lt;branch&amp;gt;&lt;/code&gt;.)&lt;/p&gt;
+&lt;p&gt;A summary of the interview can be found on the &lt;a href=&#34;https://opensource.googleblog.com/2011/03/geek-time-with-junio-c-hamano.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Google Open Source blog&lt;/a&gt;. (&lt;a href=&#34;https://www.infoq.com/news/2019/08/git-2-23-switch-restore/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Via an InfoQ post also on the introduction of git switch and restore&lt;/a&gt;.)&amp;#160;&lt;a href=&#34;#fnref:6&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

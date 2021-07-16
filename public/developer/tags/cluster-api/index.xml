@@ -1,0 +1,45 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Cluster API</title>
+    <link>/tags/cluster-api/</link>
+    <description>Recent content in Cluster API on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 26 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/cluster-api/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Challenges Managing Multiple Clusters Across Multiple Clouds</title>
+      
+      <link>/guides/kubernetes/multi-cloud-multi-cluster-management/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/multi-cloud-multi-cluster-management/</guid>
+      <description>
+
+        
+        &lt;p&gt;While Kubernetes provides a rich and capable environment for modern applications, it introduces a lot of moving parts and day 2 operating issues. How do you create and enforce security policy in a highly fluid environment? How do you make sure that your identity and access control systems are configured? How do you make certain that everything stays properly configured?&lt;/p&gt;
+&lt;p&gt;These challenges are hard enough to get right in a single Kubernetes cluster, but we don’t live in a world of single Kubernetes clusters. In the marketplace of ideas, multi-cluster has won. Rather than creating one giant Kubernetes cluster for everyone to share, there’s a clear need to have many small clusters. It makes sense from a security perspective, and can improve resilience and stability, as well. But that brings with it new management challenges.&lt;/p&gt;
+&lt;h2 id=&#34;taming-multi-cluster-management&#34;&gt;Taming Multi-Cluster Management&lt;/h2&gt;
+&lt;p&gt;While many cloud providers offer managed Kubernetes services, the control planes for these services only work for a particular provider. Several vendors are working to address the issue of multi-cloud cluster management with solutions to unify and simplify cross-cloud management in public clouds and on premises.&lt;/p&gt;
+&lt;p&gt;For example, VMware &lt;a href=&#34;https://tanzu.vmware.com/content/tanzu-mission-control/introducing-vmware-tanzu-mission-control-to-bring-order-to-cluster-chaos&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;introduced Tanzu Mission Control&lt;/a&gt; in 2019 to allow operators to apply policy to individual clusters or groups of clusters and establish guardrails, freeing developers to work more freely within defined boundaries. Under the covers, VMware Tanzu Mission Control leverages &lt;a href=&#34;https://github.com/kubernetes-sigs/cluster-api&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cluster API&lt;/a&gt; for lifecycle management.&lt;/p&gt;
+&lt;h2 id=&#34;introducing-cluster-api&#34;&gt;Introducing Cluster API&lt;/h2&gt;
+&lt;p&gt;The Cluster API is an open-source, cross-vendor effort to simplify cluster lifecycle management. It’s a member of a set of tools and emerging projects that help create/curate/update base virtual machine images, tackling the problem in a Kubernetes-native way, bringing control and consistency across clouds or on-premises, on virtualized or bare metal infrastructure.&lt;/p&gt;
+&lt;p&gt;Extensibility is important and a diverse provider universe already exists. You’ll find provider implementations for a host of clouds, including AWS, Microsoft Azure, Baidu Cloud, Digital Ocean, Google Cloud Platform, IBM Cloud, vSphere, Packet, and more.&lt;/p&gt;
+&lt;p&gt;VMware is investing heavily in the Cluster API effort, including baking a supervisor cluster into &lt;a href=&#34;https://tanzu.vmware.com/content/blog/vsphere-7-and-tanzu-kubernetes-grid-powerful-platform-for-architecting-modern-apps&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;vSphere 7&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;If you want to learn more about Cluster API or get started using it, &lt;a href=&#34;https://cluster-api.sigs.k8s.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Cluster API Book&lt;/a&gt; provides a deep dive that will help you get started.&lt;/p&gt;
+&lt;p&gt;Two recent Tanzu blogs, &lt;a href=&#34;https://tanzu.vmware.com/content/blog/cluster-api-is-a-big-deal-joe-beda-craig-mcluckie-tell-you-why&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cluster API is a Big Deal&lt;/a&gt; and &lt;a href=&#34;https://tanzu.vmware.com/content/blog/cluster-api-provider-for-azure-is-another-giant-leap-for-the-community&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cluster API Provider for Azure&lt;/a&gt; provide more context to help you understand what’s happening in multi-cloud, multi-cluster management.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

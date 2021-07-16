@@ -1,0 +1,158 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Spring Cloud Config Server</title>
+    <link>/tags/spring-cloud-config-server/</link>
+    <description>Recent content in Spring Cloud Config Server on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 29 Jan 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/spring-cloud-config-server/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Setting Up Spring Cloud Config Server</title>
+      
+      <link>/guides/spring/spring-cloud-config-set-up/</link>
+      <pubDate>Fri, 29 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/spring-cloud-config-set-up/</guid>
+      <description>
+
+        
+        &lt;p&gt;As an application moves through the deployment pipeline from dev to test to production, you may need a centralized way to manage the configuration across environments to make certain that each application has access to everything it needs to run as it moves and always uses the right configuration. &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/reference/html/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Config&lt;/a&gt; provides server-side and client-side support for managing and using external configuration information.&lt;/p&gt;
+&lt;p&gt;This can have significant advantages with microservices applications where multiple instances of a microservice may be running at one time. Using a centralized config server makes it possible to ensure that all instances are configured the same way, and if you need to change a setting, like a timeout value, you only have to do it in one place (assuming your application encode includes a refresh mechanism).&lt;/p&gt;
+&lt;p&gt;The Spring Cloud Config Server provides a central place to manage external properties for multiple applications across multiple environments, superseding or supplementing the environment variables and system properties used in most applications.&lt;/p&gt;
+&lt;p&gt;This guide explains some important considerations for setting up and using a Spring Config Server. &lt;a href=&#34;/guides/spring/spring-cloud-config-security/&#34;&gt;Securing Spring Cloud Config Server&lt;/a&gt; digs into some security mechanisms that can be used with Spring Config Server.&lt;/p&gt;
+&lt;h2 id=&#34;creating-a-config-server&#34;&gt;Creating a Config Server&lt;/h2&gt;
+&lt;p&gt;Spring Cloud Config Server acts as an intermediary between your Spring applications and a repository of configuration files. Creating a Config Server is straightforward. Use Spring Cloud’s &lt;code&gt;@EnableConfigServer&lt;/code&gt; to create a config server capable of communicating with your applications. This is a regular Spring Boot application with an annotation added to enable the config server:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@SpringBootApplication&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@EnableConfigServer&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;ConfigServer&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;SpringApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;run&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ConfigServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should switch the Config Server from the default port (8080) to the more conventional port (8888). This can be achieved by launching the Config Server with &lt;code&gt;spring.config.name=configserver&lt;/code&gt; (there is a &lt;code&gt;configserver.yml&lt;/code&gt; in the Config Server jar).&lt;/p&gt;
+&lt;h3 id=&#34;spring-config-server-repositories&#34;&gt;Spring Config Server repositories&lt;/h3&gt;
+&lt;p&gt;A Spring Config Server instance needs a place to store configuration information. A centralized repository is used for this information.The location of the repository is controlled by the &lt;code&gt;EnvironmentRepository&lt;/code&gt;, serving &lt;code&gt;Environment&lt;/code&gt; objects. &lt;code&gt;Environment&lt;/code&gt; resources have three parameters:&lt;/p&gt;
+&lt;p&gt;*&lt;code&gt;{application}&lt;/code&gt;, which maps to &lt;code&gt;spring.application.name&lt;/code&gt; on the client side.&lt;/p&gt;
+&lt;p&gt;*&lt;code&gt;{profile}&lt;/code&gt;, which maps to &lt;code&gt;spring.profiles.active&lt;/code&gt; on the client (comma-separated list).&lt;/p&gt;
+&lt;p&gt;*&lt;code&gt;{label}&lt;/code&gt;, which is a server side feature labeling a &amp;ldquo;versioned&amp;rdquo; set of config files.&lt;/p&gt;
+&lt;p&gt;A repository loads configuration files from a &lt;code&gt;spring.config.name&lt;/code&gt; based on the &lt;code&gt;{application}&lt;/code&gt; parameter, and &lt;code&gt;spring.profiles.active&lt;/code&gt; based on the &lt;code&gt;{profiles}&lt;/code&gt; parameter. Active profiles take precedence over defaults.&lt;/p&gt;
+&lt;h4 id=&#34;repository-types&#34;&gt;Repository types&lt;/h4&gt;
+&lt;p&gt;Spring Config Server supports a wide range of different &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/reference/html/#_environment_repository&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;repository types&lt;/a&gt;, making it appropriate to address almost any need from simple to complex:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Git backend.&lt;/strong&gt; Uses a local, git-based file system repository, GitHub, GitLab, or other.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;File system backend.&lt;/strong&gt; Stores config information in a local file system without version control.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Vault backend.&lt;/strong&gt; Uses Vault by HashiCorp to create a secure repository. (Described in &lt;a href=&#34;/guides/spring/spring-cloud-config-security/&#34;&gt;Securing Spring Cloud Config Server&lt;/a&gt;.)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;JDBC backend.&lt;/strong&gt; Uses the Java Database Connector (JDBC) to connect to a relational database.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Redis backend.&lt;/strong&gt; Uses the &lt;a href=&#34;https://redis.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Redis&lt;/a&gt; in-memory database.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AWS S3 backend.&lt;/strong&gt; Uses an &lt;a href=&#34;https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;AWS S3 bucket&lt;/a&gt; as a repository.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CredHub backend.&lt;/strong&gt; Uses Cloud Foundry’s &lt;a href=&#34;https://docs.cloudfoundry.org/credhub/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CredHub&lt;/a&gt; as a repository.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The default is a Git-based backend. This is convenient for managing upgrades, physical environments and for auditing changes, but you’re free to choose whichever backend fits your organization’s needs based on which options you’re familiar with or already using, where your environments are running, and what your security needs are. &lt;a href=&#34;/guides/spring/spring-cloud-config-security/&#34;&gt;Securing Spring Cloud Config Server&lt;/a&gt; focuses on security, and explains how to use Vault as a secure backend.&lt;/p&gt;
+&lt;p&gt;All the options are explained in detail in the &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/reference/html/#_environment_repository&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Config Reference documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;using-multiple-repositories&#34;&gt;Using multiple repositories&lt;/h4&gt;
+&lt;p&gt;You may wish to keep configuration data in &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/reference/html/#composite-environment-repositories&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;multiple environment repositories&lt;/a&gt;. To do so, you can enable the &lt;code&gt;composite&lt;/code&gt; profile in your configuration server’s application properties or YAML file.&lt;/p&gt;
+&lt;h3 id=&#34;sharing-configuration-information-with-all-applications&#34;&gt;Sharing Configuration Information with All Applications&lt;/h3&gt;
+&lt;p&gt;You can share a set of configuration information with all your applications.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;With file-based repositories, resources with file names application.properties, application.yml, application-*.properties, and so on) are shared with all client applications. You can use resources with these file names to configure global defaults and have them be overridden by application-specific files if necessary.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When using Vault as a backend, you can share configuration with all applications by placing configurations in &lt;code&gt;secret/application&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;property-overrides&#34;&gt;Property Overrides&lt;/h3&gt;
+&lt;p&gt;The Spring Config Server includes an &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/reference/html/#property-overrides&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;overrides feature&lt;/a&gt; that lets an operator provide configuration properties to all applications. The overridden properties cannot be accidentally changed by the application with the normal Spring Boot hooks.&lt;/p&gt;
+&lt;h2 id=&#34;client-side-usage&#34;&gt;Client-Side Usage&lt;/h2&gt;
+&lt;p&gt;To make use of &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/reference/html/#_client_side_usage&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Config Server in a client application&lt;/a&gt;, you build your Spring Boot application so it depends on &lt;code&gt;spring-cloud-config-client&lt;/code&gt;. The easiest way to add the dependency is with a Spring Boot starter &lt;code&gt;org.springframework.cloud:spring-cloud-starter-config&lt;/code&gt;. There is also a parent POM and BOM (spring-cloud-starter-parent) for Maven users and a Spring IO version management properties file for Gradle and Spring CLI users.&lt;/p&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;A great way to get started learning about and using Spring Cloud Config is the &lt;a href=&#34;https://spring.io/guides/gs/centralized-configuration/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Centralized Configuration Guide&lt;/a&gt;. This guide takes about 15 minutes, stepping through the process of setting up a Config Server and consuming configuration information from a client. It also illustrates how to refresh configuration without restarting the client.&lt;/p&gt;
+&lt;p&gt;In a recent &lt;a href=&#34;/tv/springone-tour/0006/&#34;&gt;Spring Tips video&lt;/a&gt; from the 2020 SpringOne tour, Developer Advocate Josh Long goes deep on configuration methods, including Spring Cloud Config.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/guides/spring/spring-cloud-config-security/&#34;&gt;Securing Spring Cloud Config Server&lt;/a&gt; explains how to implement several security options in conjunction with Spring Cloud Config.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Securing Spring Cloud Config Server</title>
+      
+      <link>/guides/spring/spring-cloud-config-security/</link>
+      <pubDate>Fri, 29 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/spring-cloud-config-security/</guid>
+      <description>
+
+        
+        &lt;p&gt;As explained in &lt;a href=&#34;/guides/spring/spring-cloud-config-set-up/&#34;&gt;Setting Up Spring Cloud Config Server&lt;/a&gt;, a Spring Cloud Config Server provides a centralized configuration repository for Spring apps. The &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/reference/html/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Config Server&lt;/a&gt; externalizes configuration information for an application and serves out this information via a REST interface. Some configuration information is sensitive (such as passwords) and requires greater security.&lt;/p&gt;
+&lt;p&gt;This guide explains two methods to increase the security of a Config Server:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Using encryption in combination with a git repository&lt;/li&gt;
+&lt;li&gt;Using Vault as a secure repository&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; To use encryption and decryption features you need the full-strength Java Cryptography Extension (JCE) installed in your JVM (it is not included by default). Download the &lt;em&gt;Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files&lt;/em&gt; from Oracle, and follow instructions for installation (essentially replace the two policy files in the JRE lib/security directory with the ones you downloaded).&lt;/p&gt;
+&lt;h2 id=&#34;securing-a-git-repository&#34;&gt;Securing a git repository&lt;/h2&gt;
+&lt;p&gt;The default backend for a Config Server is a git repository. This can be configured to store and serve encrypted configuration values to protect sensitive information. In a secure Config Server, the remote property sources contain encrypted content (values starting with &lt;code&gt;{cipher}&lt;/code&gt;). These will be decrypted before sending to clients over HTTP. The main advantage of this approach is that property values aren’t stored in plain text.&lt;/p&gt;
+&lt;p&gt;Keep the following in mind when using &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_server.html#_encryption_and_decryption&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;encryption&lt;/a&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Encrypted values in an &lt;code&gt;application.yml&lt;/code&gt; file can be wrapped in quotes:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;spring:
+   datasource:
+      username: dbuser
+      password: &#39;{cipher}FKSAJDFGYOS8F7GLHAKERGFHLSAJ&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Encrypted values in an &lt;code&gt;application.properties&lt;/code&gt; file must not be wrapped in quotes, otherwise the value will not be decrypted: &lt;code&gt;spring.datasource.password: {cipher}FKSAJDFGYOS8F7GLHAKERGFHLSAJ&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The Config Server exposes &lt;code&gt;/encrypt&lt;/code&gt; and &lt;code&gt;/decrypt&lt;/code&gt; endpoints (on the assumption that these are secured and only accessed by authorized agents). If you edit a remote config file, you can use the Config Server to encrypt values by POSTing to the /encrypt endpoint.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Take the encrypted value and add the &lt;code&gt;{cipher}&lt;/code&gt; prefix before you put it in the YAML or properties file and before you commit and push it to a remote (potentially insecure) store.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;key-management-symmetric-vs-asymmetric-keys&#34;&gt;Key management: symmetric vs. asymmetric keys&lt;/h3&gt;
+&lt;p&gt;The Config Server can use symmetric (shared) or asymmetric keys (RSA key pair). The asymmetric choice is superior in terms of security, but it is often more convenient to use a symmetric key since it is a single property value to configure in &lt;code&gt;bootstrap.properties&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To configure a symmetric key, you need to set &lt;code&gt;encrypt.key&lt;/code&gt; to a secret String (or use the &lt;code&gt;ENCRYPT_KEY&lt;/code&gt; environment variable to keep it out of plain-text configuration files).&lt;/p&gt;
+&lt;p&gt;You cannot configure an asymmetric key using &lt;code&gt;encrypt.key&lt;/code&gt;. To configure an asymmetric key use a keystore (e.g. as created by the &lt;code&gt;keytool&lt;/code&gt; utility that comes with the JDK). The keystore properties are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;encrypt.keyStore.location&lt;/code&gt; Contains a Resource location&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;encrypt.keyStore.password&lt;/code&gt; Holds the password that unlocks the keystore&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;encrypt.keyStore.alias&lt;/code&gt; Identifies which key in the store to use&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;encrypt.keyStore.type&lt;/code&gt; The type of KeyStore to create. Defaults to jks&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Encryption is done with the public key, and a private key is needed for decryption. Thus, in principle, you can configure only the public key in the server if you want to only encrypt (and are prepared to decrypt the values yourself locally with the private key).&lt;/p&gt;
+&lt;p&gt;In practice, you might not want to decrypt locally because it spreads the &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_server.html#_key_management&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;key management&lt;/a&gt; process to all the clients, instead of concentrating it on the server. On the other hand, it can be a useful option if your Config Server is relatively insecure and only a handful of clients need the encrypted properties.&lt;/p&gt;
+&lt;h2 id=&#34;using-hashicorp-vault-as-a-secure-external-repository&#34;&gt;Using HashiCorp Vault as a secure external repository&lt;/h2&gt;
+&lt;p&gt;Spring Cloud Vault Config provides client-side support for externalized configuration in a distributed system. &lt;a href=&#34;https://learn.hashicorp.com/collections/vault/getting-started&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;HashiCorp’s Vault&lt;/a&gt; is a central place to manage external secret properties for applications across all environments. It can be used to back Config Server instances.This section provides some guidelines for working with a Vault backend.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt; you can also configure applications to access Vault directly using &lt;a href=&#34;https://cloud.spring.io/spring-cloud-vault/reference/html/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Vault&lt;/a&gt;. Spring Cloud Vault and Spring Cloud Config with a Vault backend are &lt;a href=&#34;https://stackoverflow.com/questions/45502722/difference-between-spring-cloud-vault-and-spring-cloud-config-with-vault-backend&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;not the same thing&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To enable Config Server to &lt;a href=&#34;https://cloud.spring.io/spring-cloud-config/reference/html/#vault-backend&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;use a Vault backend&lt;/a&gt;, you run your Config Server with the Vault profile. For example, in your Config Server’s &lt;code&gt;application.properties&lt;/code&gt;, add &lt;code&gt;spring.profiles.active=vault&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;By default, Config Server assumes that your Vault server runs at &lt;code&gt;http://127.0.0.1:8200&lt;/code&gt;. It also assumes that the name of &lt;code&gt;backend&lt;/code&gt; is &lt;code&gt;secret&lt;/code&gt; and the &lt;code&gt;key&lt;/code&gt; is &lt;code&gt;application&lt;/code&gt;. All of these defaults can be re-configured in your Config Server’s &lt;code&gt;application.properties&lt;/code&gt;. All the configurable properties can be found in &lt;code&gt;org.springframework.cloud.config.server.environment.VaultEnvironmentProperties.&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;With your Config Server running, you can make HTTP requests to the server to retrieve values from the HashiCorp Vault backend. To do so, you need a token for your Vault server.&lt;/p&gt;
+&lt;p&gt;First, place some data in you Vault, as shown in the following example:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ vault kv put secret/application foo=bar baz=bam
+$ vault kv put secret/myapp foo=myappsbar
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Second, make an HTTP request to your config server to retrieve the values:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ curl -X &amp;quot;GET&amp;quot; &amp;quot;http://localhost:8888/myapp/default&amp;quot; -H &amp;quot;X-Config-Token: yourtoken&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is the default way for a client to provide the necessary authentication to let Config Server talk to HashiCorp Vault.&lt;/p&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep learning&lt;/h2&gt;
+&lt;p&gt;You can use the encryption features of Spring Cloud Config Server with a git repository to improve the security of your configuration service, or use Vault as a backend for situations that require the highest security. Some organizations or projects use a git repository for configuration information that does not need to be secured, plus a HashiCorp Vault repository for secrets.&lt;/p&gt;
+&lt;p&gt;You can get started learning about and using Spring Cloud Config with git in the &lt;a href=&#34;https://spring.io/guides/gs/centralized-configuration/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Centralized Configuration Guide&lt;/a&gt;. Although it does not include use of encryption, this guide steps through the process of setting up a Config Server and consuming configuration information from a client. Use that as a starting point to explore the use of encryption as described above.&lt;/p&gt;
+&lt;p&gt;If you want to learn more and get started using a Vault backend, this &lt;a href=&#34;https://github.com/spring-cloud-samples/spring-cloud-config-vault&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;sample code on Github&lt;/a&gt; provides an example of a working Config Server with Vault and Config Client plus usage instructions.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

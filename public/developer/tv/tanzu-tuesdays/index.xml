@@ -1,0 +1,952 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Tanzu Tuesdays</title>
+    <link>/tv/tanzu-tuesdays/</link>
+    <description>Recent content in Tanzu Tuesdays on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/tv/tanzu-tuesdays/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Self-signed JWTs: Dos and Don&#39;ts with Josh Cummings</title>
+      
+      <link>/tv/tanzu-tuesdays/0061/</link>
+      <pubDate>Tue, 13 Jul 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0061/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0061.png" width="640" />]]>
+        
+        &lt;p&gt;If you are securing a REST API with JWTs, chances are you either 1. use an authorization server or 2. have read countless variations on how a REST API can mint its own JWTs. Is this a good idea? If so, how should you go about doing it? In this talk, we&amp;rsquo;ll start with an unsecured REST API and review the trade-offs of having it use self-signed JWTs. By the end, you&amp;rsquo;ll have a better idea whether this is an option for you.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: There&#39;s an Impostor Among Us</title>
+      
+      <link>/tv/tanzu-tuesdays/0060/</link>
+      <pubDate>Tue, 06 Jul 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0060/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/among-us.png" width="640" />]]>
+        
+        &lt;p&gt;We&amp;rsquo;re going to play Among Us!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Creating Images the Easy Way - Cloud Native Buildpacks with Daniel Mikusa</title>
+      
+      <link>/tv/tanzu-tuesdays/0059/</link>
+      <pubDate>Tue, 29 Jun 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0059/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0059.png" width="640" />]]>
+        
+        &lt;p&gt;Buildpacks are a pluggable, modular, language-agnostic tool that takes application source code and gives you an OCI (Open Container Initiative) image that you can run using Docker, Kubernetes, or your OCI Runtime of choice. Tired of writing and maintaining Dockerfiles and vetting base images? Unsure how that monitoring or security agent needs to be installed? Feeling pressure from your Security team about your images? Just want to get back to coding? Buildpacks have you covered. You write code and buildpacks take care of the rest. Don&amp;rsquo;t believe it? Come check out this session, which will take you from doing things the hard way to doing them the buildpacks way.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: The road to Native Images – what can trip me up? With Dan Dobrin</title>
+      
+      <link>/tv/tanzu-tuesdays/0058/</link>
+      <pubDate>Tue, 22 Jun 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0058/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0058.png" width="640" />]]>
+        
+        &lt;p&gt;Increased cloud adoption by deploying modern apps in K8s opens up entire new sets of use-cases for enterprises on a constant basis. Hence the need to create lightweight and efficient containers that start almost instantly and consume less memory and CPU by orders of magnitude.&lt;/p&gt;
+&lt;p&gt;Native Images are the next chapter of Spring’s innovation journey in the K8s world. Can Spring Native with GraalVM make the migration to native images seamless? Is there anything that could potentially trip us up? What do we need to know when migrating apps to native? Can we learn to write better Java code in the process?&lt;/p&gt;
+&lt;p&gt;Let’s answer these questions by looking into:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;How does Just-in-time vs Ahead-of-time compilation compare?&lt;/li&gt;
+&lt;li&gt;Understanding Runtime vs Build-Time Class Initialization for Spring Native Images&lt;/li&gt;
+&lt;li&gt;Ahead-of-time compilation limitations - what do I need to know and how is Spring Native helping me to mitigate them?&lt;/li&gt;
+&lt;li&gt;What&amp;rsquo;s working differently for some of the Java’s features in Native Images?&lt;/li&gt;
+&lt;li&gt;Can we learn to write better Java code in the process?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As developers we learn by example … let&amp;rsquo;s use some practical ones&amp;hellip; then explore the topic further at our leisure with a comprehensive set as reference&amp;hellip;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Spring Boot loves Tanzu Observability with Madhura Bhave &amp; Stéphane Nicoll</title>
+      
+      <link>/tv/tanzu-tuesdays/0057/</link>
+      <pubDate>Tue, 15 Jun 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0057/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0057.png" width="640" />]]>
+        
+        &lt;p&gt;As application developers we spend a lot of time thinking of ways to improve the efficiency of our web application. We could completely rewrite it, leverage more concurrency and even add reactive features. But how do we know if it is more efficient if we don&amp;rsquo;t measure and track relevant metrics? Once the application is pushed to production, we might also need to monitor the status of external services that the application relies on. For easy consumption of such metrics, being able to visualize them on a dashboard may make understanding the application behavior easier. In this talk, we will cover how metrics collected by a Spring Boot application can be sent to Tanzu Observability (Wavefront) using the Wavefront Spring Boot starter. Using a WebFlux demo application, we will go over out-of-the-box metrics, add custom metrics and look at how a slow remote service can be detected. We will also look at sending trace data to Wavefront.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: RabbitMQ has a problem. Let us tell you about it. With Gerhard Lazu &amp; David Ansari</title>
+      
+      <link>/tv/tanzu-tuesdays/0056/</link>
+      <pubDate>Tue, 01 Jun 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0056/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0056.png" width="640" />]]>
+        
+        &lt;p&gt;Everyone experienced problems with the software that they run. We all want to know how to fix things quickly and reliably, in a confidence-inspiring manner. Let&amp;rsquo;s be honest: &amp;ldquo;stop and start it&amp;rdquo; fixes are not an option for VMware customers which use our products in mission critical applications: emergency systems, factories, autonomous vehicles, etc.  RabbitMQ is this type of a system. Those responsible for it need to know when problems hit, preferably in advance, and they need a clear path to resolution. While RabbitMQ exposes a wealth of metrics, logs, and events, and has decent dashboards that help visualise these, we know that users only look at dashboards when there is a problem. Wouldn&amp;rsquo;t it be great if RabbitMQ notified you when there is a problem in the making? How about a run book on how to fix that specific problem? Imagine if some problems could even be fixed automatically. That is the direction that we are going towards. Let us show you what we have so far.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Orchestrating Data Pipelines with Data Flow with Glenn Renfro</title>
+      
+      <link>/tv/tanzu-tuesdays/0055/</link>
+      <pubDate>Tue, 25 May 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0055/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0055.png" width="640" />]]>
+        
+        &lt;p&gt;With the quantity and types of data that must be processed in real time by enterprises today, we may be asking ourselves, &amp;ldquo;How do we create solutions to process this data and how do we orchestrate these solutions?&amp;rdquo; This discussion shows how Spring Cloud Data Flow (SCDF) can continuously deploy, scale, monitor, and manage your stream and batch workloads by using the capabilities
+on Kubernetes.&lt;/p&gt;
+&lt;p&gt;This session walks you through the tooling capabilities of SCDF. In addition to the core orchestration features, you will also see a demo of creating a real-time streaming pipeline on Kubernetes, using recipes such as functional composition of the applications, and managing workloads. You will also see a demo on scheduling and continuously deploying batch workloads on Kubernetes, creating a single-step batch job with no coding, and distributing batch job processing across multiple machines.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Observability and How I joined the Spring Team with Jonatan Ivanov</title>
+      
+      <link>/tv/tanzu-tuesdays/0054/</link>
+      <pubDate>Tue, 18 May 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0054/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0054.png" width="640" />]]>
+        
+        &lt;p&gt;Jonatan is a new addition to the Spring Team, he’s going to talk about his interviewing experience, his daily work in the Spring Team and this is also a good opportunity to ask questions from him.  You can often hear that logging, metrics, and distributed tracing are the &amp;ldquo;three pillars of Observability&amp;rdquo; but having access to them does not necessarily mean more observable systems. We will talk about what Observability is, what problems the three pillars solve, what problems they generate and what Spring has to offer to implement the three pillars and what else you can find in Spring to look under the hood of your running system.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: What’s new in Spring for Apache Kafka 2.7 with Gary Russell</title>
+      
+      <link>/tv/tanzu-tuesdays/0053/</link>
+      <pubDate>Tue, 11 May 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0053/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0053.png" width="640" />]]>
+        
+        &lt;p&gt;This talk will start with a brief overview of Spring for Apache Kafka and then we&amp;rsquo;ll introduce the new features in the recently released 2.7 version, including a large community contribution. It will be mainly a live coding demonstration, with time for Q&amp;amp;A.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: GitOps for APIs: Enterprise Microservices in the Age of Kubernetes with Chris Sterling</title>
+      
+      <link>/tv/tanzu-tuesdays/0052/</link>
+      <pubDate>Tue, 04 May 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0052/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0052.png" width="640" />]]>
+        
+        &lt;p&gt;With the adoption of API-enabled microservices increasing at a rapid rate, centrally-managed enterprise services are having a hard time keeping up. More and more, development teams are performing quick API releases, straining central API management approaches, and leading to days and weeks of delay.  That’s why enterprises must harness the agility that distributed source control and API management can provide.&lt;/p&gt;
+&lt;p&gt;In this webinar, we’ll cover:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Utilizing GitOps for releases through continuously integrated and delivered software processes.&lt;/li&gt;
+&lt;li&gt;How to align APIs with our GitOps delivery model and route definitions with their associated source code.&lt;/li&gt;
+&lt;li&gt;How Spring Cloud Gateway for Kubernetes applies this GitOps for APIs model to enable agility across your development teams.
+Get the reliable, consistent software delivery controls needed in a high-performance operations environment.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Argo CD with Knative and Cloud Native Buildpacks with Boskey Savla</title>
+      
+      <link>/tv/tanzu-tuesdays/0051/</link>
+      <pubDate>Tue, 27 Apr 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0051/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0051.png" width="640" />]]>
+        
+        &lt;p&gt;With the help of Cloud Native Buildpacks and Argo CD we can automatically deploy apps from Code without needing to build Dockerfiles, understand Kubernetes Constructs etc. We will build a sample pipeline to do the same.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Tracing Issues in Your Application with Marcin Grzejszczak</title>
+      
+      <link>/tv/tanzu-tuesdays/0050/</link>
+      <pubDate>Tue, 20 Apr 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0050/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0050.png" width="640" />]]>
+        
+        &lt;p&gt;Imagine that you&amp;rsquo;re receiving a support ticket that your application is not working fine. You read the attached stack trace and now it&amp;rsquo;s time to solve the mystery - what did the user do that lead to throwing of this exception? Is it possible to find all the logs from all the applications that correspond to this user&amp;rsquo;s business operation?  What if the user is complaining that the system is slow? How can you decide which concrete operation is the culprit? Is there any way to visualize the latency?  Let&amp;rsquo;s answer these questions by taking a deep dive into application observability using distributed tracing, metrics, and correlated logs via Spring Cloud Sleuth, Tanzu Observability, OpenZipkin, OpenTelemetry, and more!  The presentation will consist of some theory but there&amp;rsquo;ll also be live coding and demos.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Containers and Monitoring with Görkem Özlü, Robert Stamps, and Christoph Villnow</title>
+      
+      <link>/tv/tanzu-tuesdays/0049/</link>
+      <pubDate>Tue, 13 Apr 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0049/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0049.png" width="640" />]]>
+        
+        &lt;p&gt;Join our special guests, the Tanzu Vanguards, as they discuss Containers and Monitoring. Current applications often consist of many different containerized services. This is great for portability and scaling, but how do you know when to scale up and down and how do your business transactions behave in this microservice mesh? And from a platform perspective, how do you ensure your platform can cope with the app&amp;rsquo;s demands?&lt;/p&gt;
+&lt;p&gt;In this session, you will learn which tools are currently available (example: Prometheus, Tanzu Observability by Wavefront, etc.) and which tool is suitable for which portion of the story. Learn what are the ups and downs of each tool and see from a user&amp;rsquo;s perspective which features are mandatory and which are just nice to have. Finally, we also plan to take on the most difficult, challenging question currently facing the DevOps world: Where does the monitoring responsibility of a DevOps team end and what portions of the monitoring challenge are in the Platform team&amp;rsquo;s realm? Please join us on 4/13 to find out!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Spring Boot with Vavr, pure gold! with Rodislav Moldovan</title>
+      
+      <link>/tv/tanzu-tuesdays/0048/</link>
+      <pubDate>Tue, 06 Apr 2021 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0048/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0048.png" width="640" />]]>
+        
+        &lt;p&gt;We&amp;rsquo;ll use the Vavr library and some basic principles from functional programming to code a Spring Boot web app, that&amp;rsquo;ll become very easy to read and understand from the coding, reading and testing perspectives. We&amp;rsquo;ll learn that an execution can fail and the stack will continue. Na magic, no spaghetti, no problems.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: STARGATE, a gateway for multi models data API with Cedrick Lunven</title>
+      
+      <link>/tv/tanzu-tuesdays/0047/</link>
+      <pubDate>Tue, 30 Mar 2021 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0047/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0047.png" width="640" />]]>
+        
+        &lt;p&gt;Join us to learn about Stargate! Stargate is a data gateway deployed between client applications and a database. It&amp;rsquo;s built with extensibility as a first-class citizen and makes it easy to use a database for any application workload by adding plugin support for new APIs, data types, and access methods. After detailing the architecture and ideas behind the frameworks we will demo the creation of REST and GraphQL APIs on top of Cassandra through simple configuration. Bring back home a working sample!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Turning Kotlin Applications into Secure Native Executables with Eleftheria Stein</title>
+      
+      <link>/tv/tanzu-tuesdays/0046/</link>
+      <pubDate>Tue, 16 Mar 2021 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0046/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0046.png" width="640" />]]>
+        
+        &lt;p&gt;In this episode, we’ll take a Kotlin Spring Boot application, secure it and compile it to a native executable. We will start with an insecure application and secure it from the ground up using the Spring Security Kotlin DSL. Then, using Spring Native, we will compile the application to a native executable, creating a lightweight container with reduced memory consumption and near instant startup time.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Spring Cloud Gateway with Cora Iberkleid</title>
+      
+      <link>/tv/tanzu-tuesdays/0045/</link>
+      <pubDate>Tue, 09 Mar 2021 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0045/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0045.png" width="640" />]]>
+        
+        &lt;p&gt;Microservice architectures simplify the individual components that comprise our applications, but they introduce new complexity in managing a high number of distributed APIs. With so many moving parts, how can you provide a simplified experience for consumers and ensure that your system is resilient and secure? Centralized gateways have been a long-standing solution for managing APIs, but microservices demand a new generation of lightweight micro-gateway applications. Spring Cloud Gateway is one such solution. It provides a simple yet flexible API to add the routing, resilience, and control you need to protect the edge layer of your applications. Built on Spring WebFlux, it also ensures an inherently non-blocking mechanism for efficiently routing and manipulating requests.  In this talk, we&amp;rsquo;ll review the motivation for Spring Cloud Gateway and demonstrate a variety of features, such as weighted routing, circuit breakers, rate limiters, and more.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Building security into development pipelines with GitLab with Abubakar Siddiq Ango</title>
+      
+      <link>/tv/tanzu-tuesdays/0044/</link>
+      <pubDate>Tue, 02 Mar 2021 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0044/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0044.png" width="640" />]]>
+        
+        &lt;p&gt;DevSecOps is a popular term right now, but what does implementing it look like? In this talk, Abubakar Siddiq Ango from GitLab will discuss how teams can prioritize security right from the development and verification stages of their pipeline and ensure secure deployments with GitOps using the GitLabCI with GitLab&amp;rsquo;s Kubernetes Agent.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Modern Application Configuration in Tanzu with Craig Walls</title>
+      
+      <link>/tv/tanzu-tuesdays/0043/</link>
+      <pubDate>Tue, 23 Feb 2021 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0043/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0043.png" width="640" />]]>
+        
+        &lt;p&gt;Historically, application configuration has been managed internal to an application deployment, in environment variables, or in files placed in the filesystem of the running application. As applications evolved into microservices, however, that approach become inadequate. Centralized configuration, including application-specific and shared configuration, versioning and rollback capabilities, and auditing became necessary. As more applications and microservices are becoming containerized and deployed in Kubernetes, configuration continues to be challenging. While Kubernetes offers configuration via ConfigMaps and Secrets, there&amp;rsquo;s no clear way to manage the properties going into those resources.  In this Tanzu Tuesday session, we&amp;rsquo;ll explore the Tanzu Configuration Service, a means of managing configuration in a Kubernetes-native way using ConfigMaps, but that also offers the benefits afforded in a centralized configuration option.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: There&#39;s an Impostor Among Us</title>
+      
+      <link>/tv/tanzu-tuesdays/0042/</link>
+      <pubDate>Tue, 16 Feb 2021 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0042/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/among-us.png" width="640" />]]>
+        
+        &lt;p&gt;Episode 42! We learn the meaning of life, the universe and everything as we shamelessly slaughter each other.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s a groundhog day miracle!  Back by unpopular demand, Tiffany and Paul play Among Us with previous Guests, Hosts, and random people from the internet.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: A Deep Dive into Spring Application Events with Oliver Drotbohm</title>
+      
+      <link>/tv/tanzu-tuesdays/0041/</link>
+      <pubDate>Tue, 09 Feb 2021 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0041/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0041.png" width="640" />]]>
+        
+        &lt;p&gt;Events have become a key element of modern application design especially when it comes to distributed applications. But also in monolithic applications they can be used to improve modularity as Spring’s ApplicationEvent abstraction and the associated infrastructure components make it easy to design, publish and consume events.  The talks starts by giving an overview about the building blocks of Spring’s core event infrastructure. It continues with an example of how to decouple Spring components using events, discusses different ways of implementing a variety of interaction scenarios and how Spring Data allows to take a more domain-driven approach to event publication. We end up by discussing advanced event handling scenarios and failure handling.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Spring Tools 4: Everything you need to know about the tools and how to be more productive using them with Martin Lippert</title>
+      
+      <link>/tv/tanzu-tuesdays/0040/</link>
+      <pubDate>Tue, 02 Feb 2021 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0040/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0040.png" width="640" />]]>
+        
+        &lt;p&gt;This session will be hands-on and doing live-coding - in order to show you how to use Spring Tools 4 to be super productive when working on Spring Boot applications. We’ll demonstrate all the additional help to create, understand, and navigate your Spring code, including super fast navigation across Spring definitions, deep understanding of your Spring code, and more. We’ll dive into the details of how information from live-running Spring Boot apps will appear directly in your source code to provide unique insights into your running application. You’ll see why Spring beans are(n’t) being created and where they are being injected (including navigation), available URL routes from running apps, and more. The live-coding will be done using a mixture of clients, ranging from Spring Tools 4 for Eclipse to Visual Studio Code, including support for up to Java 15, and useful features of the tooling to make every attendee more productive implementing applications on top of Spring Boot.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Top tips for running Spring Boot applications on Kubernetes with Ollie Hughes</title>
+      
+      <link>/tv/tanzu-tuesdays/0039/</link>
+      <pubDate>Tue, 26 Jan 2021 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0039/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0039.png" width="640" />]]>
+        
+        &lt;p&gt;Deploying a Spring Application on K8s has become increasingly straightforward with new features in Spring Boot, such as OCI image building and micrometer metric exporting. In this talk, Ollie will demonstrate a number of tools and techniques that make deploying apps to Kubernetes as painless as possible. This will include generating manifests, setting up a local development workflow and exposing health endpoints.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Spring Native with Sébastien Deleuze</title>
+      
+      <link>/tv/tanzu-tuesdays/0038/</link>
+      <pubDate>Tue, 19 Jan 2021 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0038/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0038.png" width="640" />]]>
+        
+        &lt;p&gt;Spring Native is a new effort from the Spring team that allows to compile Spring applications to native executables, using GraalVM, in order to create lightweight containers that start almost instantly and consume 4x less memory than the same application running on a regular JVM. Sébastien will share the latest status of this effort, with more details on the upcoming beta of Spring Native for GraalVM, the ongoing challenges and how the Spring team plan to address them.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Using Knative Eventing for Better Observability with Tyler Britten</title>
+      
+      <link>/tv/tanzu-tuesdays/0037/</link>
+      <pubDate>Tue, 12 Jan 2021 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0037/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0037.png" width="640" />]]>
+        
+        &lt;p&gt;If you’re using one of the great observability tools out there, you probably already mark your data with important events that may affect it- deployments, configuration changes, etc. But what about changes Kubernetes makes on its own like autoscaling events? We’ll talk about Knative Eventing and how we can use it to automatically mark these events in your data, and some other ways you can use it to improve your Observability.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Kubernetes with vSphere. Integrated Simplicity. With Kenny Coleman</title>
+      
+      <link>/tv/tanzu-tuesdays/0036/</link>
+      <pubDate>Tue, 05 Jan 2021 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0036/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0036-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;In this session we will look at vSphere with Tanzu and go into the architecture of how vSphere is integrating at multiple points of Kubernetes to simplify RBAC, storage management, and cluster lifecycle management. The demo will show how easy it is to stand up a cluster and ready to deploy any application.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: 2020 Christmas Special - Among Us</title>
+      
+      <link>/tv/tanzu-tuesdays/0035/</link>
+      <pubDate>Tue, 22 Dec 2020 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0035/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0035.jpg" width="640" />]]>
+        
+        &lt;p&gt;Tiffany and Paul play Among Us with previous Guests, Hosts, and even everyone&amp;rsquo;s favorite SweetKiller9!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Challenges and opportunities for K8s at the Edge with Maria Gabriella (Gabry) Brodi, Glênio Damasceno Borges, and Michael Wright</title>
+      
+      <link>/tv/tanzu-tuesdays/0034/</link>
+      <pubDate>Tue, 15 Dec 2020 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0034/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0034-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Microservices and containers are conquering the next frontier, the Edge. What do we need to factor in when designing solutions to lifecycle manage applications And platforms in these new environments? We would like to share an overview of what we experienced in the field and discuss the solutions that worked best so far.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Fast Data in the Cloud Environment with Bob Glithero and Pulkit Chandra</title>
+      
+      <link>/tv/tanzu-tuesdays/0033/</link>
+      <pubDate>Tue, 08 Dec 2020 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0033/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0033-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Modern web-scale applications place exacting demands on data for speed and latency. These demands are difficult to satisfy with heritage SQL data systems, which were never designed for modern applications or deployment mechanisms like containers.  On top of that, the need for SQL-like consistency and transaction integrity remains. Is it possible for a database to reconcile all of these competing requirements? In this session we will go through different use cases where Tanzu GemFire can provide value to the customer and outcomes it drives. We will also go through the high-level overview of the product.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Getting Started with Tanzu SQL on Kubernetes with Judy Wang and Marco Nicosia</title>
+      
+      <link>/tv/tanzu-tuesdays/0032/</link>
+      <pubDate>Tue, 01 Dec 2020 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0032/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0032-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Nearly every app needs a database. Two of the most popular databases in the world are open source, and free to use. After 22 years in the industry, VMware knows everything about running databases in mission-critical environments and in the cloud. Now, we blend that expertise with our leadership in Kubernetes to bring you Tanzu SQL. We make it easy for Operators to set up a database service which provides cost-efficient and flexible deployments on-demand, automates time-consuming administration tasks, and satisfies enterprise requirements — on any cloud, anywhere.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Creating Modern Static Sites with Hugo and GitHub pages with Art Fewell</title>
+      
+      <link>/tv/tanzu-tuesdays/0031/</link>
+      <pubDate>Tue, 17 Nov 2020 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0031/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0031-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Static websites are exploding in popularity due to their simplicity, performance and free hosting with Github Pages. In this session, we will review how modern static sites work, and how to use Hugo to generate a modern, high performance website and setup hosting with Github Pages.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: SPAs with Spring Security and OAuth 2.0 with Josh Cummings</title>
+      
+      <link>/tv/tanzu-tuesdays/0030/</link>
+      <pubDate>Tue, 10 Nov 2020 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0030/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0030-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Spring Security was born in the days of server-generated HTML, when JavaScript was that annoying little brother you avoided but couldn’t keep from following you around. Now, JavaScript is all grown-up with a mortgage, a family, and a debugger. Is Spring Security still relevant in these modern times where many backends are little more than a REST API? In this talk, you’ll see why the answer is “yes”. We’ll start with an unsecured JavaScript frontend and Spring Boot backend. Step-by-step, we’ll make decisions about CORS, CSRF, and OAuth, each simplified by Spring Security. Also, you&amp;rsquo;ll get a sneak peek at the experimental Spring Authorization Server!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: What Can Tanzu RabbitMQ Do Better for You? with Gerhard Lazu</title>
+      
+      <link>/tv/tanzu-tuesdays/0029/</link>
+      <pubDate>Tue, 03 Nov 2020 13:00:00 -0800</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0029/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0029-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Friends advise friends to exercise extreme caution when running stateful workloads on Kubernetes. The best of friends however will help you run stateful workloads anywhere you want them to, and even containerize them for you. Let us show you what we have done to make it easy for you to run &amp;amp; operate RabbitMQ. We have solved many tough problems so that we have more time for what really matters: better conversations.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: The Future of Cloud Foundry and Kubernetes with Paul Warren, Jared Ruckle, and Dieu Cao</title>
+      
+      <link>/tv/tanzu-tuesdays/0028/</link>
+      <pubDate>Tue, 27 Oct 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0028/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0028-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Join members from the VMware cf-for-k8s project to discuss the latest news from CF Summit. We&amp;rsquo;ll show a demo of &amp;ldquo;cf push&amp;rdquo; atop Kubernetes, and discuss on how these two communities are coming together.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Spring Boot loves k8s with Stéphane Nicoll and Brian Clozel</title>
+      
+      <link>/tv/tanzu-tuesdays/0027/</link>
+      <pubDate>Tue, 20 Oct 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0027/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0027-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;In this episode, we&amp;rsquo;ll discuss the latest changes in Spring Boot 2.3 and 2.4 that make your life easier when deploying your apps to Kubernetes.
+In fact, those features are generally useful if you&amp;rsquo;re pushing your apps to any type of platform: from packaging your app as a container image to publishing liveness/readiness probes, we&amp;rsquo;ll see how you can leverage those features in a sample Spring Boot application.
+Feel free to join and ask any Spring Boot-related question; if time allows it, we can even chat about the upcoming Spring Framework 5.3 features such as startup time profiling!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Tanzu Vanguard In Spotlight: Reflections of VMworld 2020 and How We Would Change Our Implementations Differently in Retrospect</title>
+      
+      <link>/tv/tanzu-tuesdays/0026/</link>
+      <pubDate>Tue, 13 Oct 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0026/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0026-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;This episode of Tanzu Tuesday features the Tanzu Vanguard enterprise customer super user community, and a few members discuss the recent product announcements from VMworld 2020 and reminisce about how they would change their implementations if they knew then what they know now.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Making Kubernetes How We Build Things with Rob Richardson</title>
+      
+      <link>/tv/tanzu-tuesdays/0025/</link>
+      <pubDate>Tue, 06 Oct 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0025/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0025-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;It&amp;rsquo;s day 2. The corporate k8s cluster is humming. Everything works perfectly in a local environment, but how do you connect the wires? Your first few steps in Kubernetes may feel like walking through uncharted territory. Yet, several tools can make you just as productive as you were in your comfortable local setup. With only a few changes in your configuration, you can automatically rebuild clusters when a file changes and even debug software running in containers. Add this to some visualization tools and some templating software, and you&amp;rsquo;ll be back on track very quickly. In this talk, you’ll learn how to use some open source tooling available around the Kubernetes ecosystem to become more productive and optimize for developer joy.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Bootiful Spring Deployments with Mario Gray</title>
+      
+      <link>/tv/tanzu-tuesdays/0024/</link>
+      <pubDate>Tue, 22 Sep 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0024/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0024-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;&lt;strong&gt;Join Us&lt;/strong&gt; in a cloud-native app building experience that Spring Boot provides out of the box! Why guess at the state of microservices in a Kubernetes-centric scenario when Spring can help us get that status out? We will code with Kotlin on the JVM and use Spring’s declarative access to the liveness/readiness state and its health monitoring subsystem. Next, we’ll see a recent Spring Boot feature that lets us declare container build and execution parameters using a build tool like Maven or Gradle. Finally, we step into configuration state transfer and service discovery so that application runtime behavior gets defined with Kubernetes idioms like ConfigMaps and Secret. This demo will look at how to tie these characteristics of Spring and Kubernetes together to produce a resilient cloud-native application.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Make Your Kubernetes Clusters Production-Ready with VMware Tanzu with Tiffany Jernigan</title>
+      
+      <link>/tv/tanzu-tuesdays/0023/</link>
+      <pubDate>Tue, 15 Sep 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0023/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0023-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Tiffany will be doing an expanded version of her Spring One talk: Make Your Kubernetes Clusters Production-Ready with VMware Tanzu&lt;/p&gt;
+&lt;p&gt;&amp;ndash;&lt;/p&gt;
+&lt;p&gt;When you first started experimenting with Kubernetes, you may have started locally or on a set of servers. With simple applications, you may only have used a container registry and Kubernetes itself. When looking to move your clusters to a production setting, there are many more considerations, such as: How will I manage my clusters? How do I handle monitoring and logging? How do I safely back up my cluster resources? How do I ensure that my container images are safe and secure?&lt;/p&gt;
+&lt;p&gt;Let’s take a look at some production-ready solutions, such as VMware Tanzu Mission Control, VMware Tanzu Observability by Wavefront, Octant, Velero, and Harbor.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Let’s Build a Twitch Bot! Featuring Spring Boot and Project Reactor with Brian McClain</title>
+      
+      <link>/tv/tanzu-tuesdays/0022/</link>
+      <pubDate>Tue, 08 Sep 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0022/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0022-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;You may have seen it in your favorite streamers channel: A bot reminding you of an upcoming event, showing their uptime, and offering unique features to improve the experience for the viewer. Behind the scenes you might assume code watching every line of code, ready to respond to pre-programmed commands. But what happens when the channel has 1k views? 10k? 100k? All chatting and interacting, exchanging thousands of messages a second.&lt;/p&gt;
+&lt;p&gt;Spring Boot and Project Reactor to the rescue! This week on Tanzu Tuesday, we’ll build our very own chat bot. Started as a project inspired by episodes featuring &lt;a href=&#34;/tv/tanzu-tuesdays/0001/&#34;&gt;Josh Long&lt;/a&gt; and &lt;a href=&#34;/tv/tanzu-tuesdays/0009/&#34;&gt;Spencer Gibb&lt;/a&gt;, you&amp;rsquo;ll see how reactive programming helps tackle the massive volume of messages, how to package and deploy it to Kubernetes, &lt;a href=&#34;/guides/kubernetes/observability-prometheus-grafana-p1/&#34;&gt;gather metrics with Prometheus and visualize them in Grafana&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Demo code is available on &lt;a href=&#34;https://github.com/BrianMMcClain/reactive-bot-framework&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GitHub&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: SpringOne 2020 with Tasha Isenberg</title>
+      
+      <link>/tv/tanzu-tuesdays/0021/</link>
+      <pubDate>Tue, 01 Sep 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0021/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0021-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come hear us talk about the free, virtual &lt;a href=&#34;https://springone.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SpringOne&lt;/a&gt; conference (Sept 2-3) with Tasha Isenberg.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Cloud Native Buildpacks with Emily Casey</title>
+      
+      <link>/tv/tanzu-tuesdays/0020/</link>
+      <pubDate>Tue, 25 Aug 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0020/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0020.jpg" width="640" />]]>
+        
+        &lt;p&gt;Dockerfiles are the de facto tool many developers reach for when transforming source code into images. However, organizations frequently encounter day-2 problems that present serious obstacles to running Dockerfile-built images in production. Cloud Foundry and Heroku fans will be familiar with the previous generation of buildpacks, which work in concert with the platform to solve many of these problems including application and OS-level dependency updates. However, tight-coupling to the platform comes with drawbacks. The Cloud Native Buildpacks project thinks we can do better.
+Cloud Native Buildpacks bring the best operational features of the Cloud Foundry platform to the modern container ecosystem all while providing a seamless developer experience. In this session Emily demonstrate how developers can use the pack CLI and Paketo buildpacks to build and upgrade images. Then we will dig into what is happening behind the scenes.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Cloud Native Culture with Nate Schutta</title>
+      
+      <link>/tv/tanzu-tuesdays/0019/</link>
+      <pubDate>Tue, 18 Aug 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0019/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0019-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;The shift to cloud computing involves a veritable plethora of new technologies and approaches. From 12 factors to domain driven design, change is afoot. Your organization is knee deep in functions and platforms and containers and while the technology is important, we can’t afford to overlook the importance of culture. What changes when we go to the cloud? How do we get there? How does Conway&amp;rsquo;s law affect the success of our efforts? How can we help people navigate the latest evolution in computing? This talk will explore how cloud native computing impacts more than just our architecture.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: 15 Factor Applications on Kubernetes with DaShaun Carter</title>
+      
+      <link>/tv/tanzu-tuesdays/0018/</link>
+      <pubDate>Tue, 11 Aug 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0018/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0018-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Perhaps you have heard of 12-factor apps, cloud-native, or 15-factor apps. Maybe you have wondered if cloud-native was right for you. In this session we will explore how to deliver apps using this methodology on Kubernetes. We will start by explaining the 15-factors. We will also review the cloud native features that are built into Kubernetes. Then we will create a new application, for Kubernetes, and demonstrate how to make it &amp;ldquo;15 factor cloud native on Kubernetes&amp;rdquo;!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Spring On Kubernetes with Ryan Baxter</title>
+      
+      <link>/tv/tanzu-tuesdays/0016/</link>
+      <pubDate>Tue, 28 Jul 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0016/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0016-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;In this session we are going to show you how to get your Spring apps up and running on Kubernetes.  This session will take you from everyone’s favorite place on the internet, start.spring.io all the way to automated deployments directly to Kubernetes.  We will cover tools, as well as best practices, that will make getting your Spring app from your dev machine to your Kubernetes (production) even faster and easier.  In addition we will spend some time showing you how to use Spring Cloud Kubernetes to build cloud native Spring apps that run on Kubernetes.  By the end of this session you will have all the knowledge you need to target Kubernetes as your production environment.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Exploring VMware Open Source</title>
+      
+      <link>/tv/tanzu-tuesdays/0015/</link>
+      <pubDate>Tue, 21 Jul 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0015/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0015-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;What&amp;rsquo;s new in the world of &lt;a href=&#34;https://www.vmware.com/opensource.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Open Source&lt;/a&gt;? Tiffany and Paul will explore (and try to run!) a number of Open Source projects that VMware is involved in, expect to see some &lt;a href=&#34;https://github.com/projectcontour/contour&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Contour&lt;/a&gt;, &lt;a href=&#34;https://github.com/goharbor/harbor&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Harbor&lt;/a&gt;, maybe some &lt;a href=&#34;https://github.com/k14s&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;k14s&lt;/a&gt;, &lt;a href=&#34;https://github.com/vmware-tanzu/octant&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Octant&lt;/a&gt;, maybe even &lt;a href=&#34;https://github.com/vmware-tanzu/velero&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero&lt;/a&gt; and &lt;a href=&#34;https://github.com/tern-tools/tern&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tern&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Crafting Kubernetes Custom Controllers With Angela Chin</title>
+      
+      <link>/tv/tanzu-tuesdays/0014/</link>
+      <pubDate>Tue, 14 Jul 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0014/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0014-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;Custom controllers and custom resource definitions are all the rage in Kubernetes today! In conjunction, they allow users to extend the Kubernetes API and introduce additional features.
+In this session, we’ll explore both custom resource definitions and custom controllers by trying out popular projects that allow us to craft a new controller from scratch!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Spring Cloud Contract with Olga</title>
+      
+      <link>/tv/tanzu-tuesdays/0012/</link>
+      <pubDate>Tue, 30 Jun 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0012/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0012-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;How can we better collaborate on creating useful APIs? How to reduce the testing time of your application? How can the team build API backwards compatibility verification into their deployment process?&lt;/p&gt;
+&lt;p&gt;In this talk, Olga will discuss how to leverage the Consumer-Driven Contracts approach to solve these and other issues and present one of CDC implementations - Spring Cloud Contract. Olga will discuss practical use-cases and look at code examples.&lt;/p&gt;
+&lt;p&gt;Olga will also point out some of the possible issues and ways of handling them, as well as some good practices I have learned while working both as a CDC tools end-user and their developer.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Kubernetes Workload Configurations with Bryan Liles</title>
+      
+      <link>/tv/tanzu-tuesdays/0011/</link>
+      <pubDate>Tue, 23 Jun 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0011/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0011-yt.png" width="640" />]]>
+        
+        &lt;p&gt;Let’s take a look at configuring your Kubernetes workloads. How do we go from YAML to something that is consumable by mere mortals?&lt;/p&gt;
+&lt;p&gt;From there, is it possible to go back to YAML?&lt;/p&gt;
+&lt;p&gt;In this session, Bryan will walk through ways to manage your YAML and present what may be an easier method for configuration and keeping your clusters up to date.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Tanzu Tuesdays: Spring Experiments with Dr. David Syer</title>
+      
+      <link>/tv/tanzu-tuesdays/0010/</link>
+      <pubDate>Tue, 16 Jun 2020 13:00:00 -0700</pubDate>
+      
+      <guid>/tv/tanzu-tuesdays/0010/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/tanzu-tuesdays/0010-yt.jpg" width="640" />]]>
+        
+        &lt;p&gt;More often than not Spring moves forwards by reacting to demand, but sometimes it also tries to move first into a new area, anticipating demand in the community. In both cases, though, there are usually experimental stages, sometimes for quite long periods.&lt;/p&gt;
+&lt;p&gt;This has always been the case, but the Spring team has recently created a special place for those experiments to happen, and that gives us a chance to spy on what is going on. This talk will be taking a look at some of the current experiments, as well as reviewing some older ones, successful and unsuccessful.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

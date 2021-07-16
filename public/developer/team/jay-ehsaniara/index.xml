@@ -1,0 +1,677 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – </title>
+    <link>/team/jay-ehsaniara/</link>
+    <description>Recent content on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/team/jay-ehsaniara/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Spring Cloud Stream Kafka</title>
+      
+      <link>/guides/event-streaming/spring-cloud-stream-kafka-p1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/event-streaming/spring-cloud-stream-kafka-p1/</guid>
+      <description>
+
+        
+        &lt;p&gt;This document provides a simple demonstration of how to implement your Java application with Kafka using the least amount of code. The goal is to achieve a lot out of the box, without having to reinvent the wheel and implement it in your Spring Boot application.&lt;/p&gt;
+&lt;h2 id=&#34;audience&#34;&gt;Audience&lt;/h2&gt;
+&lt;p&gt;This document has been written for:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Developers with Java (intermediate), Spring Boot (basic) and Maven dependency management.&lt;/li&gt;
+&lt;li&gt;Developers interested in migrating from &amp;ldquo;Java EE&amp;rdquo; (&lt;code&gt;J2EE&lt;/code&gt;, please visit &lt;a href=&#34;https://www.oracle.com/java/technologies/javase/javanaming.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt; for naming details) into modern application development (&lt;a href=&#34;https://12factor.net&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;12Factor&lt;/a&gt;) and application containerization.&lt;/li&gt;
+&lt;li&gt;Basic Kafka knowledge, including Brokers, Topic, and Partitions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For more about Spring Boot Background Modern Application Development or Kafka, refer to the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://spring.io/guides/gs/spring-boot/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/videos/12-factor-or-cloud-native-apps-what-exactly-does-that-mean-for-spring-developers-thomas-gamble&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;12 Factor, or Cloud-Native Apps&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://kafka.apache.org/intro&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kafka Introduction&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;To do this tutorial, make sure that the following software is on your workstation:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Java 8 (preferably Java 11)&lt;/li&gt;
+&lt;li&gt;Maven 2 or greater
+&lt;ul&gt;
+&lt;li&gt;(For Gradle builds: Gradle 6.0 or greater, and run &lt;code&gt;gradle init&lt;/code&gt; to convert current maven into gradle)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Java Editor such as IntelliJ or Eclipse.&lt;/li&gt;
+&lt;li&gt;Docker (Docker Compose)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The complete running code for this tutorial is available in &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/tree/main/scs-099&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Github&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;spring-cloud-stream-kafka&#34;&gt;Spring Cloud Stream Kafka&lt;/h2&gt;
+&lt;p&gt;This tutorial provides examples on how to enable the Apache Kafka binder with Spring Cloud Stream Kafka.&lt;/p&gt;
+&lt;p&gt;The following diagram shows Spring Cloud Stream Kafka enabling Apache Kafka Binder on top of &lt;a href=&#34;https://spring.io/projects/spring-cloud-stream&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;https://spring.io/projects/spring-cloud-stream&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-099-1.svg&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;add-a-dependency-to-the-project&#34;&gt;Add a Dependency to the Project&lt;/h3&gt;
+&lt;p&gt;For this example, we are using the following dependency: &lt;code&gt;spring-cloud-stream-binder-kafka&lt;/code&gt; (&lt;em&gt;&lt;a href=&#34;https://docs.spring.io/spring-cloud/docs/Hoxton.SR11/reference/html/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Hoxton.SR11&lt;/a&gt;&lt;/em&gt;). In later versions, the &lt;code&gt;@EnableBinding&lt;/code&gt; feature will be &lt;em&gt;&lt;del&gt;deprecated&lt;/del&gt;&lt;/em&gt; in favor of &lt;em&gt;Functional Programming&lt;/em&gt;, which we will look into later. (for more information, see &lt;a href=&#34;https://github.com/spring-cloud/spring-cloud-stream-binder-kafka&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+   &lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+   &lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-stream-binder-kafka&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;configure-the-binders&#34;&gt;Configure the Binders&lt;/h3&gt;
+&lt;p&gt;The next step is to configure the binders.
+For more information, see &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-099/src/main/java/com/ehsaniara/scs_kafka_intro/scs099/MyBinder.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MyBinder.java&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In this example, we are using a modified version of the &lt;code&gt;sink.class&lt;/code&gt; interface, rather than &lt;code&gt;@EnableBinding(sink.class)&lt;/code&gt;. Channel has also referred as &lt;code&gt;order&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;MyBinder&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ORDER_IN&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;order-in&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ORDER_OUT&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;order-out&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+   &lt;span class=&#34;nd&#34;&gt;@Input&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ORDER_IN&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;SubscribableChannel&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+
+   &lt;span class=&#34;nd&#34;&gt;@Output&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ORDER_OUT&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;MessageChannel&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;orderOut&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the following example,  the order has been enabled  through &lt;code&gt;@EnableBinding(value = {MyBinder.class})&lt;/code&gt;. The schedule has also been set to create 10 messages, every 5 seconds  , and write it into our topic (for this example: “&lt;code&gt;scs-099.order&lt;/code&gt;”).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Scheduled&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;initialDelay&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;5_000&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;fixedDelay&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;5_000&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;producer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;IntStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;range&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+      &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;forEach&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+         &lt;span class=&#34;n&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;format&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;TestString of %s - %s&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;counter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;myBinder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;orderOut&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MessageBuilder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withPayload&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;build&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+
+         &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;warn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;message produced: {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+      &lt;span class=&#34;o&#34;&gt;});&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;counter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;++;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The following code shows 10 messages publishing  in the topic and logging in the console. The code also increments the counter per every scheduler attempt to keep logs clean.&lt;/p&gt;
+&lt;p&gt;You can make it a &lt;code&gt;WARN&lt;/code&gt; log. A &lt;code&gt;WARN&lt;/code&gt; log has different colors, making it stand out from other logs.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;.. 08:42:19.433  WARN 47569 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 0
+.. 08:42:19.434  WARN 47569 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 1
+.. 08:42:19.434  WARN 47569 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 2
+.. 08:42:19.435  WARN 47569 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 3
+.. 08:42:19.435  WARN 47569 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 4
+.. 08:42:19.435  WARN 47569 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 5
+.. 08:42:19.435  WARN 47569 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 6
+.. 08:42:19.436  WARN 47569 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 7
+.. 08:42:19.436  WARN 47569 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 8
+.. 08:42:19.436  WARN 47569 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 9
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So far, we&amp;rsquo;ve created messages on the topic. As you can see, Spring Cloud Streams make this job very easy. If you add the following line, you can publish your message.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;n&#34;&gt;myBinder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;orderOut&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MessageBuilder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withPayload&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;“&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Text&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;…”&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;build&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, it’s time to consume the message.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@StreamListener&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MyBinder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;ORDER_IN&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;consumer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@Payload&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;debug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;message consumed: {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here, the application subscribes to our Kafka topic and logs them in the console. Now, you also need to bind your publisher and subscriber channels to the Kafka topic using  the least amount of code:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;spring&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;cloud.stream.bindings&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;order-out.destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;scs-099.order&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# Topic Name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;order-in.destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;scs-099.order&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# Topic Name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;TopicName: scs-099&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;its-showtime&#34;&gt;It’s Showtime!&lt;/h2&gt;
+&lt;p&gt;Make sure Kafka is running, then run the following &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/docker-compose.yml&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;docker-compose&lt;/a&gt; file in the same path where the docker-compose file is located. Address it by adding &lt;code&gt;-f path_to_docker_compose_file.yml&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;docker-compose up -d
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Build the project:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;mvn clean package
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Run the generated &lt;strong&gt;jar&lt;/strong&gt; file in the &lt;code&gt;target&lt;/code&gt; folder, Make sure you are in the same directory when you run the &lt;strong&gt;jar&lt;/strong&gt; file.  Or, give the full path.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;java -jar scs-099-0.0.1-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-099-2.svg&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; &lt;em&gt;The application starts to listen on port 8080. The port cannot be occupied by any other app. If it is, try to pass the following parameter before &lt;code&gt;-jar&lt;/code&gt; by adding &lt;code&gt;-Dserver.port=8081&lt;/code&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Now, the console shows  10 messages from the producer (when it’s producing messages) and 10 messages from the consumer.&lt;/p&gt;
+&lt;p&gt;Based on the current default configuration, the consumer app has only one concurrent threat,   to consume the message: &lt;code&gt;container-0-C-1&lt;/code&gt;. Note, all messages have been produced from the same thread.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; &lt;em&gt;You can simulate a busy consumer and long-running process by adding a 200ms delay.&lt;/em&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;.. 19:31:51.475  WARN 59692 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 0
+.. 19:31:51.475  WARN 59692 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 1
+.. 19:31:51.476  WARN 59692 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 2
+.. 19:31:51.476  WARN 59692 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 3
+.. 19:31:51.476  WARN 59692 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 4
+.. 19:31:51.477  WARN 59692 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 5
+.. 19:31:51.477  WARN 59692 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 6
+.. 19:31:51.477  WARN 59692 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 7
+.. 19:31:51.477  WARN 59692 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 8
+.. 19:31:51.478  WARN 59692 --- [   scheduling-1] c.e.s.scs099.PobSubService               : message produced: TestString of 0 - 9
+.. 19:31:51.708 DEBUG 59692 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 0 - 0
+.. 19:31:51.913 DEBUG 59692 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 0 - 1
+.. 19:31:52.118 DEBUG 59692 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 0 - 2
+.. 19:31:52.321 DEBUG 59692 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 0 - 3
+.. 19:31:52.526 DEBUG 59692 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 0 - 4
+.. 19:31:52.731 DEBUG 59692 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 0 - 5
+.. 19:31:52.932 DEBUG 59692 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 0 - 6
+.. 19:31:53.137 DEBUG 59692 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 0 - 7
+.. 19:31:53.343 DEBUG 59692 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 0 - 8
+.. 19:31:53.544 DEBUG 59692 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 0 - 9
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;single-producer-and-single-consumer-with-3-threads&#34;&gt;Single Producer and Single Consumer with 3 Threads&lt;/h2&gt;
+&lt;p&gt;What if you want to use parallelism and involve more threads to consume your messages?&lt;/p&gt;
+&lt;p&gt;Now you can! First, stop the previous Java process. Then, try the following code:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;java -Dspring.profiles.active&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;test3 -jar scs-099-0.0.1-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you look at the logs now, you’ll notice this time is a bit different in the consumer log.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;.. 19:36:38.380 DEBUG 59798 --- [container-1-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 1 - 0
+.. 19:36:38.385 DEBUG 59798 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 1 - 2
+.. 19:36:38.388 DEBUG 59798 --- [container-2-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 1 - 3
+.. 19:36:38.585 DEBUG 59798 --- [container-1-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 1 - 1
+.. 19:36:38.598 DEBUG 59798 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 1 - 4
+.. 19:36:38.603 DEBUG 59798 --- [container-2-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 1 - 5
+.. 19:36:38.805 DEBUG 59798 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 1 - 6
+.. 19:36:39.010 DEBUG 59798 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 1 - 7
+.. 19:36:39.216 DEBUG 59798 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 1 - 8
+.. 19:36:39.422 DEBUG 59798 --- [container-0-C-1] c.e.s.scs099.PobSubService               : message consumed: TestString of 1 - 9
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;By activating a different profile (test3), a couple of more features append to the current configuration, similar to the following example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;spring&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;cloud.stream.bindings&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;Order-out&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;scs-099.order&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# Topic Name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;producer.partition-count&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;Order-in&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;scs-099.order&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# Topic Name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${spring.application.name}-group&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;consumer.concurrency&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;cloud.stream.kafka.binder.autoAddPartitions&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;whats-happened-so-far&#34;&gt;What’s happened so far?&lt;/h3&gt;
+&lt;p&gt;There are &lt;strong&gt;3 concurrent threads&lt;/strong&gt; to execute the consumer method. The partition size is sized-up (&amp;gt; consumer number) so that every consumer has its own partition to subscribe. In addition, all consumers are now  in that same consumer group to prevent duplicate processing of the same message by a different consumer (&lt;code&gt;consumerGroup: scs-099-group&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;As you see, by using Spring Cloud Stream this happened by  only adding a few lines.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-099-4.svg&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;All messages have been consumed based on the 200ms delay introduced in the consumer. Therefore, the total number of messages cannot be fully consumed in less than 2 Seconds (200ms  X 10 = 2000ms).&lt;/p&gt;
+&lt;h2 id=&#34;single-producer-and-3-consumer-app-3-separate-jvm-processes&#34;&gt;Single Producer and 3 Consumer App (3 Separate JVM Processes)&lt;/h2&gt;
+&lt;p&gt;Depending on your topic traffic or consumer performance, the best way you can scale up or down is to run your consumer in a different JVM.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; &lt;em&gt;In future tutorials you’ll see how to containerize and scale this application.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;So now, let&amp;rsquo;s stop the previous Java process to make port 8080 available again.&lt;/p&gt;
+&lt;p&gt;Run the following java application in &lt;strong&gt;3 different terminals&lt;/strong&gt; as follows:&lt;/p&gt;
+&lt;p&gt;On &lt;code&gt;Terminal-1:&lt;/code&gt; This app has one producer and one consumer.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;java -Dspring.profiles.active&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;test2 -jar scs-099-0.0.1-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;Note: I have added the port check, so you only have one producer for our Kafka topic regardless of the number of apps.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;On &lt;code&gt;Terminal-2:&lt;/code&gt; This app has only one consumer.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;java -Dspring.profiles.active&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;test2 -Dserver.port&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8081&lt;/span&gt; -jar scs-099-0.0.1-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;On &lt;code&gt;Terminal-3:&lt;/code&gt; This app has only one consumer.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;java -Dspring.profiles.active&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;test2 -Dserver.port&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8082&lt;/span&gt; -jar scs-099-0.0.1-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-099-3.svg&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; &lt;em&gt;To avoid having multiple producers, we just let only one app to create messages in the topic in the &lt;strong&gt;producer&lt;/strong&gt; method by checking the (app port == 8080)&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&#34;whats-happening-now&#34;&gt;What’s happening now?&lt;/h3&gt;
+&lt;p&gt;We only have one application running (producer and consumer on the same app). Similar to the previous example, we basically consume all messages based on the 200ms delay introduced in the consumer. Therefore, the total number of messages cannot be fully consumed in less than 2 seconds &lt;em&gt;(200ms  X 10 = 2000ms)&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;However, this time it’s running in different (JVM)s. Now, it  can be decoupled out and run in different machines or containers in the future. Our primary intention is to have &lt;strong&gt;horizontal scalability&lt;/strong&gt; in the app.&lt;/p&gt;
+&lt;p&gt;When you run the app in the second terminal, you basically tell Kafka to distribute the message to the newly introduced consumer app. You see the new application start consuming some produced messages, but not the same ones from the first app.&lt;/p&gt;
+&lt;p&gt;At the same time, when you look at the first application you see Kafka is informing the app that a new consumer has subscribed to your topic on the given consumer group (as &lt;code&gt;INFO&lt;/code&gt; logs).&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;The environments in which you have a fast producer but slower consumer are good examples and use cases for Kafka. In reality, consumers are slower. You don’t want them affecting your application producer performances.&lt;/p&gt;
+&lt;p&gt;For example, you want to make a log processing system and do some keyword search in the incoming messages. On the other hand, even though your application is producing a high amount of logs, adding the log processor system should not affect your actual application performance. Also, in case of a changing amount of logs, you want your system to be able to scale up or down easily and have a failover mechanism and resiliency.&lt;/p&gt;
+&lt;p&gt;The complete running code for this tutorial is available in &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/tree/main/scs-099&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Github&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;whats-next&#34;&gt;What’s Next&lt;/h2&gt;
+&lt;p&gt;In the next tutorial &lt;a href=&#34;/guides/event-streaming/spring-cloud-stream-kafka-p2&#34;&gt;Part 2&lt;/a&gt;, I’ll show a real life example such as the &lt;strong&gt;PubSub&lt;/strong&gt; module, multiple Kafka topics and failover handling.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Spring Cloud Stream Kafka (Part 2)</title>
+      
+      <link>/guides/event-streaming/spring-cloud-stream-kafka-p2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/event-streaming/spring-cloud-stream-kafka-p2/</guid>
+      <description>
+
+        
+        &lt;p&gt;Based on our previous demo in &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/event-streaming/spring-cloud-stream-kafka-p1/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 1&lt;/a&gt;, you are now ready to simulate a scenario to get a better sense of what we have previously discussed. Let’s say you need to design a system where you can place an order and ship it after some verification process.
+To demonstrate how &lt;code&gt;SCS&lt;/code&gt; can help you make your application development simpler, we are not going to cover all the edge or corner cases where this design can fail.&lt;/p&gt;
+&lt;p&gt;NOTE: The complete running code for this tutorial is available in &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/tree/main/scs-100&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Github&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;goal&#34;&gt;Goal&lt;/h2&gt;
+&lt;p&gt;In high level, you are going to experience:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Touch on an Event Driven approach - EDA (AKA: Event Driven Architecture)&lt;/li&gt;
+&lt;li&gt;Asynchronous communication between applications (Services)&lt;/li&gt;
+&lt;li&gt;Using Apache Kafka as broker&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In this case you are going to have two &lt;strong&gt;back-end&lt;/strong&gt; checks, which are referred to as your &lt;em&gt;inventory check&lt;/em&gt; and &lt;em&gt;shipment services&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Things to consider: the back-end process for this scenario may take a long time.There is a risk that the front-end (or UI app) call may timeout throughout this path at any point.&lt;/p&gt;
+&lt;p&gt;One way to move away from traditional request and response methods is to approach it with the event driven method - EDA (AKA: Event Driven Architecture). As a result, the UI can check the process through a State Store.&lt;/p&gt;
+&lt;p&gt;This may be a little difficult to understand right away, but this is something you have been doing for a long time in real life.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;A good example is your Mailing Service. You send a mailing envelope to a company, await a  response, and keep having to check your mailbox. In this case, your mailbox is the State Store.&lt;/p&gt;
+&lt;p&gt;There are other, alternative frameworks such as &lt;a href=&#34;https://spring.io/projects/spring-integration&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Integration&lt;/a&gt; or &lt;a href=&#34;https://spring.io/projects/spring-cloud-dataflow&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Data-Flow&lt;/a&gt; that you can use for this use case.&lt;/p&gt;
+&lt;h4 id=&#34;note-in-this-demo-state-store-is-just-a-hashmap-order-id-is-the-key&#34;&gt;Note: In this demo, State Store is just a &lt;code&gt;HashMap&lt;/code&gt;. Order ID is the key.&lt;/h4&gt;
+&lt;h2 id=&#34;the-work-flow&#34;&gt;The Work Flow&lt;/h2&gt;
+&lt;p&gt;In order to visualize our goal, let’s take it to as high a level as possible and see this problem in three major services, while keeping in mind the future scalability. Each service has individual responsibilities (as stateless as possible)&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-100-3.svg&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;create-an-order-request&#34;&gt;Create an Order Request&lt;/h2&gt;
+&lt;p&gt;A REST call is a &lt;strong&gt;create request&lt;/strong&gt; through the controller and ordering service. It can also be a UI or any other service.&lt;/p&gt;
+&lt;p&gt;Since you are expecting a series of processes and operations in the back-end, you don&amp;rsquo;t need to make the UI wait for the entire flow and keep the request thread occupied (blocked).&lt;/p&gt;
+&lt;p&gt;Simply create an order ID and create a lookup operation for checking the status of the order, while waiting for the order back-end processes to finish.&lt;/p&gt;
+&lt;p&gt;For the purpose of this document, you may use a simple local hash map in the application (as there is only a single application for this example).&lt;/p&gt;
+&lt;h4 id=&#34;note-although-all-service-methods-are-in-the-same-service-class-they-are-distributed-in-different-methods-in-the-source-code-lets-refer-to-them-as-services-but-eventually-they-can-become-separated-services&#34;&gt;Note: Although all service methods are in the same Service class, they are distributed in different methods in the source code, let’s refer to them as services, but eventually they can become separated services.&lt;/h4&gt;
+&lt;p&gt;Some ideas related to your Kafka topic responsibilities:&lt;/p&gt;
+&lt;div class=&#34;table&#34;&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left&#34;&gt;Topic Name&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Object&lt;/th&gt;
+&lt;th style=&#34;text-align:left&#34;&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;scs-100.inventoryChecking&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Order&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;Orders need to be processed for Inventory Check Operation&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;scs-100.shipping&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Order&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;Orders need to be shipped (Ready to go)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;scs-100.ordering_dlq&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Order&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;Orders need to be canceled (For Unexpected Behaviors)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;order-service&#34;&gt;Order Service&lt;/h2&gt;
+&lt;p&gt;This is where you create the order ID — which can have simple validation checks for sanity. Having a lookup can reduce a lot of complexities and at the same time introduce new challenges that we will discuss later.&lt;/p&gt;
+&lt;h4 id=&#34;note-you-will-only-have-one-write-but-many-reads-operations-at-a-time-per-order&#34;&gt;Note: You will only have one &lt;strong&gt;Write&lt;/strong&gt; but many &lt;strong&gt;Reads&lt;/strong&gt; operations at a time, per order.&lt;/h4&gt;
+&lt;p&gt;Having this method of breaking the processes in the application design can have its own challenges, especially in lookup check. The lookup check process usually happens in one of the following ways:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The application informs the UI (end-user or order creator service) as order changes its status. It can be any one of the &lt;a href=&#34;https://en.wikipedia.org/wiki/Unicast&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;Unicast&lt;/code&gt;&lt;/a&gt; or &lt;a href=&#34;https://en.wikipedia.org/wiki/Multicast&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;Multicast&lt;/code&gt;&lt;/a&gt; approaches.&lt;/li&gt;
+&lt;li&gt;UI or end-user calls a specific API to see the latest status of a particular order.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can choose 1 of 2 approaches, depending on the use case and implementation of the application. To keep the demo simple, the second approach is preferred.&lt;/p&gt;
+&lt;p&gt;The service is putting the order into topic (&lt;code&gt;scs-100.inventoryChecking&lt;/code&gt;). It is a producer for this topic.&lt;/p&gt;
+&lt;p&gt;This process is simplified by using &lt;code&gt;SCS&lt;/code&gt; (Spring Cloud Stream). You need to create a binder and its configuration only.&lt;/p&gt;
+&lt;p&gt;Producer part with Initializing the Order (&lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/6604387604742fc43b9afa8ff71dc3288cdefae6/scs-100/src/main/java/com/ehsaniara/scs_kafka_intro/scs100/OrderService.java#L54&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;OrderService.java&lt;/a&gt;):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;placeOrder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;order&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;itemName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getItemName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;orderUuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;randomUUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;orderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;PENDING&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;build&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+   &lt;span class=&#34;c1&#34;&gt;//update the status
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;   &lt;span class=&#34;n&#34;&gt;orderDataBase&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getOrderUuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+   &lt;span class=&#34;c1&#34;&gt;//send it for inventory check
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;   &lt;span class=&#34;n&#34;&gt;orderBinder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;inventoryCheckingOut&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MessageBuilder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withPayload&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;                   &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setHeader&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MessageHeaders&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;CONTENT_TYPE&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;MimeTypeUtils&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;APPLICATION_JSON&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;                   &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;build&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Binder part (&lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/6604387604742fc43b9afa8ff71dc3288cdefae6/scs-100/src/main/java/com/ehsaniara/scs_kafka_intro/scs100/OrderBinder.java#L10&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;OrderBinder.java&lt;/a&gt;):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;//spring.cloud.stream.bindings.inventoryChecking-in
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;INVENTORY_CHECKING_IN&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;inventoryChecking-in&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;INVENTORY_CHECKING_OUT&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;inventoryChecking-out&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@Input&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;INVENTORY_CHECKING_IN&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;SubscribableChannel&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;inventoryCheckingIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@Output&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;INVENTORY_CHECKING_OUT&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;MessageChannel&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;inventoryCheckingOut&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Application Configuration part (&lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100/src/main/resources/application.yml#L8&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;application.yml&lt;/a&gt;)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;spring.cloud.stream.bindings.inventoryChecking-out.destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;scs-100.inventoryChecking&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Our expectation from this service is to create the order and produce it in the topic. You may also separate this component into different applications and scale it. Eventually, this service can also be the only point of interaction between the front-end and back-end applications. You may refer to this component as your &lt;strong&gt;Event Source&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;inventory-service&#34;&gt;Inventory Service&lt;/h2&gt;
+&lt;p&gt;Inventory Service is also referred to as Event Processor. Here you have a consumer to your inventory check topic, and every message in this topic represents an order that needs to be checked for inventory. This is called an &amp;ldquo;Inventory Check&amp;rdquo; but it can vary in the real scenario, such as payments, supplier delivery, custom delivery, state tax calculator, etc.&lt;/p&gt;
+&lt;p&gt;At this point, you can have multiples of these services for other purposes. Theoretically speaking, it doesn&amp;rsquo;t matter how much time this process takes since you are not blocking the original request thread.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100/src/main/java/com/ehsaniara/scs_kafka_intro/scs100/OrderService.java#L68&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;OrderService.java&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@StreamListener&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OrderBinder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;INVENTORY_CHECKING_IN&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@SneakyThrows&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;checkInventory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@Payload&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;debug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;checkInventory orderIn: {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setOrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;INVENTORY_CHECKING&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;orderDataBase&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getOrderUuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+   &lt;span class=&#34;n&#34;&gt;Thread&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;sleep&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;5_000&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//5 sec delay
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
+   &lt;span class=&#34;c1&#34;&gt;// just a simulation of create exception for random orders (1 in 2) in case of inventory insufficiency
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;   &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;currentTimeMillis&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;%&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+       &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setOrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;OUT_OF_STOCK&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+       &lt;span class=&#34;n&#34;&gt;orderDataBase&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getOrderUuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+       &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;warn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Let&amp;#39;s assume we ran out of stock for item: {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getItemName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+       &lt;span class=&#34;n&#34;&gt;Thread&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;sleep&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;5_000&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//5 sec delay
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;       &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OrderFailedException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;format&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;insufficient inventory for order: %s&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getOrderUuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()));&lt;/span&gt;
+   &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+   &lt;span class=&#34;c1&#34;&gt;//Order is good to go for shipping
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;   &lt;span class=&#34;n&#34;&gt;orderBinder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;shippingOut&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;send&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MessageBuilder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withPayload&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;                   &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setHeader&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MessageHeaders&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;CONTENT_TYPE&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;MimeTypeUtils&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;APPLICATION_JSON&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;                   &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;build&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;This method is the consumer and produce order event&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;In this method, you’ve intentionally thrown a runtime exception to simulate one of the cool features of &lt;a href=&#34;https://github.com/spring-cloud/spring-cloud-stream-binder-kafka&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;SCS&lt;/code&gt;&lt;/a&gt; which is provided out of the box, “Retry Mechanism”. It can easily be configured in &lt;code&gt;application.yml&lt;/code&gt; with no extra coding. It also supports the “Back off and retry mechanism”. The retry value is 3 seconds, by default, and the &lt;code&gt;backoff&lt;/code&gt; value is 5 seconds, by default.&lt;/p&gt;
+&lt;p&gt;Eventually, when this method throws an exception, it doesn&amp;rsquo;t immediately fail  unless it hits its built-in retry threshold.&lt;/p&gt;
+&lt;p&gt;For example, let’s say, you need to call a third party service, but the call failed in the first attempt due to some networking issues or unhealthy nodes. However, you know that if you try one more time, you can get the results by hitting the healthy one. It’s recommended that you visit &lt;a href=&#34;https://cloud.spring.io/spring-cloud-static/spring-cloud-stream-binder-kafka/3.0.3.RELEASE/reference/html/spring-cloud-stream-binder-kafka.html#_kafka_binder_properties&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this link&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100/src/main/resources/application.yml#L28&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;application.yml&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;spring.cloud.stream.kafka&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;bindings&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;inventoryChecking-in.consumer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;     &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;enableDlq&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;     &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;dlqName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;scs-100.ordering_dlq&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;     &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;autoCommitOnError&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;     &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;AutoCommitOffset&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are many other configurations that you can apply. Go &lt;a href=&#34;https://docs.spring.io/spring-cloud-stream-binder-kafka/docs/3.0.12.RELEASE/reference/html/spring-cloud-stream-binder-kafka.html#_apache_kafka_binder&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt; for more information.&lt;/p&gt;
+&lt;p&gt;Potentially, you could put the order in &lt;code&gt;DLQ&lt;/code&gt; manually and exit the method immediately (“return;”) within the “if” statement, but i &lt;code&gt;SCS&lt;/code&gt; wouldn’t understand if something went wrong and that it needs to “retry” the method (throughout the document we keep referring to it as service).&lt;/p&gt;
+&lt;p&gt;Keep in mind that you can configure from application.yml&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;l&#34;&gt;cloud.stream.bindings.inventoryChecking-in.consumer.maxAttempts&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once you are done with the inventory check service, you can put the order into &lt;code&gt;scs-100.shipping&lt;/code&gt; topic and you are done with the service. The instance of service is ready to pick up the next order for checking, and the workflow keeps going on.&lt;/p&gt;
+&lt;h2 id=&#34;shipping-service&#34;&gt;Shipping Service&lt;/h2&gt;
+&lt;p&gt;This is your &lt;strong&gt;Event Sink&lt;/strong&gt; process. In your final step, you are going to ship out the order that has been passed from all the verification steps you have designed. You can mark your order as SHIPPED.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@StreamListener&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OrderBinder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;SHIPPING_IN&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;shipIt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@Payload&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;debug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;shipIt orderIn: {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setOrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;SHIPPED&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+   &lt;span class=&#34;n&#34;&gt;orderDataBase&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getOrderUuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+   &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;ItemID: {} has been Shipped&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderIn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getOrderUuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;Note: Any failure on this step also drives the order to your &lt;code&gt;DLQ&lt;/code&gt;, by configuration.&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;cancellation-service&#34;&gt;Cancellation Service&lt;/h2&gt;
+&lt;p&gt;Basically, you are handling all &lt;code&gt;DLQ&lt;/code&gt; messages (orders) in this topic. Eventually, orders which end up here should be canceled so that the canceling process applies to them.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-100-1.svg&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;show-time&#34;&gt;Show Time!&lt;/h2&gt;
+&lt;p&gt;Let&amp;rsquo;s run the application now by running the following line:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;java -jar scs-100-0.0.1-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, the application is running on the port 8080, as you expected. To create an order and see the flow, let’s run the following command line. Before that, make sure you have already installed the &lt;a href=&#34;https://stedolan.github.io/jq/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;jq&lt;/code&gt;&lt;/a&gt; (command-line JSON processor).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;nv&#34;&gt;ORDER_UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;curl --silent -H &lt;span class=&#34;s1&#34;&gt;&amp;#39;Content-Type: application/json&amp;#39;&lt;/span&gt; -d &lt;span class=&#34;s2&#34;&gt;&amp;#34;{\&amp;#34;itemName\&amp;#34;:\&amp;#34;book\&amp;#34;}&amp;#34;&lt;/span&gt; http://localhost:8080/order &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; jq -r &lt;span class=&#34;s1&#34;&gt;&amp;#39;.orderUuid&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; i in &lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;seq &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; 15&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;curl --silent &lt;span class=&#34;s2&#34;&gt;&amp;#34;http://localhost:8080/order/status/&amp;#34;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$ORDER_UUID&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; sleep 1&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;done&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here you have created an order and keep calling its status every second for a total of 15 seconds.&lt;/p&gt;
+&lt;h6 id=&#34;in-case-of-inventory-available-and-order-shipped-the-results-will-be-similar-to-this&#34;&gt;In case of inventory available and order shipped, the results will be similar to this:&lt;/h6&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;INVENTORY_CHECKING&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;INVENTORY_CHECKING&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;INVENTORY_CHECKING&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;INVENTORY_CHECKING&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;INVENTORY_CHECKING&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;SHIPPED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;SHIPPED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;SHIPPED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;SHIPPED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;SHIPPED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;SHIPPED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;SHIPPED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;SHIPPED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;SHIPPED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;SHIPPED&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;Eventually, once you see the “SHIPPED” status you can exit the loop.&lt;/em&gt;&lt;/p&gt;
+&lt;h6 id=&#34;in-case-of-shortage-of-supply-the-results-will-be-similar-to-this&#34;&gt;In case of shortage of supply, the results will be similar to this:&lt;/h6&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;INVENTORY_CHECKING&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;INVENTORY_CHECKING&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;INVENTORY_CHECKING&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;INVENTORY_CHECKING&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;INVENTORY_CHECKING&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;OUT_OF_STOCK&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;OUT_OF_STOCK&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;OUT_OF_STOCK&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;OUT_OF_STOCK&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;OUT_OF_STOCK&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;CANCELED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;CANCELED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;CANCELED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;CANCELED&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;s2&#34;&gt;&amp;#34;CANCELED&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;Basically, once you see the “CANCELED” status you can exit the loop. You may also notice the “OrderFailedException” on your application console, which is intentional.&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Spring Cloud Stream, which is represented as the &lt;strong&gt;green layer&lt;/strong&gt; in the following diagram, helps us to focus on solving the business problem rather than taking care of plumbing issues with the application.
+&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-100-2.svg&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The complete running code for this tutorial is available in &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/tree/main/scs-100&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Github&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;known-issues&#34;&gt;Known Issues&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;State Store Database (you just temporarily left it as &lt;code&gt;HashMap&lt;/code&gt;), which is only available for the local app, can cause issues when you horizontally scale the application instances or break the application into smaller modules.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;SCS&lt;/code&gt; Binder features are &lt;del&gt;deprecated&lt;/del&gt; in the next versions of &lt;code&gt;SCS&lt;/code&gt; in favor of Functional Programming.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;whats-next&#34;&gt;What’s Next?&lt;/h3&gt;
+&lt;p&gt;In the next tutorial, Part 3, you are going to learn how to overcome the known issues. You will also be introduced to topics such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;State Stores&lt;/li&gt;
+&lt;li&gt;Materialized View&lt;/li&gt;
+&lt;li&gt;Interactive Queries&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Spring Cloud Stream Kafka (Part 3) - Functional Programming</title>
+      
+      <link>/guides/event-streaming/spring-cloud-stream-kafka-p3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/event-streaming/spring-cloud-stream-kafka-p3/</guid>
+      <description>
+
+        
+        &lt;p&gt;This tutorial is going to use the same example (Ordering System) from &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/event-streaming/spring-cloud-stream-kafka-p2/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 2&lt;/a&gt;, and craft it into a Stream Process with a modern Java Functional Programming Model by using &lt;code&gt;SCS&lt;/code&gt; (Spring Cloud Stream Kafka).&lt;/p&gt;
+&lt;p&gt;The Ordering System from &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/event-streaming/spring-cloud-stream-kafka-p2/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 2&lt;/a&gt; may not be the perfect scenario for Streaming, but the purpose of this tutorial is  to look at the problem with a Streaming approach and demonstrate how &lt;code&gt;SCS&lt;/code&gt; can be helpful during this process.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: The complete running code for this tutorial is available in &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/tree/main/scs-100-2&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Github&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Looking back to the previous tutorial &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/event-streaming/spring-cloud-stream-kafka-p2/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 2&lt;/a&gt;, we see how it tracks the order status changes and overrides the status every time. However, there are some real-life use cases where you may need to know when  the status changed (AKA change history).&lt;/p&gt;
+&lt;p&gt;For example: If someone asks you “What time is it?”, or “What is the time now?, they actually want to know the current value of the time. They are not asking  how time becomes the value.&lt;/p&gt;
+&lt;p&gt;Conversely, if someone asks you “How did you get here?”, despite the fact that your current location is known, the intention is about the series of locations over time that got you here.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-1002-p0.png&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Telematics or sensor data, app logs, and similar systems are the types of structures we are going to discuss when we talk about streaming.&lt;/p&gt;
+&lt;h2 id=&#34;audience&#34;&gt;Audience&lt;/h2&gt;
+&lt;p&gt;This document is written for those who:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Review and understand the previous tutorials &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/event-streaming/spring-cloud-stream-kafka-p1/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 1&lt;/a&gt; and &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/event-streaming/spring-cloud-stream-kafka-p2/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 2&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Have good knowledge of Java Functional Programming (preferably, Java 11).&lt;/li&gt;
+&lt;li&gt;Have a basic understanding of Kafka Stream and Topology, as well as &lt;a href=&#34;https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html#streams_concepts_kstream&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;KStream&lt;/a&gt;, &lt;a href=&#34;https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html#streams_concepts_ktable&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ktable&lt;/a&gt;, &lt;a href=&#34;https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html#aggregating&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Aggregation&lt;/a&gt;, &lt;a href=&#34;https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html#joining&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Joins&lt;/a&gt; and &lt;a href=&#34;https://kafka.apache.org/20/documentation/streams/architecture.html#streams_architecture_state&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;State Store&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So, now it&amp;rsquo;s the time to switch from what we used in &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/event-streaming/spring-cloud-stream-kafka-p1/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 1&lt;/a&gt; and &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/event-streaming/spring-cloud-stream-kafka-p2/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 2&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-stream-binder-kafka&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Into this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-stream-binder-kafka-streams&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;By replacing the dependency to Spring Cloud Stream (&lt;code&gt;SCS&lt;/code&gt;) for Kafka, we include new libraries that will help make the Kafka Topology. The library already has &lt;code&gt;rocksdbjni&lt;/code&gt; and &lt;code&gt;org.apache.kafka:kafka-streams&lt;/code&gt; where we need it for &lt;code&gt;KStream&lt;/code&gt; and &lt;code&gt;KTable&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;From &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/event-streaming/spring-cloud-stream-kafka-p2/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 2&lt;/a&gt;, here is the conversion of the Ordering System into what the Kafka Stream Topology will look like.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: There are many ways to create the Topology for this problem. The following example is not the only solution.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-1002-2.svg&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;To overcome the &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/event-streaming/spring-cloud-stream-kafka-p2/#known-issues&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Known Issues&lt;/a&gt; mentioned in the previous tutorial, we have a continued flow from the time the &amp;ldquo;order&amp;rdquo; is created and put in the Kafka topic through &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100-2/src/main/java/com/ehsaniara/scs_kafka_intro/scs1002/OrderService.java#L69&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;orderAggConsumer&lt;/code&gt;&lt;/a&gt;. This materializes the aggregate state value of the order per each &lt;code&gt;orderUuid&lt;/code&gt;, so the temporary &lt;code&gt;HashMap&lt;/code&gt; lookup can go away with it.&lt;/p&gt;
+&lt;p&gt;Here is how we eventually manage our &lt;code&gt;StateStore&lt;/code&gt;. Events are flowing through this &lt;code&gt;@Bean&lt;/code&gt; every time it completes a step of it. All steps become an individual &lt;code&gt;@Bean&lt;/code&gt;, where in the next tutorial they will become individual micro-services.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100-2/src/main/java/com/ehsaniara/scs_kafka_intro/scs1002/OrderService.java#L69&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;orderAggConsumer&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Function&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;KStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;orderAggConsumer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;uuidOrderKStream&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+       &lt;span class=&#34;n&#34;&gt;KTable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;uuidStringKTable&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;kStreamKTableStringFunction&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;apply&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;uuidOrderKStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+       &lt;span class=&#34;c1&#34;&gt;//then join the stream with its original stream to keep the flow
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;       &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;uuidOrderKStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;leftJoin&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;uuidStringKTable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;
+               &lt;span class=&#34;n&#34;&gt;Joined&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;with&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Serdes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderJsonSerde&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Serdes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()));&lt;/span&gt;
+   &lt;span class=&#34;o&#34;&gt;};&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here is the topology to create a &lt;code&gt;KTable&lt;/code&gt; for &lt;code&gt;orderUuid&lt;/code&gt; and the latest order status as String, which materializes it in &lt;code&gt;STATE_STORE_NAME&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;n&#34;&gt;Function&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;KTable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;kStreamKTableStringFunction&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;input&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;input&lt;/span&gt;
+       &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;groupBy&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getOrderUuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt;
+               &lt;span class=&#34;n&#34;&gt;Grouped&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;with&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;JsonSerde&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ObjectMapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())))&lt;/span&gt;
+       &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;aggregate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;
+               &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;::&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;oldStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getOrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;toString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt;
+               &lt;span class=&#34;n&#34;&gt;Materialized&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;KeyValueStore&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Bytes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;as&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Application&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;STATE_STORE_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+                       &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;withKeySerde&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Serdes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()).&lt;/span&gt;
+                       &lt;span class=&#34;n&#34;&gt;withValueSerde&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Serdes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())&lt;/span&gt;
+       &lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;Note: If you run multiple of these applications on the same machine, you may have a different value for &amp;ldquo;&lt;a href=&#34;https://kafka.apache.org/10/documentation/streams/developer-guide/config-streams.html#state-dir&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;state.dir&lt;/a&gt;&amp;rdquo; in each application. You may notice &lt;code&gt;state-scs-100-2-*&lt;/code&gt; folder in the parent root directory. This is where RocksDB stores its data. It can be modified from &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100-2/src/main/resources/application.yml#L40&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;application.yml&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;With the current design, you only see the latest order status. The missing parameter here is  TIME.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-1002-0.svg&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;KStream&lt;/p&gt;
+&lt;div class=&#34;table&#34;&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left&#34;&gt;&lt;code&gt;OrderUuid&lt;/code&gt; (Key)&lt;/th&gt;
+&lt;th style=&#34;text-align:left&#34;&gt;&lt;code&gt;Status&lt;/code&gt; (Value)&lt;/th&gt;
+&lt;th style=&#34;text-align:left&#34;&gt;Timestamp (MetaData, but It can be added to Value)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;..-8064d09b661e&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;PENDING&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;00:00:00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;..-8064d09b661e&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;INVENTORY_CHECKING&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;00:00:05&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;..-8064d09b661e&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;SHIPPED&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;00:00:10&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;KTable&lt;/p&gt;
+&lt;div class=&#34;table&#34;&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left&#34;&gt;&lt;code&gt;OrderUuid&lt;/code&gt; (Key)&lt;/th&gt;
+&lt;th style=&#34;text-align:left&#34;&gt;&lt;code&gt;Status&lt;/code&gt; (Value)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;&lt;code&gt;..-8064d09b661e&lt;/code&gt;&lt;/td&gt;
+&lt;td style=&#34;text-align:left&#34;&gt;SHIPPED&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;Expected stream topology:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-1002-1.svg&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;At this point, if the application wants the order status, it does a rest call to &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100-2/src/main/java/com/ehsaniara/scs_kafka_intro/scs1002/OrderController.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Order Controller&lt;/a&gt; and gets it from the following method:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Function&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;statusCheck&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;orderUuid&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+       &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ReadOnlyKeyValueStore&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;store&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;
+               &lt;span class=&#34;n&#34;&gt;interactiveQueryService&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getQueryableStore&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Application&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;STATE_STORE_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;QueryableStoreTypes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;keyValueStore&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+
+       &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;valueOf&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Optional&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;ofNullable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;store&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;orderUuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+               &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;orElseThrow&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OrderNotFoundException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Order not found&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)));&lt;/span&gt;
+   &lt;span class=&#34;o&#34;&gt;};&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, this is not the correct way. There is a big issue with it! Basically, this only works if you have one instance of the application. When you scale up the application, your &lt;code&gt;StateStore&lt;/code&gt; may not be on the same machine where you registered it earlier, resulting in a 404 Page Not Found error to display.&lt;/p&gt;
+&lt;p&gt;Let’s check the &amp;ldquo;key’s &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100-2/src/main/java/com/ehsaniara/scs_kafka_intro/scs1002/OrderService.java#L46&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Host Info&lt;/a&gt;&amp;rdquo; before calling it.&lt;/p&gt;
+&lt;p&gt;Note: The key’s &lt;code&gt;HostInfo&lt;/code&gt; is stored locally in the application’s &lt;code&gt;RocksDb&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;n&#34;&gt;HostInfo&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;hostInfo&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;interactiveQueryService&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getHostInfo&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Application&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;STATE_STORE_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;
+       &lt;span class=&#34;n&#34;&gt;orderUuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UUIDSerializer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Also, Kafka needs to know the app server information.  It’s already documented &lt;a href=&#34;https://docs.spring.io/spring-cloud-stream-binder-kafka/docs/3.1.3/reference/html/spring-cloud-stream-binder-kafka.html#_interactive_queries&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;, based on the project’s cloud version).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;spring.cloud.stream.kafka.streams.binder.configuration.application.server&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;localhost:${server.port}&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the following &lt;code&gt;@Bean&lt;/code&gt; methods, the application decides what the next stream is going to be based on the current order status.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100-2/src/main/java/com/ehsaniara/scs_kafka_intro/scs1002/OrderService.java#L96&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;@Bean (&amp;ldquo;orderProcess&amp;rdquo;)&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@SuppressWarnings&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;unchecked&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Function&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;KStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;[]&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;orderProcess&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;Predicate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;isOrderMadePredicate&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;k&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getOrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;PENDING&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;Predicate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;isInventoryCheckedPredicate&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;k&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getOrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;INVENTORY_CHECKING&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;Predicate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;isShippedPredicate&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;k&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;v&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getOrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;SHIPPED&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;input&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;input&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;peek&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;uuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;debug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Routing Order: {} [status: {}]&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;uuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getOrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()))&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;map&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KeyValue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;::&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;branch&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;isOrderMadePredicate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;isInventoryCheckedPredicate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;isShippedPredicate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the following, &lt;strong&gt;@Bean(s)&lt;/strong&gt; are the demonstrations of processes you may want to add in the Ordering System.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100-2/src/main/java/com/ehsaniara/scs_kafka_intro/scs1002/OrderService.java#L114&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;@Bean (&amp;ldquo;inventoryCheck&amp;rdquo;)&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Function&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;KStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;inventoryCheck&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;input&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;input&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;peek&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;uuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;debug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Checking order inventory, Order: {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;uuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;peek&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setOrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;INVENTORY_CHECKING&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;map&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KeyValue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;::&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100-2/src/main/java/com/ehsaniara/scs_kafka_intro/scs1002/OrderService.java#L121&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;@Bean (&amp;ldquo;shipping&amp;rdquo;)&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Function&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;KStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;shipping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;input&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;input&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;peek&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;uuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;debug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Applying Shipping Process, Order: {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;uuid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;peek&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setOrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OrderStatus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;SHIPPED&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;map&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KeyValue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;::&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100-2/src/main/java/com/ehsaniara/scs_kafka_intro/scs1002/OrderService.java#L130&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;@Bean (&amp;ldquo;shippedConsumer&amp;rdquo;)&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Consumer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KStream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Order&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;shippedConsumer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;input&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;input&lt;/span&gt;
+           &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;foreach&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;debug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;THIS IS THE END! key: {} value: {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Another important point in this demonstration is in (&lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/blob/main/scs-100-2/src/main/resources/application.yml#L23&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;application.yml&lt;/a&gt;):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;spring.cloud.stream.kafka.streams.bindings&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;orderStateStoreProcessor-in-0.consumer.configuration.application.id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${spring.application.name}-orderStateStoreProcessor&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;orderProcess-in-0.consumer.configuration.application.id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${spring.application.name}-orderProcess&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;inventoryCheck-in-0.consumer.configuration.application.id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${spring.application.name}-inventoryCheck&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;shipping-in-0.consumer.configuration.application.id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${spring.application.name}-shipping&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;shippedConsumer-in-0.consumer.configuration.application.id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${spring.application.name}-shipped&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We need it since we have all the &lt;code&gt;@Bean&lt;/code&gt;s in the same application (required for Kafka 2.6.x and later)&lt;/p&gt;
+&lt;h2 id=&#34;its-showtime&#34;&gt;It’s Showtime!&lt;/h2&gt;
+&lt;p&gt;Let’s build the project:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;mvn clean package
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then, run the project from the project root “scs-100-2”:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;java -jar target/scs-100-2-0.0.1-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After the application has started completely, this should display in the console:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;…..RocksDBTimestampedStore      : Opening store scs-100-2-order-events in regular mode
+…
+…
+… State transition from REBALANCING to RUNNING
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, run the test:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;nv&#34;&gt;ORDER_UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;curl --silent -H &lt;span class=&#34;s1&#34;&gt;&amp;#39;Content-Type: application/json&amp;#39;&lt;/span&gt; -d &lt;span class=&#34;s2&#34;&gt;&amp;#34;{\&amp;#34;itemName\&amp;#34;:\&amp;#34;book\&amp;#34;}&amp;#34;&lt;/span&gt; http://localhost:8080/order &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; jq -r &lt;span class=&#34;s1&#34;&gt;&amp;#39;.orderUuid&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; i in &lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;seq &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; 15&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; sleep 1&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;curl --silent &lt;span class=&#34;s2&#34;&gt;&amp;#34;http://localhost:8080/order/status/&amp;#34;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$ORDER_UUID&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;done&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Similar to &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/event-streaming/spring-cloud-stream-kafka-p2/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Part 2&lt;/a&gt;, you create an order and check its status every second for the next 15 seconds.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&amp;#34;PENDING&amp;#34;
+&amp;#34;PENDING&amp;#34;
+&amp;#34;PENDING&amp;#34;
+&amp;#34;PENDING&amp;#34;
+&amp;#34;PENDING&amp;#34;
+&amp;#34;PENDING&amp;#34;
+&amp;#34;INVENTORY_CHECKING&amp;#34;
+&amp;#34;INVENTORY_CHECKING&amp;#34;
+&amp;#34;INVENTORY_CHECKING&amp;#34;
+&amp;#34;INVENTORY_CHECKING&amp;#34;
+&amp;#34;INVENTORY_CHECKING&amp;#34;
+&amp;#34;SHIPPED&amp;#34;
+&amp;#34;SHIPPED&amp;#34;
+&amp;#34;SHIPPED&amp;#34;
+&amp;#34;SHIPPED&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;running-multi-instances&#34;&gt;Running Multi-instances&lt;/h2&gt;
+&lt;p&gt;Now, let’s run the same application multiple times, at the same time, to simulate the application redundancy.
+Before doing that, make sure that the current application is &lt;strong&gt;not running&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;This &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/tree/main/scs-100-2&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;project code&lt;/a&gt; comes with Nginx as a Load Balancer. It’s  preconfigured to distribute the incoming traffic from port &lt;strong&gt;8080&lt;/strong&gt; and route it into &lt;em&gt;&lt;strong&gt;8081&lt;/strong&gt;&lt;/em&gt; and &lt;strong&gt;&lt;em&gt;8082&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;First, let’s start a different docker-compose from root on this project &lt;a href=&#34;https://github.com/ehsaniara/scs-kafka-intro/tree/main/scs-100-2&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;scs-100-2&lt;/code&gt;&lt;/a&gt; as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;docker-compose -f nginx/docker-compose.yml up -d
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Since port 8080 is already occupied by Nginx, we can run the Ordering application &lt;strong&gt;in 2 separate terminals&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Terminal 1:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;java -Dserver.port&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8081&lt;/span&gt; -jar target/scs-100-2-0.0.1-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Terminal 2:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;java -Dserver.port&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8082&lt;/span&gt; -jar target/scs-100-2-0.0.1-SNAPSHOT.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-1002-3.svg&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Then, run our curl call command again (same as the earlier one)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;nv&#34;&gt;ORDER_UUID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;curl --silent -H &lt;span class=&#34;s1&#34;&gt;&amp;#39;Content-Type: application/json&amp;#39;&lt;/span&gt; -d &lt;span class=&#34;s2&#34;&gt;&amp;#34;{\&amp;#34;itemName\&amp;#34;:\&amp;#34;book\&amp;#34;}&amp;#34;&lt;/span&gt; http://localhost:8080/order &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; jq -r &lt;span class=&#34;s1&#34;&gt;&amp;#39;.orderUuid&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; i in &lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;seq &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; 15&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; sleep 1&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;curl --silent &lt;span class=&#34;s2&#34;&gt;&amp;#34;http://localhost:8080/order/status/&amp;#34;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$ORDER_UUID&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;done&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;/images/guides/event-streaming/kafka-events-intro-1002-4.svg&#34; alt=&#34;General Flow Diagram&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;When you review the logs, you&amp;rsquo;ll notice some calls are going into App 1 and others into App 2.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s review what is happening:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Incoming Request meets the Nginx on port 8080 and gets round-robin to either Application 1 or 2.&lt;/li&gt;
+&lt;li&gt;In the case of the “create order” request, depending on which application Nginx is routing the call, the order state will get materialized and stored in that instance of the application. In a real scenario, this can happen on a different machine.&lt;/li&gt;
+&lt;li&gt;For the following lookup calls, the application &lt;code&gt;InteractiveQueryService&lt;/code&gt; checks the &lt;code&gt;HostInfo&lt;/code&gt; for the requested key (&lt;code&gt;orderUuid&lt;/code&gt;) and decides to look it up on its local storage or ask the counterpart application (the other instance which &lt;code&gt;HostInfo&lt;/code&gt; addressed) through the &lt;code&gt;RestTemplate&lt;/code&gt; calls.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Note: In case the hosted application instance dies (where the key is located), the KTable change logs will be Re-Aggregated during the partition re-balancing, and the results will be materialized in the newly selected application instance.&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;whats-next&#34;&gt;What’s Next?&lt;/h2&gt;
+&lt;p&gt;We are going to break this application down into smaller micro-services and apply the Modern Application Best Practices.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

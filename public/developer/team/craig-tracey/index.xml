@@ -1,0 +1,877 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Craig Tracey</title>
+    <link>/team/craig-tracey/</link>
+    <description>Recent content in Craig Tracey on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 11 May 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/team/craig-tracey/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Outcomes: Developing a DevSecOps Practice</title>
+      
+      <link>/outcomes/secure-software-supply-chain/establish-devsecops/</link>
+      <pubDate>Tue, 11 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/secure-software-supply-chain/establish-devsecops/</guid>
+      <description>
+
+        
+        &lt;p&gt;Modern software delivery demands that we think differently about how we bring
+code to production. Traditional methodologies typically took on a siloed
+approach: a development team writes the code, a security team ensures that this
+code adheres to organizational compliance requirements, and operations teams
+maintained the availability of the running service. While this organization of
+specific roles often met the demand for bringing code to production, it suffers
+from a number of drawbacks.&lt;/p&gt;
+&lt;p&gt;First, it was often slow. With different groups all involved in bringing code to
+production, responsibilities were often serialized. Once the code is ready, the
+security team takes a look. And then, once the security team blesses the
+release, an operator can deploy and maintain it. Yes, these teams could
+multi-task, and begin the next body of work while their current release
+candidate was being validated. But, this is typically not an efficient process.
+In practical terms, it introduces disruptive context switching, but it also
+means that these teams are not working collaboratively towards a common goal.&lt;/p&gt;
+&lt;p&gt;Because these teams each have different objectives, friction often develops when
+attempting to achieve outcomes. Development teams are often blindsided by
+unclear or poorly understood security requirements, operations teams do not
+usually have nuanced understanding of the code to effectively operate it, and
+security teams struggle to keep the business secure in the face of rapidly
+evolving technical requirements.&lt;/p&gt;
+&lt;p&gt;While Secure Software Supply Chains are primarily a component of getting code
+into production, they are also an opportunity to reduce the friction between the
+various stakeholders attached to software development efforts. When implemented
+properly, each part of the organization will be working together towards the
+common goal of delivering customer value through software delivery.&lt;/p&gt;
+&lt;h2 id=&#34;changing-responsibilities&#34;&gt;Changing Responsibilities&lt;/h2&gt;
+&lt;p&gt;Members of a development organization will still maintain their respective areas
+of expertise, but they will now be asked to work more collaboratively towards
+this common goal of bringing code to production. Instead of serialized tasks,
+within DevSecOps each of these groups are working together in parallel. Needs
+and solutions are clearly communicated on a regular basis. And, because these
+lines of responsibility are becoming blurred, members can come to shared
+understandings of how the system works through code. After all, they are now
+working as one team.&lt;/p&gt;
+&lt;h3 id=&#34;the-platform-operator&#34;&gt;The Platform Operator&lt;/h3&gt;
+&lt;p&gt;The role of the SRE or platform operator shifts from one of being primarily
+focused on system availability to one where the operator is an integral part of
+the development process itself. While the application teams will be focused on
+new feature development, SREs will focus on the reliability of the whole system.
+This will require new and different skills from that of a classic system
+administrator role. Instead of a simple restart of a service, an SRE will now be
+analyzing performance metrics, debugging defects, and helping to build plans to
+ensure data integrity.&lt;/p&gt;
+&lt;p&gt;Platform operators need to be involved from the beginning in order to develop
+fault-tolerant systems. Their broad infrastructure expertise will help to inform
+key code decisions during the design and development phases. Determining backup
+and recovery needs as well as how to ensure the high-availability of systems are
+just some of the tasks that require operator involvement.&lt;/p&gt;
+&lt;p&gt;Maintaining the supply chain will require the development of cross-cutting
+functionality: pipelines and tools that are suitable for all development teams.
+This may include implementation of common frameworks for business continuity,
+systems that enforce transparent security, and general infrastructure
+management.&lt;/p&gt;
+&lt;h3 id=&#34;the-security-engineer&#34;&gt;The Security Engineer&lt;/h3&gt;
+&lt;p&gt;The role of the security engineer, similar to that of a platform engineer,
+evolves into one that is closely aligned with their development partners.
+Instead of acting as a gate to production, they are now engaged with the
+development teams from the start. The goal is to ensure that security
+requirements are implemented from the beginning. And, these requirements are no
+longer defined by spreadsheets and quickly-dated documents, but where possible
+they are defined by code and continuously verified. This code will make crystal
+clear, to anyone who would like to ship new code to production, the security
+requirements that are expected to be adhered to.&lt;/p&gt;
+&lt;p&gt;Modern platforms provide for shared mechanisms of policy enforcement. This may
+include everything from how infrastructure is deployed and refreshed to clearly
+outlining which software dependencies a development team is cleared to use. With
+a DevSecOps mindset, security engineers are helping to define these policies,
+but more importantly, help to implement these policies through code. Sometimes
+that code will be implemented as simple configuration data, but there is also
+the expectation that security teams will engage on the product&amp;rsquo;s code itself;
+advising on items like dependencies, user identity flows, and similar types of
+needs.&lt;/p&gt;
+&lt;h3 id=&#34;the-app-developer&#34;&gt;The App Developer&lt;/h3&gt;
+&lt;p&gt;Within DevSecOps the application developer&amp;rsquo;s role still consists, primarily, of
+bringing new software to customers. However, the scope of their work grows.
+Instead of being squarely focused on new features, or even addressing bugs,
+their scope needs to include tasks that will help to establish and maintain the
+security of their software pipelines.&lt;/p&gt;
+&lt;p&gt;The software delivery pipeline requires the same degree of diligence as the
+product itself. After all, this is the component that stands between your
+development teams and customers realizing value through your code. Without this
+robust capability, new code will never make it to your customers.&lt;/p&gt;
+&lt;p&gt;Developers will need to be involved in the development of unit and integration
+tests that exercise their code in ways that will mimic real-world use. Likewise,
+they will be a critical part in ensuring that all of the components in their
+software artifacts are up to date and secure. And, as they are typically closest
+to the data requirements of the software, they will need to play a critical role
+in developing disaster recovery requirements with their Security and Operations
+counterparts.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Outcomes: Secure Software Supply Chains</title>
+      
+      <link>/outcomes/secure-software-supply-chain/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/outcomes/secure-software-supply-chain/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;key-concepts&#34;&gt;Key Concepts&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;The software supply chain is the most critical component that stands between
+your ability to deliver value through software and your customers.&lt;/li&gt;
+&lt;li&gt;There are no shortcuts. The same security standard that you enact for your
+production code needs to be implemented for your delivery mechanism as well.&lt;/li&gt;
+&lt;li&gt;A supply chain is not a unidirectional construct. It is a closed-loop system
+that will enable you to quickly identify and remediate production failures.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;outcomes&#34;&gt;Outcomes&lt;/h2&gt;
+&lt;p&gt;What we have heard from customers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;“We need to be able to deploy code to our staging and production environments
+reliably every time”&lt;/li&gt;
+&lt;li&gt;“The Security team continually scans our environment for vulnerabilities. When
+they discover a problem with our deployed code or one of its dependencies, we
+need to be able to remediate the problem within 24 hours.”&lt;/li&gt;
+&lt;li&gt;“Our compliance requirements mandate that all of our software is validated
+during our build process and that it is built upon validated, secure images.”&lt;/li&gt;
+&lt;li&gt;“We do not allow our developers to deploy containers directly from Docker
+Hub.”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;Delivering business value through software requires that an organization is able
+to ship code to production consistently, reliably, and securely. This capability
+enables the software organization to meet the immediate needs of their
+customers. Whether this amounts to delivering software for the first time, or
+reacting to a security vulnerability in a timely manner, consistency will create
+better customer outcomes.&lt;/p&gt;
+&lt;p&gt;Unfortunately, for many organizations the primary development focus is often
+centered on product features alone. Delivery systems are very often an
+afterthought, usually implemented in an ad hoc fashion, and, as a result, become
+a fragile component that stands between development teams and the customers
+seeking to derive value from their work. When properly implemented, a secure
+software supply chain has the ability to close this gap across the entirety of
+your software portfolio.&lt;/p&gt;
+&lt;p&gt;A secure software supply chain is a term that refers to the full suite of
+software that will move your code from a developer’s laptop, through source
+control, and eventually onto production systems. This is not a one-way
+transaction. This supply chain, when implemented properly, will become a
+closed-loop system, whereby the same tools that will drive code to production
+will also help to address critical production events.&lt;/p&gt;
+&lt;p&gt;There are a few basic tenets to consider when implementing a secure software
+supply chain:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Code is simply and consistently delivered to production. It is a natural and
+familiar extension of a developer’s workflow.&lt;/li&gt;
+&lt;li&gt;New software is easily and consistently onboarded onto this delivery
+mechanism. There are no one-off delivery mechanisms. All code flows through
+this chain to production so that standards are continually maintained.&lt;/li&gt;
+&lt;li&gt;The supply chain is not an opaque construct. Developers can easily interact
+with it, investigate delivery failures, and augment the system as needed.&lt;/li&gt;
+&lt;li&gt;The software delivery mechanism is secure. As it is integral to the software
+itself, it adheres to the same security constraints. The organization may
+restrict actions through role-based policy, certify software artifacts, audit
+production system modifications, and address runtime vulnerabilities.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When most people think of software security, they often immediately consider how
+software performs in a production setting. However, the process for creating
+secure software begins long before your code is deployed.&lt;/p&gt;
+&lt;p&gt;There are 4 pillars for developing and deploying secure software:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The code is thoroughly reviewed by project maintainers.&lt;/li&gt;
+&lt;li&gt;All code has a standard suite of unit and/or integration tests that must pass
+before code can make it to production environments.&lt;/li&gt;
+&lt;li&gt;Unit tests are an integral part of the code base.&lt;/li&gt;
+&lt;li&gt;Tests should be run automatically on secure infrastructure and with the
+release candidate artifact.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Optionally, organizations may also choose to implement additional security
+features within their software supply chain. Code linters, open source license
+checks, automated vulnerability tests, and change management updates are all
+common tasks that may also be incorporated into a software supply chain.&lt;/p&gt;
+&lt;p&gt;Getting code into production is the most obvious goal for a software supply
+chain, but mature organizations implement this as a closed loop. Not only will
+this system be used for new feature development and promotion to production, but
+it will also allow operations teams to quickly identify and address
+vulnerabilities.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Identity and Access Control</title>
+      
+      <link>/guides/kubernetes/identity/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/identity/</guid>
+      <description>
+
+        
+        &lt;p&gt;In order to deploy Kubernetes securely you need to implement the principle of
+least privilege. What this means is that you will allow users to take actions
+against the cluster (e.g. create Pods, Services, etc.), but you will ensure that
+any privileges that you extend to a user will be constrained to include only
+those that are necessary to fulfill the user&amp;rsquo;s needs, and nothing more.&lt;/p&gt;
+&lt;p&gt;To ensure that users only have what they need, you will need to know about who
+our users are. You will need to both authenticate their credentials, and then
+once you have, you will need to ensure that they are allowed to perform the
+actions they have requested. Similarly, you will want to be sure that you always
+have a consistent view of this user data. This consistent view will ensure that
+as users come and go, you always grant them only the access they are entitled
+to.&lt;/p&gt;
+&lt;p&gt;Many newcomers to Kubernetes are sometimes surprised to learn that Kubernetes
+does not have a User resource type. Unlike other platforms in the distributed
+computing space, Kubernetes deliberately seeks to offload this functionality
+onto other systems.&lt;/p&gt;
+&lt;p&gt;While Kubernetes does provide some primitive user management capabilities in the
+form of Service Accounts, a production deployment should leverage an
+organization-wide user identity store. Often times an organization will have a
+common LDAP, Active Directory, or Open ID Connect (OIDC) infrastructure that is
+leveraged across its environments. Kubernetes is capable of integrating
+(directly or indirectly) with these systems, and doing so will provide that
+common user identity integration that you are looking for. When a user leaves
+the organization, their access is revoked from this common identity store, and
+Kubernetes will in-turn revoke their access to the cluster.&lt;/p&gt;
+&lt;h2 id=&#34;open-identity-connect-oidc&#34;&gt;Open Identity Connect (OIDC)&lt;/h2&gt;
+&lt;p&gt;If you have examined the Kubernetes documentation, you will notice that there
+are quite a few options for integrating user identity systems, but that the only
+standard protocol-based configuration involves OIDC.&lt;/p&gt;
+&lt;p&gt;With OIDC, a user will authenticate with the identity store, and upon successful
+login, will obtain a JSON Web Token (JWT). This token will be presented as a
+base64 string, but when decoded, it contains human-readable metadata about the
+user. Some of this data may include the username, token issue time, token
+expiration time, and most importantly, a field that provides what OIDC calls
+&amp;ldquo;claims.&amp;rdquo; These claims are typically an array of strings that indicate which
+user groups this user should have access to. These groups will eventually be
+mapped to Roles and ClusterRoles for the implementation of Kubernetes RBAC
+rules.&lt;/p&gt;
+&lt;p&gt;Note that the Kubernetes API server may be configured to specify both a user
+claim and a group claim. These fields would correspond to attributes within the
+token.&lt;/p&gt;
+&lt;p&gt;A sample JWT may look like the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;iss&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;https://auth.example.com&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;sub&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Ch5hdXRoMHwMTYzOTgzZTdjN2EyNWQxMDViNjESBWF1N2Q2&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;aud&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;dDblg7xO7dks1uG6Op976jC7TjUZDCDz&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;exp&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1517266346&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;iat&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1517179946&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;at_hash&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;OjgZQ0vauibNVcXP52CtoQ&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;username&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;marysmith&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;email&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;marysmith@example.com&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;email_verified&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;groups&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;qa&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;infrastructure&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this example, you would configure the API server to use the &amp;ldquo;username&amp;rdquo;
+attribute as the username claim field and the &amp;ldquo;groups&amp;rdquo; attribute as the groups
+claim. When developing RBAC rules, you will now be able to utilize these claims
+as subjects for RoleBinding and ClusterRoleBinding resources:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;RoleBinding&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;web-rw-deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;some-web-app-ns&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;roleRef&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Role&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;web-rw-deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiGroup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;subjects&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;User&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;marysmith&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiGroup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;or&amp;hellip;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterRoleBinding&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;web-infra&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;roleRef&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Role&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;web-infra&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiGroup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;subjects&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Group&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;infrastructure&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiGroup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;rbac.authorization.k8s.io&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;What about other protocols?&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;There are no direct LDAP or Active Directory integrations, but it is possible to
+integrate these systems with tools that will act as identity brokers.&lt;/p&gt;
+&lt;p&gt;One very common tool for brokering various identity backends is
+&lt;a href=&#34;https://github.com/dexidp/dex&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Dex&lt;/a&gt;. This service, deployed in-cluster, will
+allow us to connect various backends, such as LDAP, SAML, Active Directory, and
+similar to an OIDC front-end. Kubernetes may then be configured to utilize Dex
+as its identity source.&lt;/p&gt;
+&lt;p&gt;This project was developed by CoreOS, and is currently being proposed for
+donation to the Cloud Native Computing Foundation.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Once a user has authenticated against their identity store, they will receive a
+JWT. The user then adds this token to their kubeconfig, and all subsequent
+client requests will include this bearer token in the request&amp;rsquo;s Authorization
+header. The Kubernetes API server uses this token to identify and authorize the
+user.&lt;/p&gt;
+&lt;p&gt;This flow can be complex, however, there are tools that will make this process
+straightforward. &lt;a href=&#34;https://github.com/heptiolabs/gangway&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;gangway&lt;/a&gt; is such a
+tool, and it will provide an end user with all of the steps necessary to
+integrate with an OIDC identity provider in a self-service fashion.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/identity/gangway.png&#34; alt=&#34;Gangway&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;It should be noted that JWT tokens are not able to be revoked, but are also
+time-bound. This expiration time is embedded in the token itself, and is
+immutable. The identity server may scope this token for as long as it would
+like, but remember that the token will be valid until it is expired. So, be sure
+to choose a scope that makes sense - an hour is typically sufficient.&lt;/p&gt;
+&lt;p&gt;In addition to the access JWT token, the OIDC specification also calls for an
+optional refresh token as well. If your identity server supports refresh tokens,
+these may be exchanged for a new access token upon expiration. This
+functionality makes it possible for a user to continually get new time-scoped
+access tokens seamlessly.&lt;/p&gt;
+&lt;h2 id=&#34;other-means&#34;&gt;Other Means&lt;/h2&gt;
+&lt;p&gt;While OIDC is the preferred integration protocol for identity and access
+control, there are scenarios where, despite the availability of OIDC brokering
+tools, this is still not possible. Fortunately, Kubernetes affords a number of
+alternative means of identity and access control. Each of these, while capable,
+may have drawbacks that make it a less favorable approach.&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Why choose one?&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;Identity in Kubernetes is not mutually exclusive. It allows for multiple
+identity configurations simultaneously. While you are not likely in a scenario
+where it will be hard to choose the best integration, you will want to consider
+this feature in order to facilitate cluster operations. If you encounter a
+scenario where an external user identity system were to become unavailable,
+having alternate means of authentication is a great tool to have in order to
+effect change during an incident.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Let&amp;rsquo;s take a brief look at some of the other integrations.&lt;/p&gt;
+&lt;h3 id=&#34;x509-certificates&#34;&gt;X.509 Certificates&lt;/h3&gt;
+&lt;p&gt;Kubernetes, when properly configured, leverages TLS to secure communication
+throughout the cluster. All control plane surfaces utilize the encryption
+features of TLS to encrypt all over-the-wire communication, but perhaps just as
+importantly, they utilize the identity aspects of TLS to ensure that only the
+clients that we have authorized will be able to communicate with each other.&lt;/p&gt;
+&lt;p&gt;Just as we can utilize these X.509 certificates to secure service-to-service
+communication, we can use these certificates to secure and identify users as
+well. In order to do so, we will need to generate an X.509 certificate signing
+request that will then be signed against a certificate authority common to the
+Kubernetes API server. This is a multi-step process that is outside the scope of
+this documentation, but instructions may be found in the &lt;a href=&#34;https://kubernetes.io/docs/concepts/cluster-administration/certificates/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes
+documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;With X.509 certificates we may specify the username and groups that a user is a
+member of by manipulating the standard fields of the cert.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;openssl req -new -key marysmith.pem -out marysmith-csr.pem -subj &amp;quot;/CN=marysmith/O=group1/O=group2&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The Common Name field is used to indicate the username of the identity, and we
+add the user to user groups by way of the Organization fields. Just as with the
+OIDC case, these fields may be used in RBAC RoleBinding and ClusterRoleBindings.&lt;/p&gt;
+&lt;p&gt;X.509 certificates can be very difficult to work with in a practical way. First,
+many users are often confused by the steps required to generate a certificate.
+And this confusion often leads to reluctance when it comes to proper issuance of
+credentials to new users and/or the reissuance in the case of compromise. In
+fact, a common pattern that we have encountered in-the-wild has been for
+certificates with broad privileges (e.g. cluster-admin) to be shared among many
+users. This not only severely compromises security, but also limits your ability
+to leverage features like audit logging.&lt;/p&gt;
+&lt;p&gt;Secondarily, these certificates must be signed against a common certificate
+authority. In the best of scenarios, users will have a certificate authority
+that may be used across the organization. But, in most cases, these certificates
+are dedicated to the cluster itself. This will require new certificates for each
+cluster a user interacts with.&lt;/p&gt;
+&lt;p&gt;Finally, and perhaps most problematic, is the fact that x.509 certificates are
+note able to be revoked easily. The certificate will be valid until the
+certificate expires or the server certificate has been rotated.&lt;/p&gt;
+&lt;p&gt;In short, the user experience with certificates is not great. And, poor user
+experiences within the realm of security often leads to users circumventing
+processes meant to secure all users. So, for general-purpose needs, we do not
+recommend this approach.&lt;/p&gt;
+&lt;p&gt;With this said, however, X.509 certificates can be a very good option for &amp;ldquo;break
+glass&amp;rdquo; access. As these certificates do not require any runtime infrastructure
+they may be readily used in the event that other authentication means are
+unexpectedly unavailable. Operations teams should ensure that these keys are
+only used for remediation.&lt;/p&gt;
+&lt;h3 id=&#34;webhooks&#34;&gt;Webhooks&lt;/h3&gt;
+&lt;p&gt;Kubernetes also supports a generic mechanism for authentication by way of
+webhooks. In this scenario, you may configure the API server to POST webhooks to
+a service that will respond with the appropriate HTTP responses. These POSTs
+will issue the Kubernetes TokenReview resource type to the authenticating
+service. This type includes an attribute for the bearer token associated with
+the request that is attempting to authenticate.&lt;/p&gt;
+&lt;p&gt;The authenticating webhook service will simply update the TokenReview object
+with an &lt;code&gt;authenticated&lt;/code&gt; boolean field, and return it to the calling Kubernetes
+API service. In the case of &lt;code&gt;authenticated: true&lt;/code&gt;, the webhook will also provide
+detail about the user; username, groups, etc.&lt;/p&gt;
+&lt;p&gt;While this mechanism may be used in cases where there are no other viable
+methods, we strongly discourage this type of integration. First, any
+introduction of a downstream webhook into the regular API request flow will
+introduce latencies. Secondly, this is now a (yet another) service that must be
+maintained by those who are operating the Kubernetes platform, and this type of
+work, while seemingly innocuous, can be non-trivial.&lt;/p&gt;
+&lt;p&gt;This should only be used when no other options exist.&lt;/p&gt;
+&lt;h3 id=&#34;static-tokens-and-basic-authentication&#34;&gt;Static Tokens and Basic Authentication&lt;/h3&gt;
+&lt;p&gt;And, finally, Kubernetes offers some mechanisms to provide the Kubernetes API
+server with pointers to files that contain either static tokens and/or basic
+authentication credentials. These files must exist on a disk local to the API
+server and are neither secure nor scalable. These should be avoided at all cost.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Service Routing</title>
+      
+      <link>/guides/kubernetes/service-routing/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/service-routing/</guid>
+      <description>
+
+        
+        &lt;p&gt;Fundamental to the deployment of most software is the ability to route traffic
+to network services. This is especially true when the software platform adopts a
+microservices architecture.&lt;/p&gt;
+&lt;p&gt;Traditionally, exposing such services has been an arduous task. Concerns such as
+service discovery, port contention, and even load balancing were often left as
+an exercise for the operator. These capabilities were, no doubt, available, but
+were often configured and operated through manual user intervention.&lt;/p&gt;
+&lt;p&gt;Fortunately, Kubernetes provides a number of primitives that allow us to route
+service traffic across the cluster as well as from external sources. Just as all
+other Kubernetes resources, these are configured in a declarative way.&lt;/p&gt;
+&lt;h2 id=&#34;the-kubernetes-service-resource&#34;&gt;The Kubernetes Service Resource&lt;/h2&gt;
+&lt;p&gt;The Kubernetes Service resource is a core API type that allows users to define
+how service endpoints may be exposed to client applications. This construct
+operates between layer 3 and 4 of the OSI networking stack. This resource,
+natively, offers three types of services that provide various levels of service
+exposure.&lt;/p&gt;
+&lt;p&gt;An example Service declaration may take the following form:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Service&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;mysql&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;myapp&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ClusterIP&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# this is the default value if unspecified&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;mysql&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;protocol&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;TCP&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;3307&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;targetPort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;3306&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This Service will provide Layer 3/4 access to mysql Pods that are labeled with
+the &lt;code&gt;app: mysql&lt;/code&gt; key-value pair within the &lt;code&gt;myapp&lt;/code&gt; namespace. While the Pod
+exposes the service on the standard mysql port (3306), the Service may
+selectively expose it on an alternate port (in this case, 3307).&lt;/p&gt;
+&lt;p&gt;Each of the Service types build on the previous type, beginning with ClusterIP
+as the most basic type.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/service-routing/diagrams/service-routing.png&#34; alt=&#34;Service Routing&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;clusterip&#34;&gt;ClusterIP&lt;/h3&gt;
+&lt;p&gt;The ClusterIP Service type is used to expose a Pod&amp;rsquo;s layer 4 endpoint to the
+rest of the cluster. As stated earlier, this service type serves as the most
+basic of all of the types. This construct is namespaced, and has two primary
+functions: to provide a cluster-local virtual IP and an associated DNS entry.
+This virtual IP is pulled from an IP pool that is dedicated for all services,
+and once created it is used as the target for a consistent DNS record.&lt;/p&gt;
+&lt;p&gt;These DNS records take the fully-qualified form of:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;service name&amp;gt;.&amp;lt;namespace&amp;gt;.svc.cluster.local&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;From the example above, this record would take the form:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;mysql.myapp.svc.cluster.local&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;These records may be used for service discovery from within the cluster. They
+may be used to address services across namespaces as well as within the same
+namespace. In the case of intra-namespace resolution, they may be addressed with
+just the short name of the record.&lt;/p&gt;
+&lt;p&gt;When a service type is not specified, ClusterIP is the default.&lt;/p&gt;
+&lt;h3 id=&#34;nodeport&#34;&gt;NodePort&lt;/h3&gt;
+&lt;p&gt;NodePort services provide a mechanism for exposing services to external
+entities. In this case, a high port will be opened on all Nodes in the cluster.
+The range from which this port will be allocated may be specified through the
+&lt;code&gt;--service-node-port-range&lt;/code&gt; &lt;code&gt;kube-api-server&lt;/code&gt; configuration parameter. The
+default port range can be consulted in the
+&lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/service/#nodeport&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;official documentation.&lt;/a&gt;
+While a valid, unused port that falls within the range may be specified in the
+declaration, the most common case calls for the port to be selected
+automatically by Kubernetes itself.&lt;/p&gt;
+&lt;p&gt;When a NodePort service type is specified, this functionality will build upon
+the ClusterIP construct. In other words, when specified, NodePort will
+instantiate the functionality of both NodePort as well as ClusterIP. An external
+user will be able to address an in-cluster service by connecting to any single
+node in the cluster at the high port which has been dedicated to the service.
+Likewise, clients that originate their connection from within the cluster may
+utilize either the virtual IP and/or DNS entries provided by the ClusterIP
+functionality.&lt;/p&gt;
+&lt;p&gt;This functionality can be a critical component for exposing services to external
+clients, but it can be a bit cumbersome. An external client would need to know
+the IP address of cluster Nodes as well as the ephemeral high port that has been
+delegated to the Service. While custom service discovery mechanisms may be
+reliably configured with this ephemeral data, in the next section we will
+demonstrate how NodePort may be utilized to front Services with an external load
+balancer.&lt;/p&gt;
+&lt;p&gt;Node ports are opened on all Nodes within the cluster. Therefore, there is no
+guarantee that your destination Pod is also colocated on that Node. Once the
+traffic hits the Node port, it will be forwarded through the ClusterIP service
+that may direct it to a Pod on another Node, even if a suitable Pod is running
+on that Node. This behavior can be controlled by configuring your Service with
+an &lt;code&gt;externalTrafficPolicy&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;An &lt;code&gt;externalTrafficPolicy&lt;/code&gt; denotes if the traffic received is desired to be
+routed to node-local or cluster-wide endpoints. The default value for this
+parameter is &lt;code&gt;Cluster&lt;/code&gt;, which as described above will forward the NodePort
+traffic to any Pod running in the cluster, even if it is running on a Node
+different than the one receiving the traffic. When choosing &lt;code&gt;Local&lt;/code&gt; for this
+setting, the client source IP is preserved and a second hop to another node is
+avoided, but this potentially limits the load-spread across the cluster and
+risks imbalanced traffic spreading.&lt;/p&gt;
+&lt;h3 id=&#34;loadbalancer&#34;&gt;LoadBalancer&lt;/h3&gt;
+&lt;p&gt;The LoadBalancer Service type, again, builds on the foundation provided by the
+NodePort and ClusterIP functionality. When this type is specified, both
+in-cluster and external access is configured as outlined above. Additionally, an
+external load balancer will also be configured to front all of the NodePort
+services.&lt;/p&gt;
+&lt;p&gt;This Service type requires the cluster is built on top of infrastructure that
+provides load balancing functionality. Nearly all cloud IaaS providers (i.e. AWS,
+GCP, Azure, etc.), provide support for these services through Kubernetes cloud
+provider integrations. Additionally, there are third-party integrations (i.e. F5,
+NSX, etc.) that may also provide load balancing functionality that implements
+the Kubernetes Service resource.&lt;/p&gt;
+&lt;h2 id=&#34;ingress&#34;&gt;Ingress&lt;/h2&gt;
+&lt;p&gt;As web-based services continue to grow in popularity, whether those are
+user-facing interfaces or REST/GraphQL APIs, it is likely that these types of
+applications will constitute the majority of what gets deployed on an average
+cluster. With these types of applications, there are a number of features that
+are necessary for a production deployment. First and foremost, these
+applications will require redundancy, and this is typically achieved by
+deploying a number of discreet instances of the web-based application and, in
+turn, fronting these with a layer 7 proxy. This reverse proxy will register a
+number of upstream instances of the application, ensuring that each is reachable
+by way of a health check, and forwarding traffic to healthy upstreams according
+to the declared configuration.&lt;/p&gt;
+&lt;p&gt;These configurations will provide mechanisms for the traffic to be qualified by
+a number of rules before it is forwarded on to the upstream instances of the
+application. These rules for evaluation may include conditions such as the value
+of the &lt;code&gt;Host&lt;/code&gt; header in the HTTP request, as well as the specific paths that are
+being requested. Once a rule has evaluated to a known upstream, the traffic may
+be passed as-is or forwarded on with specified modifications (i.e. header
+changes, path rewrites, etc).&lt;/p&gt;
+&lt;p&gt;Kubernetes provides a mechanism for easy configuration of an in-cluster reverse
+proxy deployment with its Ingress resource. This resource serves as a generic
+configuration for nearly any reverse proxy. As Pods for a Service scale up or
+down (again, these are determined by label selectors), the Ingress controller
+will, in turn, add or remove the Pod&amp;rsquo;s IP from the pool of upstream Endpoints.
+Endpoints for a Service may be queried with the &lt;code&gt;kubectl get endpoints&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/service-routing/diagrams/service-routing-ingress.png&#34; alt=&#34;Service Routing Ingress&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Some proxies, however, also provide functionality above and beyond what would be
+considered a common feature set. In this case, custom features may be
+supplemented with annotations on the resource.&lt;/p&gt;
+&lt;p&gt;In addition to specific implementation details, annotations may be utilized for
+adjacent and/or complementary functionality. For instance, with the
+&lt;a href=&#34;https://github.com/jetstack/cert-manager&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cert-manager&lt;/a&gt; project, annotations
+are placed on an Ingress resource so that the reverse proxy may secure the
+deployment with TLS certificates.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;networking.k8s.io/v1beta1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Ingress&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;test-ingress&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;annotations&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;nginx.ingress.kubernetes.io/rewrite-target&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;rules&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;http&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;paths&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/testpath&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;backend&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;              &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;serviceName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;test&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;              &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;servicePort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;80&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As with any Kubernetes controller, a user may declare a desired state and the
+controller is responsible for reconciling that configuration towards that
+desired state. The case for Ingress controllers is no different. The controller
+will watch for any updates to the full collection of Ingress objects and, in
+turn, configure the reverse proxy to reflect the desired state. In the case of
+proxies such as nginx, this will amount to the controller writing a collection
+of nginx configuration files, and reloading the nginx service. Alternatively,
+with more modern proxies (e.g. Envoy managed by the Contour Controller),
+upstreams and other configurations may be manipulated with an API, and thus do
+not require reloads. This functionality is advantageous as it will not disrupt
+any in-flight connections.&lt;/p&gt;
+&lt;h2 id=&#34;service-mesh&#34;&gt;Service Mesh&lt;/h2&gt;
+&lt;p&gt;As mentioned earlier, natively, Kubernetes service routing is concerned with
+providing the layer 3 and 4 plumbing that will connect a client to a network
+service that is being served from within the cluster. There is, however, a
+desire amongst the industry to provide additional routing capabilities. While
+layer 3 and 4 can provide adequate mechanisms for connectivity, it is incapable
+of providing any data or features for application-centric concerns. As one
+extends into the higher layers, we can start to change the way we deploy and
+observe these applications.&lt;/p&gt;
+&lt;p&gt;Service mesh deployments make use of the native Kubernetes service constructs,
+but layer on features implemented with layers 5 through 7. Some of the features
+afforded by service mesh controllers include mutual TLS, tracing, circuit
+breaking, dynamic routing, rate limiting, load balancing, and more. This is
+typically implemented by placing lightweight proxies at application boundaries
+within the Kubernetes cluster. Specifically, in the case of projects like
+&lt;a href=&#34;https://istio.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Istio&lt;/a&gt; this is accomplished by automatically attaching an
+Envoy proxy container to all Pods. Envoy, when deployed in this way, can provide
+the features mentioned above. This does, however, come at the price of
+additional resource utilization.&lt;/p&gt;
+&lt;p&gt;While service mesh implementations are relatively nascent in the wild, it is
+quickly becoming a must-have feature set. And, we fully expect that service mesh
+deployments will continue to expand in size and scope. Let&amp;rsquo;s review some of the
+common service mesh features.&lt;/p&gt;
+&lt;h3 id=&#34;mutual-tls&#34;&gt;Mutual TLS&lt;/h3&gt;
+&lt;p&gt;Mutual TLS provides some very attractive features for application developers and
+platform operators alike. As with most deployments, there will be requirements
+for adhering to security constraints before going to production. One of the most
+popular requests is that all network traffic should be encrypted. While this may
+be achieved with some CNI implementations, many do not provide this type of
+overlay capability. Regardless of what the nature of our network fabric looks
+like, we can provide this capability seamlessly with a service mesh operating at
+layer 5 and 7 of the OSI model.&lt;/p&gt;
+&lt;p&gt;In addition to the requirement that all traffic be encrypted, mutual TLS also
+provides service-to-service identity. In other words, we can ensure that only
+services that we have been authorized to transact with one another may do so. Of
+course we can implement firewall policies that would also provide similar
+capabilities, but these are not nearly as advanced as what TLS can provide.
+Firewall rules merely indicate which IP and port combinations may initiate and
+complete connections. Mutual TLS, however, can ensure cryptographically which
+layer 7 connections will be able to be initiated and completed.&lt;/p&gt;
+&lt;h3 id=&#34;tracing&#34;&gt;Tracing&lt;/h3&gt;
+&lt;p&gt;In dynamic environments like Kubernetes, there is often a desire to understand
+how microservices are connected to one another. Not only are we concerned with
+what services speak to each other, we are also concerned with understanding to
+what degree they do so. How many connections are there, and how frequently? Or,
+are there some service-to-service connections that are slower than others?&lt;/p&gt;
+&lt;p&gt;Due to service mesh-placed proxies alongside the application, we can now
+automatically add Open Tracing headers to help us understand how services
+interact. And, this is precisely how tracing works with service mesh
+technologies: headers are placed on intra-service traffic, and may then be
+analyzed by tools such as &lt;a href=&#34;https://jaegertracing.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Jaeger&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;circuit-breaking&#34;&gt;Circuit Breaking&lt;/h3&gt;
+&lt;p&gt;Circuit breaking allows for advanced patterns concerning failure detection. Now,
+instead of relying on the, relatively simplistic, health checks offered by layer
+3 and layer 4 (i.e. can we connect?), we can now programmatically remove
+upstreams based on more qualified data. Because service mesh operates at the
+application layer, we can add criteria concerning HTTP status codes, response
+times, number of pending requests and the like. Utilizing application data in
+this way helps to provide a better end-user experience.&lt;/p&gt;
+&lt;h3 id=&#34;advanced-request-routing&#34;&gt;Advanced Request Routing&lt;/h3&gt;
+&lt;p&gt;Service mesh implementations also allow for routing traffic based upon policy
+that extend above and beyond what is capable with native Kubernetes constructs
+alone. Advanced patterns, such as canary, weighted, and/or blue/green
+deployments, are available through service mesh-specific resource types.
+Likewise, this capability also enables advanced development patterns. Users may
+be directed to specific application instances based on designated headers and
+even the request&amp;rsquo;s attached user identity.&lt;/p&gt;
+&lt;h3 id=&#34;load-balancing&#34;&gt;Load Balancing&lt;/h3&gt;
+&lt;p&gt;While Kubernetes Ingress controllers are implemented with load balancing reverse
+proxies, service mesh is capable of providing features above what is typically
+provided by these third-party controllers. Whereas most Ingress controllers are
+a bit limited with regard to how they maybe configured through the Ingress
+resource type, service mesh provides additional resource types that allow a user
+to be more expressive. Service mesh also typically provides for some advanced
+capabilities like locality-based balancing, with failover based upon priority
+designations.&lt;/p&gt;
+&lt;h2 id=&#34;popular-tooling-and-approaches&#34;&gt;Popular Tooling and Approaches&lt;/h2&gt;
+&lt;h3 id=&#34;ingress-1&#34;&gt;Ingress&lt;/h3&gt;
+&lt;h4 id=&#34;nginx-ingress-controller&#34;&gt;NGINX Ingress Controller&lt;/h4&gt;
+&lt;p&gt;The &lt;a href=&#34;https://github.com/kubernetes/ingress-nginx&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;NGINX Ingress Controller&lt;/a&gt; is
+the most commonly deployed Ingress controller within the Kubernetes ecosystem.
+It is maintained in the open as a Kubernetes community project. It is built on
+the decades-old NGINX reverse proxy and, is therefore, well understood and a
+technology that many organizations have already operationalized and/or have
+familiarity with.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Broad adoption.&lt;/li&gt;
+&lt;li&gt;Well-tested in production scenarios.&lt;/li&gt;
+&lt;li&gt;Extends the Ingress resource with dozens of implementation-specific
+annotations.&lt;/li&gt;
+&lt;li&gt;Functionality may be extended with Lua scripting.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Technology is not well-suited for highly dynamic environments.
+&lt;ul&gt;
+&lt;li&gt;All Ingress changes require that NGINX reloads the process in order to apply
+the changes. This may have a detrimental impacts on in-flight connections.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;contour&#34;&gt;Contour&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&#34;https://projectcontour.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Contour&lt;/a&gt; is an Ingress controller that is developed
+and maintained by VMware. Built on top of the
+&lt;a href=&#34;https://www.envoyproxy.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Envoy&lt;/a&gt; proxy from Lyft. It offers a performant,
+cloud native solution for Ingress control.&lt;/p&gt;
+&lt;p&gt;Because Envoy is configurable via gRPC APIs, this means that new route
+configurations may be applied dynamically and without disrupting any in-flight
+connections.&lt;/p&gt;
+&lt;p&gt;Contour adds a Custom Resource Definition called HTTPProxy, which enables
+advanced capabilities that may not be expressed with Ingress normally. Features
+such as route delegation, multi-service routes, weighted endpoints, and load
+balancing strategies allow end users to craft highly-specific application
+rollout patterns, thus further enabling CI/CD.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Built on top of Envoy, a highly performant and scalable reverse proxy.&lt;/li&gt;
+&lt;li&gt;Ingress configuration is applied via an API; not static configuration files.&lt;/li&gt;
+&lt;li&gt;Extends Ingress control to support multi-team environments.
+&lt;ul&gt;
+&lt;li&gt;HTTPProxy provides richer configuration than is available with the Ingress
+resource alone. Some of these extended features include weighted routes
+and specification of load balancing strategies without the use of
+annotations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Relatively new within the ecosystem, only reaching GA recently.
+&lt;ul&gt;
+&lt;li&gt;Features that already exist for other Ingress controllers may not yet be
+available for Contour.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;traefik&#34;&gt;Traefik&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&#34;https://containo.us/traefik/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Traefik&lt;/a&gt; bills itself as the &amp;ldquo;Cloud Native Edge
+Router.&amp;rdquo; While we have seen limited numbers of deployments leveraging Traefik,
+it has often been utilized in cases where other solutions did not provide
+equivalent functionality. Specifically, features like header-based routing have
+been implemented with Traefik in the past, but as this functionality becomes
+more commonplace, the need for Traefik to fill this gap will likely diminish.&lt;/p&gt;
+&lt;p&gt;Traefik is supported by &lt;a href=&#34;https://containo.us&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Containous&lt;/a&gt; and is developed as
+open source software.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Has some extended features that may not be available with other Ingress
+solutions.&lt;/li&gt;
+&lt;li&gt;Seamless integrations with services such as Let&amp;rsquo;s Encrypt&lt;/li&gt;
+&lt;li&gt;Full-featured dashboard&lt;/li&gt;
+&lt;li&gt;Multi-platform support beyond Kubernetes alone.
+&lt;ul&gt;
+&lt;li&gt;Docker&lt;/li&gt;
+&lt;li&gt;Rancher&lt;/li&gt;
+&lt;li&gt;Marathon&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Has not seen strong traction within the community.&lt;/li&gt;
+&lt;li&gt;Deep feature list, but configuration can be a bit complicated.&lt;/li&gt;
+&lt;li&gt;Some Enterprise features are not open sourced.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;service-mesh-1&#34;&gt;Service Mesh&lt;/h3&gt;
+&lt;h4 id=&#34;linkerd&#34;&gt;Linkerd&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&#34;https://linkerd.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Linkerd&lt;/a&gt; is an ultra lightweight service mesh for
+Kubernetes. It provides end users with the features that they would expect from
+a service mesh solution: runtime debugging, observability, reliability, and
+security. Linkerd is a fully open source solution falling under the Apache 2
+license.&lt;/p&gt;
+&lt;p&gt;Features:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;HTTP, HTTP/2, and gRPC Proxying&lt;/li&gt;
+&lt;li&gt;TCP Proxying and Protocol Detection&lt;/li&gt;
+&lt;li&gt;Retries and Timeouts&lt;/li&gt;
+&lt;li&gt;Automatic mTLS&lt;/li&gt;
+&lt;li&gt;Ingress&lt;/li&gt;
+&lt;li&gt;Telemetry and Monitoring&lt;/li&gt;
+&lt;li&gt;Automatic Proxy Injection&lt;/li&gt;
+&lt;li&gt;Dashboard and Grafana&lt;/li&gt;
+&lt;li&gt;Distributed Tracing&lt;/li&gt;
+&lt;li&gt;Fault Injection&lt;/li&gt;
+&lt;li&gt;High Availability&lt;/li&gt;
+&lt;li&gt;Service Profiles&lt;/li&gt;
+&lt;li&gt;Traffic Split (canaries, blue/green deploys)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lightweight service mesh solution which requires absolutely no changes to
+application code.&lt;/li&gt;
+&lt;li&gt;Contains all of the features that would be expected from a service mesh
+solution.&lt;/li&gt;
+&lt;li&gt;Was one of the first service mesh options and is quite mature as a result.&lt;/li&gt;
+&lt;li&gt;Recently rewritten in the aim of improving performance.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Linkerd doesn&amp;rsquo;t provide an Ingress Controller. The &lt;a href=&#34;https://linkerd.io/2/tasks/using-ingress/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;project
+documentation&lt;/a&gt; has information
+about integrating with Nginx, Contour, and others. This means Linkerd requires
+managing Ingress as additional operational overhead.&lt;/li&gt;
+&lt;li&gt;Traffic splitting syntax can be cumbersome.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;istio&#34;&gt;Istio&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&#34;https://istio.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Istio&lt;/a&gt; is perhaps the most popular service mesh offering
+today. It is an open source project that is being maintained by Google, IBM, and
+Red Hat. Just as with Linkerd, it has dozens of features that one would expect
+to see in a service mesh solution.&lt;/p&gt;
+&lt;p&gt;Istio makes it easy to create a network of deployed services with load
+balancing, service-to-service authentication, monitoring, and more, with few or
+no code changes in service code. You add Istio support to services by deploying
+a special sidecar proxy throughout your environment that intercepts all network
+communication between microservices, then configure and manage Istio using its
+control plane functionality, which includes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Automatic load balancing for HTTP, gRPC, WebSocket, and TCP traffic.&lt;/li&gt;
+&lt;li&gt;Fine-grained control of traffic behavior with rich routing rules, retries,
+failovers, and fault injection.&lt;/li&gt;
+&lt;li&gt;A pluggable policy layer and configuration API supporting access controls,
+rate limits and quotas.&lt;/li&gt;
+&lt;li&gt;Automatic metrics, logs, and traces for all traffic within a cluster,
+including cluster ingress and egress.&lt;/li&gt;
+&lt;li&gt;Secure service-to-service communication in a cluster with strong
+identity-based authentication and authorization.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Istio has a huge amount of momentum behind it. It is currently the most
+popular service mesh offering on the market.&lt;/li&gt;
+&lt;li&gt;It forms the basis of VMware&amp;rsquo;s NSX-SM solution.&lt;/li&gt;
+&lt;li&gt;It is extraordinarily full-featured, but this also creates a large degree of
+complexity.&lt;/li&gt;
+&lt;li&gt;Istio may be used as both an Ingress and a service mesh with the Ingress
+Gateway feature.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Istio does not have an open governance model. Its steering committee is run by
+IBM, Google, and Red Hat.&lt;/li&gt;
+&lt;li&gt;Istio is in rapid development and many features are at various levels of
+stability, some of which may not be suitable for production.&lt;/li&gt;
+&lt;li&gt;Configuration can be extraordinarily complex.&lt;/li&gt;
+&lt;li&gt;You may be required to leverage the Istio ingress controller exclusively in
+order to leverage the features you are interested in.&lt;/li&gt;
+&lt;li&gt;The complexity that Istio introduces to a Kubernetes deployment often mandates
+a team dedicated to its operation and support.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

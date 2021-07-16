@@ -1,0 +1,654 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Prometheus</title>
+    <link>/tags/prometheus/</link>
+    <description>Recent content in Prometheus on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 26 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/prometheus/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Kubernetes Monitoring Overview</title>
+      
+      <link>/guides/kubernetes/observability-kubernetes-monitoring-overview/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/observability-kubernetes-monitoring-overview/</guid>
+      <description>
+
+        
+        &lt;p&gt;Observability is a key element of cloud native application architectures. Most modern applications are distributed in nature, with a collection of multiple modules that communicate with each other via APIs. Anytime a problem occurs you need to be able to see when and where failures happened. And you need to measure failures to establish a profile or baseline against which deviations from normal operation can be identified and addressed. As such, monitoring, feature-rich metrics, alerting tools, and data visualization frameworks are a key element of successful cloud native applications.&lt;/p&gt;
+&lt;p&gt;This guide provides an overview of monitoring tools for Kubernetes environments.&lt;/p&gt;
+&lt;h2 id=&#34;how-is-monitoring-apps-on-kubernetes-different&#34;&gt;How Is Monitoring Apps on Kubernetes Different?&lt;/h2&gt;
+&lt;p&gt;Containerized systems such as Kubernetes present new monitoring challenges versus virtual-machine-based compute environments. These differences include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The ephemeral nature of containers&lt;/li&gt;
+&lt;li&gt;An increased density of objects, services, and metrics within a given node&lt;/li&gt;
+&lt;li&gt;A focus on services, rather than machines&lt;/li&gt;
+&lt;li&gt;More diverse consumers of monitoring data&lt;/li&gt;
+&lt;li&gt;Changes in the software development lifecycle&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As monolithic apps are refactored into microservices and orchestrated with Kubernetes, requirements for monitoring those apps change. To start, instrumentation to capture application data needs to be at a container level, at scale, across thousands of endpoints. Because Kubernetes workloads are ephemeral by default and can start or stop at any time, application monitoring must be dynamic and aware of Kubernetes labels and namespaces. A consistent set of rules or alerts must be applied to all pods, new and old.&lt;/p&gt;
+&lt;p&gt;Observability should always be a consideration when you’re developing new apps or refactoring existing ones. Maintaining a common layer of baseline metrics that applies to all apps and infrastructure while incorporating custom metrics is extremely desirable. Adding a new metric based on user feedback should NOT trigger a major replumb of your monitoring stack.&lt;/p&gt;
+&lt;h2 id=&#34;monitoring-resource-consumption-and-preventing-infiltration&#34;&gt;Monitoring Resource Consumption and Preventing Infiltration&lt;/h2&gt;
+&lt;p&gt;How can you protect your Kubernetes system from hijackers and infiltrators? Here are some suggestions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Monitor cluster and network utilization&lt;/li&gt;
+&lt;li&gt;Monitor for suspicious activity and analyze failed login and RBAC events&lt;/li&gt;
+&lt;li&gt;Monitor configurations, such as dashboard access, for risks and vulnerabilities&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The NIST document, &lt;a href=&#34;https://nvlpubs.nist.gov/nistpubs/ir/2017/NIST.IR.8176.pdf&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Security Assurance Requirements for Linux Application Container Deployments&lt;/a&gt; sets forth security requirements and countermeasures to help meet the recommendations of the &lt;a href=&#34;https://csrc.nist.gov/publications/detail/sp/800-190/final&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;NIST Application Container Security Guide&lt;/a&gt; when containerized applications are deployed in production environments. According to NIST, you should log and monitor resource consumption of containers to ensure availability of critical resources.&lt;/p&gt;
+&lt;h3 id=&#34;security-monitoring-and-auditing&#34;&gt;Security monitoring and auditing&lt;/h3&gt;
+&lt;p&gt;The proper security monitoring for your cluster depends largely on the amount of time and staffing you have to respond to alerts and keep an eye on things. As a general rule, you shouldn&amp;rsquo;t spend time building security monitoring systems that you don&amp;rsquo;t have the time to maintain and tune. Start with the real-time (alert-based) and periodic (audit review) analyst or operator workflows you want to enable, and build the monitoring platform you need to enable those workflows.&lt;/p&gt;
+&lt;h3 id=&#34;logging&#34;&gt;Logging&lt;/h3&gt;
+&lt;p&gt;The bedrock of security monitoring is logging. You should generally capture application logs, host-level logs, Kubernetes API audit logs, and cloud-provider logs (if applicable). There are well-established patterns for implementing log aggregation on common cluster configurations.&lt;/p&gt;
+&lt;p&gt;Centralized logging is an essential part of any enterprise Kubernetes deployment. Configuring and maintaining a real-time high-performance central repository for log collection can ease the day-to-day operations of tracking what went wrong and its impact. Effective central logging also helps development teams quickly observe application logs to characterize application performance. Security compliance and auditing often require a company to maintain digital trails of who did what and when. In most cases, a robust logging solution is the most efficient way to satisfy these requirements&lt;/p&gt;
+&lt;p&gt;For security auditing purposes, consider streaming your logs to an external location with append-only access from within your cluster. For example, on AWS, you can create an S3 bucket in an isolated AWS account and give append-only access to your cluster log aggregator. This ensures your logs cannot be tampered with, even in the case of a total cluster compromise.&lt;/p&gt;
+&lt;h5 id=&#34;log-aggregation&#34;&gt;Log Aggregation&lt;/h5&gt;
+&lt;p&gt;An effective log aggregator must support the processing of events from thousands of endpoints, the ability to accommodate real-time queries, and a superior analytics engine to provide intelligent metrics to solve complex technical and business problems. You have the option to implement log aggregation using a number of popular open source or commercial logging analytics solutions, such as Elasticsearch, Fluentd, Kibana, or Splunk. Each solution has a set of strengths and weaknesses.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.fluentd.org&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Fluentd&lt;/a&gt; is an open-source data collector for unified logging. &lt;a href=&#34;https://fluentbit.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Fluent Bit&lt;/a&gt; is a lightweight data forwarder for Fluentd. Fluentd is used to create a unified logging layer to collect and process data. Fluent Bit is for forwarding data from the edge to Fluentd aggregators. Fluentd and Fluent Bit can collect logging data and push it to an output destination, such as &lt;a href=&#34;https://www.elastic.co&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Elasticsearch&lt;/a&gt;, which is a distributed search and analytics engine that lets data engineers query unstructured, structured, and time-series data.&lt;/p&gt;
+&lt;h3 id=&#34;network-monitoring&#34;&gt;Network monitoring&lt;/h3&gt;
+&lt;p&gt;Network-based security monitoring tools, such as a network intrusion detection system (IDS) and web application firewalls, may work nearly out of the box, but making them work well takes some effort. The biggest hurdle is that many tools expect IP addresses to be a useful context for events. To integrate these tools with Kubernetes, consider enriching the collected events with Kubernetes &lt;code&gt;namespace&lt;/code&gt;, &lt;code&gt;pod name&lt;/code&gt;, and &lt;code&gt;pod label&lt;/code&gt; metadata. This adds valuable context to the event that you can use for alerting or manual review and can make these traditional tools even more powerful in a Kubernetes cluster than in a traditional environment. Some monitoring tools can collect Kubernetes metadata, but you can also write custom event enrichment code to add this kind of metadata integration to those that don&amp;rsquo;t.&lt;/p&gt;
+&lt;h3 id=&#34;host-event-monitoring&#34;&gt;Host event monitoring&lt;/h3&gt;
+&lt;p&gt;It&amp;rsquo;s also possible to run a host-based IDS, such as file integrity monitoring and Linux system call logging (for example, auditd), directly with Kubernetes, but the results are hard to manage because the workload running on any particular node varies from hour to hour as applications deploy and Kubernetes orchestrates pods.&lt;/p&gt;
+&lt;p&gt;To make sense of host-based events, you&amp;rsquo;ll again want to consider extending your existing tools to include Kubernetes pod or container metadata in the context of captured events. Systems such as &lt;a href=&#34;https://sysdig.com/opensource/falco/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Sysdig Falco&lt;/a&gt; include this context out of the box.&lt;/p&gt;
+&lt;h3 id=&#34;prometheus-and-grafana&#34;&gt;Prometheus and Grafana&lt;/h3&gt;
+&lt;p&gt;The open-source community is converging on &lt;a href=&#34;https://prometheus.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Prometheus&lt;/a&gt; as a preferred solution for Kubernetes monitoring. The ability to address evolving requirements of Kubernetes while including a rich set of language-specific client libraries gives Prometheus an advantage.&lt;/p&gt;
+&lt;p&gt;Prometheus excels at monitoring multidimensional data, including time-series data, and it is hosted by the Cloud Native Computing Foundation, of which VMware is a member. &lt;a href=&#34;https://grafana.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Grafana&lt;/a&gt; is an open-source metrics dashboard commonly used with Prometheus to display data.&lt;/p&gt;
+&lt;h3 id=&#34;wavefront&#34;&gt;Wavefront&lt;/h3&gt;
+&lt;p&gt;Kubernetes can be integrated with Wavefront (VMware Tanzu Observability) to efficiently monitor containers at enterprise scale. Wavefront delivers monitoring and analytics throughout a cloud native stack for always-on metrics as a service.Wavefront gives developers and DevOps real-time visibility into the operations and performance of containerized workloads and Kubernetes clusters.&lt;/p&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;KubeAcademy offers a course on &lt;a href=&#34;https://kube.academy/courses/introduction-to-observability&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes observability&lt;/a&gt; where you can learn more about many of the topics mentioned above. For a practical guide on how to get started with Prometheus and Grafana, be sure to read &lt;a href=&#34;/guides/kubernetes/prometheus-grafana-p1/&#34;&gt;Prometheus and Grafana: Gathering Metrics from Kubernetes&lt;/a&gt;. Spring Boot users will also want to check out &lt;a href=&#34;/guides/spring/spring-prometheus/&#34;&gt;Prometheus and Grafana: Gathering Metrics from Spring Boot on Kubernetes&lt;/a&gt; to learn how to gather metrics from Spring applications. The guides &lt;a href=&#34;/guides/microservices/distributed-tracing&#34;&gt;Implementing Distributed Tracing&lt;/a&gt; and &lt;a href=&#34;/guides/spring/spring-zipkin/&#34;&gt;Getting Started with Zipkin and Spring Boot&lt;/a&gt; can help you improve observability for microservices applications.&lt;/p&gt;
+&lt;p&gt;If you’re considering Wavefront, be sure and read &lt;a href=&#34;/guides/kubernetes/monitoring-at-scale-wavefront&#34;&gt;Monitoring Containers at Scale with Wavefront&lt;/a&gt; and &lt;a href=&#34;/guides/spring/spring-wavefront-gs/&#34;&gt;Wavefront for Spring Boot: Getting Started&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Gathering Metrics from Kubernetes with Prometheus and Grafana</title>
+      
+      <link>/guides/kubernetes/observability-prometheus-grafana-p1/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/observability-prometheus-grafana-p1/</guid>
+      <description>
+
+        
+        &lt;p&gt;You have your Kubernetes cluster up, it’s running your applications, and
+everything seems to be running great. Your work is done, right?&lt;/p&gt;
+&lt;p&gt;If only it was that simple. Running in production means keeping a close eye on
+how things are performing, so having data that provides such insight is
+important. After all, being able to recognize potentially problematic patterns
+in how your applications are performing or how Kubernetes is handling specific
+workloads can mean the difference between making a quick fix and getting a call
+at 3 a.m. because your website is down.&lt;/p&gt;
+&lt;p&gt;Two open source tools that can help with this are Prometheus and Grafana.
+Prometheus excels at gathering metrics from a wide array of sources, while
+Grafana is the go-to tool for visualizing complex time-series data. These two
+tools working in tandem are very powerful, and are very easy to install and use!&lt;/p&gt;
+&lt;p&gt;In this guide, you’ll be setting up Prometheus and Grafana on an existing Kubernetes cluster, as well as setting up a dashboard in Grafana to visualize the data gathered from that cluster. You can use any Kubernetes installation of your choosing, whether it’s hosted on a cloud provider or even something like &lt;a href=&#34;https://minikube.sigs.k8s.io/docs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Minikube&lt;/a&gt; running on your local machine.&lt;/p&gt;
+&lt;h2 id=&#34;installing-prometheus&#34;&gt;Installing Prometheus&lt;/h2&gt;
+&lt;p&gt;Luckily, there’s a comprehensive
+&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/kube-prometheus&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm chart for Prometheus&lt;/a&gt;
+with an extensive list of configuration options. If you’re not familiar with
+Helm, make sure to check out
+&lt;a href=&#34;/guides/kubernetes/helm-what-is/&#34;&gt;Helm: What Is it?&lt;/a&gt; and
+&lt;a href=&#34;/guides/kubernetes/helm-gs/&#34;&gt;Getting Started With Helm&lt;/a&gt;. For this walkthrough,
+you’ll be keeping things fairly straightforward, so if you’ve used Helm before,
+or are just starting to learn, you will have seen most of what’s in this guide.&lt;/p&gt;
+&lt;p&gt;To install Prometheus, you first need to add the Bitnami Helm repository by
+using the &lt;code&gt;helm repo add&lt;/code&gt; command followed by the &lt;code&gt;helm repo update&lt;/code&gt; command to
+pull in the latest metadata:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo update
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Before you install Prometheus, check out the
+&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/kube-prometheus#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;configuration options&lt;/a&gt;
+you have, because there are a lot of them. In this example, it’s assumed that
+you’ll be installing with the default configuration into a Kubernetes cluster
+with no specific requirements. As you can see, there are options for everything
+from how each component is exposed (i.e., the type of ingress used, if it’s
+behind a load balancer, etc.) to how data is stored and more. If this was a
+production installation, you’d want to thoroughly sort out these options, but
+for the purposes of this demo, you can install Prometheus with the default
+configuration using the &lt;code&gt;helm install&lt;/code&gt; command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install prometheus bitnami/kube-prometheus
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After a few moments, you’ll see a few new pods created:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;alertmanager-prometheus-prometheus-oper-alertmanager-0   2/2     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          25m
+prometheus-kube-state-metrics-68cb46fdd4-gk4jh           1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          25m
+prometheus-node-exporter-rkg84                           1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          25m
+prometheus-prometheus-oper-operator-745f4b599c-xjjsn     1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          25m
+prometheus-prometheus-prometheus-oper-prometheus-0       3/3     Running   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;          25m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are a few ways you can access Prometheus, but it largely depends on how
+your Kubernetes cluster is configured. As the Prometheus documentation points
+out, traditionally you would expose the server through a reverse proxy, such as
+nginx. But since the default configuration of the Prometheus Helm chart only
+exposes it to other pods in the Kubernetes cluster, you can instead take
+advantage of the &lt;code&gt;kubectl port-forward&lt;/code&gt; command. Open a new terminal and keep it
+open after running the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl port-forward --namespace default svc/prometheus-kube-prometheus-prometheus 9090:9090
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Great! The above command forwards all traffic to port 9090 on your machine to
+the &lt;code&gt;prometheus-server&lt;/code&gt; pod, which you can see by visiting
+&lt;a href=&#34;http://localhost:9090&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:9090&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-grafana/prometheus-001.png&#34; alt=&#34;Prometheus Dashboard&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;installing-grafana&#34;&gt;Installing Grafana&lt;/h2&gt;
+&lt;p&gt;Much like Prometheus, Grafana has a great
+&lt;a href=&#34;https://hub.helm.sh/charts/bitnami/grafana&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm chart&lt;/a&gt; for installing it.
+Again, you’ll see a plethora of configuration options to tweak the installation
+to your needs, but for this demo, you can just install it with the default
+configuration to see it in action. You can install the &lt;code&gt;bitnami/grafana&lt;/code&gt; Helm
+chart with the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install grafana bitnami/grafana
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After a few moments, you’ll see a new pod created:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;grafana-66c98bcb86-xpd5t                         1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          2d23h
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There’s one additional step you’ll need to take. The Grafana Helm chart
+generates a random password for you and stores it as a secret in Kubernetes. You
+can retrieve this password by running the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;kubectl get secret grafana-admin --namespace default -o &lt;span class=&#34;nv&#34;&gt;jsonpath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;{.data.GF_SECURITY_ADMIN_PASSWORD}&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; base64 --decode&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note the password, as you’ll be needing it shortly. Like the Prometheus install,
+you may have different requirements or capabilities for exposing services
+outside of your Kubernetes cluster, but you can again use the
+&lt;code&gt;kubectl port-forward&lt;/code&gt; command. Open a new terminal and run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;POD_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;kubectl get pods --namespace default -l &lt;span class=&#34;s2&#34;&gt;&amp;#34;app.kubernetes.io/name=grafana,app.kubernetes.io/instance=grafana&amp;#34;&lt;/span&gt; -o &lt;span class=&#34;nv&#34;&gt;jsonpath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;{.items[0].metadata.name}&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
+kubectl --namespace default port-forward &lt;span class=&#34;nv&#34;&gt;$POD_NAME&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;3000&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With this command running, you can now access Grafana at
+&lt;a href=&#34;http://localhost:3000&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:3000&lt;/a&gt;! You’ll be prompted for a
+username, which by default is &lt;code&gt;admin&lt;/code&gt;, along with the password you just
+retrieved. Though when you log in, you may notice that things are a bit bare.
+That’s because, while Prometheus is automatically gathering metrics from your
+Kubernetes cluster, Grafana doesn’t know anything about your Prometheus install.
+It does, however, know how to speak to a Prometheus server, and makes it very
+easy to configure it as a data source.&lt;/p&gt;
+&lt;h2 id=&#34;visualizing-prometheus-data-in-grafana&#34;&gt;Visualizing Prometheus Data in Grafana&lt;/h2&gt;
+&lt;p&gt;If you mouse over the cogwheel on the left-hand side of the Grafana screen,
+you’ll be prompted with several configuration options. Choose “Data Sources,”
+followed by “Add data source.” Here, you’ll see a long list of data sources that
+Grafana knows how to talk to automatically, and luckily Prometheus is on that
+list. Choose “Prometheus” and you’ll be brought to the configuration screen for
+your new data source.&lt;/p&gt;
+&lt;p&gt;If you didn’t change the default configuration when installing Prometheus,
+you’ll only need to give it a name of your choosing, as well as the URL where
+Prometheus is running. Since both are running in the same cluster, you can
+connect Grafana to Prometheus using the internal DNS to Kubernetes by providing
+it the service name that Prometheus is connected to:
+&lt;code&gt;http://prometheus-kube-prometheus-prometheus.default.svc.cluster.local:9090&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-grafana/prometheus-002.png&#34; alt=&#34;Adding a new Grafana data source&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;If you’re already familiar with creating dashboards and
+&lt;a href=&#34;https://grafana.com/docs/grafana/latest/panels/panels-overview/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;panels&lt;/a&gt; in
+Grafana, you’re all set! However, if you’re new to Grafana, don’t worry; this is
+where you can once again look to the great community for information about these
+tools. The Grafana website has a huge repository of dashboards that can be
+easily shared and imported into your own Grafana installation. And all you need
+in order to import one of these dashboards from the Grafana site is a single ID
+number. Take &lt;a href=&#34;https://grafana.com/grafana/dashboards/10000&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this dashboard&lt;/a&gt;, for
+example. You can see that it has an ID of “10000.”&lt;/p&gt;
+&lt;p&gt;To import this dashboard, mouse over the “Dashboards” section on the left-hand
+side of the Grafana screen (the icon is four squares) and choose “Manage.” On
+the top right of the dashboard management screen, click “Import” and you’ll be
+prompted for the URL, ID, or JSON for the dashboard that you wish to import.
+Under “Import via grafana.com,” enter “10000,” matching the ID of the dashboard
+that you wish to import. Feel free to change the name or the unique identifier,
+but the one thing you must provide is the data source, which is asked for on the
+bottom of the configuration screen. Choose your Prometheus data source, click
+“Import,” and you will be greeted by your newly created, but fully populated,
+dashboard!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-grafana/prometheus-003.png&#34; alt=&#34;Grafana dashboard showing Kubernetes metrics&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;whats-next&#34;&gt;What’s Next?&lt;/h2&gt;
+&lt;p&gt;The great news is that any data gathered from Prometheus can be used in Grafana.
+That means any pod with the
+&lt;a href=&#34;https://github.com/helm/charts/tree/master/stable/prometheus#scraping-pod-metrics-via-annotations&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;proper annotations&lt;/a&gt;
+will automatically get scraped by Prometheus. Many languages and frameworks have
+&lt;a href=&#34;https://prometheus.io/docs/instrumenting/clientlibs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;libraries that support exposing metrics&lt;/a&gt;
+that Prometheus can gather, including
+&lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-metrics-export-prometheus&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring&lt;/a&gt;.
+Make sure to check out the libraries available for your language of choice!
+Additionally, if you&amp;rsquo;re looking to learn more about observability and how to get
+better insight into your applications, make sure to check out our
+&lt;a href=&#34;/patterns/observability/&#34;&gt;growing collection of guides&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Gathering Metrics from Spring Boot on Kubernetes with Prometheus and Grafana</title>
+      
+      <link>/guides/spring/spring-prometheus/</link>
+      <pubDate>Tue, 08 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/spring-prometheus/</guid>
+      <description>
+
+        
+        &lt;p&gt;If you read the guide on how to run &lt;a href=&#34;/guides/kubernetes/observability-prometheus-grafana-p1/&#34;&gt;Prometheus and Grafana on Kubernetes&lt;/a&gt;, you might be wondering: How do I add metrics from my application? Spring Boot developers are used to making metrics available from their application using &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot Actuator&lt;/a&gt; and &lt;a href=&#34;https://micrometer.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Micrometer&lt;/a&gt;, but Prometheus expects metrics to be in a specific format. In this guide, you’ll learn how to expose both standard and custom metrics in your Spring Boot application, gather them using Prometheus, and visualize them in Grafana.&lt;/p&gt;
+&lt;p&gt;All of the code for this guide can be found &lt;a href=&#34;https://github.com/BrianMMcClain/spring-prometheus-demo&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;export-metrics-for-prometheus-from-spring-boot&#34;&gt;Export Metrics for Prometheus from Spring Boot&lt;/h2&gt;
+&lt;p&gt;Thanks to &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot Actuator&lt;/a&gt; there are only a couple of steps you need to take to start exporting basic metrics from your application that Prometheus can gather. By default, Spring Boot Actuator provides &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-metrics-meter&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;a lot of metrics out of the box&lt;/a&gt;, including insight into the JVM, the machine the application is running on, and the web server that’s backing the application. To enable these insights, you can include the Spring Boot Actuator dependency in your &lt;code&gt;pom.xml&lt;/code&gt; file, as well as the dependency that will provide them for Prometheus:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-actuator&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;io.micrometer&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;micrometer-registry-prometheus&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Internally, including these dependencies makes an additional metrics endpoint available at &lt;code&gt;/actuator/prometheus&lt;/code&gt;, but by default this endpoint isn’t reachable by outside services. You can expose the new endpoint by explicitly enabling it in your &lt;code&gt;application.yml&lt;/code&gt; file, alongside the default &lt;code&gt;health&lt;/code&gt; and &lt;code&gt;metrics&lt;/code&gt; endpoints. You’ll also want to provide an &lt;code&gt;application&lt;/code&gt; tag to your metrics so Grafana knows how to organize the metrics. Below, the &lt;code&gt;application&lt;/code&gt; tag is set to match the name of the application, defined in the &lt;code&gt;spring.application.name&lt;/code&gt; property:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;spring&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;application&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-prometheus-demo&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;management&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;endpoints&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;web&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;exposure&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;include&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;health, metrics, prometheus&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metrics&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;tags&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;application&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;${spring.application.name}&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That’s it! Upon running your application, you’ll see a new endpoint available that you can point Prometheus to. As with any Spring Boot application, you can start it with the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;./mvnw spring-boot:run
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once started, you’ll find a huge list of metrics made available at &lt;a href=&#34;http://localhost:8080/actuator/prometheus&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:8080/actuator/prometheus&lt;/a&gt;!&lt;/p&gt;
+&lt;h2 id=&#34;adding-a-custom-metric&#34;&gt;Adding a Custom Metric&lt;/h2&gt;
+&lt;p&gt;Insight into the machine running your application and the JVM it’s on is a great start. But what if you want to track custom metrics? If your application is running a website, maybe you want to track how many page hits certain endpoints are receiving, or how many times a resource with a specific ID is requested.&lt;/p&gt;
+&lt;p&gt;Since these metrics are being taken care of by Spring Boot Actuator, any &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-metrics-custom&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;custom metrics&lt;/a&gt; you generate are picked up by Prometheus as well! Consider a scenario in which you want to track how many times the main page of the website receives a request. For this, you’d use a simple &lt;a href=&#34;https://docs.spring.io/spring-metrics/docs/current/public/prometheus#counters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;counter&lt;/a&gt;, increasing it every time the page is requested. Take a look at the following &lt;code&gt;RestController&lt;/code&gt;, which sets up a counter called &lt;code&gt;visitCounter&lt;/code&gt; and adds it to the default &lt;code&gt;MeterRegistry&lt;/code&gt;. Additionally, the &lt;code&gt;visitCounter&lt;/code&gt; is incremented every time the &lt;code&gt;/&lt;/code&gt; endpoint is requested, fulfilled by the &lt;code&gt;index()&lt;/code&gt; method:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@RestController&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;WebController&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;Counter&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;visitCounter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;WebController&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MeterRegistry&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;visitCounter&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Counter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;visit_counter&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+            &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Number of visits to the site&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+            &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;register&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;registry&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;nd&#34;&gt;@GetMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;index&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;visitCounter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;increment&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Hello World!&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;    
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Restart the application and visit it running at &lt;a href=&#34;http://localhost:8080/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:8080/&lt;/a&gt; a few times to increase the counter. You can then see the value of this counter by visiting &lt;a href=&#34;http://localhost:8080/actuator/prometheus&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:8080/actuator/prometheus&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;visit_counter_total 5.0&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This same method can be used for &lt;a href=&#34;https://docs.spring.io/spring-metrics/docs/current/public/prometheus#timers&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;timers&lt;/a&gt; and &lt;a href=&#34;https://docs.spring.io/spring-metrics/docs/current/public/prometheus#gauges&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;gauges&lt;/a&gt; as well.&lt;/p&gt;
+&lt;h2 id=&#34;deploying-the-application-in-kubernetes&#34;&gt;Deploying the Application in Kubernetes&lt;/h2&gt;
+&lt;p&gt;This guide assumes you’ve already deployed Prometheus to the Kubernetes cluster that you’re deploying your application to, but if not, be sure to check out the &lt;a href=&#34;/guides/kubernetes/observability-prometheus-grafana-p1/&#34;&gt;Prometheus and Grafana: Gathering Metrics from Kubernetes&lt;/a&gt; guide. You’ll also need to first build a container for your application, which you can do using the Maven &lt;code&gt;spring-boot:build-image&lt;/code&gt; command as described in &lt;a href=&#34;https://spring.io/guides/gs/spring-boot-docker/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this guide on the Spring website&lt;/a&gt;. Once built and pushed to the container repository of your choice, you’re ready to deploy to Kubernetes!&lt;/p&gt;
+&lt;p&gt;You’ll need to deploy three things: a &lt;code&gt;Deployment&lt;/code&gt; to run the application, a &lt;code&gt;Service&lt;/code&gt; to access the application, and a &lt;code&gt;ServiceMonitor&lt;/code&gt; to tell Prometheus how to gather metrics from your application. You can &lt;a href=&#34;https://github.com/BrianMMcClain/spring-prometheus-demo/blob/main/deploy.yaml&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;find the full deployment YAML here&lt;/a&gt;. First, take a look at the &lt;code&gt;Deployment&lt;/code&gt; and the &lt;code&gt;Service&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;apps/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-prometheus-demo&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-prometheus-demo&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;replicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;matchLabels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-prometheus-demo&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-prometheus-demo&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-prometheus-demo&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;brianmmcclain/spring-prometheus-demo:0.0.1-SNAPSHOT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;imagePullPolicy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Always&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;containerPort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8080&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Service&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-prometheus-demo-service&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-prometheus-demo&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-prometheus-demo&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;protocol&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;TCP&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;http-traffic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8080&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;targetPort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8080&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above creates a &lt;code&gt;Deployment&lt;/code&gt; from the container image of the application, in this case pointing to my personal build at &lt;code&gt;brianmmcclain/spring-prometheus-demo:0.0.1-SNAPSHOT&lt;/code&gt;. It also gives it the label of &lt;code&gt;app: spring-prometheus-demo&lt;/code&gt;. The &lt;code&gt;Service&lt;/code&gt; then uses that label as a selector to know how to attach to the application. The &lt;code&gt;Service&lt;/code&gt; also receives a label of &lt;code&gt;app: spring-prometheus-demo&lt;/code&gt;, which the &lt;code&gt;ServiceMonitor&lt;/code&gt; will use to find the &lt;code&gt;Service&lt;/code&gt;. One thing to note is that the &lt;code&gt;port&lt;/code&gt; receives a name of &lt;code&gt;http-traffic&lt;/code&gt;, which you can see the &lt;code&gt;ServiceMonitor&lt;/code&gt; reference below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;monitoring.coreos.com/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ServiceMonitor&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-prometheus-demo-service-monitor&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;matchLabels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;spring-prometheus-demo&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;endpoints&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;http-traffic&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/actuator/prometheus&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here a &lt;code&gt;ServiceMonitor&lt;/code&gt; is created, which looks for a &lt;code&gt;Service&lt;/code&gt; with the label &lt;code&gt;app: spring-prometheus-demo&lt;/code&gt;. It then defines an endpoint to use to scrape metrics, referring to the port named &lt;code&gt;http-traffic&lt;/code&gt; and the path &lt;code&gt;/actuator/prometheus&lt;/code&gt;, which as you saw is where Spring Boot exposes the Prometheus-formatted metrics.&lt;/p&gt;
+&lt;p&gt;You can verify that Prometheus is scraping the new endpoint by checking the targets it has registered, found under “Status” drop-down menu:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/spring-prometheus-001.png&#34; alt=&#34;Spring application scrape information in Prometheus&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;visualizing-the-jvm-metrics&#34;&gt;Visualizing the JVM Metrics&lt;/h2&gt;
+&lt;p&gt;The Grafana website maintains a great repository of community-made dashboards, including one for visualizing &lt;a href=&#34;https://grafana.com/grafana/dashboards/4701&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JVM metrics from Micrometer&lt;/a&gt;. Even better, Grafana makes it very easy to import existing dashboards, as shown in &lt;a href=&#34;/guides/kubernetes/observability-prometheus-grafana-p1/#visualizing-prometheus-data-in-grafana&#34;&gt;this guide&lt;/a&gt;. While it may take a few minutes for Prometheus to pick up some of the metrics, upon importing the dashboard, you’ll see a whole plethora of metrics start to be populated.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/spring-prometheus-002.png&#34; alt=&#34;JVM metrics in Grafana&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;But what about the custom metric added to the code? For this, you can create a new panel by clicking the graph with the plus sign symbol on the top of the dashboard. You’ll be presented with a screen with a number of options. What you’re interested in is the query, however just entering the name of the visits metric (&lt;code&gt;visit_counter_total&lt;/code&gt;) will show the cumulative total number of visits over time rather than a pattern of spikes and dips. This is where we need the help of the &lt;a href=&#34;https://prometheus.io/docs/prometheus/latest/querying/functions/#rate&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;rate&lt;/code&gt; function&lt;/a&gt;, which “calculates the per-second average rate of increase of the time series in the range vector.” Put in simpler terms, it turns the accumulative counter into a time-series measurement. One-second intervals can also inject a lot of noise into the graph, so you can further modify the query to look at it in 5-minute intervals as well. In all, this turns the query into:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;rate(visit_counter_total[5m])&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/spring-prometheus-003.png&#34; alt=&#34;Adding a panel for the custom metric&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Apply your changes, and you’ll see the new graph added to the dashboard!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/spring-prometheus-004.png&#34; alt=&#34;New panel added to the Grafana dashboard&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;whats-next&#34;&gt;What’s Next?&lt;/h2&gt;
+&lt;p&gt;Hopefully this gave you an idea of how to start gathering metrics, both standard and custom, from your Spring Boot applications using Prometheus. &lt;a href=&#34;https://micrometer.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Micrometer&lt;/a&gt; provides a huge  array of tools you can take advantage of, all of which are automatically gathered by Prometheus. Grafana also provides a rich set of features for &lt;a href=&#34;https://grafana.com/docs/grafana/latest/panels/queries/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;building your own queries&lt;/a&gt;, which may look intimidating at first, but is made easier thanks to &lt;a href=&#34;https://prometheus.io/docs/prometheus/latest/querying/functions/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;great documentation&lt;/a&gt; and &lt;a href=&#34;https://prometheus.io/docs/prometheus/latest/querying/examples/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;examples&lt;/a&gt;. If you’re setting up Prometheus and Grafana for the first time, we have a guide on how you can &lt;a href=&#34;/guides/kubernetes/observability-prometheus-grafana-p1/&#34;&gt;get started on your own!&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Create a Multi-Cluster Monitoring Dashboard with Thanos, Grafana and Prometheus</title>
+      
+      <link>/guides/kubernetes/prometheus-multicluster-monitoring/</link>
+      <pubDate>Wed, 11 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/prometheus-multicluster-monitoring/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://prometheus.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Prometheus&lt;/a&gt;, coupled with
+&lt;a href=&#34;https://grafana.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Grafana&lt;/a&gt;, is a popular monitoring solution for Kubernetes
+clusters. It allows SRE teams and developers to capture metrics and telemetry
+data for applications running in a cluster, allowing deeper insights into
+application performance and reliability.&lt;/p&gt;
+&lt;p&gt;The Prometheus/Grafana combination works well for individual clusters, but as
+teams scale out and start working with multiple clusters, monitoring
+requirements become correspondingly more complex. For effective multi-cluster
+monitoring, a &amp;ldquo;single pane of glass&amp;rdquo; with centralized real-time monitoring, time
+series comparisons across and within clusters and high availability is essential
+for teams operating with multiple clusters and multiple providers.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://thanos.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Thanos&lt;/a&gt; is a monitoring system that aggregates data from
+multiple Prometheus deployments. This data can then be inspected and analyzed
+using Grafana, just as with regular Prometheus metrics. Although this setup
+sounds complex, it&amp;rsquo;s actually very easy to achieve with the following Bitnami
+Helm charts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/prometheus-operator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Prometheus Operator Helm chart&lt;/a&gt;
+lets you deploy Prometheus in your Kubernetes cluster with an additional
+Thanos sidecar container.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/thanos&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Thanos Helm chart&lt;/a&gt;
+lets you deploy all the Thanos components together with MinIO and Alertmanager
+so you can quickly bootstrap a Thanos deployment.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/grafana&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Grafana Helm chart&lt;/a&gt;
+lets you deploy Grafana in your Kubernetes cluster.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This guide walks you through the process of using these charts to create a
+Thanos deployment that aggregates data from Prometheus Operators in multiple
+clusters and allows further monitoring and analysis using Grafana.&lt;/p&gt;
+&lt;h2 id=&#34;assumptions-and-prerequisites&#34;&gt;Assumptions and prerequisites&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;You have three separate multi-node Kubernetes clusters running on the same
+cloud provider:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Two &amp;ldquo;data producer&amp;rdquo; clusters which will host Prometheus deployments and
+applications that expose metrics via Prometheus.&lt;/li&gt;
+&lt;li&gt;One &amp;ldquo;data aggregator&amp;rdquo; cluster which will host Thanos and aggregate the data
+from the data producers. This cluster will also host Grafana for data
+visualization and reporting.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;You have the &lt;em&gt;kubectl&lt;/em&gt; CLI and the Helm v3.x package manager installed and configured to work with your Kubernetes clusters. &lt;a href=&#34;https://docs.bitnami.com/kubernetes/get-started-kubernetes#step-3-install-kubectl-command-line&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Learn how to install &lt;em&gt;kubectl&lt;/em&gt; and Helm v3.x&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This guide uses clusters hosted on the Google Kubernetes Engine (GKE) service
+but you can use any Kubernetes provider. Learn about
+&lt;a href=&#34;https://docs.bitnami.com/kubernetes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;deploying a Kubernetes cluster on different cloud platforms&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;step-1-install-the-prometheus-operator-on-each-cluster&#34;&gt;Step 1: Install the Prometheus Operator on each cluster&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/prometheus-operator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Prometheus Operator chart&lt;/a&gt;
+provides easy monitoring definitions for Kubernetes services and management of
+Prometheus instances. It also includes an optional Thanos sidecar container,
+which can be used by your Thanos deployment to access cluster metrics.&lt;/p&gt;
+&lt;p&gt;Only one instance of the Prometheus Operator component should be running in a
+cluster.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Add the Bitnami charts repository to Helm:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install the Prometheus Operator in the first &amp;ldquo;data producer&amp;rdquo; cluster using the command below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install prometheus-operator &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set prometheus.thanos.create&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set operator.service.type&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;ClusterIP &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set prometheus.service.type&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;ClusterIP &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set alertmanager.service.type&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;ClusterIP &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set prometheus.thanos.service.type&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;LoadBalancer &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set prometheus.externalLabels.cluster&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;data-producer-0&amp;#34;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  bitnami/prometheus-operator
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;em&gt;prometheus.thanos.create&lt;/em&gt; parameter creates a Thanos sidecar container,
+while the &lt;em&gt;prometheus.thanos.service.type&lt;/em&gt; parameter makes the sidecar service
+available at a public load balancer IP address. Note the
+&lt;em&gt;prometheus.externalLabels&lt;/em&gt; parameter which lets you define one or more unique
+labels per Prometheus instance - these labels are useful to differentiate
+different stores or data sources in Thanos.&lt;/p&gt;
+&lt;p&gt;The command above exposes the Thanos sidecar container in each cluster at a
+public IP address using a &lt;em&gt;LoadBalancer&lt;/em&gt; service. This makes it easy for
+Thanos to access Prometheus metrics in different clusters without needing any
+special firewall or routing configuration. However, this approach is highly
+insecure and should be used only for demonstration or testing purposes. In
+production environments, it is preferable to deploy an NGINX Ingress
+Controller to control access from outside the cluster and further limit access
+using whitelisting and other security-related configuration.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use the command below to obtain the public IP address of the sidecar service.
+You will use this IP address in the next step.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get svc | grep prometheus-operator-prometheus-thanos
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Repeat the steps shown above for the second &amp;ldquo;data producer&amp;rdquo; cluster. Use a
+different value for the &lt;em&gt;prometheus.externalLabels.cluster&lt;/em&gt; parameter, such as
+&lt;em&gt;data-producer-1&lt;/em&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;step-2-install-and-configure-thanos&#34;&gt;Step 2: Install and configure Thanos&lt;/h2&gt;
+&lt;p&gt;The next step is to install Thanos in the &amp;ldquo;data aggregator&amp;rdquo; cluster and
+integrate it with Alertmanager and MinIO as the object store.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Modify your Kubernetes context to reflect the cluster on which you wish to install Thanos.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;em&gt;values.yaml&lt;/em&gt; file as shown below. Replace the KEY placeholder with a
+hard-to-guess value and the SIDECAR-SERVICE-IP-ADDRESS-X placeholders with the
+public IP addresses of the Thanos sidecar containers in the &amp;ldquo;data producer&amp;rdquo;
+clusters.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;objstoreConfig&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|-&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;  type: s3
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;  config:
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    bucket: thanos
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    endpoint: {{ include &amp;#34;thanos.minio.fullname&amp;#34; . }}.monitoring.svc.cluster.local:9000
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    access_key: minio
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    secret_key: KEY
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    insecure: true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;querier&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;stores&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;SIDECAR-SERVICE-IP-ADDRESS-1:10901&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;SIDECAR-SERVICE-IP-ADDRESS-2:10901&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;bucketweb&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;enabled&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;compactor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;enabled&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;storegateway&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;enabled&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ruler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;enabled&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;alertmanagers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;http://prometheus-operator-alertmanager.monitoring.svc.cluster.local:9093&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;config&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|-&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;    groups:
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;      - name: &amp;#34;metamonitoring&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;        rules:
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;          - alert: &amp;#34;PrometheusDown&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;sd&#34;&gt;            expr: absent(up{prometheus=&amp;#34;monitoring/prometheus-operator&amp;#34;})&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;minio&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;enabled&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;accessKey&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;minio&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;secretKey&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;KEY&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;defaultBuckets&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;thanos&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install Thanos using the command below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install thanos bitnami/thanos &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --values values.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Wait for the deployment to complete and note the DNS name and port number for
+the Thanos Querier service in the deployment output, as shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-multicluster-monitoring/querier-service.png&#34; alt=&#34;Thanos Querier service&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Follow the instructions shown in the chart output to connect to the Thanos
+Querier Web interface and navigate to the &amp;ldquo;Stores&amp;rdquo; tab. Confirm that both
+sidecar services are running and registered with Thanos, as shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-multicluster-monitoring/querier-stores.png&#34; alt=&#34;Thanos Querier stores&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Confirm also that each service displays a unique &lt;em&gt;cluster&lt;/em&gt; labelset, as configured in &lt;a href=&#34;#step-1-install-the-prometheus-operator-on-each-cluster&#34;&gt;Step 1&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-3-install-grafana&#34;&gt;Step 3: Install Grafana&lt;/h2&gt;
+&lt;p&gt;The next step is to install Grafana, also on the same &amp;ldquo;data aggregator&amp;rdquo; cluster
+as Thanos.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Use the command below, replacing GRAFANA-PASSWORD with a password for the
+Grafana application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install grafana bitnami/grafana &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set service.type&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;LoadBalancer &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set admin.password&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;GRAFANA-PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Wait for the deployment to complete and obtain the public IP address for the
+Grafana load balancer service:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get svc &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep grafana
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Confirm that you are able to access Grafana by browsing to the load balancer
+IP address on port 3000 and logging in with the username &lt;em&gt;admin&lt;/em&gt; and the
+configured password. Here is what you should see:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-multicluster-monitoring/grafana-dashboard.png&#34; alt=&#34;Grafana dashboard&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-4-configure-grafana-to-use-thanos-as-a-data-source&#34;&gt;Step 4: Configure Grafana to use Thanos as a data source&lt;/h2&gt;
+&lt;p&gt;Follow these steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;From the Grafana dashboard, click the &amp;ldquo;Add data source&amp;rdquo; button.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;On the &amp;ldquo;Choose data source type&amp;rdquo; page, select &amp;ldquo;Prometheus&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-multicluster-monitoring/grafana-add-data-source.png&#34; alt=&#34;Grafana data source&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;On the &amp;ldquo;Settings&amp;rdquo; page, set the URL for the Prometheus server to
+&lt;em&gt;http://NAME:PORT&lt;/em&gt;, where NAME is the DNS name for the Thanos service obtained
+at the end of &lt;a href=&#34;#step-2-install-and-configure-thanos&#34;&gt;Step 2&lt;/a&gt; and PORT is the
+corresponding service port. Leave all other values at their default.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-multicluster-monitoring/grafana-thanos-url.png&#34; alt=&#34;Grafana data source configuration&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click &amp;ldquo;Save &amp;amp; Test&amp;rdquo; to save and test the configuration. If everything is
+configured correctly, you should see a success message like the one below.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-multicluster-monitoring/grafana-success.png&#34; alt=&#34;Grafana test&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-5-test-the-system&#34;&gt;Step 5: Test the system&lt;/h2&gt;
+&lt;p&gt;At this point, you can start deploying applications into your &amp;ldquo;data producer&amp;rdquo;
+clusters and collating the metrics in Thanos and Grafana. For demonstration
+purposes, this guide will deploy a MariaDB replication cluster using Bitnami&amp;rsquo;s
+MariaDB Helm chart in each &amp;ldquo;data producer&amp;rdquo; cluster and display the metrics
+generated by each MariaDB service in Grafana.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Deploy MariaDB in each cluster with one master and one slave using the
+production configuration with the commands below. Replace the
+MARIADB-ADMIN-PASSWORD and MARIADB-REPL-PASSWORD placeholders with the
+database administrator account and replication account password respectively.
+You can also optionally create a MariaDB user account for application use by
+specifying values for the USER-PASSWORD, USER-NAME and DB-NAME placeholders.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install mariadb &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set rootUser.password&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;MARIADB-ADMIN-PASSWORD &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set replication.password&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;MARIADB-REPL-PASSWORD &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set db.user&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;USER-NAME &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set db.password&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;USER-PASSWORD &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set db.name&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;DB-NAME &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set slave.replicas&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set metrics.enabled&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  --set metrics.serviceMonitor.enabled&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;  bitnami/mariadb 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note the &lt;em&gt;metrics.enabled&lt;/em&gt; parameter, which enables the Prometheus exporter
+for MySQL server metrics, and the &lt;em&gt;metrics.serviceMonitor.enabled&lt;/em&gt; parameter,
+which creates a Prometheus Operator ServiceMonitor.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once deployment in each cluster is complete, note the instructions to connect
+to each database service.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-multicluster-monitoring/mariadb-service.png&#34; alt=&#34;MariaDB service&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Browse to the
+&lt;a href=&#34;https://github.com/percona/grafana-dashboards/blob/master/dashboards/MySQL_Overview.json&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MySQL Overview dashboard in the Percona GitHub repository&lt;/a&gt;
+and copy the JSON model.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Log in to Grafana. From the Grafana dashboard, click the &amp;ldquo;Import -&amp;gt; Dashboard&amp;rdquo;
+menu item.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;On the &amp;ldquo;Import&amp;rdquo; page, paste the JSON model into the &amp;ldquo;Or paste JSON&amp;rdquo; field.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-multicluster-monitoring/grafana-dashboard-import.png&#34; alt=&#34;Grafana dashboard import&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click &amp;ldquo;Load&amp;rdquo; to load the data and then &amp;ldquo;Import&amp;rdquo; to import the dashboard. The
+new dashboard should appear in Grafana, as shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-multicluster-monitoring/grafana-mysql-dashboard.png&#34; alt=&#34;Grafana MySQL dashboard&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Connect to the MariaDB service in the first &amp;ldquo;data producer&amp;rdquo; cluster and
+perform some actions, such as creating a database, adding records to a table
+and executing a query. Perform similar actions in the second &amp;ldquo;data producer&amp;rdquo;
+cluster. You should see your activity in each cluster reflected in the MySQL
+Overview chart in Grafana, as shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-multicluster-monitoring/grafana-metrics.png&#34; alt=&#34;MariaDB metrics in Grafana&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;You can view metrics from individual master and slave nodes in each cluster by
+selecting a different host in the &amp;ldquo;Host&amp;rdquo; drop down of the dashboard, as shown
+below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/prometheus-multicluster-monitoring/grafana-hosts.png&#34; alt=&#34;MariaDB hosts in Grafana&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can now continue adding more applications to your clusters. So long as you
+enable Prometheus metrics and a Prometheus Operator ServiceMonitor for each
+deployment, Thanos will continuously receive and aggregate the metrics and you
+can inspect them using Grafana.&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful links&lt;/h2&gt;
+&lt;p&gt;To learn more about the topics discussed in this guide, use the links below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/prometheus-operator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami Prometheus Operator Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/thanos&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Thanos Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/grafana&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami&amp;rsquo;s Grafana Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/bitnami/charts/tree/master/bitnami/mariadb&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Bitnami MariaDB Helm chart&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kubernetes/ingress/tree/master/controllers/nginx&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;NGINX Ingress controller documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.bitnami.com/tutorials/secure-kubernetes-services-with-ingress-tls-letsencrypt/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Secure Kubernetes Services with Ingress, TLS and Let&amp;rsquo;s Encrypt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

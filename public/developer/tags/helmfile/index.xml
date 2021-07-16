@@ -1,0 +1,167 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Helmfile</title>
+    <link>/tags/helmfile/</link>
+    <description>Recent content in Helmfile on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 30 Apr 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/helmfile/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: What is Helmfile?</title>
+      
+      <link>/guides/kubernetes/helmfile-what-is/</link>
+      <pubDate>Thu, 30 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/helmfile-what-is/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://github.com/roboll/helmfile&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helmfile&lt;/a&gt; adds additional functionality to &lt;a href=&#34;https://helm.sh&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm&lt;/a&gt; by wrapping it in a declarative spec that allows you to compose several charts together to create a comprehensive deployment artifact for anything from a single application to your entire infrastructure stack.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: If you&amp;rsquo;re not familiar with Helm, start with our &lt;a href=&#34;../helm-what-is&#34;&gt;Getting Started with Helm&lt;/a&gt; guide.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;In addition to the Templating and Packaging Helm gives you for your Kubernetes manifests, Helmfile provides a way to apply GitOps style CI/CD methodologies over your Helm charts by:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Separating out your Environment specific information from your Chart&lt;/li&gt;
+&lt;li&gt;Performing a diff of your existing deployment and only applying the changes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Helmfile uses the same templating system as Helm and in a way lets you template your templates (&lt;em&gt;&lt;insert yo dawg meme here&gt;&lt;/em&gt;). This can be a bit difficult to wrap your mind around at first, but adds a ton of powerful features as it allows you to put basic programming logic like &lt;em&gt;if/then/else&lt;/em&gt; into just about any component including your actual Helm Chart Values.&lt;/p&gt;
+&lt;h2 id=&#34;why-is-it-important&#34;&gt;Why Is It Important?&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://helm.sh&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm&lt;/a&gt; is a great tool for templating and sharing Kubernetes manifests for your applications. However it can become quite cumbersome to install larger multi-tier applications or groups of applications across multiple Kubernetes clusters.&lt;/p&gt;
+&lt;p&gt;Helmfile addresses this issue and more by providing a fairly simple but very powerful declarative specification for deploying Helm charts across many environments.&lt;/p&gt;
+&lt;p&gt;First and foremost Helm is a &lt;strong&gt;declarative&lt;/strong&gt; specification. Like Kubernetes manifests you can store them in version control, and perform declarative style actions. Much like Kubernetes has &lt;code&gt;kubectl apply&lt;/code&gt; for Kubernetes manifests, Helmfile has &lt;code&gt;helmfile apply&lt;/code&gt; for Helm charts.&lt;/p&gt;
+&lt;p&gt;Helmfile is very &lt;strong&gt;modular&lt;/strong&gt;, you can have one large &lt;code&gt;helmfile.yaml&lt;/code&gt; that does everything or you can break it down to suit your way of working. This modularity allows you to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Give each Helm chart its own &lt;code&gt;helmfile.yaml&lt;/code&gt; and include them recursively in a centralized &lt;code&gt;helmfile.yaml&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Separate out &lt;a href=&#34;https://github.com/roboll/helmfile/blob/master/docs/writing-helmfile.md#layering-state-files&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;environment specific&lt;/a&gt; values from general values. Often you&amp;rsquo;ll find while a Helm chart can take 50 different values, only a few actually differ between your environments.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;As well as providing a set of values, either Environment specific or otherwise, you can also read Environment Variables, Execute scripts and read their output.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Store &lt;a href=&#34;https://github.com/roboll/helmfile/pull/648&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;remote state&lt;/a&gt; in git/s3/fileshare/etc in much the same way as Terraform does.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Helmfile is &lt;strong&gt;versatile&lt;/strong&gt; enough to allow you to also include raw Kubernetes manifests, &lt;a href=&#34;https://github.com/kubernetes-sigs/kustomize&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kustomizations&lt;/a&gt;, or even execute scripts via hooks, turning all of these into &lt;a href=&#34;https://github.com/roboll/helmfile/pull/673&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm releases&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Need to modify the resources generated by a specific Helm chart? Helmfile allows you to &lt;a href=&#34;https://github.com/roboll/helmfile/pull/673&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JSON/Strategic-Merge&lt;/a&gt; &lt;strong&gt;patch&lt;/strong&gt; resources before actually installing them.&lt;/p&gt;
+&lt;h2 id=&#34;how-does-it-work&#34;&gt;How Does It Work?&lt;/h2&gt;
+&lt;p&gt;Helmfile works by reading in your Helmfile manifest (usually &lt;code&gt;helmfile.yaml&lt;/code&gt;) which declares the Helm Charts you want to install and the values you wish to install them with, these are compared against the actual state of what is running in your cluster and any differences are then acted upon by calling out to Helm itself.&lt;/p&gt;
+&lt;p&gt;A basic &lt;code&gt;helmfile.yaml&lt;/code&gt; to install nginx would look something like this:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;./apps/nginx/helmfile.yaml&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;repositories&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;stable&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;https://kubernetes-charts.storage.googleapis.com&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;releases&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;my-nginx-server&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;chart&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;stable/nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;~1.24.1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;values&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;./nginx/vault.yaml.gotmpl&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;my.registry.com/nginx&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Values are a list that can be passed in as a file or a list of key/values. These are the helm style values that will be rendered into your chart. Helmfile will treat any file with the &lt;code&gt;.gotmpl&lt;/code&gt; extension as a template and will render it &lt;strong&gt;before&lt;/strong&gt; passing it onto Helm.&lt;/p&gt;
+&lt;p&gt;If you wanted to load the above into a parent &lt;code&gt;helmfile.yaml&lt;/code&gt; you could do the following:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;./helmfile.yaml&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;helmfiles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;apps/*/helmfile.yaml&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can even make all of your included &lt;code&gt;helmfile.yaml&lt;/code&gt; files templates and render stuff right into the helmfiles. It really is templates all the way down.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;./helmfile.yaml&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helmfiles:
+  - apps/*/helmfile.yaml.gotmpl
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Thankfully the Helmfile GitHub repository has some really good &lt;a href=&#34;https://github.com/roboll/helmfile#configuration&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;documentation&lt;/a&gt; and &lt;a href=&#34;https://github.com/roboll/helmfile/blob/master/docs/writing-helmfile.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;best practices&lt;/a&gt; showing different ways to construct your &lt;code&gt;helmfile.yaml&lt;/code&gt; files.&lt;/p&gt;
+&lt;h2 id=&#34;how-can-i-use-it&#34;&gt;How Can I Use It?&lt;/h2&gt;
+&lt;p&gt;It&amp;rsquo;s pretty easy to get started with Helmfile. The documentation in the repository is quite good.&lt;/p&gt;
+&lt;p&gt;For an interesting perspective showing how to completely decouple your Code and Environment data have a look at Paul Czarkowski&amp;rsquo;s &lt;a href=&#34;https://github.com/paulczar/helmfile-starter-kit&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helmfile Starter Kit&lt;/a&gt; and the &lt;a href=&#34;https://github.com/paulczar/platform-operations-on-kubernetes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Platform Operations on Kubernetes&lt;/a&gt; project built on top of it. The latter of which is used to deploy a whole kitchen sink worth of platform tooling across dozens of Kubernetes clusters.&lt;/p&gt;
+&lt;link rel=&#34;stylesheet&#34; href=&#34;/css/faq.css&#34;&gt;
+&lt;div class=&#34;faqs&#34; id=&#34;faqs&#34;&gt;
+    &lt;div class=&#34;flex-container jc-between&#34;&gt;&lt;/div&gt;
+        &lt;h2 class=&#34;h2 mb-md&#34;&gt;Frequently Asked Questions&lt;/h2&gt;
+        &lt;div class=&#34;faq&#34;&gt;
+            
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;What is a Helmfile?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Helmfile is a declarative specification wrapping for deploying distributions of Helm charts. They add additional functionality to Helm by allowing you to compose several charts together to create a comprehensive deployment artifact.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;What is a Helm chart?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Helm charts are Kubernetes manifests or a collection of files that correspond to a directly related set of Kubernetes resources.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;How do Helmfiles work?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Helmfiles work by reading your Helmfile manifests and comparing them against the actual state of what is running in your cluster. Any differences are then acted upon by calling out to Helm itself.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;What is the difference between Helm and Helmfile?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Helm is a tool for templating and sharing Kubernetes manifests for your applications, while a Helmfile is a declarative specification for deploying Helm charts that adds functionality to Helm.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;How do you modify the resources generated by a specific Helm chart?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Resources generated by a specific Helm chart can be modified before installation by allowing you to JSON/Strategic-Merge patch resources.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;What are the benefits of Helmfiles?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Helmfiles are beneficial because they provide powerful declarative specification for deploying Helm charts across many environments.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+        &lt;/div&gt;
+    &lt;/div&gt;
+    
+&lt;/div&gt;
+
+&lt;script type=&#34;text/javascript&#34;&gt;
+    $(&#34;.faq-item&#34;).each( function() {
+        $(this).click(function () {
+            $(this).find(&#34;#arrow&#34;).toggleClass(&#34;flip&#34;); 
+            $(this).find(&#34;.faq-answer&#34;).slideToggle(200); 
+        });
+    });
+&lt;/script&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

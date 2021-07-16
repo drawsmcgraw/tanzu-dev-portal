@@ -1,0 +1,241 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Wavefront</title>
+    <link>/tags/wavefront/</link>
+    <description>Recent content in Wavefront on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 15 Apr 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/wavefront/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Kubernetes Monitoring Overview</title>
+      
+      <link>/guides/kubernetes/observability-kubernetes-monitoring-overview/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/observability-kubernetes-monitoring-overview/</guid>
+      <description>
+
+        
+        &lt;p&gt;Observability is a key element of cloud native application architectures. Most modern applications are distributed in nature, with a collection of multiple modules that communicate with each other via APIs. Anytime a problem occurs you need to be able to see when and where failures happened. And you need to measure failures to establish a profile or baseline against which deviations from normal operation can be identified and addressed. As such, monitoring, feature-rich metrics, alerting tools, and data visualization frameworks are a key element of successful cloud native applications.&lt;/p&gt;
+&lt;p&gt;This guide provides an overview of monitoring tools for Kubernetes environments.&lt;/p&gt;
+&lt;h2 id=&#34;how-is-monitoring-apps-on-kubernetes-different&#34;&gt;How Is Monitoring Apps on Kubernetes Different?&lt;/h2&gt;
+&lt;p&gt;Containerized systems such as Kubernetes present new monitoring challenges versus virtual-machine-based compute environments. These differences include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The ephemeral nature of containers&lt;/li&gt;
+&lt;li&gt;An increased density of objects, services, and metrics within a given node&lt;/li&gt;
+&lt;li&gt;A focus on services, rather than machines&lt;/li&gt;
+&lt;li&gt;More diverse consumers of monitoring data&lt;/li&gt;
+&lt;li&gt;Changes in the software development lifecycle&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As monolithic apps are refactored into microservices and orchestrated with Kubernetes, requirements for monitoring those apps change. To start, instrumentation to capture application data needs to be at a container level, at scale, across thousands of endpoints. Because Kubernetes workloads are ephemeral by default and can start or stop at any time, application monitoring must be dynamic and aware of Kubernetes labels and namespaces. A consistent set of rules or alerts must be applied to all pods, new and old.&lt;/p&gt;
+&lt;p&gt;Observability should always be a consideration when you’re developing new apps or refactoring existing ones. Maintaining a common layer of baseline metrics that applies to all apps and infrastructure while incorporating custom metrics is extremely desirable. Adding a new metric based on user feedback should NOT trigger a major replumb of your monitoring stack.&lt;/p&gt;
+&lt;h2 id=&#34;monitoring-resource-consumption-and-preventing-infiltration&#34;&gt;Monitoring Resource Consumption and Preventing Infiltration&lt;/h2&gt;
+&lt;p&gt;How can you protect your Kubernetes system from hijackers and infiltrators? Here are some suggestions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Monitor cluster and network utilization&lt;/li&gt;
+&lt;li&gt;Monitor for suspicious activity and analyze failed login and RBAC events&lt;/li&gt;
+&lt;li&gt;Monitor configurations, such as dashboard access, for risks and vulnerabilities&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The NIST document, &lt;a href=&#34;https://nvlpubs.nist.gov/nistpubs/ir/2017/NIST.IR.8176.pdf&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Security Assurance Requirements for Linux Application Container Deployments&lt;/a&gt; sets forth security requirements and countermeasures to help meet the recommendations of the &lt;a href=&#34;https://csrc.nist.gov/publications/detail/sp/800-190/final&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;NIST Application Container Security Guide&lt;/a&gt; when containerized applications are deployed in production environments. According to NIST, you should log and monitor resource consumption of containers to ensure availability of critical resources.&lt;/p&gt;
+&lt;h3 id=&#34;security-monitoring-and-auditing&#34;&gt;Security monitoring and auditing&lt;/h3&gt;
+&lt;p&gt;The proper security monitoring for your cluster depends largely on the amount of time and staffing you have to respond to alerts and keep an eye on things. As a general rule, you shouldn&amp;rsquo;t spend time building security monitoring systems that you don&amp;rsquo;t have the time to maintain and tune. Start with the real-time (alert-based) and periodic (audit review) analyst or operator workflows you want to enable, and build the monitoring platform you need to enable those workflows.&lt;/p&gt;
+&lt;h3 id=&#34;logging&#34;&gt;Logging&lt;/h3&gt;
+&lt;p&gt;The bedrock of security monitoring is logging. You should generally capture application logs, host-level logs, Kubernetes API audit logs, and cloud-provider logs (if applicable). There are well-established patterns for implementing log aggregation on common cluster configurations.&lt;/p&gt;
+&lt;p&gt;Centralized logging is an essential part of any enterprise Kubernetes deployment. Configuring and maintaining a real-time high-performance central repository for log collection can ease the day-to-day operations of tracking what went wrong and its impact. Effective central logging also helps development teams quickly observe application logs to characterize application performance. Security compliance and auditing often require a company to maintain digital trails of who did what and when. In most cases, a robust logging solution is the most efficient way to satisfy these requirements&lt;/p&gt;
+&lt;p&gt;For security auditing purposes, consider streaming your logs to an external location with append-only access from within your cluster. For example, on AWS, you can create an S3 bucket in an isolated AWS account and give append-only access to your cluster log aggregator. This ensures your logs cannot be tampered with, even in the case of a total cluster compromise.&lt;/p&gt;
+&lt;h5 id=&#34;log-aggregation&#34;&gt;Log Aggregation&lt;/h5&gt;
+&lt;p&gt;An effective log aggregator must support the processing of events from thousands of endpoints, the ability to accommodate real-time queries, and a superior analytics engine to provide intelligent metrics to solve complex technical and business problems. You have the option to implement log aggregation using a number of popular open source or commercial logging analytics solutions, such as Elasticsearch, Fluentd, Kibana, or Splunk. Each solution has a set of strengths and weaknesses.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.fluentd.org&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Fluentd&lt;/a&gt; is an open-source data collector for unified logging. &lt;a href=&#34;https://fluentbit.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Fluent Bit&lt;/a&gt; is a lightweight data forwarder for Fluentd. Fluentd is used to create a unified logging layer to collect and process data. Fluent Bit is for forwarding data from the edge to Fluentd aggregators. Fluentd and Fluent Bit can collect logging data and push it to an output destination, such as &lt;a href=&#34;https://www.elastic.co&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Elasticsearch&lt;/a&gt;, which is a distributed search and analytics engine that lets data engineers query unstructured, structured, and time-series data.&lt;/p&gt;
+&lt;h3 id=&#34;network-monitoring&#34;&gt;Network monitoring&lt;/h3&gt;
+&lt;p&gt;Network-based security monitoring tools, such as a network intrusion detection system (IDS) and web application firewalls, may work nearly out of the box, but making them work well takes some effort. The biggest hurdle is that many tools expect IP addresses to be a useful context for events. To integrate these tools with Kubernetes, consider enriching the collected events with Kubernetes &lt;code&gt;namespace&lt;/code&gt;, &lt;code&gt;pod name&lt;/code&gt;, and &lt;code&gt;pod label&lt;/code&gt; metadata. This adds valuable context to the event that you can use for alerting or manual review and can make these traditional tools even more powerful in a Kubernetes cluster than in a traditional environment. Some monitoring tools can collect Kubernetes metadata, but you can also write custom event enrichment code to add this kind of metadata integration to those that don&amp;rsquo;t.&lt;/p&gt;
+&lt;h3 id=&#34;host-event-monitoring&#34;&gt;Host event monitoring&lt;/h3&gt;
+&lt;p&gt;It&amp;rsquo;s also possible to run a host-based IDS, such as file integrity monitoring and Linux system call logging (for example, auditd), directly with Kubernetes, but the results are hard to manage because the workload running on any particular node varies from hour to hour as applications deploy and Kubernetes orchestrates pods.&lt;/p&gt;
+&lt;p&gt;To make sense of host-based events, you&amp;rsquo;ll again want to consider extending your existing tools to include Kubernetes pod or container metadata in the context of captured events. Systems such as &lt;a href=&#34;https://sysdig.com/opensource/falco/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Sysdig Falco&lt;/a&gt; include this context out of the box.&lt;/p&gt;
+&lt;h3 id=&#34;prometheus-and-grafana&#34;&gt;Prometheus and Grafana&lt;/h3&gt;
+&lt;p&gt;The open-source community is converging on &lt;a href=&#34;https://prometheus.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Prometheus&lt;/a&gt; as a preferred solution for Kubernetes monitoring. The ability to address evolving requirements of Kubernetes while including a rich set of language-specific client libraries gives Prometheus an advantage.&lt;/p&gt;
+&lt;p&gt;Prometheus excels at monitoring multidimensional data, including time-series data, and it is hosted by the Cloud Native Computing Foundation, of which VMware is a member. &lt;a href=&#34;https://grafana.com&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Grafana&lt;/a&gt; is an open-source metrics dashboard commonly used with Prometheus to display data.&lt;/p&gt;
+&lt;h3 id=&#34;wavefront&#34;&gt;Wavefront&lt;/h3&gt;
+&lt;p&gt;Kubernetes can be integrated with Wavefront (VMware Tanzu Observability) to efficiently monitor containers at enterprise scale. Wavefront delivers monitoring and analytics throughout a cloud native stack for always-on metrics as a service.Wavefront gives developers and DevOps real-time visibility into the operations and performance of containerized workloads and Kubernetes clusters.&lt;/p&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;KubeAcademy offers a course on &lt;a href=&#34;https://kube.academy/courses/introduction-to-observability&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Kubernetes observability&lt;/a&gt; where you can learn more about many of the topics mentioned above. For a practical guide on how to get started with Prometheus and Grafana, be sure to read &lt;a href=&#34;/guides/kubernetes/prometheus-grafana-p1/&#34;&gt;Prometheus and Grafana: Gathering Metrics from Kubernetes&lt;/a&gt;. Spring Boot users will also want to check out &lt;a href=&#34;/guides/spring/spring-prometheus/&#34;&gt;Prometheus and Grafana: Gathering Metrics from Spring Boot on Kubernetes&lt;/a&gt; to learn how to gather metrics from Spring applications. The guides &lt;a href=&#34;/guides/microservices/distributed-tracing&#34;&gt;Implementing Distributed Tracing&lt;/a&gt; and &lt;a href=&#34;/guides/spring/spring-zipkin/&#34;&gt;Getting Started with Zipkin and Spring Boot&lt;/a&gt; can help you improve observability for microservices applications.&lt;/p&gt;
+&lt;p&gt;If you’re considering Wavefront, be sure and read &lt;a href=&#34;/guides/kubernetes/monitoring-at-scale-wavefront&#34;&gt;Monitoring Containers at Scale with Wavefront&lt;/a&gt; and &lt;a href=&#34;/guides/spring/spring-wavefront-gs/&#34;&gt;Wavefront for Spring Boot: Getting Started&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Monitoring Containers at Scale with Wavefront</title>
+      
+      <link>/guides/kubernetes/monitoring-at-scale-wavefront/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/monitoring-at-scale-wavefront/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/observability&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Observability by Wavefront&lt;/a&gt; efficiently monitors cloud native operations at scale. It is a high-performance streaming analytics platform that supports 3D observability (metrics, histograms, traces/spans) and can scale to very high data ingestion rates and query loads. You can collect data from many services and sources across your entire application stack, and can look at details for earlier data collected by Wavefront.&lt;/p&gt;
+&lt;p&gt;The Wavefront platform includes dashboards that give DevOps teams real-time visibility into the operation and performance of containerized applications and Kubernetes clusters. The dashboard displays data on the performance of microservices and resource utilization to help you identify issues, troubleshoot problems, and optimize applications. The data can, for example, help you make decisions about how and when to scale a container environment. In short, Wavefront is an observability platform with automated service discovery and full-stack analytics.&lt;/p&gt;
+&lt;h2 id=&#34;monitoring-kubernetes&#34;&gt;Monitoring Kubernetes&lt;/h2&gt;
+&lt;p&gt;The Wavefront service can measure, correlate, and analyze data across containers and Kubernetes clusters and can display various information, including metrics, histograms, span logs, traces and distributed tracing analysis.
+Because Wavefront can correlate Kubernetes performance with the performance of applications, it can help you scale faster while maintaining high quality. With Wavefront you can:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;See a real-time, full-stack picture of your Kubernetes environment&lt;/li&gt;
+&lt;li&gt;Find out about incidents earlier and solve them faster by drilling down into the data&lt;/li&gt;
+&lt;li&gt;Understand and assess long-term trends&lt;/li&gt;
+&lt;li&gt;Improve collaboration and visibility across teams&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Wavefront can also help you evaluate and tune the performance of microservices running on Kubernetes. For example, Wavefront can help you isolate and resolve microservices rate, error, and duration problems.&lt;/p&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;Wavefront helps monitor and manage container deployments. It offers so much functionality that it’s often best to begin by investigating specific areas you are interested in. The video &lt;a href=&#34;https://tanzu.vmware.com/content/vmware-tanzu-observability-by-wavefront-videos/introduction-to-wavefront&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Introduction to Wavefront&lt;/a&gt; explains more about where and how Wavefront is being used. Watch &lt;a href=&#34;https://tanzu.vmware.com/content/vmware-tanzu-observability-by-wavefront-videos/wavefront-and-kubernetes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Wavefront and Kubernetes&lt;/a&gt; to understand Kubernetes specifics. You can check out the &lt;a href=&#34;https://tanzu.vmware.com/content/vmware-tanzu-observability-by-wavefront-videos&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete library of Wavefront videos&lt;/a&gt; to find topics of interest. &lt;a href=&#34;https://docs.wavefront.com/index.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Wavefront docs&lt;/a&gt; also provide an exceptionally thorough introduction to the solution, with in-depth sections on Kubernetes, dashboards, alerts, tracing and more, including lots of video content for visual learners.&lt;/p&gt;
+&lt;p&gt;If you are a Spring Boot developer &lt;a href=&#34;/guides/spring/spring-wavefront-gs/&#34;&gt;Wavefront for Spring Boot: Getting Started&lt;/a&gt; is a great starting point and explains how to take advantage of our free tier offer.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: Introducing the Tanzu Observability Slug Generator</title>
+      
+      <link>/blog/introducing-the-tanzu-observability-slug-generator/</link>
+      <pubDate>Thu, 15 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/introducing-the-tanzu-observability-slug-generator/</guid>
+      <description>
+
+        
+        &lt;p&gt;A great feature of &lt;a href=&#34;https://tanzu.vmware.com/observability&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tanzu Observability&lt;/a&gt; is that all context about the chart or dashboard that you are looking at is encoded in the URL, which makes it easy for you to share those links with your colleagues and to deep link into our product from other places such as wiki pages. A consequence of this is that the URL slug is rather involved. This is not a problem when the UI generates the URL, but it becomes very tedious when customers try to create the URL on their own in order to automate and embed Tanzu Observability charts and dashboards outside of the product itself.&lt;/p&gt;
+&lt;p&gt;To help customers take better advantage of Tanzu Observability charts and dashboards as well as allow easier automation and customization, we recently open sourced our Tanzu Observability URL slug generation code. This code lets you programmatically generate links to charts and dashboards that you can then embed wherever you like to give users an easy to find view of the metrics that matter to them.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-a-url-slug&#34;&gt;What is a URL Slug?&lt;/h2&gt;
+&lt;p&gt;If you are not familiar with a URL slug, it is the last part of a URL that comes after the domain name. For example:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.vmware.com/company.html&#34;&gt;https://www.vmware.com/company.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;In the URL above, “company.html” is referred to as the URL slug.&lt;/p&gt;
+&lt;p&gt;In some cases, the URL slug is relatively simple. In the case of a Tanzu Observability chart or dashboard, a lot of information is encoded in the slug which makes it difficult for humans to parse and even trickier to generate. For example, a Tanzu Observability slug might looks like the following:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(c:(b:1,id:chart,n:Chart,ne:!t,s:!((n:source,q:&#39;ts(metrics)&#39;,qb:!n,qbe:!f)),smp:off),g:(c:off,d:7200,g:auto,s:1373948820),t:customer)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Luckily, you do not have to parse URLs manually. But at times, it can be convenient to generate a Tanzu Observability dashboard or chart in code and this is where the open sourced library comes in.&lt;/p&gt;
+&lt;h2 id=&#34;where-to-find-the-code&#34;&gt;Where to Find the Code?&lt;/h2&gt;
+&lt;p&gt;The open sourced URL slug generation code can be found in the &lt;a href=&#34;https://github.com/vmware-tanzu/tanzu-observability-slug-generator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu GitHub organization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Note that previously open sourced code can be found under &lt;a href=&#34;https://github.com/wavefrontHQ&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Wavefront in GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;how-to-get-started&#34;&gt;How to Get Started&lt;/h2&gt;
+&lt;p&gt;Complete instructions to use the code can be found in the &lt;a href=&#34;https://github.com/vmware-tanzu/tanzu-observability-slug-generator/blob/main/README.md&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;README.md file in the GitHub directory&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The README file includes information about prerequisites for Maven and Gradle as well as instructions on how to create chart and dashboard slugs.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Generating Tanzu Observability URL slugs can be cumbersome and error prone. With the newly open sourced URL slug generation code, you can easily and automatically generate URL slugs and embed charts and dashboards in the pages that make the most sense for your business.&lt;/p&gt;
+&lt;h2 id=&#34;links&#34;&gt;Links&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://tanzu.vmware.com/observability-trial&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Try Tanzu Observability and get started today&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you are a Spring developer, take a look at the &lt;a href=&#34;https://spring.io/guides/gs/tanzu-observability/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;guide for Tanzu Observability&lt;/a&gt; as well as our guide on &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/spring/spring-wavefront-gs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with Wavefront for Spring Boot&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/vmware-tanzu/tanzu-observability-slug-generator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Get started with generating URL slugs&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Tanzu Observability by Wavefront Terraform Integration</title>
+      
+      <link>/videos/tanzu-observability-terraform/</link>
+      <pubDate>Thu, 08 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/tanzu-observability-terraform/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with Wavefront for Spring Boot</title>
+      
+      <link>/guides/spring/spring-wavefront-gs/</link>
+      <pubDate>Wed, 20 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/spring-wavefront-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;&lt;a href=&#34;https://www.wavefront.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu Observability by Wavefront&lt;/a&gt; offers a &lt;a href=&#34;https://tanzu.vmware.com/content/blog/byo-spring-boot-apps-tanzu-observability-for-free-no-sign-up-needed&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;free tier&lt;/a&gt; for Spring Boot developers. If you&amp;rsquo;re unfamiliar with Wavefront, it provides a SaaS-based platform for real-time metrics, monitoring, and alerting. It has integrations for many languages, frameworks, and platforms. Simply put, you send Wavefront your metrics, and it handles visualization and analysis. Additionally, &lt;a href=&#34;https://docs.wavefront.com/wavefront_springboot.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Wavefront for Spring Boot&lt;/a&gt; helps Spring developers to integrate with Wavefront while still using solutions they’re used to, such as Micrometer and Sleuth.&lt;/p&gt;
+&lt;p&gt;In this guide, you’ll take an existing application and add Wavefront for Spring Boot, which will start sending metrics and traces to Wavefront. Additionally, you&amp;rsquo;ll see how custom metrics added via Micrometer are reflected in Wavefront.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;Before you get started, you will need the following tools:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Your text editor or IDE of choice&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://adoptopenjdk.net/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JDK 1.8&lt;/a&gt; or newer&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://gradle.org/install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Gradle 4+&lt;/a&gt; or &lt;a href=&#34;https://maven.apache.org/download.cgi&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Maven 3.2+&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you want to see the whole demo put together, you can find the &lt;a href=&#34;https://github.com/BrianMMcClain/spring-petclinic-wavefront&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;complete code on GitHub&lt;/a&gt;. This guide will also link to specific commits if you want to see the code changes done along the way, but if you want the short version, make sure to check out these commits:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/BrianMMcClain/spring-petclinic-wavefront/commit/3e99b9ece141179385ab28069ea381dd8b35bb94&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Enabling Wavefront for metrics and Sleuth for tracing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/BrianMMcClain/spring-petclinic-wavefront/commit/b9a60f71ef26e6ace615b99a8a5e7afc5e4ae30c&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Adding your own custom metrics&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These commits will also be denoted along the way.&lt;/p&gt;
+&lt;h2 id=&#34;modifying-an-existing-application&#34;&gt;Modifying an Existing Application&lt;/h2&gt;
+&lt;p&gt;&lt;sup&gt;Commit: &lt;a href=&#34;https://github.com/BrianMMcClain/spring-petclinic-wavefront/commit/3e99b9ece141179385ab28069ea381dd8b35bb94&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;3e99b9e&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;For this demo, you&amp;rsquo;ll be modifying an existing application, the &lt;a href=&#34;https://github.com/spring-projects/spring-petclinic&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Pet Clinic&lt;/a&gt;. This will provide a starting point of a fully working application so that you can focus on the topic of this guide. Clone this code and &lt;code&gt;cd&lt;/code&gt; into the newly created directory:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git clone https://github.com/spring-projects/spring-petclinic.git
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; spring-petclinic
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you&amp;rsquo;re curious how this application works, feel free to build and run it. You can start the application as a standard Spring application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;./mvnw spring-boot:run
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After a few moments, the application will be up and running, available at &lt;a href=&#34;http://localhost:8080/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:8080&lt;/a&gt;. Poke around, check it out, and when you&amp;rsquo;re done, stop the application.&lt;/p&gt;
+&lt;p&gt;To get started with Wavefront for Spring Boot in the most basic form, there are actually no code changes required. You may be familiar with &lt;a href=&#34;https://micrometer.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Micrometer&lt;/a&gt;, which not only provides basic metrics for Spring applications by default but also offers an interface for providing custom metrics. The Wavefront Spring Boot starter takes this Micrometer data and ships it to Wavefront automatically, allowing you to continue to instrument your code the way you&amp;rsquo;re used to doing. There&amp;rsquo;s one other dependency that you can include, which is &lt;a href=&#34;https://spring.io/projects/spring-cloud-sleuth&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Sleuth&lt;/a&gt;. Much like Micrometer, Sleuth can provide some automated instrumentation for your code, but in this case it will enable tracing requests in your application. That means you can follow requests all the way through your code to find problem spots.&lt;/p&gt;
+&lt;p&gt;Add these two dependencies to your &lt;code&gt;pom.xml&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;com.wavefront&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;wavefront-spring-boot-starter&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;2.1.0&lt;span class=&#34;nt&#34;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-starter-sleuth&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.0.0&lt;span class=&#34;nt&#34;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There&amp;rsquo;s just one other thing you&amp;rsquo;ll need to do, which is to tell Wavefront  a bit about your application. Luckily, this can be done in just a couple of configuration values in your &lt;code&gt;src/main/resources/application.properties&lt;/code&gt; file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;wavefront.application.name=spring-petclinic
+wavefront.application.service=spring-petclinic-app
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It&amp;rsquo;s not uncommon that applications are made up of multiple backend services. Consider if the Pet Clinic application had a pet service, a vet service, and so on. For this reason, the Wavefront configuration distinguishes between &lt;code&gt;wavefront.application.name&lt;/code&gt;, or the name of the overall application, and &lt;code&gt;wavefront.application.service&lt;/code&gt;, or the name of this specific service.&lt;/p&gt;
+&lt;h2 id=&#34;exploring-wavefront&#34;&gt;Exploring Wavefront&lt;/h2&gt;
+&lt;p&gt;With the changes to your &lt;code&gt;pom.xml&lt;/code&gt; file and your &lt;code&gt;application.properties&lt;/code&gt; file, you&amp;rsquo;re ready to start the application back up and see your metrics begin to appear in Wavefront. Again, you can start the app as a standard Spring application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;./mvnw spring-boot:run
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You&amp;rsquo;ll notice some new information in the log output. Specifically, once the application is running, keep an eye out for a line that reads:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Connect to your Wavefront dashboard using this one-time use link:
+https://wavefront.surf/us/xxxxxxxxxx
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Open this link in your browser, and you&amp;rsquo;ll be greeted with your Wavefront dashboard! But things are looking a little empty. Without any traffic to your application, there&amp;rsquo;s not a whole lot to look at here, so open up your Pet Clinic application at &lt;a href=&#34;http://localhost:8080/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:8080&lt;/a&gt; and start poking around. Refresh a few different pages a few times; try adding pets to owners. Click the &amp;ldquo;Error&amp;rdquo; page a few times.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/spring-wavefront-01.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;You can see from the image above that &lt;code&gt;GET /&lt;/code&gt; got the most requests, &lt;code&gt;GET /owners&lt;/code&gt; is the slowest to respond on average, and that 15 percent of requests resulted in an error, with all of those errors being raised from &lt;code&gt;GET /oups&lt;/code&gt;. This already gives you a few places to start investigating issues that your application could be having.&lt;/p&gt;
+&lt;h2 id=&#34;adding-your-own-metrics&#34;&gt;Adding Your Own Metrics&lt;/h2&gt;
+&lt;p&gt;&lt;sup&gt;Commit: &lt;a href=&#34;https://github.com/BrianMMcClain/spring-petclinic-wavefront/commit/b9a60f71ef26e6ace615b99a8a5e7afc5e4ae30c&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;b9a60f7&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;The above changes feed in both the standard metrics from Micrometer and traces from Sleuth into Wavefront, but there are probably some metrics specific to your application as well. Let&amp;rsquo;s consider a scenario where you&amp;rsquo;d like to keep track of pet owners who are looked up on the application the most often. Luckily, this is as easy as &lt;a href=&#34;https://micrometer.io/docs/concepts#_counters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;adding a new counter through Micrometer&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;n&#34;&gt;Metrics&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;counter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;owner.lookup&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;owner&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getLastName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;, &amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;owner&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getFirstName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;increment&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the above example, a new metric named &lt;code&gt;owner.lookup&lt;/code&gt; is created, with one key/value pair: a key of &lt;code&gt;name&lt;/code&gt; with a value containing the owner’s name, in the format of &amp;ldquo;Last Name, First Name&amp;rdquo;. When added to the &lt;code&gt;showOwner&lt;/code&gt; method that&amp;rsquo;s annotated with &lt;code&gt;@GetMapping(&amp;quot;/owners/{ownerId}&amp;quot;)&lt;/code&gt; in the &lt;code&gt;OwnerController.java&lt;/code&gt; file, each request will increment a counter for the owner that they look up. Again, restart the application and send some traffic to some user pages.&lt;/p&gt;
+&lt;p&gt;This data can be visualized in Wavefront by clicking &amp;ldquo;Dashboard&amp;rdquo;, then &amp;ldquo;Create Chart&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/spring-wavefront-02.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;From here, the newly gathered data can be added to the chart by selecting it as the data to show:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/spring-wavefront-03.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;You&amp;rsquo;ll then see all of the requests to all of the owners that you sent traffic to:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/spring-wavefront-04.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;You can find much more information in the &lt;a href=&#34;https://docs.wavefront.com/micrometer.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Wavefront documentation&lt;/a&gt;. If you&amp;rsquo;re looking to learn more about Micrometer and how you can instrument your Spring applications, make sure to check out the &lt;a href=&#34;https://micrometer.io/docs/concepts&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Micrometer concepts&lt;/a&gt; and the different types of tools provided there  in order to get better insight into your code.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

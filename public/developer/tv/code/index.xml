@@ -1,0 +1,682 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Code</title>
+    <link>/tv/code/</link>
+    <description>Recent content in Code on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/tv/code/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Code: Newly Native with Josh Long</title>
+      
+      <link>/tv/code/0036/</link>
+      <pubDate>Wed, 30 Jun 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0036/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/josh-long.jpg" width="640" />]]>
+        
+        &lt;p&gt;In this session, we’re going to explore some new possibilities for native Spring Boot applications with Spring Native and GraalVM. we’ll look at using the Exposed ORM for Kotlin; Spring Integration; and the Okta Spring Boot starter. It’ll be fun. And we might even explore some of the new bits in Spring Integration 5.5, while we’re at it.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: OpenID Connect with Spring cloud Gateway with Mario Gray</title>
+      
+      <link>/tv/code/0035/</link>
+      <pubDate>Wed, 23 Jun 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0035/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mario-gray.png" width="640" />]]>
+        
+        &lt;p&gt;This episode features a user-facing service needing authentication. Using Spring Cloud Gateway, we can fulfill OAuth connect with a userDetails service and authorization against downstream back end micro services.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Event-Driven Architecture Traps with Jakub Pilimon</title>
+      
+      <link>/tv/code/0034/</link>
+      <pubDate>Wed, 16 Jun 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0034/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/jakub-pilimon.jpg" width="640" />]]>
+        
+        &lt;p&gt;Event-driven architectures (EDA) have become more popular by the day. Organizations see a great value in them, and developers love how EDA help to grow, scale, and mirror what really happens in the business domain. However, most developers are not familiar with this kind of architecture, which can lead to common pitfalls that we’ll examine in this talk&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Kotlin Spring with CoRoutines with Mario Gray</title>
+      
+      <link>/tv/code/0033/</link>
+      <pubDate>Wed, 09 Jun 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0033/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mario-gray.png" width="640" />]]>
+        
+        &lt;p&gt;Refactor a Spring Application in Kotlin&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Bootiful Proxies with Josh Long</title>
+      
+      <link>/tv/code/0032/</link>
+      <pubDate>Wed, 02 Jun 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0032/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/josh-long.jpg" width="640" />]]>
+        
+        &lt;p&gt;Hey Spring fans! In this installment, we’re going to explore the wide world of proxies in the wide world of Springdom and see the implications on your GraalVM native image applications with Spring Native.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Software architecture and modeling don&#39;ts with Jakub Pilimon</title>
+      
+      <link>/tv/code/0031/</link>
+      <pubDate>Wed, 26 May 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0031/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/jakub-pilimon.jpg" width="640" />]]>
+        
+        &lt;p&gt;Mistakes that are too often learned the hard way. Software architecture is an important asset that impacts the overall development process. It also help the developers (and business stakeholder reason about the system and detect potential risks. Without proper architecture and modelling skills, every change will lead to a potential problem or even unexpected rework. To avoid such situations, in this talk we will walk through some common architecture and modelling mistakes and how to tackle them. Since software architecture is technology agnostic, you don’t have to be Spring or even Java developer to attend this session.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Spring Integration and Reactive Streams with Mario Gray</title>
+      
+      <link>/tv/code/0030/</link>
+      <pubDate>Wed, 19 May 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0030/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mario-gray.png" width="640" />]]>
+        
+        &lt;p&gt;Taking a test drive with integration and reactive streams. High level concepts with low level impact. Lets see how reactive micro services with spring integration make life simple and cool.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Scheduling of tasks with Spring Boot with Mario Gray</title>
+      
+      <link>/tv/code/0029/</link>
+      <pubDate>Wed, 05 May 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0029/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mario-gray.png" width="640" />]]>
+        
+        &lt;p&gt;Testing task scheduling with Spring Boot and Awaitility. This is going to be coded in Kotlin. #springboot #kotlin&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: How design can kill your testability with Jakub Pilimon</title>
+      
+      <link>/tv/code/0028/</link>
+      <pubDate>Wed, 21 Apr 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0028/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/jakub-pilimon.jpg" width="640" />]]>
+        
+        &lt;p&gt;&amp;ldquo;I can&amp;rsquo;t test it!&amp;rdquo;, &amp;ldquo;My tests are so fragile!&amp;rdquo;, &amp;ldquo;Testing does not work!&amp;rdquo; - let&amp;rsquo;s take a look how to avoid such emotions with proper refactoring of a legacy design.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Spring Integration &#43; Kotlin : Holy cow this is productivity with Mario Gray</title>
+      
+      <link>/tv/code/0027/</link>
+      <pubDate>Wed, 14 Apr 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0027/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mario-gray.jpg" width="640" />]]>
+        
+        &lt;p&gt;Code: Implement and test messaging components using Kotlin and Spring Integration Kotlin DSL&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Don&#39;t Cross the Streams! Using Spring Cloud Stream to bust the ghosts of interservice communication with Mark Heckler</title>
+      
+      <link>/tv/code/0026/</link>
+      <pubDate>Wed, 07 Apr 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0026/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mark-heckler.jpg" width="640" />]]>
+        
+        &lt;p&gt;This session is a lively exploration of the hidden power of Spring Cloud Stream.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Spring Boot: robust, performant and efficient: pick three with Josh Long</title>
+      
+      <link>/tv/code/0025/</link>
+      <pubDate>Wed, 31 Mar 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0025/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/josh-long.jpg" width="640" />]]>
+        
+        &lt;p&gt;Spring Native is here! Spring Native is the easiest way to turn your Spring Boot application into a lean, mean, GraalVM-powered Kubernetes machine. Join me, Spring Developer Advocate Josh Long and we’ll explore the next frontier for Spring-powered workloads.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Sidecars and μServices with Mario Gray</title>
+      
+      <link>/tv/code/0024/</link>
+      <pubDate>Wed, 24 Mar 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0024/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mario-gray.jpg" width="640" />]]>
+        
+        &lt;p&gt;Decoupling services with Istio Sidecars&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Back to Basics: DI and Spring IoC with Jakub Pilimon</title>
+      
+      <link>/tv/code/0023/</link>
+      <pubDate>Wed, 17 Mar 2021 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0023/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/jakub-pilimon.jpg" width="640" />]]>
+        
+        &lt;p&gt;This short live coding session will walk you through the motivation behind the principle of Dependency Injection and how it relates to Spring IoC Container.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: RSocket Wrench: Hand me that Spanner! with Mark Heckler</title>
+      
+      <link>/tv/code/0022/</link>
+      <pubDate>Wed, 03 Mar 2021 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0022/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mark-heckler.jpg" width="640" />]]>
+        
+        &lt;p&gt;You may (or may not) have heard of RSocket, the flexible and resilient way to crank up microservice scalability. This session offers a quick introduction, but that isn’t its primary mission; rather, this is an hour-long (more or less) meandering in which Mark explores various scenarios with Spring Boot, Reactor, and RSocket to see what combinations might work, what might not, and where an edge or two may lie. Success is not guaranteed, come join the fun! All examples will be coded live &amp;amp; in real-time.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: I&#39;ve gotta Spring Cloud Gateway, I want to flyyy away with Josh Long</title>
+      
+      <link>/tv/code/0021/</link>
+      <pubDate>Wed, 24 Feb 2021 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0021/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/josh-long.jpg" width="640" />]]>
+        
+        &lt;p&gt;or: &lt;strong&gt;Go, go, gadget Gateway!&lt;/strong&gt; First, I&amp;rsquo;m sorry Lenny Kravitz. I just am. I did it. I knew I shouldn&amp;rsquo;t have. I knew it wouldn&amp;rsquo;t work. But here we are. I can&amp;rsquo;t help myself. I love Spring Cloud Gateway, and so should you. And that&amp;rsquo;s what we&amp;rsquo;re going to talk about in this extra special deep dive into the wide and wonderful world of Spring Cloud Gateway, the API gateway you didn&amp;rsquo;t know you needed.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Testing the Web Layer with Spring with Jakub Pilimon</title>
+      
+      <link>/tv/code/0020/</link>
+      <pubDate>Wed, 17 Feb 2021 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0020/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/jakub-pilimon.jpg" width="640" />]]>
+        
+        &lt;p&gt;This quick live coding session will walk you through the process of testing the web layer in a few different ways. We will cover pros and cons of each approach.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Assume Nothing: A Dead-Simple Intro to Application Security</title>
+      
+      <link>/tv/code/0019/</link>
+      <pubDate>Wed, 10 Feb 2021 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0019/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mark-heckler.jpg" width="640" />]]>
+        
+        &lt;p&gt;In this Live-Coding Adventure™, Mark explores and explains security concepts like user authentication and authorization and demonstrates how to secure a Spring Boot application using Spring Security.&lt;/p&gt;
+&lt;p&gt;Included in this session are both blocking and non-blocking, reactive mechanisms for securing all the APIs and evaluation of when a forms-based approach is a good solution, when it is not, and what alternatives exist (alternatives to be covered in a future session). Come join the fun!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Oleh and Josh Explore RSocket with Josh Long and Oleh Dokuka</title>
+      
+      <link>/tv/code/0018/</link>
+      <pubDate>Wed, 27 Jan 2021 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0018/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/josh-long.jpg" width="640" />]]>
+        
+        &lt;p&gt;Come see Spring Developer Advocate Josh Long (&lt;a href=&#34;https://twitter.com/starbuxman&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;@starbuxman&lt;/a&gt;) and Reactor teammate and RSocket committer Oleh Dokuka (&lt;a href=&#34;https://twitter.com/olehdokuka&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;@olehdokuka&lt;/a&gt;) for a tour of the reactive RSocket protocol&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Safe Refactoring with Jakub Pilimon</title>
+      
+      <link>/tv/code/0017/</link>
+      <pubDate>Wed, 20 Jan 2021 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0017/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/jakub-pilimon.jpg" width="640" />]]>
+        
+        &lt;p&gt;We&amp;rsquo;ve all been there, facing a blinking cursor. You need to build a new feature, but aren&amp;rsquo;t sure where to start. Or you have to fix something in your app, and you&amp;rsquo;re unsure why it broke. This situation is common with Big Ball of Mud architectures. This design hinders your release velocity and it makes it near impossible to seize new business opportunities. How can you move on from this situation?&lt;/p&gt;
+&lt;p&gt;Most of us also know what good design is. We talk a lot about domain-driven design, modeling, and test-driven development. Here&amp;rsquo;s the challenge: how to apply this thinking to your current systems. How do we modernize the app? How do we convince people we should modernize it? How do we overcome the lack of testing? And lack of business knowledge? How do we make sure we can easily revert our changes?&lt;/p&gt;
+&lt;p&gt;Learn about &amp;ldquo;Blue/Green Refactoring with Parallel Models&amp;rdquo; to answer these questions and more. You&amp;rsquo;ll learn about techniques that have proven to work in companies like yours.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Initialization with Spring Cloud Data Flow with Mario Gray</title>
+      
+      <link>/tv/code/0016/</link>
+      <pubDate>Wed, 13 Jan 2021 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0016/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mario-gray.jpg" width="640" />]]>
+        
+        &lt;p&gt;Watch as Mario Gray takes a running app and &amp;lsquo;feeds&amp;rsquo; it using Spring Cloud Data Flow.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Springing into Kotlin: How to Make the Magic even more Magical with Mark Heckler</title>
+      
+      <link>/tv/code/0015/</link>
+      <pubDate>Wed, 06 Jan 2021 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0015/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mark-heckler.jpg" width="640" />]]>
+        
+        &lt;p&gt;Developing applications with Spring Boot is already a pretty magical experience, but could it be better? Can the magic get any more powerful than it already is? Since Spring Framework 5.0 became generally available in 2017, Kotlin has enjoyed full first class support as a language for developing Spring applications.&lt;/p&gt;
+&lt;p&gt;As such, you can use Kotlin anywhere you would use Java: migrating to it gradually or all at once, running Spring apps in production with any mix of Java &amp;amp; Kotlin code - including in the same microservice! For Java developers, Kotlin feels like a natural addition to their spell book. But as with any new endeavor, the first step is often the most difficult to take. In this talk, we’ll look at how Kotlin can be used to reduce boilerplate, increase code quality, and elevate your code wizardry.&lt;/p&gt;
+&lt;p&gt;The presenter will demonstrate how to begin incorporating Kotlin into your existing Spring applications and, once you start your journey, where it can lead. Come to this session to level up on Spring+Kotlin! (Robes optional)&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Refactoring to Event Sourcing with Jakub Pilimon</title>
+      
+      <link>/tv/code/0014/</link>
+      <pubDate>Wed, 16 Dec 2020 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0014/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/jakub-pilimon.jpg" width="640" />]]>
+        
+        &lt;p&gt;A live coding example - we will introduce events into an example seen in one of the previous episodes. With tests, without a big rewrite.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: CONTINUOUS DELIVERY! with Josh Long and Paul Czarkowski</title>
+      
+      <link>/tv/code/0013/</link>
+      <pubDate>Wed, 09 Dec 2020 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0013/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/josh-long.jpg" width="640" />]]>
+        
+        &lt;p&gt;IN A WORLD&amp;hellip;. where change is constant, one software developer&amp;hellip;. is not enough! This summer, join &lt;a href=&#34;http://twitter.com/starbuxman&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Josh Long (@starbuxman)&lt;/a&gt; and &lt;a href=&#34;http://twitter.com/pczarkowski&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Paul Czarkowski (@pczarkowski)&lt;/a&gt; as they move quickly &lt;em&gt;explosion!&lt;/em&gt; and break things * two explosions!* in *lots of explosions*: CONTINUOUS DELIVERY!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Shipping Spring Configuration with Mario Gray</title>
+      
+      <link>/tv/code/0012/</link>
+      <pubDate>Wed, 02 Dec 2020 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0012/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mario-gray.jpg" width="640" />]]>
+        
+        &lt;p&gt;this week, Mario will be investigating shipping configuration and deployments in the cloud.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Spring Boot Actuator 101 with Jakub Pilimon</title>
+      
+      <link>/tv/code/0011/</link>
+      <pubDate>Wed, 18 Nov 2020 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0011/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/jakub-pilimon.jpg" width="640" />]]>
+        
+        &lt;p&gt;Let’s go through Spring Boot Actuator that includes a number of additional features to help you monitor and manage your application like health, metrics or auditing. This is going to be mainly a live-coding session for both people who are not familiar with Spring Boot Actuator and developers who would like to see how it works under the hood.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Buildpacks for building spring boot projects with Mario Gray</title>
+      
+      <link>/tv/code/0010/</link>
+      <pubDate>Wed, 11 Nov 2020 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0010/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mario-gray.jpg" width="640" />]]>
+        
+        &lt;p&gt;This week, Mario will be exploring stacks and layers of buildpacks for your spring boot project.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Kubernetes and Spring: a Rom-Com for the Ages with Josh Long</title>
+      
+      <link>/tv/code/0009/</link>
+      <pubDate>Wed, 04 Nov 2020 12:00:00 -0800</pubDate>
+      
+      <guid>/tv/code/0009/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/josh-long.jpg" width="640" />]]>
+        
+        &lt;p&gt;Real love in the modern rom-com world means having to do some seriously outrageous things. Join Spring Developer Josh Long (@starbuxman) as he pursues production - and avoids disaster - with Spring and Kubernetes.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Spring Cloud Streams and Friends with Mark Heckler</title>
+      
+      <link>/tv/code/0008/</link>
+      <pubDate>Wed, 28 Oct 2020 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0008/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mark-heckler.jpg" width="640" />]]>
+        
+        &lt;p&gt;This week, Mark will be exploring ancillary topics for Spring Cloud Stream and various messaging platforms including Kafka and others, featuring Solace, PubSub etc.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Back to the basics: A thing about modeling and testing with Jakub Pilimon</title>
+      
+      <link>/tv/code/0007/</link>
+      <pubDate>Wed, 21 Oct 2020 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0007/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/jakub-pilimon.jpg" width="640" />]]>
+        
+        &lt;p&gt;In this live coding session we are going to see some modeling patterns based on OOP approach. We are going to back it with unit testing done right and a splash of refactoring techniques.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Test Containers are your friend, and why you should test in containers too with Mario Gray</title>
+      
+      <link>/tv/code/0006/</link>
+      <pubDate>Wed, 14 Oct 2020 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0006/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mario-gray.jpg" width="640" />]]>
+        
+        &lt;p&gt;&lt;a href=&#34;https://cassandra.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cassandra&lt;/a&gt;, &lt;a href=&#34;https://www.elastic.co/elasticsearch/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Elasticsearch&lt;/a&gt; with &lt;a href=&#34;https://spring.io/projects/spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot&lt;/a&gt; &amp;amp; &lt;a href=&#34;https://www.testcontainers.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;TestContainers&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: The Road to (Continuous) Delivery with Josh Long</title>
+      
+      <link>/tv/code/0005/</link>
+      <pubDate>Wed, 07 Oct 2020 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0005/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/josh-long.jpg" width="640" />]]>
+        
+        &lt;p&gt;A small-town Spring Developer Advocate Josh Long has big-city dreams of production, but learns he can&amp;rsquo;t truly escape where he came from - Bugsville, USA.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Testing Messaging in Spring with Jakub Pilimon</title>
+      
+      <link>/tv/code/0004/</link>
+      <pubDate>Wed, 30 Sep 2020 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0004/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/jakub-pilimon.jpg" width="640" />]]>
+        
+        &lt;p&gt;Let’s hack and try to test our message producers in various ways.&lt;/p&gt;
+&lt;p&gt;And consumers too.&lt;/p&gt;
+&lt;p&gt;Using Spock, jUnit, Mockito, Spring Cloud Stream, Spring Cloud Contract&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: A Live Coding Adventure in Interservice Comms with Mark Heckler</title>
+      
+      <link>/tv/code/0003/</link>
+      <pubDate>Wed, 23 Sep 2020 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0003/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mark-heckler.jpg" width="640" />]]>
+        
+        &lt;p&gt;As all aspects of our lives become more distributed and the world gets ever smaller - we can &amp;ldquo;Zoom&amp;rdquo; anywhere in milliseconds! - systems that support tasks large and small become more interconnected as well. Distributed systems are the future, and anyone who says otherwise is probably selling monoliths.&lt;/p&gt;
+&lt;p&gt;With the number of applications and cloud regions expanding at a dizzying rate, communication is key. In this session, the presenter leads attendees on a live-coding adventure exploring various options for your critical interservice comms. Topics covered depend on time available, but may include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;HTTP-based interactions, e.g. REST APIs using standard types&lt;/li&gt;
+&lt;li&gt;HTTP-based interactions using Reactive Streams publishers&lt;/li&gt;
+&lt;li&gt;Server Sent Events&lt;/li&gt;
+&lt;li&gt;WebSocket&lt;/li&gt;
+&lt;li&gt;RSocket&lt;/li&gt;
+&lt;li&gt;Message-based interactions using messaging platforms, e.g. RabbitMQ, Kafka&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All examples will be coded &lt;em&gt;live &amp;amp; in real-time&lt;/em&gt;. Hailing frequencies open, Captain!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Spring Dataflow Batch Jobs in Kotlin with Mario Gray</title>
+      
+      <link>/tv/code/0002/</link>
+      <pubDate>Wed, 09 Sep 2020 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0002/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/mario-gray.jpg" width="640" />]]>
+        
+        &lt;p&gt;Over the years, I have written a few real-time streaming apps, but haven’t written many Batch jobs. Join me as I explore the world of Spring Batch and find out how more Atomic, Consistent, Isolated, and Durable it is over any ordinary scheduled task or eventually consistent stream. To make things even more fun, I’ll give it a go by deploying jobs to Spring Cloud Dataflow, whilst using my favorite language of the last couple of years – Kotlin!&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Code: Orchestration for Reactive Spring with Josh Long</title>
+      
+      <link>/tv/code/0001/</link>
+      <pubDate>Wed, 26 Aug 2020 12:00:00 -0700</pubDate>
+      
+      <guid>/tv/code/0001/</guid>
+      <description>
+
+        
+          <![CDATA[<img src="/images/tv/episodes/code/josh-long.jpg" width="640" />]]>
+        
+        &lt;p&gt;Join Spring Developer Advocate Josh Long as he fleshes out the sample code for the &amp;ldquo;Orchestration&amp;rdquo; chapter in his new book &amp;ldquo;&lt;a href=&#34;http://ReactiveSpring.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Reactive Spring&lt;/a&gt;.&amp;rdquo;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,539 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Velero</title>
+    <link>/tags/velero/</link>
+    <description>Recent content in Velero on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 26 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/velero/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Backing Up, Restoring, and Migrating Resources with Velero</title>
+      
+      <link>/guides/kubernetes/what-is-velero/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/what-is-velero/</guid>
+      <description>
+
+        
+        &lt;p&gt;Velero is an open source tool for safely backing up and restoring resources in a Kubernetes cluster, performing disaster recovery, and migrating resources and persistent volumes to another Kubernetes cluster.&lt;/p&gt;
+&lt;p&gt;Velero offers key data protection features, such as scheduled backups, retention schedules, and pre- or post-backup hooks for custom actions. Velero can help protect data stored in persistent volumes and makes your entire Kubernetes cluster more resilient.&lt;/p&gt;
+&lt;h1 id=&#34;velero-use-cases&#34;&gt;Velero Use Cases&lt;/h1&gt;
+&lt;p&gt;Here are some of the things Velero can do:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Back up your cluster and restore it in case of loss.&lt;/li&gt;
+&lt;li&gt;Recover from disaster.&lt;/li&gt;
+&lt;li&gt;Copy cluster resources to other clusters.&lt;/li&gt;
+&lt;li&gt;Replicate your production environment to create development and testing environments.&lt;/li&gt;
+&lt;li&gt;Take a snapshot of your application&amp;rsquo;s state before upgrading a cluster.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;velero-components-and-architecture&#34;&gt;Velero Components and Architecture&lt;/h1&gt;
+&lt;p&gt;Velero consists of two main components:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A server that runs on your cluster&lt;/li&gt;
+&lt;li&gt;A command-line utility that runs locally&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Velero supports plug-ins to enable it to work with different storage systems and Kubernetes platforms. You can run Velero in clusters on a cloud provider or on premises.&lt;/p&gt;
+&lt;h1 id=&#34;how-velero-works&#34;&gt;How Velero Works&lt;/h1&gt;
+&lt;p&gt;Each Velero operation&amp;ndash;on-demand backup, scheduled backup, restoration&amp;ndash;is a custom resource that is defined with a Kubernetes custom resource definition, or CRD, and stored in &lt;code&gt;etcd&lt;/code&gt;. Velero includes controllers that process the CRDs to back up and restore resources. You can back up or restore all objects in your cluster, or you can filter objects by type, namespace, or label.&lt;/p&gt;
+&lt;p&gt;Data protection is a chief concern for application owners who want to make sure that they can restore a cluster to a known good state, recover from a crashed cluster, or migrate to a new environment. Velero provides those capabilities.&lt;/p&gt;
+&lt;h3 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h3&gt;
+&lt;p&gt;On the &lt;a href=&#34;https://velero.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero home page&lt;/a&gt; you can get information on the latest release and download Velero from Github.&lt;/p&gt;
+&lt;p&gt;To get started using Velero read our guide, &lt;a href=&#34;/guides/kubernetes/velero-gs&#34;&gt;Getting Started with Velero&lt;/a&gt;, and watch these videos covering two of Velero’s useful features, &lt;a href=&#34;https://kube.academy/courses/cluster-operations/lessons/backuprestore&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Backup and Restore&lt;/a&gt;, and &lt;a href=&#34;https://www.youtube.com/watch?v=q2FCxheA8VI&amp;amp;list=PL7bmigfV0EqQRysvqvqOtRNk4L5S7uqwM&amp;amp;index=5&amp;amp;t=0s&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Migration&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with Velero</title>
+      
+      <link>/guides/kubernetes/velero-gs/</link>
+      <pubDate>Fri, 29 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/velero-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;What do you do if you lose state in your cluster, or something went very wrong
+and you need to revert it or move my resources to another cluster? Are you out
+of luck?&lt;/p&gt;
+&lt;p&gt;That’s where &lt;a href=&#34;https://velero.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero&lt;/a&gt; comes in. Velero is an open source
+tool to safely backup and restore, perform disaster recovery, and migrate
+Kubernetes cluster resources and persistent volumes. This guide will show you
+how to deploy Velero to your Kubernetes cluster, create backups, and recover
+from a backup after something goes wrong in the cluster.&lt;/p&gt;
+
+&lt;div class=&#34;youtube-video-shortcode&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/VBwBR9Em_1A&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Before you get started you will need to do the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Create a Kubernetes cluster&lt;/strong&gt;: You need a Kubernetes cluster, v1.10 or
+later, with DNS and container networking enabled. This guide uses a Google
+Kubernetes Engine (GKE) Linux cluster with Kubernetes version 1.16.5 and
+Velero 1.5.3. As of the writing of this guide, Velero
+&lt;a href=&#34;https://velero.io/docs/v1.5/basic-install/#velero-on-windows&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;does not officially support Windows&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Install
+&lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;kubectl&lt;/code&gt;&lt;/a&gt; on our
+local machine&lt;/strong&gt;: You probably already have this one if you&amp;rsquo;re working with
+Kubernetes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Verify the cluster has a
+&lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/storage-classes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;storage class&lt;/a&gt;&lt;/strong&gt;:
+Check if you have a storage class with &lt;code&gt;kubectl get storageclasses&lt;/code&gt;. You need
+one to create persistent volumes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Install the &lt;code&gt;velero&lt;/code&gt; CLI&lt;/strong&gt;: There are a few
+&lt;a href=&#34;https://velero.io/docs/v1.5/basic-install/#install-the-cli&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;options&lt;/a&gt; to
+install Velero. This guide uses &lt;code&gt;brew install velero&lt;/code&gt; and &lt;code&gt;velero&lt;/code&gt; v1.5.3 .
+&lt;a href=&#34;https://velero.io/docs/v1.5/customize-installation/#enabling-shell-autocompletion&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Enabling shell autocompletion&lt;/a&gt;
+can be very helpful too.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can also look at the &lt;a href=&#34;https://velero.io/docs/v1.5/basic-install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero Basic Install documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;setup&#34;&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Now that you have your Kubernetes cluster and the Velero CLI installed, we can
+move to the next step.&lt;/p&gt;
+&lt;p&gt;First you need to &lt;strong&gt;install Velero server components&lt;/strong&gt; in your cluster. To do
+this, you need a &lt;strong&gt;storage provider&lt;/strong&gt; for Velero to store your resources and
+volumes. In this guide, since we use GKE, we will use Google Cloud Storage as
+the object store. If you&amp;rsquo;re deploying Velero in a different environment, check
+the &lt;a href=&#34;https://velero.io/docs/v1.5/supported-providers/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;providers documentation&lt;/a&gt;
+for specific setup instructions.&lt;/p&gt;
+&lt;p&gt;You can either use the &lt;code&gt;velero install&lt;/code&gt; CLI command with the required storage
+provider flags or the
+&lt;a href=&#34;https://vmware-tanzu.github.io/helm-charts/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero Helm chart&lt;/a&gt;. We will use
+the CLI in this guide.&lt;/p&gt;
+&lt;h3 id=&#34;initial-setup&#34;&gt;Initial Setup&lt;/h3&gt;
+&lt;p&gt;There are quite a few different storage provider options such as &lt;a href=&#34;https://tanzu.vmware.com/content/blog/a-deep-dive-into-the-kubernetes-vsphere-csi-driver-with-tkgi-and-tkg&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;vSphere&lt;/a&gt;, AWS,
+and GCP. This guide uses the
+&lt;a href=&#34;https://github.com/vmware-tanzu/velero-plugin-for-gcp#setup&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;setup for GCP&lt;/a&gt;.&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Note for GKE Users&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;If you run Google Kubernetes Engine (GKE), make sure that your current IAM
+user is a cluster-admin. This role is required to create RBAC objects. See
+the
+&lt;a href=&#34;https://cloud.google.com/kubernetes-engine/docs/how-to/role-based-access-control#iam-rolebinding-bootstrap&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GKE documentation&lt;/a&gt;
+for more information.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;First we need to create an object storage bucket for Velero to save backups in:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;BUCKET=&amp;lt;your-bucket-name&amp;gt;
+gsutil mb gs://$BUCKET/
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With GCP you can set Velero permissions
+&lt;a href=&#34;https://github.com/vmware-tanzu/velero-plugin-for-gcp#option-2-set-permissions-with-using-workload-identity-optional&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;using a service account&lt;/a&gt;
+or optionally
+&lt;a href=&#34;https://github.com/vmware-tanzu/velero-plugin-for-gcp#option-2-set-permissions-with-using-workload-identity-optional&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;using Workload Identity&lt;/a&gt;
+to set up Velero GCP permissions. This guide will use a service account.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Get the current GCP project:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;PROJECT_ID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;gcloud config get-value project&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$PROJECT_ID&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a service account for Velero:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gcloud iam service-accounts create velero &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --display-name &lt;span class=&#34;s2&#34;&gt;&amp;#34;Velero service account&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Tip: If you&amp;rsquo;ll be using Velero to back up multiple clusters with multiple
+GCS buckets, you may want to create a unique name per cluster instead of
+just &lt;code&gt;velero&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set &lt;code&gt;SERVICE_ACCOUNT_EMAIL&lt;/code&gt; to the email attached to your new service account:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;SERVICE_ACCOUNT_EMAIL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;gcloud iam service-accounts list &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;--filter&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;displayName:Velero service account&amp;#34;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;--format &lt;span class=&#34;s1&#34;&gt;&amp;#39;value(email)&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Attach the IAM policies Velero needs to interact with the object store bucket:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;ROLE_PERMISSIONS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=(&lt;/span&gt;
+    compute.disks.get
+    compute.disks.create
+    compute.disks.createSnapshot
+    compute.snapshots.get
+    compute.snapshots.create
+    compute.snapshots.useReadOnly
+    compute.snapshots.delete
+    compute.zones.get
+&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Create an IAM role, Velero Server, with the above role permissions&lt;/span&gt;
+gcloud iam roles create velero.server &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --project &lt;span class=&#34;nv&#34;&gt;$PROJECT_ID&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --title &lt;span class=&#34;s2&#34;&gt;&amp;#34;Velero Server&amp;#34;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --permissions &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;IFS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;${&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ROLE_PERMISSIONS&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[*]&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;
+
+gcloud projects add-iam-policy-binding &lt;span class=&#34;nv&#34;&gt;$PROJECT_ID&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --member serviceAccount:&lt;span class=&#34;nv&#34;&gt;$SERVICE_ACCOUNT_EMAIL&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --role projects/&lt;span class=&#34;nv&#34;&gt;$PROJECT_ID&lt;/span&gt;/roles/velero.server
+
+gsutil iam ch serviceAccount:&lt;span class=&#34;nv&#34;&gt;$SERVICE_ACCOUNT_EMAIL&lt;/span&gt;:objectAdmin gs://&lt;span class=&#34;si&#34;&gt;${&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;BUCKET&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a service account key. The following command will store it locally in a file called &lt;code&gt;credentials-velero&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gcloud iam service-accounts keys create credentials-velero &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --iam-account &lt;span class=&#34;nv&#34;&gt;$SERVICE_ACCOUNT_EMAIL&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;install-velero&#34;&gt;Install Velero&lt;/h3&gt;
+&lt;p&gt;OK, now it’s time to install Velero. We need to give &lt;code&gt;velero install&lt;/code&gt; the
+provider, provider plugin, storage bucket, and IAM credentials.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero install &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --provider gcp &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --plugins velero/velero-plugin-for-gcp:v1.1.0 &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --bucket &lt;span class=&#34;nv&#34;&gt;$BUCKET&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --secret-file ./credentials-velero
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It will then display the resources that are being created. If you’re interested
+in looking further, you can view Velero&amp;rsquo;s server-side components by running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n velero get all
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Velero also uses a number of CRDs (Custom Resource Definitions) to represents
+its own resources like backups, backups schedules, etc.&lt;/p&gt;
+&lt;h2 id=&#34;run-apps&#34;&gt;Run Apps&lt;/h2&gt;
+&lt;p&gt;As an example, we will deploy an instance of Ghost. Ghost is a personal blog,
+similar to WordPress. We will be using the
+&lt;a href=&#34;https://bitnami.com/stack/ghost/helm&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ghost Helm Chart&lt;/a&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a file containing configuration values for the Ghost Helm Chart. Ghost
+uses MariaDB for storage. For simplicity, we are going to hard-code in that
+file the database credentials, as well as the login credentials (so that we
+know these passwords). The &lt;code&gt;ghostPassword&lt;/code&gt; and &lt;code&gt;ghostEmail&lt;/code&gt; will be used to
+log into the admin account to create blogs.&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-warning&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Caution&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;These are sample, insecure passwords. Please don’t use these outside of
+a demo! Instead of a values YAML file, we could also use multiple &lt;code&gt;--set&lt;/code&gt;
+flags when invoking &lt;code&gt;helm install&lt;/code&gt; below.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Create a file called ghost-values.yaml in the current dir&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# And add the following variables&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# ghostPassword has a minimum of 10 characters&lt;/span&gt;
+
+cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt;EOF &amp;gt; ghost-values.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;ghostUsername: admin
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;ghostPassword: &amp;#34;0123456789&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;ghostEmail: admin@example.com
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;mariadb:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    auth:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        rootPassword: &amp;#34;root_password&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        password: &amp;#34;db_password&amp;#34;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Add the &lt;code&gt;bitnami&lt;/code&gt; repository of Helm charts.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create the &lt;code&gt;ghost&lt;/code&gt; namespace and install the Helm chart.&lt;/p&gt;
+&lt;p&gt;For Helm 3:&lt;/p&gt;
+
+
+&lt;div class=&#34;aside aside-info&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Tip for Helm 3.2.0 and later&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;As of Helm 3.2.0 you can add a &lt;code&gt;--create-namespace&lt;/code&gt; flag to the &lt;code&gt;helm&lt;/code&gt;
+command instead of using kubectl to create the namespace first.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create namespace ghost
+
+helm install ghost bitnami/ghost -n ghost &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --version 12.1.0 &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --values ./ghost-values.yaml 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see an error message telling you that you &amp;ldquo;did not provide an
+external host&amp;rdquo;; so we&amp;rsquo;re going to address that.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check if the load balancer is up and running. It should have an &lt;code&gt;EXTERNAL_IP&lt;/code&gt; listed.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# The -w flag is for watching changes. You need to do ctrl-c to exit.&lt;/span&gt;
+kubectl -n ghost get svc -w
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see a service for &lt;code&gt;ghost&lt;/code&gt; (the app)  and &lt;code&gt;ghost-mariadb&lt;/code&gt; (the database).&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl -n ghost get svc
+
+NAME            TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
+ghost           LoadBalancer   10.108.8.228   35.233.219.60   80:31603/TCP   2m2s
+ghost-mariadb   ClusterIP      10.108.8.42    &amp;lt;none&amp;gt;          3306/TCP       2m2s
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once it’s running, get the load balancer’s external IP and add it to our
+ghost-values.yaml and upgrade the Helm chart to get the deployment to start:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Set the APP_HOST to the ghost service&amp;#39;s EXTERNAL-IP. You could also copy-paste&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;APP_HOST&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;kubectl get svc --namespace ghost ghost &lt;span class=&#34;se&#34;&gt;\-&lt;/span&gt;-template &lt;span class=&#34;s2&#34;&gt;&amp;#34;{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Add ghostHost to ghost-values.yaml&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;ghostHost: &lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$APP_HOST&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; ghost-values.yaml
+&lt;span class=&#34;c1&#34;&gt;# Check the file to see it got added and isn&amp;#39;t blank&lt;/span&gt;
+cat ghost-values.yaml
+
+&lt;span class=&#34;c1&#34;&gt;# To complete the Ghost deployment, we will run upgrade with the ghostHost&lt;/span&gt;
+helm upgrade ghost bitnami/ghost -n ghost &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --version 12.1.0 &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;    --values ./ghost-values.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Helm will show us our blog URL, and the admin URL that we will use in a
+minute to create some content. The IP address is the &lt;code&gt;EXTERNAL_IP&lt;/code&gt; of the
+load balancer.&lt;/p&gt;
+&lt;p&gt;So right now you should be seeing these resources. Your IP addresses will be
+different; and if the pods are not both &lt;code&gt;Running&lt;/code&gt; and &lt;code&gt;READY&lt;/code&gt; yet, give them
+a minute to come up.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n ghost get all
+
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/ghost-86b56c9d44-gk2f8   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          44m
+pod/ghost-mariadb-0          1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          50m
+
+NAME                    TYPE           CLUSTER-IP     EXTERNAL-IP     PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;        AGE
+service/ghost           LoadBalancer   10.108.8.228   35.233.219.60   80:31603/TCP   50m
+service/ghost-mariadb   ClusterIP      10.108.8.42    &amp;lt;none&amp;gt;          3306/TCP       50m
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/ghost   1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           44m
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/ghost-86b56c9d44   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       44m
+
+NAME                             READY   AGE
+statefulset.apps/ghost-mariadb   1/1     50m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now open your &lt;code&gt;Admin URL&lt;/code&gt; in a web browser. If it doesn&amp;rsquo;t load, double-check
+that the pods shown in the previous section show up as &lt;code&gt;1/1&lt;/code&gt; in the &lt;code&gt;READY&lt;/code&gt;
+column. Sign in the admin interface with the email and password that we
+entered earlier in the values file. You should now see the following screen,
+which will let us create a blog:
+&lt;img src=&#34;/images/guides/kubernetes/velero-gs/1-welcome-to-ghost.png&#34; alt=&#34;Ghost Admin Page&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Click on the &lt;code&gt;+&lt;/code&gt; next to Posts to create your first post. Enter a title and
+some content, then click Publish in the top right.
+&lt;img src=&#34;/images/guides/kubernetes/velero-gs/2-ghost-create-post.png&#34; alt=&#34;Ghost Publish Page&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The home page should now look like this:
+&lt;img src=&#34;/images/guides/kubernetes/velero-gs/3-ghost-home-page.png&#34; alt=&#34;Ghost Page With Post&#34;  /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;backup&#34;&gt;Backup&lt;/h2&gt;
+&lt;p&gt;Now, let’s look into backups in case something happens to the blog. Backups are
+for Kubernetes resources and persistent volumes. You can back up your entire
+cluster, or optionally choose a namespace or label selector to back up.&lt;/p&gt;
+&lt;p&gt;They can be run one off or scheduled. It’s a good idea to have scheduled backups
+so you are certain you have a recent backup to easily fall back to. You can also
+create &lt;a href=&#34;https://velero.io/docs/v1.5/backup-hooks/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;backup hooks&lt;/a&gt; if you want to
+execute actions before or after a backup is made.&lt;/p&gt;
+&lt;p&gt;By default, the backup retention is 30 days, but you can change it with the &lt;code&gt;--ttl&lt;/code&gt; flag.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;[Optional] To see what all you can do with backups run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero backup -h
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Let’s start with the most basic option: creating a one off backup. It’s a
+good idea to give it a meaningful name so you remember what it was for unlike
+what is done here.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;BACKUP&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;gastly
+velero backup create &lt;span class=&#34;nv&#34;&gt;$BACKUP&lt;/span&gt; --include-namespaces ghost
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we wanted to do a backup with all namespaces we can remove the
+&lt;code&gt;--include-namespaces&lt;/code&gt; flag. And to include all namespaces except specific
+ones we could use &lt;code&gt;--exclude-namespaces&lt;/code&gt; with the namespace(s) we don&amp;rsquo;t
+want.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Let’s create a backup from a schedule.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;SCHEDULE&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;minute
+velero schedule create &lt;span class=&#34;nv&#34;&gt;$SCHEDULE&lt;/span&gt; --schedule&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;@every 1m&amp;#34;&lt;/span&gt; --include-namespaces ghost
+&lt;span class=&#34;c1&#34;&gt;# You could also use schedule=&amp;#34;*/1 * * * *&amp;#34;&lt;/span&gt;
+
+velero backup create minute --from-schedule &lt;span class=&#34;nv&#34;&gt;$SCHEDULE&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;See all of the backups created:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero backup get
+
+NAME                    STATUS            ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
+gastly                  Completed         &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;        &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          2021-01-28 00:19:44 -0800 PST   29d       default            &amp;lt;none&amp;gt;
+minute-20210128081949   Completed         &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;        &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          2021-01-28 00:19:49 -0800 PST   29d       default            &amp;lt;none&amp;gt;
+minute-20210128081849   Completed         &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;        &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          2021-01-28 00:18:49 -0800 PST   29d       default            &amp;lt;none&amp;gt;
+…
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[Optional] For both curiosity and debugging, it’s useful to do a &lt;code&gt;describe&lt;/code&gt;
+and &lt;code&gt;logs&lt;/code&gt; on your backups:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero backup describe &lt;span class=&#34;nv&#34;&gt;$BACKUP&lt;/span&gt;
+
+velero backup logs &lt;span class=&#34;nv&#34;&gt;$BACKUP&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;wreak-havoc&#34;&gt;🔥Wreak Havoc🔥&lt;/h2&gt;
+&lt;p&gt;Now that we have a happy cluster state and that most excellent blog you
+created&amp;hellip;let’s nuke Ghost.&lt;/p&gt;
+&lt;p&gt;Let’s say that &lt;em&gt;&lt;strong&gt;someone&lt;/strong&gt;&lt;/em&gt; (you) “accidentally” (definitely intentionally)
+deleted the Ghost Helm chart and the persistent volume claim (PVC) by running
+the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm delete --namespace ghost ghost
+kubectl -n ghost delete pvc data-ghost-mariadb-0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Try to connect to Ghost again. Shoot&amp;hellip; Now the blog site is down and so is that
+&lt;em&gt;&lt;strong&gt;super important&lt;/strong&gt;&lt;/em&gt; blog post you just made. What now?&lt;/p&gt;
+&lt;h2 id=&#34;restore&#34;&gt;Restore&lt;/h2&gt;
+&lt;p&gt;Well, it’s a good thing you have backups! Now it&amp;rsquo;s time to look into restoring
+from a backup.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;To see what all you can do with restore run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero restore -h
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Let’s now wait for all of the resources to be gone. First check the output of
+&lt;code&gt;get all&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n ghost get all
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And the Ghost and MariaDB persistent volumes claims (PVCs) as well:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get pvc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note: It might take a minute until everything is properly deleted; so you
+may run these commands above until they give you a (somewhat ominous)
+&lt;code&gt;No resources found&lt;/code&gt; output.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now to perform a restore:&lt;/p&gt;
+&lt;p&gt;To take a look at what backups you have you can run the following again:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero backup get
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To restore from the specific backup we created first:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero restore create --include-namespaces ghost --from-backup &lt;span class=&#34;nv&#34;&gt;$BACKUP&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;So the big questions are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Did all the resources come back up and therefore the Ghost site?&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Is the &lt;em&gt;super important&lt;/em&gt; blog back, or only the default blogs?&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Let’s find out. First let’s check to see if our resources are back and
+running.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n ghost get all
+
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/ghost-86b56c9d44-gk2f8   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          2m13s
+pod/ghost-mariadb-0          1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          2m13s
+
+NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP      PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;        AGE
+service/ghost           LoadBalancer   10.108.14.225   34.105.103.109   80:30353/TCP   2m12s
+service/ghost-mariadb   ClusterIP      10.108.5.14     &amp;lt;none&amp;gt;           3306/TCP       2m12s
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/ghost   1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           2m12s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/ghost-86b56c9d44   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       2m12s
+
+NAME                             READY   AGE
+statefulset.apps/ghost-mariadb   1/1     2m12s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Again, wait until all the pods above are &lt;code&gt;Running&lt;/code&gt; with counts of &lt;code&gt;1/1&lt;/code&gt; pods
+in &lt;code&gt;READY&lt;/code&gt; state.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now get the &lt;code&gt;EXTERNAL_IP&lt;/code&gt; from your service:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get svc --namespace ghost ghost --template &lt;span class=&#34;s2&#34;&gt;&amp;#34;{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&#34;aside aside-warning&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Double check your IP&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;Note: Your IP address may have changed from earlier. For the depth of this
+specific demo it doesn&amp;rsquo;t cause problems. However, to ensure all links work
+properly, update the &lt;code&gt;ghostHost&lt;/code&gt; in &lt;code&gt;ghost-values.yaml&lt;/code&gt; and run the
+&lt;a href=&#34;#run-apps&#34;&gt;previous &lt;code&gt;helm upgrade&lt;/code&gt;&lt;/a&gt; command again. If we were using
+&lt;a href=&#34;https://github.com/kubernetes-sigs/external-dns&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;external-dns&lt;/code&gt;&lt;/a&gt; and
+hostnames, it would automatically resolve itself.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now head to you the IP address in your browser and your blog should be up
+with the post you wrote!&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[Optional] For both curiosity and debugging, it’s useful to do a &lt;code&gt;describe&lt;/code&gt;
+and &lt;code&gt;logs&lt;/code&gt; on your restores:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;velero restore describe &amp;lt;restore-name&amp;gt;
+
+velero restore logs &amp;lt;restore-name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;As of Velero 1.5 &lt;a href=&#34;https://velero.io/docs/v1.5/restore-hooks/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Restore Hooks&lt;/a&gt; are
+also available.&lt;/p&gt;
+&lt;p&gt;For cluster migration (restoring from one cluster’s backup into another cluster)
+you can follow the
+&lt;a href=&#34;https://velero.io/docs/v1.5/migration-case/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cluster migration documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;cleanup&#34;&gt;Cleanup&lt;/h2&gt;
+&lt;p&gt;To delete the app resources, you can use &lt;code&gt;helm uninstall&lt;/code&gt; and then delete the
+namespace:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm uninstall --namespace ghost ghost
+kubectl delete ns ghost
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you would like to remove Velero from your cluster, you can use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl delete namespace/velero clusterrolebinding/velero
+kubectl delete crds -l &lt;span class=&#34;nv&#34;&gt;component&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;velero
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, if you&amp;rsquo;d like to remove the GCP resources that we created earlier:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Remove the velero service account&lt;/span&gt;
+gcloud iam service-accounts delete &lt;span class=&#34;nv&#34;&gt;$SERVICE_ACCOUNT_EMAIL&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Delete the velero role&lt;/span&gt;
+gcloud iam roles delete velero.server --project &lt;span class=&#34;nv&#34;&gt;$PROJECT_ID&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# We don&amp;#39;t need to delete the key or the policy binding, as they get removed automatically.&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# Finally, remove the storage bucket.&lt;/span&gt;
+gsutil -m rm -r gs://&lt;span class=&#34;nv&#34;&gt;$BUCKET&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;learn-more&#34;&gt;Learn More&lt;/h2&gt;
+&lt;p&gt;Hopefully you found this guide helpful. Here are some other resources to help
+you learn more.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://velero.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://velero.io/docs/latest/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/vmware-tanzu/velero&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://velero.io/blog/Velero-is-an-Open-Source-Tool-to-Back-up-and-Migrate-Kubernetes-Clusters/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Introduction to Velero Blog&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://velero.io/docs/v1.5/contributions/minio/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Quick start evaluation install with Minio&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

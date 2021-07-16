@@ -1,0 +1,867 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – </title>
+    <link>/team/tony-vetter/</link>
+    <description>Recent content on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/team/tony-vetter/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Installing Harbor on Kubernetes with Project Contour, Cert Manager, and Let’s Encrypt</title>
+      
+      <link>/guides/kubernetes/harbor-gs/</link>
+      <pubDate>Mon, 02 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/harbor-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;Running a private container image registry has been a staple in many enterprise
+environments for years. These registries allow full control over access,
+updates, and the software platform itself. And while your organization may have
+an official image registry, having your own can also be a benefit!&lt;/p&gt;
+&lt;p&gt;Maybe it&amp;rsquo;s just for learning. Or maybe you like the idea of self-hosting your
+own services. Or maybe, like so many companies that have also made the decision
+to self-host, you are concerned about security and access. Whatever the reason,
+you have made the decision to deploy your own. But this process includes a lot
+more than just an initial install.&lt;/p&gt;
+&lt;p&gt;A container image registry needs to be accessible to many online services to be
+useful, not the least of which is your desktop. It’s what makes pulling and
+pushing images possible. And you probably want it to be accessible from outside
+your own network, too, so that you can collaborate and share your projects.
+These days, to be secure, this requires TLS encryption to enable HTTPS traffic.&lt;/p&gt;
+&lt;p&gt;In this guide, you will deploy Harbor to Kubernetes as the actual image registry
+application. You will also use Project Contour to manage ingress to your
+Kubernetes cluster.&lt;/p&gt;
+
+&lt;div class=&#34;youtube-video-shortcode&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/SXSqrgYKO4s&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;harbor-and-contour&#34;&gt;Harbor and Contour&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://goharbor.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Harbor&lt;/a&gt; is a powerful registry for containers and Helm
+charts. It is fully open source and backed by the
+&lt;a href=&#34;https://landscape.cncf.io/selected=harbor&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Native Computing Foundation (CNCF)&lt;/a&gt;.
+But getting it up and running, with automated TLS certificate renewal in
+particular, can be a challenge—especially with the multiple services Harbor uses
+that require east-west and north-south network communication.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://projectcontour.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Contour&lt;/a&gt;, also a CNCF project, is an ingress
+controller built for Kubernetes. It functions as a control plane for Envoy while
+also offering advanced routing functionality beyond the default ingress
+controller provided by Kubernetes.&lt;/p&gt;
+&lt;p&gt;You will deploy Harbor and Contour, and use
+&lt;a href=&#34;https://cert-manager.io/docs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cert-manager&lt;/a&gt; and
+&lt;a href=&#34;https://letsencrypt.org&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt; to automate TLS certificate generation
+and renewal for your Harbor installation. This will allow you to keep your
+Harbor installation up and running and utilizing HTTPS without manually
+generating and applying new certificates.&lt;/p&gt;
+&lt;p&gt;Also, using the patterns in this guide, you should be able to deploy other
+services to Kubernetes and secure their ingress as well. And once you understand
+the basics of certificate management, ingress, and routing services, you’ll be
+able to keep on deploying other services to Kubernetes and enabling secure
+access over the internet!&lt;/p&gt;
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Before you get started, you’ll need to do the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Install Helm 3&lt;/strong&gt;: Helm is used in this guide to install Contour and Harbor.
+A guide for installing Helm can be found
+&lt;a href=&#34;https://helm.sh/docs/intro/install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Create a Kubernetes cluster&lt;/strong&gt;: This guide was built using Google Kubernetes
+Engine (GKE) with Kubernetes version 1.17. Any Kubernetes cluster with access
+to the internet should work fine, but your results may vary depending on the
+version you use. Initial testing with 1.16 resulted in errors during the
+Harbor install. For a guide on creating a GKE cluster, see
+&lt;a href=&#34;https://cloud.google.com/kubernetes-engine/docs/quickstart&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this page&lt;/a&gt; from
+Google. Ensure your
+&lt;a href=&#34;https://kubernetes.io/docs/reference/kubectl/cheatsheet/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&lt;code&gt;kubectl&lt;/code&gt; context&lt;/a&gt;
+is using this cluster.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Install watch&lt;/strong&gt;: watch is a small command-line utility that continually
+shows the output of a command being run. This allows you to monitor
+&lt;code&gt;kubectl get pods&lt;/code&gt;, for example, without explicitly re-running the command
+multiple times. Instructions for installing on macOS are
+&lt;a href=&#34;https://osxdaily.com/2010/08/22/install-watch-command-on-os-x/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;About 30 minutes&lt;/strong&gt;: It could take more time than that; it will depend on how
+long the Let’s Encrypt servers take to issue certificates. But in most of my
+testing for writing this post, it took about 30 minutes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Optional - buy a domain name&lt;/em&gt;: You can use &lt;code&gt;.xip.io&lt;/code&gt; (a
+&lt;a href=&#34;http://xip.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;service&lt;/a&gt; that provides dynamic DNS based on IP address)
+addresses to avoid needing to buy a domain. Otherwise you will need a domain
+name that you control in order to configure DNS. This guide uses a
+Google-managed domain and DNS zone, but instructions can be modified for other
+providers. Note: if you do decide to use &lt;code&gt;.xip.io&lt;/code&gt;, you may experience issues
+using the &lt;code&gt;letsencrypt-prod&lt;/code&gt; ClusterIssuer later in the demo due to rate
+limiting. Often you can just wait a few hours and it&amp;rsquo;ll eventually work. For
+best results, we recommend using your own domain.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;prepare-the-environment&#34;&gt;Prepare the Environment&lt;/h2&gt;
+&lt;p&gt;Create a Kubernetes cluster.  In GKE this can be as simple as running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gcloud container clusters create jan8 --num-nodes &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Being organized is key to any successful project. So before you dig in, create a
+new project directory and &lt;code&gt;cd&lt;/code&gt; into it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir harbor-install &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$_&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;install-project-contour&#34;&gt;Install Project Contour&lt;/h2&gt;
+&lt;p&gt;While you are going to use Helm to install Project Contour, Helm will not create
+the namespace for you. So the first step in this installation is to create that
+namespace.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ kubectl create namespace projectcontour
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you do not have the Bitnami repo referenced in Helm yet (you can check by
+running &lt;code&gt;helm repo list&lt;/code&gt;), you will need to install it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You will also need to update your Helm repositories.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helm repo update
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Next, run &lt;code&gt;helm install&lt;/code&gt; to finish the installation. Here you will install
+Bitnami&amp;rsquo;s image for Contour. This chart includes defaults that will work out of
+the box for this guide. And since it comes from Bitnami, you can trust that the
+image has been thoroughly tested and scanned.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helm install ingress bitnami/contour -n projectcontour --version 3.3.1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now simply wait for the Pods to become &lt;code&gt;READY&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;watch kubectl get pods -n projectcontour
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then define some environment variables for your proposed Harbor domain and your
+email address. It is recommended that you use a subdomain under the domain
+procured in the prerequisites section (e.g., harbor.example.com). This way you
+can use other subdomain URLs to access other services you may deploy in the
+future. The email address will be used for your Let&amp;rsquo;s Encrypt certificate so the
+cert authority can notify you about expirations.&lt;/p&gt;
+&lt;p&gt;Defining these variables will make the rest of the commands in this guide more
+simple to run. The email address and the domain do not have to use the same
+domain (a Gmail address is fine).&lt;/p&gt;
+&lt;p&gt;If you do not have a custom domain run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;IP&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;kubectl describe svc ingress-contour-envoy --namespace projectcontour &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep Ingress &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $3}&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;DOMAIN&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$IP&lt;/span&gt;.xip.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Otherwise run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;DOMAIN&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;your.domain.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Set your email address for cert-manager:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;EMAIL_ADDRESS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;username@example.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;set-up-dns&#34;&gt;Set Up DNS&lt;/h2&gt;
+
+
+&lt;div class=&#34;aside aside-warning&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;You may skip this section&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;This section is not applicable for those using &lt;code&gt;xip.io&lt;/code&gt;.
+If that&amp;rsquo;s you, please skip this entire section.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In this section, things can vary a bit. Because this guide was written using
+Google Cloud Platform (GCP) tooling, the instructions below will reflect that.
+But should you be using another provider, I will try to provide a generalized
+description of what is being done so you can look up those specific steps. I
+have also numbered these steps for clarity.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;In order to set up DNS records, you need the IP address of the Envoy ingress
+router installed by Project Contour. Use the following command to describe
+the service. If the &lt;code&gt;EXTERNAL-IP&lt;/code&gt; is still in a &lt;code&gt;&amp;lt;pending&amp;gt;&lt;/code&gt; state, just wait
+until one is assigned. Record this value for a future step.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;watch kubectl get service ingress-contour-envoy -n projectcontour -o wide
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Now set up a DNS zone within your cloud provider.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;For GCP, this can be found in the GCP web UI, under Networking Services,
+Cloud DNS. Click &lt;code&gt;Create Zone&lt;/code&gt; and follow the instructions to give the zone
+a descriptive name, as well as provide the DNS name. The DNS name will be
+whatever domain you have registered (e.g., &lt;code&gt;example.com&lt;/code&gt;).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For AWS, this is done via a service called
+&lt;a href=&#34;https://aws.amazon.com/route53/faqs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Route 53&lt;/a&gt;, and for Azure,
+&lt;a href=&#34;https://docs.microsoft.com/en-us/azure/dns/dns-getstarted-portal_&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;this is done&lt;/a&gt;
+by creating a resource in the Azure Portal.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once completed, the important part is that you now have a list of name
+servers. For example, one or more of the format
+&lt;code&gt;ns-cloud-x1.googledomains.com.&lt;/code&gt; Record these for a future step.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;Next, add an A record to your DNS zone for a wildcard (&lt;code&gt;*&lt;/code&gt;) subdomain. An A
+record is an &amp;ldquo;Address&amp;rdquo; record, one of the most fundamental types of DNS
+records; it maps the more user-friendly URL (harbor.example.com) to an IP
+address. Setting this up as a wildcard will allow you to configure any
+traffic coming into any subdomain to first be resolved by Project Contour and
+Envoy, then be routed to its final destination based on the specific
+subdomain requested.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;For GCP, click into the DNS zone you just created and select &lt;code&gt;Add Record Set&lt;/code&gt;.
+From here, add a &lt;code&gt;*&lt;/code&gt; as the DNS name field so the full DNS name reads
+&lt;code&gt;*.example.com&lt;/code&gt;. In the IPv4 address field, enter the &lt;code&gt;EXTERNAL_IP&lt;/code&gt; of the
+Envoy service recorded earlier in Step 1. Then click create.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For AWS and Azure, this is done via the respective services listed in the previous step.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once completed, your DNS zone should have an A record set up for any subdomain
+(&lt;code&gt;*&lt;/code&gt;) to be mapped to the IP address of the Envoy service running in
+Kubernetes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;For the last of the somewhat confusing UI-based steps, you need to add the
+list of name servers from Step 2 to your personal domain. This will allow any
+HTTP/HTTPS requests for your domain to reference the records you set up
+previously in your DNS zone.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;For Google-managed domains, in the Google Domains UI, click &lt;code&gt;manage&lt;/code&gt; next to
+the domain you want to modify. Then click on &lt;code&gt;DNS&lt;/code&gt;. In the Name Servers
+section at the top, click &lt;code&gt;edit&lt;/code&gt;. Now, one at a time, simply paste in the list
+of name servers recorded in Step 2. There should be four name server
+addresses. Then click &lt;code&gt;Save&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For other domain name registrars, the process is similar. Contact your
+registrar if you require further assistance with this process.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;That&amp;rsquo;s it for configuring DNS. Now you need to wait for all the new records to
+propagate. Run the following command and wait for the output to show that your
+domain is now referencing the IP address of the Envoy service. This could take a
+few minutes.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;watch host &lt;span class=&#34;nv&#34;&gt;$DOMAIN&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;install-cert-manager&#34;&gt;Install cert-manager&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://cert-manager.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cert-manager&lt;/a&gt; will automate certificate renewal for
+your services behind Project Contour. When a certificate is set to expire,
+cert-manager will automatically request a new one from the certificate issuer
+(you will set this up in the next section). This is especially important when
+using a project like Let&amp;rsquo;s Encrypt, whose certificates are only valid for 90
+days.&lt;/p&gt;
+&lt;p&gt;To install cert-manager, this guide uses Helm, for uniformity. As with
+installing Project Contour, Helm will not create a namespace, so the first step
+is to create one.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create namespace cert-manager
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you do not have the Jetstack repo referenced in Helm yet (you can check by
+running &lt;code&gt;helm repo list&lt;/code&gt;), you will need to install that reference.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo add jetstack https://charts.jetstack.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once again, update your Helm repositories.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm repo update
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, run &lt;code&gt;helm install&lt;/code&gt; to install cert-manager.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install cert-manager jetstack/cert-manager --namespace cert-manager &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;   --version v1.0.2 --set &lt;span class=&#34;nv&#34;&gt;installCRDs&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, wait for the Pods to become &lt;code&gt;READY&lt;/code&gt; before moving on to the next step.
+This should only take a minute or so.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;watch kubectl get pods -n cert-manager
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;set-up-lets-encrypt-staging-certificates&#34;&gt;Set up Let&amp;rsquo;s Encrypt Staging Certificates&lt;/h2&gt;
+&lt;p&gt;When initially setting up your Harbor service, or any service that will be using
+Let&amp;rsquo;s Encrypt, it is important to start by using certificates from their staging
+server as opposed to the production server. Staging certificates allow you to
+test your service without the risk of running up against any API rate limiting,
+which Let’s Encrypt imposes on its production environment. This is not a
+requirement, however; production certificates can be used initially. But using
+the staging ones is a good habit to get into, and will highlight how these
+certificates are applied.&lt;/p&gt;
+&lt;p&gt;Create the deployment YAML for the staging certificate by pasting the block
+below into a new file. Once applied, this will set up the staging cert
+configuration along with your email address, for certificate expirations
+notifications. You won&amp;rsquo;t need to worry about these emails, however, as
+cert-manager will take care of the renewal for you.&lt;/p&gt;
+&lt;p&gt;Notice that this is of &lt;code&gt;kind: ClusterIssuer&lt;/code&gt;. That means this certificate issuer
+is scoped to all namespaces in this Kubernetes cluster. For more granular
+controls in production, you may decide to simply change this to &lt;code&gt;kind: Issuer&lt;/code&gt;,
+which will be scoped to a specific namespace and only allow services in that
+namespace to request certificates from that issuer. But be aware that this will
+necessitate changing other configuration options throughout this guide. We are
+using &lt;code&gt;ClusterIssuer&lt;/code&gt; because it is secure enough for our use case, and
+presumably you are not using a multi-tenant Kubernetes cluster when following
+this guide.&lt;/p&gt;
+&lt;p&gt;Finally, this sets up a “challenge record&amp;quot; in the &lt;code&gt;solvers&lt;/code&gt; section, which
+allows Let&amp;rsquo;s Encrypt to verify that the certificate it is issuing is really
+controlled by you.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; letsencrypt-staging.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;apiVersion: cert-manager.io/v1alpha2
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;kind: ClusterIssuer
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;metadata:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  name: letsencrypt-staging
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;spec:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  acme:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    email: $EMAIL_ADDRESS
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    privateKeySecretRef:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      name: letsencrypt-staging
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    server: https://acme-staging-v02.api.letsencrypt.org/directory
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    solvers:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    - http01:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        ingress:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          class: contour
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now &lt;code&gt;apply&lt;/code&gt; the file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f letsencrypt-staging.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The process of creating the cluster issuer should be fairly quick, but you can
+confirm it completed successfully by running the following and ensuring the
+cluster issuer was issued.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl get clusterissuers.cert-manager.io
+NAME                  READY   AGE
+letsencrypt-staging   True    74s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;install-harbor&#34;&gt;Install Harbor&lt;/h2&gt;
+&lt;p&gt;Now that you have your staging certificate, you can install Harbor, for which
+this guide uses Helm in combination with the Bitnami repo set up earlier. As
+with your other install steps, the first thing to do is create the namespace.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create namespace harbor
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Next, create the values file. The Bitnami Helm chart includes defaults that, for
+the most part, will work for your needs. However, there are a few configuration
+options that need to be set.&lt;/p&gt;
+&lt;p&gt;Here you will notice that you are giving the TLS secret in Kubernetes a name,
+&lt;code&gt;harbor-tls-staging&lt;/code&gt;. You can choose any name you like, but it should be
+descriptive and reflect that this secret will be distinct from the production
+certificate you will apply later.&lt;/p&gt;
+&lt;p&gt;You are also setting up references to your domain so Harbor and Contour can set
+up routing. The Annotations section is important as it tells Harbor about our
+configuration. Notice that for
+&lt;code&gt;cert-manager.io/cluster-issuer: letsencrypt-staging&lt;/code&gt; you are telling Harbor to
+use the &lt;code&gt;ClusterIssuer&lt;/code&gt; called letsencrypt-staging, the one you set up earlier.
+This will come up again later when you move to production certificates. Comments
+are provided in the file for further detail.&lt;/p&gt;
+&lt;p&gt;Finally, this values file will disable the Harbor Notary service. At the time of
+this writing there is a bug in the Bitnami Helm chart (already reported) that
+doesn&amp;rsquo;t allow a TLS certificate to be applied for both &lt;code&gt;notary.$DOMAIN&lt;/code&gt; and
+&lt;code&gt;registry.$DOMAIN&lt;/code&gt;. I will try to update this post once that bug is fixed.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; harbor-values.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;harborAdminPassword: Password12345
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;service:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  type: ClusterIP
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  tls:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    enabled: true
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    existingSecret: harbor-tls-staging
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    notaryExistingSecret: notary-tls-staging
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;ingress:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  enabled: true
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  hosts:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    core: registry.$DOMAIN
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    notary: notary.$DOMAIN
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  annotations:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    cert-manager.io/cluster-issuer: letsencrypt-staging  # use letsencrypt-staging as the cluster issuer for TLS certs
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    ingress.kubernetes.io/force-ssl-redirect: &amp;#34;true&amp;#34;     # force https, even if http is requested
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    kubernetes.io/ingress.class: contour                 # using Contour for ingress
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    kubernetes.io/tls-acme: &amp;#34;true&amp;#34;                       # using ACME certificates for TLS
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;externalURL: https://registry.$DOMAIN
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;portal:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  tls:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    existingSecret: harbor-tls-staging
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now install Harbor using this values file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm install harbor bitnami/harbor -f harbor-values.yaml -n harbor --version 9.4.4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And wait for the Pods to become &lt;code&gt;&amp;lt;READY&amp;gt;&lt;/code&gt;. This may take a minute or two.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;watch kubectl get pods -n harbor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, ensure that the certificates were requested and returned successfully.
+This should happen fairly quickly, but may take up to an hour. It all depends on
+the server load at that time.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ kubectl -n harbor get certificate
+NAME                 READY   SECRET               AGE
+harbor-tls-staging   True    harbor-tls-staging   2m26s
+notary-tls-staging   True    notary-tls-staging   2m26s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Print out the URL, username, and password:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;url: https://registry.$DOMAIN
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;username: admin
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;password: $(kubectl get secret --namespace harbor harbor-core-envvars -o jsonpath=&amp;#34;{.data.HARBOR_ADMIN_PASSWORD}&amp;#34; | base64 --decode)
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now open your browser of choice and go to your URL. You will notice that you
+will need to accept the security warning that the site is &amp;ldquo;untrusted.&amp;rdquo; This is
+because you are still using the staging certificates, which are not signed by a
+trusted certificate authority (CA).&lt;/p&gt;
+&lt;p&gt;Once you ensure that you can log in and that Harbor is working as intended, you
+can move to production certificates.&lt;/p&gt;
+&lt;h2 id=&#34;set-up-lets-encrypt-production-certificates&#34;&gt;Set Up Let&amp;rsquo;s Encrypt Production Certificates&lt;/h2&gt;
+
+
+&lt;div class=&#34;aside aside-warning&#34;&gt;
+    &lt;div class=&#34;aside aside-title&#34;&gt;
+        &lt;i class=&#34;fas fa-exclamation-circle&#34;&gt;&lt;/i&gt;
+        &lt;div&gt;Rate Limits&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;aside aside-content&#34;&gt;
+    &lt;p&gt;Reminder, if using &lt;code&gt;.xip.io&lt;/code&gt; you may encounter rate limit issues with Lets
+Encrypt causing major delays in the certificate issuance.&lt;/p&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Similar to how you set up the Let&amp;rsquo;s Encrypt staging certificate, you now need to
+create the &lt;code&gt;ClusterIssuer&lt;/code&gt; for production certificates. First, &lt;code&gt;echo&lt;/code&gt; the
+following to create the file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; letsencrypt-prod.yaml
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;apiVersion: cert-manager.io/v1alpha2
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;kind: ClusterIssuer
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;metadata:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  name: letsencrypt-prod
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;spec:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;  acme:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    email: $EMAIL_ADDRESS
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    privateKeySecretRef:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;      name: letsencrypt-prod
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    server: https://acme-v02.api.letsencrypt.org/directory
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    solvers:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;    - http01:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;        ingress:
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;          class: contour
+&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then apply it to your Kubernetes cluster.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f letsencrypt-prod.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Again, you can confirm this process completed successfully by running the
+following and ensuring the cluster issuer was issued.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get clusterissuers
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Recall how earlier in the annotations of the Harbor &lt;code&gt;values.yml&lt;/code&gt; file you told
+Harbor to use the &lt;code&gt;letsencrypt-staging&lt;/code&gt; cluster issuer, as well as the secret
+&lt;code&gt;harbor-tls-staging&lt;/code&gt;. You must now tell Harbor to use the production cluster
+issuer you just created, and trigger it to create a new secret based on that
+certificate. To do this, you are going to update the &lt;code&gt;harbor-values.yaml&lt;/code&gt; file
+using &lt;code&gt;sed&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sed -i &#39;s/-staging/-prod/&#39; harbor-values.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Run &lt;code&gt;helm delete&lt;/code&gt; then &lt;code&gt;helm install&lt;/code&gt; to uninstall and reinstall Harbor:&lt;/p&gt;
+&lt;p&gt;Note: The persistent volumes are not deleted during the &lt;code&gt;helm delete&lt;/code&gt; so any
+changes in Harbor you may have made should persist.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;helm delete -n harbor harbor
+helm install harbor bitnami/harbor -f harbor-values.yaml -n harbor --version 9.4.4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wait for the new Pods to become &lt;code&gt;&amp;lt;READY&amp;gt;&lt;/code&gt;. This may take a minute or two.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;watch kubectl get pods -n harbor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This process may take as little as a minute or as long as an hour. It just
+depends on the server load at that time. But in most of my testing, it took less
+than 10 minutes.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;watch kubectl get certificate harbor-tls-prod -n harbor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the certificates are generated successfully, your Harbor instance should be
+up and running with valid and trusted TLS certificates. Try logging into Harbor
+again.&lt;/p&gt;
+&lt;p&gt;Your browser should no longer present a warning, as the certificate you are now
+using is signed by a trusted CA.&lt;/p&gt;
+&lt;p&gt;Note: If you still see certificate warnings, you may need to re-open it from a
+fresh browser.&lt;/p&gt;
+&lt;h2 id=&#34;test-harbor&#34;&gt;Test Harbor&lt;/h2&gt;
+&lt;p&gt;Run &lt;code&gt;docker login&lt;/code&gt; to log into your new registry:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker login https://registry.&lt;span class=&#34;nv&#34;&gt;$DOMAIN&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Push an image to the new registry:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker pull nginx:latest
+docker tag nginx:latest registry.&lt;span class=&#34;nv&#34;&gt;$DOMAIN&lt;/span&gt;/library/nginx:latest
+docker push registry.&lt;span class=&#34;nv&#34;&gt;$DOMAIN&lt;/span&gt;/library/nginx:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Test that Kubernetes can access the new image:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create deployment nginx --image&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;registry.&lt;span class=&#34;nv&#34;&gt;$DOMAIN&lt;/span&gt;/library/nginx:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wait a few moments and check that the Pod is running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ NAME                         READY   STATUS    RESTARTS   AGE
+pod/nginx-7cdffc88cf-p8v9r   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          5s
+
+NAME                 TYPE        CLUSTER-IP     EXTERNAL-IP   PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;   AGE
+service/kubernetes   ClusterIP   10.123.240.1   &amp;lt;none&amp;gt;        443/TCP   166m
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginx   1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           5s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginx-7cdffc88cf   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       5s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;That&amp;rsquo;s it! You now have a service running in Kubernetes with TLS encryption
+enforced and certificate generation automated. And by using these patterns, you
+should be able to install and configure other services as well. Specific steps,
+especially around the configuration of the service itself, will be different,
+but after using this guide you should have a leg up in getting started.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Blog: KubeCon Europe 2021</title>
+      
+      <link>/blog/kubecon-europe-2021/</link>
+      <pubDate>Fri, 30 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/kubecon-europe-2021/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;greetings-kubecon--cnc-europe-attendees&#34;&gt;Greetings KubeCon + CNC Europe Attendees!&lt;/h2&gt;
+&lt;p&gt;We hope you are enjoying your time at KubeCon and CloudNativeCon! Hopefully, you have seen VMware&amp;rsquo;s keynote presentation around just a hand full of the open source projects VMware is involved in. Well, if you are interested in learning more about those projects, and maybe even trying them out for yourself, you&amp;rsquo;ve come to the right place. Below, we have some great content for you to look through for each of these projects. Enjoy!&lt;/p&gt;
+&lt;h2 id=&#34;carvel&#34;&gt;Carvel&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Blog&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/kubernetes/carvel/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Introduction to Carvel&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Guide&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/kubernetes/kapp-gs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with kapp&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Workshop&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/workshops/lab-getting-started-with-carvel/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with Carvel (formerly k14s)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;knative&#34;&gt;Knative&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Guide&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/blog/using-knative-eventing-for-better-observability/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Using Knative Eventing for Better Observability&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Video&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/tv/tanzu-tuesdays/0051/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Argo CD with Knative and Cloud Native Buildpacks with Boskey Savla&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Video&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/videos/spring-live-cloudevents-knative/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Live: Processing CloudEvents with Spring and Knative&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;buildpacks&#34;&gt;Buildpacks&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Video&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/tv/tanzu-tuesdays/0020/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Native Buildpacks with Emily Casey&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Guide&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/containers/cnb-gs-pack/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with the pack CLI using Cloud Native Buildpacks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Guide&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/containers/cnb-gs-kpack/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with kpack to Automate Builds using Cloud Native Buildpacks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Video&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/tv/tanzu-tuesdays/0051/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Argo CD with Knative and Cloud Native Buildpacks with Boskey Savla&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Guide&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/ci-cd/tekton-gs-p1/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with Tekton Part 1: Hello World&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Guide&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/ci-cd/tekton-gs-p2/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with Tekton Part 2: Building a Container&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Guide&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/python/cnb-gs-python/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Python Like A Pro: Building Docker Containers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Guide&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/ci-cd/gitlab-ci-cd-cnb/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Deploy Cloud Native Apps Using GitLab CI/CD and Cloud Native Buildpacks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Video&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/videos/spring-live-buildpacks/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Live: Build Images with Confidence and Ease with Cloud Native Buildpacks&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;octant&#34;&gt;Octant&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Workshop&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/workshops/lab-getting-started-with-octant/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started with Octant&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Guide&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/blog/debugging-a-kubernetes-workload-with-octant/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Debugging a Kubernetes Workload with Octant&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Guide&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/ci-cd/express-app-bitnami-skaffold-octant/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Continuously Develop and Monitor an Express Application on Kubernetes with Bitnami, Skaffold and Octant&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;antrea&#34;&gt;Antrea&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Video&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/tv/tgik/135/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;TGI Kubernetes 135: Antrea CNI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Blog&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/kubernetes/container-networking/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Container Networking&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;spiffespire&#34;&gt;SPIFFE/SPIRE&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Video&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/tv/tgik/0094/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;TGI Kubernetes 094: SPIFFE and SPIRE&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Blog&lt;/strong&gt; - &lt;a href=&#34;https://tanzu.vmware.com/developer/guides/kubernetes/platform-security-workload-identity/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Workload Identity&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Getting Started with Concourse</title>
+      
+      <link>/samples/concourse-gs/</link>
+      <pubDate>Thu, 07 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/concourse-gs/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with ArgoCD on Kubernetes</title>
+      
+      <link>/guides/ci-cd/argocd-gs/</link>
+      <pubDate>Tue, 05 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/ci-cd/argocd-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;ArgoCD is a declarative GitOps tool built to deploy applications to Kubernetes. While the continuous delivery (CD) space is seen by some as crowded these days, ArgoCD does bring some interesting capabilities to the table.&lt;/p&gt;
+&lt;p&gt;Unlike other tools, ArgoCD is lightweight and easy to configure. It is purpose-built to deploy applications to Kubernetes so it doesn’t have the UI overhead of many tools built to deploy to multiple locations.&lt;/p&gt;
+&lt;p&gt;It was also built with a &lt;a href=&#34;https://www.weave.works/technologies/gitops/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GitOps&lt;/a&gt; flow in mind. That means everything ArgoCD sees as its source of truth is stored in a repository, which makes permissions and access control easier to handle since no one can change files locally to impact the behavior of ArgoCD. It also increases security by not storing any of these configuration files locally.&lt;/p&gt;
+&lt;p&gt;And it’s fast! After using it I am sure you will agree that ArgoCD is very performant. It feels like a native, local application even though it&amp;rsquo;s running distributed microservices on Kubernetes.&lt;/p&gt;
+&lt;p&gt;In this guide, you will install ArgoCD onto Kubernetes. Then you will configure ArgoCD to pull Kubernetes configuration files from GitHub, and a Docker image to run from Docker Hub. Then you will “sync” that image to another Kubernetes cluster.&lt;/p&gt;
+&lt;p&gt;Ready to get started? Here you go!&lt;/p&gt;
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Before you get started, you will need to do a number of things.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Install &lt;a href=&#34;https://minikube.sigs.k8s.io/docs/start/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Minikube&lt;/a&gt;&lt;/strong&gt;: You will use Minikube to build the Kubernetes clusters referenced in this guide. Other options for running local Kubernetes clusters may also work but have not been tested in this guide.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Install &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl&lt;/a&gt;&lt;/strong&gt;: If you have worked with Kubernetes before, you likely already have kubectl installed. If not, you will need it to manage your clusters, as well as give ArgoCD a way to connect to them through the kubeconfig file.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Install &lt;a href=&#34;https://docs.docker.com/desktop/#download-and-install&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker&lt;/a&gt; and log in (optional)&lt;/strong&gt;: If you choose, there are some optional steps in this guide for building your own demo application. To perform these steps, you will use Docker to build and push your container to Docker Hub.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Have a &lt;a href=&#34;http://dockerhub.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;DockerHub&lt;/a&gt; account (optional)&lt;/strong&gt;: As discussed above, if you choose to go through the optional steps, you will need a Docker Hub account to push your container to.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Set aside 10-15 minutes&lt;/strong&gt;: About how long this guide will take to complete unless you do the optional steps.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;create-the-kubernetes-clusters&#34;&gt;Create the Kubernetes clusters&lt;/h2&gt;
+&lt;p&gt;Once you have these config files, the next step is to create two Kubernetes clusters: On one, you will install ArgoCD; the other is where you will push your application and run it.&lt;/p&gt;
+&lt;p&gt;You will use &lt;a href=&#34;https://minikube.sigs.k8s.io/docs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Minikube&lt;/a&gt; to create these clusters. Other options may work, but Minikube is an easy tool for creating multiple clusters without too much troubleshooting when it comes to managing ingress and external connections.&lt;/p&gt;
+&lt;p&gt;First, start the target Kubernetes cluster.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;minikube start -p target-k8s
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then, start the cluster on which you will install ArgoCD.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;minikube start -p argocd-k8s
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In the next section, you will be working on the &lt;code&gt;argocd-k8s&lt;/code&gt; cluster to complete the install of ArgoCD. Because of the order you created these clusters in, your &lt;code&gt;kubectl context&lt;/code&gt; should already be pointed at this cluster, but it’s good to be sure. The following will confirm that your context is set correctly.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl config use-context argocd-k8s
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;optional-download-the-git-repo&#34;&gt;Optional: Download the git repo&lt;/h2&gt;
+&lt;p&gt;As the “&lt;a href=&#34;https://argoproj.github.io/argo-cd/getting_started/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started&lt;/a&gt;” documentation from ArgoCD will show, the install process is very straightforward (much of this guide uses commands found there). Even so, you will still need some configuration files to get your pipeline to start delivering applications to production.&lt;/p&gt;
+&lt;p&gt;Rather than creating everything from scratch, the environment has been created for you. Look through these files and understand their function. If you have some experience with Kubernetes configuration files, they will be fairly straightforward.&lt;/p&gt;
+&lt;p&gt;To make this viewing easier, you may decide to clone the repo locally. You will not be changing these files in this guide, as ArgoCD pulls them directly from the repository.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/anthonyvetter/argocd-getting-started.git &amp;amp;&amp;amp; cd argocd-getting-started
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You will have the option of creating these environments using your own GitHub and Docker Hub images later in this post, but it’s not required to get started.&lt;/p&gt;
+&lt;h2 id=&#34;install-argocd&#34;&gt;Install ArgoCD&lt;/h2&gt;
+&lt;p&gt;Now that you have created your Kubernetes clusters, you can start the install process. It’s really just two commands. The first is to create a namespace where you will install ArgoCD.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create namespace argocd
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The second—and mostly final step—is to apply this script from the ArgoCD team, which will take care of the rest.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This command will complete quickly, but pods will still be spinning up on the back end. These need to be in a running state before you can move forward. Use the watch command to ensure the pods are running and ready.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;watch kubectl get pods -n argocd
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Troubleshooting&lt;/strong&gt;: I and several others have run into an issue at this step, where pods will enter a &lt;code&gt;CrashLoopBackOff&lt;/code&gt; or &lt;code&gt;ImgPullError&lt;/code&gt; state. These install steps are exactly the same as on the ArgoCD “Getting Started” guide. If it happens to you, know that I had good luck simply using Minikube to stop and start the Kubernetes cluster again and retrying.&lt;/p&gt;
+&lt;p&gt;Once the pods are ready, ArgoCD will be running. But it will not be accessible from outside the cluster. Since this is a demo environment, use port-forward to expose a port to the service, and forward it to &lt;code&gt;localhost&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl port-forward svc/argocd-server -n argocd 8080:443
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once run, your ArgoCD cluster will be available at &lt;a href=&#34;https://localhost:8080&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;https://localhost:8080&lt;/a&gt;. Since you didn’t deploy any certificates, you will need to accept your browser’s certificate exception. The &lt;code&gt;port-forward&lt;/code&gt; command will also now be running in the foreground of your terminal. Open another terminal window or tab and cd back into the working directory.&lt;/p&gt;
+&lt;p&gt;In the UI, you will not be able to log in yet. ArgoCD uses the unique name of its server pod as a default password, so every installation will be different. Pretty clever! The following command will list the pods and format the output to provide just the line you want. It will have the format &lt;code&gt;argocd-server-&amp;lt;number&amp;gt;-&amp;lt;number&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d&#39;/&#39; -f 2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To log in to the ArgoCD UI, the default username is &lt;code&gt;admin&lt;/code&gt; and the default password is the output of the above command. Save this password; you will need it for the next step of installing and configuring the ArgoCD command-line agent.&lt;/p&gt;
+&lt;p&gt;At this stage, take some time to familiarize yourself with the ArgoCD UI. While the rest of the steps in this guide can be done either through the UI or the CLI, you will be using the CLI.&lt;/p&gt;
+&lt;h2 id=&#34;install-and-set-up-the-argocd-cli&#34;&gt;Install and set up the ArgoCD CLI&lt;/h2&gt;
+&lt;p&gt;There are two primary methods for installing the ArgoCD CLI tool. If you are on a Mac computer running brew, there is a tap for argocd. Otherwise, you will need to install the binary from &lt;a href=&#34;https://github.com/argoproj/argo-cd/releases/latest&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;To install with brew&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;brew tap argoproj/tap &amp;amp;&amp;amp; brew install argoproj/tap/argocd
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;To install the binary&lt;/strong&gt;: First, you need to confirm the version of ArgoCD you are running. The script does install the latest stable version, but it’s good to ensure version compatibility.
+Log in to the ArgoCD UI. In the upper left-hand corner, you will see the ArgoCD squid, and underneath that, you will see the major version listed. Hovering your cursor over it will show the full version string.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/argocd/screenshots/version.png&#34; alt=&#34;ArgoCD Version&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Then go to the &lt;a href=&#34;https://github.com/argoproj/argo-cd/releases&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;releases page&lt;/a&gt; on the ArgoCD GitHub site and find the version associated with your ArgoCD version. Under the Assets section, download the argocd version appropriate for your platform.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/argocd/screenshots/releases.png&#34; alt=&#34;ArgoCD Releases&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Once downloaded, rename the file and move it into your &lt;code&gt;$PATH&lt;/code&gt;. Modify this command for your platform.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mv argocd-darwin-amd64 argocd &amp;amp;&amp;amp; mv argocd /usr/local/bin
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now that the &lt;code&gt;argocd&lt;/code&gt; client is installed, you can log it into your ArgoCD installation. Use the password from the previous section.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd login localhost:8080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: Again, as with the UI, you will need to accept the server certificate error.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Optional step&lt;/strong&gt;: You can change your password at this stage if you like. This command will prompt you for your current password, your new password, then to confirm that new password.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd account update-password
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You are now almost ready to deploy your application. But first you need to tell ArgoCD about your deployment target. By default, if you do not add an additional Kubernetes cluster target, ArgoCD will deploy applications to the cluster on which it is installed. To add your target Kubernetes cluster to ArgoCD, use the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd cluster add target-k8s
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will add an ArgoCD service account onto the cluster, which will allow ArgoCD to deploy applications to it.&lt;/p&gt;
+&lt;h2 id=&#34;optional-the-demo-application&#34;&gt;Optional: The demo application&lt;/h2&gt;
+&lt;p&gt;For an application to deploy, you are going to be using &lt;a href=&#34;https://github.com/spring-projects/spring-petclinic&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;spring-petclinic&lt;/a&gt;. It’s an application that is pretty easy to understand, and packaged into a container to run on Kubernetes. It&amp;rsquo;s been packaged already on a public &lt;a href=&#34;https://hub.docker.com/repository/docker/anthonyvetter/spring-petclinic&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;DockerHub&lt;/a&gt; repo. No steps are required in this guide to package your own. You will configure ArgoCD to pull this image.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Optional steps&lt;/strong&gt;: You may, at some point, want to create your own container to pull from your own registry. It is recommended that you run through this guide once as-is so you understand how things work in ArgoCD. But if you are ready to package your own application, these are the steps.&lt;/p&gt;
+&lt;p&gt;Within the optional directory of the GitHub repo you cloned, there is a Dockerfile for building spring-petclinic. To build it, run the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;docker build optional/. -t spring-petclinic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This Dockerfile uses &lt;a href=&#34;https://maven.apache.org/what-is-maven.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Maven&lt;/a&gt; to package the application in an OCI container image; it will take some time to run. In the end, you will have a container on your local system called spring-petclinic.&lt;/p&gt;
+&lt;p&gt;To push this container to DockerHub, first tag your container. Modify this command and the next to add your DockerHub username.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;docker tag spring-petclinic &amp;lt;your-dh-username&amp;gt;/spring-petclinic:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then push your container to Docker Hub.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;docker push &amp;lt;your-dh-username&amp;gt;/spring-petclinic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The configuration files you may have cloned earlier are still written to call from my DockerHub account. And if you have run through this guide once already, you know that ArgoCD pulls those files directly from GitHub (modifying them locally will have no effect on this behavior).&lt;/p&gt;
+&lt;p&gt;There are many methods to create your own configuration files for ArgoCD, but the easiest is probably to &lt;a href=&#34;https://help.github.com/en/github/getting-started-with-github/fork-a-repo&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;fork&lt;/a&gt; my repository into your own, then modify the &lt;code&gt;deployment.yml&lt;/code&gt; to pull the image from your DockerHub account. You will then need to modify the later &lt;code&gt;argo app create&lt;/code&gt; flags in the next section to use your GitHub repo.&lt;/p&gt;
+&lt;h2 id=&#34;add-your-app-to-argocd&#34;&gt;Add your app to ArgoCD&lt;/h2&gt;
+&lt;p&gt;You are now ready to add your application to ArgoCD to monitor and push to your target. But first you need to set up a couple of environment variables so as to make some of the following commands a little easier.&lt;/p&gt;
+&lt;p&gt;This variable will tell the argocd CLI client where our ArgoCD installation resides. It gets the cluster information from your kubectl context, but it needs the namespace. Without setting this variable, you will need to add the &lt;code&gt;--port-forward-namespace&lt;/code&gt; flag to all commands run with argocd.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;export ARGOCD_OPTS=&#39;--port-forward-namespace argocd&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This variable you will use to tell ArgoCD where your target cluster API URL is.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;export MINIKUBE_IP=https://$(minikube ip -p target-k8s):8443
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With these variables set, use argocd to create the application record. Here you are telling ArgoCD to pull in configuration files from my GitHub repository, and that the files are in the root directory. Then you are telling it to deploy that application onto your target cluster, in the default namespace.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd app create spring-petclinic --repo https://github.com/anthonyvetter/argocd-getting-started.git --path . --dest-server $MINIKUBE_IP --dest-namespace default
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once this completes, you can see the status and configuration of your app by running the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd app list
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Notice the &lt;code&gt;STATUS: OutOfSync&lt;/code&gt; and &lt;code&gt;HEALTH: Missing&lt;/code&gt;. That’s because ArgoCD creates applications with manual triggers by default. Automated triggers are available and are &lt;a href=&#34;https://argoproj.github.io/argo-cd/user-guide/auto_sync/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;straightforward to configure&lt;/a&gt;, but in this guide , you will stick with manual triggers in order to go through the process slowly.&lt;/p&gt;
+&lt;p&gt;“Sync” is the terminology ArgoCD uses to describe the application on your target cluster as being up to date with the sources ArgoCD is pulling from. You have set up ArgoCD to monitor the GitHub repository with the configuration files as well as the spring-petclinic container image in Docker Hub. Once the initial sync is completed, a change to either of these sources will cause the status in ArgoCD to change to &lt;code&gt;OutOfSync&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For a more detailed view of your application configuration, run:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd app get spring-petclinic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now you are ready to sync your application to your target cluster. To do this, simply use the sync command for your application:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;argocd app sync spring-petclinic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once completed, your target Kubernetes cluster will be creating the pod on which spring-petclinic will be running. But as with ArgoCD, the UI will not be available outside the cluster. To forward a port, you first need to change kubectl contexts to your target cluster.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl config use-context target-k8s
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: Since the argocd CLI client uses your kubectl context to connect to your cluster, any argocd commands you run from this point won’t work. You will need to change contexts back to your argocd-k8s cluster to manage ArgoCD.&lt;/p&gt;
+&lt;p&gt;Now simply forward the port as you did for the ArgoCD UI. Once completed, spring-petclinic will be available at &lt;a href=&#34;http://localhost:9090&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:9090&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl port-forward svc/spring-petclinic -n default 9090:8080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And there you have it! You have a running application deployed to Kubernetes with ArgoCD. For further learning, try setting up your own environment using the optional steps provided throughout this guide. Find out how to set up &lt;a href=&#34;https://argoproj.github.io/argo-cd/user-guide/auto_sync/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;automated triggers&lt;/a&gt;, and maybe configure ArgoCD with your own custom Kubernetes application. Finally, look at adding ArgoCD into your CI/CD pipeline and deploying applications into external Kubernetes environments.&lt;/p&gt;
+&lt;p&gt;For further learning, the &lt;a href=&#34;https://argoproj.github.io/argo-cd/operator-manual/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Operator Manual&lt;/a&gt; from ArgoCD is a terrific resource. If you want to look at developing a third-party integration for ArgoCD, see the Developer &lt;a href=&#34;https://argoproj.github.io/argo-cd/developer-guide/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Guides&lt;/a&gt;.&lt;/p&gt;
+&lt;link rel=&#34;stylesheet&#34; href=&#34;/css/faq.css&#34;&gt;
+&lt;div class=&#34;faqs&#34; id=&#34;faqs&#34;&gt;
+    &lt;div class=&#34;flex-container jc-between&#34;&gt;&lt;/div&gt;
+        &lt;h2 class=&#34;h2 mb-md&#34;&gt;Frequently Asked Questions&lt;/h2&gt;
+        &lt;div class=&#34;faq&#34;&gt;
+            
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;How do you install ArgoCD on Kubernetes?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;After creating a Kubernetes cluster, ArgoCD can be installed with two simple commands. First, create a namespace to install the ArgoCD and run the command &lt;code&gt;kubectl create namespace argocd&lt;/code&gt;. Finally, apply the script &lt;code&gt;kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml&lt;/code&gt; to finish the install.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;What are the benefits of using ArgoCD on Kubernetes?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Because ArgoCD can apply git repository configurations to Kubernetes, it assists in the lifecycle management and accelerated deployment of &lt;a href=&#34;https://tanzu.vmware.com/cloud-native&#34;&gt;cloud-native applications&lt;/a&gt;.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;How do you install ArgoCD CLI?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;On Mac, the ArgoCD CLI can be installed with &lt;code&gt;brew&lt;/code&gt;, where there is a tap for ArgoCD. Otherwise, the binary will need to be installed by navigating to ArgoCD releases page, installing the correct version appropriate for your platform, renaming the file, modifying the command, logging in, and deploying your application.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;How do you deploy apps to ArgoCD in Kubernetes?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;After Installation of the ArgoCD CLI, to deploy your applications with ArgoCD, first tell ArgoCD about your deployment target Kubernetes cluster using the command &lt;code&gt;argocd cluster add target-k8s&lt;/code&gt;, then configure ArgoCD to pull the image using &lt;a href=&#34;https://github.com/spring-projects/spring-petclinic&#34;&gt;spring-petclinic&lt;/a&gt;. Finally, push your container to DockerHub and create your own configuration files, or &lt;a href=&#34;https://docs.github.com/en/get-started/quickstart/fork-a-repo&#34;&gt;fork our repository&lt;/a&gt; into your own.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;How do you add a Kubernetes cluster to ArgoCD?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;Kubernetes clusters can be added to ArgoCD by installing the proper configuration files, installing ArgoCD on a Kubernetes cluster, then starting both the target cluster and the cluster in which you installed ArgoCD.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+  &lt;div class=&#34;faq-item&#34; id=&#34;faq-item&#34;&gt;
+    &lt;div class=&#34;flex jc-between ai-center&#34;&gt;
+        &lt;h4 class=&#34;faq-question&#34;&gt;What is ArgoCD sync?&lt;/h4&gt;
+        &lt;i class=&#34;fa fa-angle-down&#34; id=&#34;arrow&#34;&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;faq-answer&#34;&gt;
+        &lt;div&gt;“Sync” is the terminology ArgoCD uses to describe the application on your target cluster as being up to date with the sources ArgoCD is pulling from.&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+        &lt;/div&gt;
+    &lt;/div&gt;
+    
+&lt;/div&gt;
+
+&lt;script type=&#34;text/javascript&#34;&gt;
+    $(&#34;.faq-item&#34;).each( function() {
+        $(this).click(function () {
+            $(this).find(&#34;#arrow&#34;).toggleClass(&#34;flip&#34;); 
+            $(this).find(&#34;.faq-answer&#34;).slideToggle(200); 
+        });
+    });
+&lt;/script&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with Concourse CI</title>
+      
+      <link>/guides/ci-cd/concourse-gs/</link>
+      <pubDate>Mon, 04 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/ci-cd/concourse-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;Writing code is one thing. Testing and deploying that code into production is another. Many tools exist to automate the workflow, from code commit to production release. Continuous Integration (CI), Continuous Deployment (CD), Continuous Delivery (CD again), artifact registries, code security scanners, and various other tools are used to achieve this goal. But it all starts with code integration.&lt;/p&gt;
+&lt;p&gt;How can you make sure your code is ready to be integrated into a release? Continuous Integration (CI) is not a new concept for most developers, and—once the system is implemented, it is rarely thought about deeply again. Even when it’s agreed that the current implementation is non-optimal, the CI system runs in the background, churning away. For the most part, it “just works.”&lt;/p&gt;
+&lt;p&gt;But what if there was a better system? One that was built for cloud native development paradigms on the foundation of a stateless architecture where all pipelines are built and treated as code? That’s where Concourse CI comes in.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/concourse/screenshots/overview.png&#34; alt=&#34;Concourse dashboard&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;An example Concourse CI dashboard showing the status of many pipelines&lt;/p&gt;
+&lt;h2 id=&#34;concourse-ci&#34;&gt;Concourse CI&lt;/h2&gt;
+&lt;p&gt;Concourse CI is a system built with a loosely coupled microservices architecture; a &lt;a href=&#34;https://concourse-ci.org/postgresql-node.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;database node&lt;/a&gt; using PostgreSQL is the only state saved by the system. All build histories, stored pipelines, as well as user and group access privileges are stored here.&lt;/p&gt;
+&lt;p&gt;A &lt;a href=&#34;https://concourse-ci.org/concourse-web.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;web node&lt;/a&gt; service provides the user interface to Concourse CI. Here, developers and administrators can get a quick view of their pipelines, including their status. Broken pipelines can be easily identified so users can fix any issues.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://concourse-ci.org/concourse-worker.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Worker nodes&lt;/a&gt; run each of the tasks defined in a Concourse CI pipeline. They download container images, clone git repositories, and run tests as defined. And when they are done, the testing containers are entirely ephemeral, so you get a clean test every time.&lt;/p&gt;
+&lt;p&gt;Concourse CI pipelines are built using three different abstraction paradigms: tasks, jobs, and resources.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://concourse-ci.org/tasks.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Tasks&lt;/a&gt; are the smallest unit of work Concourse CI does. They can be called to run a script or even just a single command within the testing container. Meanwhile, task output is provided as detailed log files, which can be parsed programmatically if needed.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://concourse-ci.org/jobs.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Jobs&lt;/a&gt; are a package of tasks. By bundling up a group of tasks as a job, Concourse CI users can make their pipeline code reusable for other systems. Such bundling provides a higher-level abstraction as pipelines get larger and more complex, which makes it easier for new team members to get up to speed.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://concourse-ci.org/resources.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Resources&lt;/a&gt; are what jobs perform actions on. A typical example would be a git repository; once configured, Concourse CI can pull in new code to test, run test scripts stored in git, or even push its own changes. And since everything in Concourse CI is configured as code, even resource configurations can be managed in git and reused across an organization.&lt;/p&gt;
+&lt;p&gt;Intrigued? What follows here is a guide to get started with Concourse CI. You will deploy a small Concourse CI cluster locally on top of Kubernetes. Then you will push a new pipeline to your cluster, which will run a series of tests on a sample application, which you will clone.&lt;/p&gt;
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Before you get started, you will need to do a number of things.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Install &lt;a href=&#34;https://www.docker.com/products/docker-desktop&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Desktop&lt;/a&gt; and &lt;a href=&#34;https://docs.docker.com/docker-for-mac/#kubernetes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;enable Kubernetes&lt;/a&gt;&lt;/strong&gt;: Other methods of deploying a local Kubernetes cluster like &lt;a href=&#34;https://kind.sigs.k8s.io/docs/user/quick-start/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;KIND&lt;/a&gt; or &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-minikube/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Minikube&lt;/a&gt; may also work. Cloud-based or other production Kubernetes deployments should work, too. This guide was written using Docker Desktop; other methods will require modification of commands and have not been fully tested for use in this guide.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Install &lt;a href=&#34;https://helm.sh/docs/intro/install/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Helm 3&lt;/a&gt;&lt;/strong&gt;: Helm 3 will be used to install Concourse CI.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Install &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;kubectl&lt;/a&gt;&lt;/strong&gt;: This is the local client application you will use for interacting with your Kubernetes cluster. It is also how Helm will reach and interact with your cluster.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Secure a Slack instance&lt;/strong&gt;: One via which you have access to create webhooks and can post messages to a channel.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Set aside 15-20 minutes&lt;/strong&gt;: Roughly the time it will take to run through this guide.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;setting-up&#34;&gt;Setting up&lt;/h2&gt;
+&lt;p&gt;To make the installation and configuration of Concourse CI and its pipelines a little easier, a GitHub repo is provided here along with some helpful files. Download it, then &lt;code&gt;cd&lt;/code&gt; into that directory. In this guide, commands will assume this as your working directory unless otherwise noted.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/anthonyvetter/concourse-getting-started.git &amp;amp;&amp;amp; cd concourse-getting-started
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In this repository are three directories: &lt;code&gt;install&lt;/code&gt;, &lt;code&gt;pipelines&lt;/code&gt;, and &lt;code&gt;test-scripts&lt;/code&gt;. You will explore the &lt;code&gt;pipelines&lt;/code&gt; and &lt;code&gt;test-scripts&lt;/code&gt; directories later on in this guide. They contain a helpful starter pipeline you will push to our Concourse CI cluster, as well as some unit test scripts. The &lt;code&gt;install&lt;/code&gt; directory contains an abbreviated version of the Concourse CI &lt;code&gt;values.yml&lt;/code&gt; file, and a (very) small BASH script for exposing access to Concourse CI locally. Let’s get into that next.&lt;/p&gt;
+&lt;p&gt;Next, define a variable for your username of your GitHub account.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;export GH_USERNAME=your-github-username
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;installation&#34;&gt;Installation&lt;/h3&gt;
+&lt;p&gt;Let’s get started by installing Concourse CI onto Kubernetes. This installation will be abbreviated; it’s intended for demonstration and learning purposes only. Full installation instructions using Helm can be found &lt;a href=&#34;https://github.com/concourse/concourse-chart&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;via the Concourse CI team&lt;/a&gt; from which the installation instructions in this guide borrow heavily.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Optional step&lt;/strong&gt;: Concourse CI installation in a local context is fairly straightforward. There are some default attributes contained in the &lt;code&gt;install/values.yml&lt;/code&gt; file; leaving these as their default values will get you a working installation. That said, there are a few values that you may choose to modify in order to slightly customize your installation and experiment with Concourse CI. Modify this file to suit your needs. Comments on each line will explain their respective functions.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vim install/values.yml # replace vim with your text editor of choice
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Helm 3 does not come with the chart repository for Concourse CI by default (it doesn’t include any repositories by default). So the next step is to add that to Helm and update Helm’s caches.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helm repo add concourse https://concourse-charts.storage.googleapis.com/ &amp;amp;&amp;amp; helm repo update
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;These are pretty much the only required steps prior to install. But before you run the install command, be sure to check kubectl to ensure you are targeting the correct Kubernetes cluster. If you are using Docker Desktop, this should be your output.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;❯ kubectl config get-contexts
+
+CURRENT   NAME                 CLUSTER          AUTHINFO         NAMESPACE
+*         docker-desktop       docker-desktop   docker-desktop
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Further instructions for managing contexts and clusters using kubectl can be found &lt;a href=&#34;https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Now you can install Concourse CI. This command will use Helm to install the cluster into the default Kubernetes namespace using our &lt;code&gt;values.yml&lt;/code&gt; file. If you left this file as default, then the &lt;code&gt;-f&lt;/code&gt; flag can be left out.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;helm install concourse concourse/concourse -f install/values.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This command will complete quickly, but there will still be pods spinning up on the back end. To see the status of the system as it is being deployed, use &lt;code&gt;watch&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;watch kubectl get pods
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will show a list of pods in the default namespace and their status. Wait until they are all in a running status.&lt;/p&gt;
+&lt;p&gt;Once all the pods are ready, Concourse CI will be up and running. But it won’t be accessible outside the cluster. To expose it, run the provided expose script.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./install/expose-concourse.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Running this script opens up a node port in your Kubernetes cluster and forwards it to your localhost. Assuming you left these values as default, your Concourse CI cluster should now be available at &lt;a href=&#34;http://localhost:8080&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:8080&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: This port-forward task is running in the foreground in your terminal. To keep UI access available, open a new terminal window or tab and cd back into your working directory.&lt;/p&gt;
+&lt;p&gt;You can access the cluster by logging in using the credentials set in the &lt;code&gt;values.yml&lt;/code&gt; file. If you left them as default the username and the password are both &lt;code&gt;test&lt;/code&gt;. At this point, there are no pipelines set; you need to install the fly client application first.&lt;/p&gt;
+&lt;h3 id=&#34;installing-fly&#34;&gt;Installing fly&lt;/h3&gt;
+&lt;p&gt;Fly is the local client application developers and Concourse CI administrators use as their primary way to interact with the cluster from the command line. To install fly, download the binary from your Concourse CI cluster directly by clicking the link appropriate for your system, as shown here.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/concourse/screenshots/download-fly.png&#34; alt=&#34;Download Fly&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The Concourse CI interface upon a new installation showing download links for the fly client application&lt;/p&gt;
+&lt;p&gt;Once completed, make the binary executable, then move it into your &lt;code&gt;$PATH&lt;/code&gt;. That’s it!&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo chmod +x ~/Downloads/fly &amp;amp;&amp;amp; mv ~/Downloads/fly /usr/local/bin
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: These commands are for use on a Macintosh computer. They will need to be modified for other platforms.&lt;/p&gt;
+&lt;p&gt;Now you need to let fly know about your Concourse CI cluster. Do that with the &lt;code&gt;target&lt;/code&gt; command for your fly client. Notice we are giving our Concourse CI a name of &lt;code&gt;demo&lt;/code&gt;. It can be any name you want, just keep it short. Every command run using fly must include the &lt;code&gt;--target&lt;/code&gt; flag to explicitly run commands on a specific cluster, so unless you &lt;code&gt;alias&lt;/code&gt; it, you will be typing it a lot.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fly --target demo login --concourse-url http://127.0.0.1:8080 -u test -p test
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then, to ensure compatible versions of Concourse CI and fly are running, use the &lt;code&gt;sync&lt;/code&gt; command.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fly -t demo sync
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Notice you can abbreviate &lt;code&gt;--target&lt;/code&gt; with &lt;code&gt;-t&lt;/code&gt;, making commands shorter to type. There are many abbreviations in fly like this. You will use these abbreviations throughout this guide.&lt;/p&gt;
+&lt;h2 id=&#34;creating-the-demo-application&#34;&gt;Creating the demo application&lt;/h2&gt;
+&lt;p&gt;For this guide, you will use &lt;a href=&#34;https://github.com/spring-projects/spring-petclinic&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;spring-petclinic&lt;/a&gt; as an application to test against in your pipeline, which is a small Java application written in Spring. But there are no specific dependencies on this application other than the test scripts running Maven testing jobs.&lt;/p&gt;
+&lt;p&gt;To follow along, &lt;a href=&#34;https://help.github.com/en/github/getting-started-with-github/fork-a-repo&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;fork&lt;/a&gt; this application (&lt;a href=&#34;https://github.com/spring-projects/spring-petclinic&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;linked here&lt;/a&gt;) into your own GitHub repository or provide your own application and modify the test scripts as needed (they are very rudimentary).&lt;/p&gt;
+&lt;p&gt;Next, clone the repository locally and place it anywhere on your system. Then &lt;code&gt;cd&lt;/code&gt; into the directory.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/$GH_USERNAME/spring-petclinic.git &amp;amp;&amp;amp; cd spring-petclinic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Next, you need to create a test branch. You can mimic an example GitOps flow where a new feature or bug fix is pulled into this branch for testing; the automated system takes it from there.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git checkout -b test
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will create a test branch for your project, which will be monitored by Concourse CI. Next, push this branch to your repository so Concourse CI can monitor it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git push origin test
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The result is that once you deploy the pipeline and push a change to this branch, Concourse CI will pick it up and run its configured automated tests.&lt;/p&gt;
+&lt;h2 id=&#34;deploying-a-pipeline&#34;&gt;Deploying a pipeline&lt;/h2&gt;
+&lt;p&gt;Now that your Concourse CI installation is up and running, it’s time to create your first pipeline. Go back to the concourse-getting-started folder for the configuration files. But before you set that pipeline to Concourse CI, take a look at each of the sections to understand what they are doing. Comments are provided within the pipeline YAML as well, to describe each section.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat pipelines/pipeline.yml | less
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This pipeline is going to pull in your demo application from your repository. Then it will pull in test scripts from a separate repository. And finally, it will run those tests, one at a time, in a dedicated container, all the while reporting out status via Slack. Review the comments in the file to understand the function of each section.&lt;/p&gt;
+&lt;p&gt;You will notice there are a few &lt;code&gt;((variables))&lt;/code&gt; contained within the pipeline; you will define those next. The &lt;code&gt;credentials.yml&lt;/code&gt; file contains those variable assignments. Open the file and fill in the variables for your environment. Again, the comments in the file will help you understand the function of each line.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vim pipelines/credentials.yml # replace vim with your favorite text editor
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: This will include a step for setting up a Slack webhook integration. A link to the instructions from Slack to set it up is provided in the file, or you can view it &lt;a href=&#34;https://slack.com/help/articles/115005265063-Incoming-Webhooks-for-Slack&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Another note&lt;/strong&gt;: Using credentials files in this way provides an easy way to make changes to a pipeline. For example, by modifying just this one file in a straightforward way, the pipeline can be used flexibly across many environments, with many applications. However, in a production environment you would want to configure Concourse CI to use a &lt;a href=&#34;https://concourse-ci.org/creds.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;credential management system&lt;/a&gt; like &lt;a href=&#34;https://learn.hashicorp.com/vault/getting-started/install&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Vault&lt;/a&gt;, &lt;a href=&#34;https://docs.cloudfoundry.org/credhub/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CredHub&lt;/a&gt;, or something similar.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;That’s because using a credentials file provides just a simple translation done at the time when the pipeline is set. Which is not a big deal when it&amp;rsquo;s just URLs, but when these files contain access tokens, private SSH keys, passwords, and the like, you will want a more secure system.&lt;/p&gt;
+&lt;p&gt;Now you will set the pipeline onto your Concourse CI deployment by using fly and the &lt;code&gt;set-pipeline&lt;/code&gt; command, which can be abbreviated &lt;code&gt;sp&lt;/code&gt;. Here the &lt;code&gt;-c&lt;/code&gt; flag denotes which configuration file you will use for your pipeline. The &lt;code&gt;-p&lt;/code&gt; flag will be the name of your pipeline in Concourse CI and the &lt;code&gt;-l&lt;/code&gt; flag will tell Concourse CI where to load variables from. Once it is run, type &lt;code&gt;y&lt;/code&gt; to accept the configuration changes.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fly -t demo set-pipeline -c pipelines/pipeline.yml -p petclinic-tests -l pipelines/credentials.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Pipelines start “paused,” meaning they won’t start running until you tell them to, which you can do from the UI or the fly CLI tool. But before you unpause, take a look at the UI to confirm your pipeline has been created successfully.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/concourse/screenshots/dashboard.png&#34; alt=&#34;Concourse Pipeline&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The main Concourse CI UI showing your pipeline set&lt;/p&gt;
+&lt;p&gt;When clicking into that pipeline, you will see the jobs and resources depicted as connected entities. The jobs are the big gray boxes; the resources used by the jobs are the smaller, black boxes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/concourse/screenshots/pipeline.png&#34; alt=&#34;Download Fly&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;the-pipeline&#34;&gt;The pipeline&lt;/h3&gt;
+&lt;p&gt;Back at the CLI, unpause the pipeline using the &lt;code&gt;unpause-pipeline&lt;/code&gt; command, which can be abbreviated &lt;code&gt;up&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fly -t demo unpause-pipeline -p petclinic-tests
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Watch the pipeline complete. Then click into the running job and watch it complete in more detail.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/ci-cd/concourse/screenshots/concourse-test.gif&#34; alt=&#34;Pipeline run&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;the-pipeline-and-job-run-details&#34;&gt;The pipeline and job run details&lt;/h3&gt;
+&lt;p&gt;That’s it! Your pipeline is now monitoring your test branch for changes. Whenever a change is made, this pipeline will be kicked off and the tests will be run. Feel free to keep experimenting with this pipeline configuration, and build it to suit your needs. Push more changes to the application and watch Concourse CI trigger a new test run.&lt;/p&gt;
+&lt;p&gt;For more information on Concourse CI, check out the &lt;a href=&#34;https://concourse-ci.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;open source project&lt;/a&gt; site. For information about the commercially-supported version, check out the Concourse CI &lt;a href=&#34;https://tanzu.vmware.com/concourse&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;page&lt;/a&gt; on VMware.com.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

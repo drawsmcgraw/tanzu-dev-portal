@@ -1,0 +1,669 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Agile</title>
+    <link>/guides/agile/</link>
+    <description>Recent content in Agile on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/guides/agile/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Git Playbook</title>
+      
+      <link>/guides/agile/git-playbook/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/agile/git-playbook/</guid>
+      <description>
+
+        
+        &lt;p&gt;Git is a free and open source version control system that is widely used in the open source community, including well known git repositories such as GitHub and GitLab. If you are unfamiliar with Git, it’s worth taking a few moments to familiarize yourself with it.  A simple guide can be found at &lt;a href=&#34;http://rogerdudler.github.io/git-guide/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://rogerdudler.github.io/git-guide/&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;gitflow&#34;&gt;Gitflow&lt;/h2&gt;
+&lt;p&gt;Gitflow enables you to work on your own feature branch in isolation before committing to the main project branches, i.e. develop and master.  Features may be driven from your preferred project planning tool as assigned tasks.  Gitflow helps manage the Git history to reflect the progress against specific issues.&lt;/p&gt;
+&lt;h3 id=&#34;install-gitflow&#34;&gt;Install GitFlow&lt;/h3&gt;
+&lt;h4 id=&#34;os-x&#34;&gt;OS X&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;brew install gitflow
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;linux&#34;&gt;Linux&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;apt-get install gitflow
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;windows-via-cygwin&#34;&gt;Windows (via Cygwin)&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;wget&lt;/code&gt; and &lt;code&gt;util-linux&lt;/code&gt; are required to install gitflow.  For more detailed instructions see &lt;a href=&#34;https://github.com/nvie/gitflow/wiki/Windows&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;https://github.com/nvie/gitflow/wiki/Windows&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;wget -q -O - --no-check-certificate https://github.com/nvie/gitflow/raw/develop/contrib/gitflow-installer.sh &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;gitflow-initialization-and-settings&#34;&gt;GitFlow initialization and settings&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;From the local repository directory (e.g. /universal-imports),&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git flow init
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Use the following settings when prompted for the gitflow prefixes,&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nv&#34;&gt;master&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; master
+&lt;span class=&#34;nv&#34;&gt;develop&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; develop
+&lt;span class=&#34;nv&#34;&gt;feature&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; feature/
+&lt;span class=&#34;nv&#34;&gt;release&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; release/
+&lt;span class=&#34;nv&#34;&gt;hotfix&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; hotfix/
+&lt;span class=&#34;nv&#34;&gt;support&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; support/
+&lt;span class=&#34;nv&#34;&gt;versiontag&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; -v
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;gitflow-workflow&#34;&gt;GitFlow workflow&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Before starting a feature branch ensure that you have the latest code from the &lt;code&gt;develop&lt;/code&gt; branch,&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git checkout develop
+git pull
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Start a feature branch by typing, &lt;code&gt;git flow *feature identifier*&lt;/code&gt; For example, if your feature has an ID of 007, you would execute:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git flow feature start &lt;span class=&#34;m&#34;&gt;007&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;
+&lt;p&gt;Now, start committing changes to your feature.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You can propose changes (add it to the Index) using,&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git add &amp;lt;filename&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;or&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git add *
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;To commit these changes to your local repository:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git commit -m &lt;span class=&#34;s2&#34;&gt;&amp;#34;#007 Commit message&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;(Be sure to start the message with your feature ID or feature name.)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Refer to the following &lt;a href=&#34;https://github.com/erlang/otp/wiki/Writing-good-commit-messages&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;guidelines&lt;/a&gt; for writing commit messages.  For example,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; PSE-007: Summarize clearly in one line what the commit is about
+&amp;gt;
+&amp;gt; Describe the problem the commit solves or the use
+&amp;gt; &lt;span class=&#34;k&#34;&gt;case&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; a new feature. Justify why you chose
+&amp;gt; the particular solution.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Optionally, publish a feature branch to the remote server so it can be used by other users,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git flow feature publish &lt;span class=&#34;m&#34;&gt;007&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When done with the feature, use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git flow feature finish &lt;span class=&#34;m&#34;&gt;007&lt;/span&gt;
+git push
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Then delete the remote feature branch (if it was created):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git push origin :feature/007
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Then delete the local branch (if it still exists. git flow will usually delete it for you):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git branch -d feature/007
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;resolve-unstaged-change-warnings&#34;&gt;Resolve Unstaged Change Warnings&lt;/h3&gt;
+&lt;p&gt;Resolve unstaged change warnings using:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git stash
+git push &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;i.e. push your staged commits&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can switch to another branch to work on another feature, etc.
+To bring back your stashed changes:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git stash pop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;avoid-fast-forward-merges&#34;&gt;Avoid Fast-forward Merges&lt;/h3&gt;
+&lt;p&gt;Suppose you are working on &amp;ldquo;feature/007&amp;rdquo; and there have been changes in the meantime to the &amp;ldquo;develop&amp;rdquo; branch.&lt;/p&gt;
+&lt;h4 id=&#34;approach-1---pre-sync-the-target-branch&#34;&gt;Approach 1 - Pre-sync the target branch&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git checkout develop
+git pull
+git checkout feature/007
+git flow feature finish &lt;span class=&#34;m&#34;&gt;007&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;approach-2---merge-the-branches-with-the-no-fast-forward-flag&#34;&gt;Approach 2 - Merge the branches with the &amp;ldquo;no fast-forward&amp;rdquo; flag&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git flow feature start &lt;span class=&#34;m&#34;&gt;007&lt;/span&gt;
+git flow feature publish &lt;span class=&#34;m&#34;&gt;007&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Instead of using &amp;ldquo;git flow feature finish 007&amp;rdquo; (because it causes a fast forward at this point)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git checkout develop
+git pull
+git merge --no-ff feature/007
+git push origin develop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;git-tips-and-tricks&#34;&gt;Git Tips and Tricks&lt;/h2&gt;
+&lt;h3 id=&#34;checkout-a-specific-tag&#34;&gt;Checkout a specific tag&lt;/h3&gt;
+&lt;p&gt;This can be useful if you want to use a specific tagged version for a deployment:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;List the available tags:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git tag -l
+
+...
+v3.10.0
+v3.11.0
+v3.14.0
+v3.15.0
+v3.16.0
+v3.17.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Checkout a specific tag:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git checkout tags/v3.16.0
+
+M	/universal-imports/modules
+Note: checking out &lt;span class=&#34;s1&#34;&gt;&amp;#39;tags/v3.16.0&amp;#39;&lt;/span&gt;.
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;undo-or-rollback-a-git-commit&#34;&gt;Undo or rollback a Git commit&lt;/h3&gt;
+&lt;p&gt;Assuming you have not yet pushed commits to the remote repository, you can rollback to the previous commit:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git reset --soft HEAD^
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To rollback the last three commits,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git reset --hard HEAD~3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;resetting-a-local-branch-to-exactly-match-a-remote-branch&#34;&gt;Resetting a local branch to exactly match a remote branch&lt;/h3&gt;
+&lt;p&gt;Set your local branch to exactly match the remote branch:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git fetch origin
+git reset --hard origin/develop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you want to save your current branch&amp;rsquo;s state before doing this (just in case),&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git commit -a -m &lt;span class=&#34;s2&#34;&gt;&amp;#34;Saving my work, just in case&amp;#34;&lt;/span&gt;
+git branch my-saved-work
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;rollback-a-release-in-the-master-branch-to-a-previous-tag&#34;&gt;Rollback a release in the Master branch to a previous tag&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;WARNING:  This alters history.  Do not try this on the &lt;strong&gt;DEVELOP&lt;/strong&gt; branch.&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Ensure that you are on the &lt;strong&gt;MASTER&lt;/strong&gt; branch,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git checkout master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Find the commit number of the previous tag (e.g. dc7e7b5 3.15.0.RELEASE),&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git log --oneline
+
+ecdd645 Merge branch &lt;span class=&#34;s1&#34;&gt;&amp;#39;release-3.16.0&amp;#39;&lt;/span&gt;
+c023314 3.16.0.RELEASE
+72a9524 Added some changes
+f2e68e5 3.16.0.SNAPSHOT
+3414a30 Merge branch &lt;span class=&#34;s1&#34;&gt;&amp;#39;release-3.15.0&amp;#39;&lt;/span&gt; into develop
+5078f25 Merge branch &lt;span class=&#34;s1&#34;&gt;&amp;#39;release-3.15.0&amp;#39;&lt;/span&gt;
+dc7e7b5 3.15.0.RELEASE
+9e5c0d2 Updated some other changes
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Make the previous tag commit the current one (e.g. 3.15.0.RELEASE),&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git reset --hard dc7e7b5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Remove the other release&amp;rsquo;s now uncommitted changes locally:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git reset HEAD^
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Force push the new HEAD commit to the remote repository:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git push origin +HEAD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you want to still have it in your local repository and only remove it from the remote, instead use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git push origin +HEAD^:master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;merging&#34;&gt;Merging&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Open the Git merge tool:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git mergetool
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Fix any merge issues&amp;hellip;&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;
+&lt;p&gt;Execute the merge:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git merge
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This merges resolved conflicts and resets the merge head appropriately&amp;hellip;&lt;/p&gt;
+&lt;h3 id=&#34;undo-a-failed-merge&#34;&gt;Undo a failed merge&lt;/h3&gt;
+&lt;p&gt;If you see something like the following Git error/warning message: &lt;code&gt;You have not concluded your merge (MERGE_HEAD exists). Please, commit your changes before you can merge.&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git merge --abort
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;If you’re just getting familiar with git and related tools, you may also want to check out the blog &lt;a href=&#34;/blog/how-and-why-to-write-commit-messages-first/&#34;&gt;How and Why to Write Commit Messages First&lt;/a&gt;, and you’ll find more tips in this blog on &lt;a href=&#34;/blog/git-switch-and-restore-an-improved-user-experience/&#34;&gt;Git Switch and Restore&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To learn how to take the next steps when your code is ready, check out &lt;a href=&#34;/blog/from-commit-to-container/&#34;&gt;From Code to Container&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Remote Tips: Remote is Exhausting</title>
+      
+      <link>/guides/agile/remote-tips-remote-is-exhausting/</link>
+      <pubDate>Fri, 29 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/agile/remote-tips-remote-is-exhausting/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;creating-the-right-working-environment&#34;&gt;Creating the right working environment&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Everyone should have a good audio headset with a directional mic.&lt;/li&gt;
+&lt;li&gt;Establish boundaries and transitions: separate work from life by carving out a dedicated workspace and find ways to remove it from your vision while not working.&lt;/li&gt;
+&lt;li&gt;It’s OK for family and pets to appear in your video; we’re all human.&lt;/li&gt;
+&lt;li&gt;Introduce variety: work from different parts of the house.&lt;/li&gt;
+&lt;li&gt;Turn off notifications.&lt;/li&gt;
+&lt;li&gt;Try &lt;a href=&#34;https://krisp.ai/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Krisp&lt;/a&gt;, a video conferencing add-on that mutes not only your background noise, but also that of everyone else on the call.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;looking-after-yourself-and-each-other&#34;&gt;Looking after yourself and each other&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Schedule breaks.&lt;/li&gt;
+&lt;li&gt;Stretch, dance, or take up bird watching!&lt;/li&gt;
+&lt;li&gt;Spend time outdoors, exercise, or have exercise breaks with your team.&lt;/li&gt;
+&lt;li&gt;Stay hydrated!&lt;/li&gt;
+&lt;li&gt;When on break, allow your eyes to rest at a distance.&lt;/li&gt;
+&lt;li&gt;Stay connected with friends, family and community.&lt;/li&gt;
+&lt;li&gt;Block time for personal care.&lt;/li&gt;
+&lt;li&gt;🔥 Monitor your potential for burnout using &lt;a href=&#34;https://burnoutindex.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Burnoutindex.org&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Take an occasional “mental health day.”&lt;/li&gt;
+&lt;li&gt;Don&amp;rsquo;t suffer in silence; help each other and keep each other accountable.&lt;/li&gt;
+&lt;li&gt;Ask each other the right questions.&lt;/li&gt;
+&lt;li&gt;Discuss in retros how to support each other and reduce fatigue.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;setting-a-routine&#34;&gt;Setting a routine&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Make time for breaks, planning, reflection, and team social time (e.g., take 10-min break for every 80 minutes of work; Mary needs to deal with childcare at 3 PM every Wednesday, so plan meetings around it).&lt;/li&gt;
+&lt;li&gt;Having a fixed working routine helps you to maintain and manage your energy levels.&lt;/li&gt;
+&lt;li&gt;Use a timer to help plan breaks.&lt;/li&gt;
+&lt;li&gt;Find ways to mark the start and end of your day (standups/catch-ups); daily stand-downs might help to shorten standups.&lt;/li&gt;
+&lt;li&gt;Replicate your commute to punctuate the transition from home to work by doing something relaxing and fun before work, and clearing your workspace at the end of the day.&lt;/li&gt;
+&lt;li&gt;Don&amp;rsquo;t go straight to work after you wake up.&lt;/li&gt;
+&lt;li&gt;Keep regular times for meals.&lt;/li&gt;
+&lt;li&gt;Experiment with different ways of working to find out what&amp;rsquo;s best for the team; not everyone shares the same peak hours of energy and focus.&lt;/li&gt;
+&lt;li&gt;Designate a pair of engineers as the “interrupt pair” at the start of each day to lower the cost of interruptions and minimize the need for conversations, decisions and context switching.&lt;/li&gt;
+&lt;li&gt;Respect the routine, but experiment with change.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Remote Tips</title>
+      
+      <link>/guides/agile/remote-tips/</link>
+      <pubDate>Fri, 29 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/agile/remote-tips/</guid>
+      <description>
+
+        
+        &lt;p&gt;The transition to working remotely due to COVID-19 has proven to be quite a challenge—including for those of us at VMware Tanzu Labs. While remotely communicating and collaborating using digital tools is not new to us, doing so in an entirely distributed environment for the foreseeable future is.&lt;/p&gt;
+&lt;p&gt;The challenges have been especially daunting when we’ve had to apply the principles of Extreme Programming (XP), namely constant communication, intense collaboration, and ongoing reflection. On top of all that, we engage with new customers on a regular basis to kick off projects multiple times throughout the course of a year. In this new normal, our practitioners must not only quickly bootstrap burgeoning relationships and get up to speed on unfamiliar  domains, but build customer-based teams that feature all these new ways of working and in the process, re-define a set of previously shared norms.&lt;/p&gt;
+&lt;p&gt;There are undoubtedly more challenges left for us to face in our new, all-remote set-up. In the meantime, however, we set out to identify the most pressing problems and come up with the best possible solutions to address them. The result is a series of remote working tips that we are thrilled to share with you.&lt;/p&gt;
+&lt;h2 id=&#34;our-tips&#34;&gt;Our tips&lt;/h2&gt;
+&lt;p&gt;Our remote working tips cover a wide range of topics, from general considerations to specific advice for high-collaboration teams:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/guides/agile/remote-tips-building-relationships/&#34;&gt;Building relationships&lt;/a&gt; – How to create virtual spaces and use them to socialize, how to be more inclusive, expressive, and kind; and how to build empathy are just some of the challenges that are heightened by a remote environment.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/guides/agile/remote-tips-facillitation/&#34;&gt;Easing facilitation&lt;/a&gt; – From setting team working agreements and ground rules to keeping participants engaged and included to making the best use of your tools, good facilitation is key to remote working success.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/guides/agile/remote-tips-physical-space/&#34;&gt;Leveraging physical space&lt;/a&gt; – How important is physical space in an all-remote working environment? More important than ever before, it turns out, which is why we offer a gallery of practitioner setups for inspiration.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/guides/agile/remote-tips-remote-is-exhausting/&#34;&gt;Battling fatigue&lt;/a&gt; – Working remotely is exhausting. We suggest ways that you can create a stimulating and inspiring work environment, complete with ways to look after yourself (and others), including by setting routines.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/guides/agile/remote-tips-tools-and-tips/&#34;&gt;Using the tools&lt;/a&gt; – Whether you’re still agreeing on the tool stack or helping your customers get up to speed on Zoom, as we’ve learned firsthand, the tools you and your team use have never had such a big impact.&lt;/p&gt;
+&lt;h2 id=&#34;a-word-on-our-process&#34;&gt;A word on our process&lt;/h2&gt;
+&lt;p&gt;At VMware Tanzu Labs, we &lt;a href=&#34;https://tanzu.vmware.com/app-development&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;practice what we preach&lt;/a&gt;. To create these tips, we assigned a balanced team—which consisted of a product manager, a designer, and an engineer—to run user research and identify current best practices along with problems and pain points. And as with every project, there were plenty of stakeholders involved. Our team collaborated with our colleagues in Services Strategy, Marketing, and Legal, to name just a few. These tips are as much theirs as they are ours—and now, yours.&lt;/p&gt;
+&lt;p&gt;Indeed, we have been using and improving on these remote tips internally, but we also recognize that the challenges we’ve faced are hardly unique. And so we wanted to share them with a wider audience. We’re confident that you’ll find something that makes your own remote working life—and that of your team—a little easier.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Remote Tips: Building Relationships</title>
+      
+      <link>/guides/agile/remote-tips-building-relationships/</link>
+      <pubDate>Thu, 01 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/agile/remote-tips-building-relationships/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;socializing&#34;&gt;Socializing&lt;/h2&gt;
+&lt;h4 id=&#34;here-are-a-few-ways-your-team-can-make-remote-work-fun&#34;&gt;Here are a few ways your team can make remote work fun:&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Create virtual water cooler Zoom rooms and Slack channels with specific themes (e.g., favorite movie, last night&amp;rsquo;s dinner, #baking, #bad-jokes, etc.).&lt;/li&gt;
+&lt;li&gt;⏱ Set 10 minutes of casual catch-up time at the start of meetings.&lt;/li&gt;
+&lt;li&gt;🍩 Have a team donut chat (randomized 1:1s).&lt;/li&gt;
+&lt;li&gt;🥅 Plan team activities based on personal goals and needs.&lt;/li&gt;
+&lt;li&gt;Play with Snap Camera to have a little fun on video calls with Snapchat style filters.&lt;/li&gt;
+&lt;li&gt;Agree on a daily team theme, like featuring objects in video calls, dress up, etc. (e.g., “yellow,” “hats,” “animals,” “‘90s movies,” “black tie”).&lt;/li&gt;
+&lt;li&gt;Always start with a fun energizer 😀 to brighten the day.&lt;/li&gt;
+&lt;li&gt;Point your camera out the window.&lt;/li&gt;
+&lt;li&gt;Do a desk show and tell.&lt;/li&gt;
+&lt;li&gt;Make all social activities optional.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;here-are-remote-first-ways-for-team-building&#34;&gt;Here are remote-first ways for team building:&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;☕️ Take 1:1 social/coffee breaks.&lt;/li&gt;
+&lt;li&gt;Have an expensed remote lunch/dinner together.&lt;/li&gt;
+&lt;li&gt;Set up regular, weekly social hours to chat, talk about usual things like sports, kids, vacations, hobbies, books, movies, etc.&lt;/li&gt;
+&lt;li&gt;Play “Two Truths and a Lie.”&lt;/li&gt;
+&lt;li&gt;Do silly quizzes as a team (e.g., “What Star Wars character are you?”).&lt;/li&gt;
+&lt;li&gt;Try a cooking/fermenting/brewing club.&lt;/li&gt;
+&lt;li&gt;Play free and instant-play team games during breaks:
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.webliero.com/&#34;&gt;https://www.webliero.com/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://dominion.games/&#34;&gt;https://dominion.games/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://codenames.game/&#34;&gt;https://codenames.game/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.spyfall.app/&#34;&gt;http://www.spyfall.app/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://skribbl.io/&#34;&gt;http://skribbl.io/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://houseparty.com/&#34;&gt;https://houseparty.com/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;building-empathy&#34;&gt;Building empathy&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Try user manuals:
+&lt;ul&gt;
+&lt;li&gt;Each team member creates their own user manual that outlines hours they prefer to work, how they prefer to communicate, what their personal interests are, etc.&lt;/li&gt;
+&lt;li&gt;Share and compare all the user manuals to find common ground, areas of difference, and actions to ensure effective collaboration and strong relationships.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Take and share results of &lt;a href=&#34;https://www.16personalities.com/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;personality tests&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Use gallery view in video calls.&lt;/li&gt;
+&lt;li&gt;Encourage always-on video, but make it optional; remember, in a remote setting, it&amp;rsquo;s OK to look away!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;creating-virtual-spaces&#34;&gt;Creating virtual spaces&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Set up dedicated meeting rooms for all meetings: IPM, retro, etc.&lt;/li&gt;
+&lt;li&gt;Set up dedicated meeting rooms for pairs (e.g., team-name-pair-1, team-name-pair-2, team-name-pms, etc.).&lt;/li&gt;
+&lt;li&gt;Set up personal meeting rooms so somebody can quickly talk to you even if you’re soloing.&lt;/li&gt;
+&lt;li&gt;Set up a Trello or Miro board where people can drag pictures of themselves and link to the room they’re in, so people who want to talk to you can find where you are, and jump into your Zoom just like they could walk over and talk to you.&lt;/li&gt;
+&lt;li&gt;Set up a shared calendar/social calendar.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;being-kinder-more-inclusive-and-expressive&#34;&gt;Being kinder, more inclusive, and expressive&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;It costs nothing to be kind, even if you don&amp;rsquo;t believe someone deserves it.&lt;/li&gt;
+&lt;li&gt;Sharing praise creates a climate where feedback is viewed as a gift rather than an attack—say thanks!&lt;/li&gt;
+&lt;li&gt;👩🏻‍🏫 Use emoji or emoticons when chatting—they can be more inclusive when English isn’t the first language, and help convey tone, emphasis and emotion.&lt;/li&gt;
+&lt;li&gt;No egos! Don&amp;rsquo;t defend a point to win an argument or double-down on a mistake.&lt;/li&gt;
+&lt;li&gt;Assume positive intent. If a message feels like a slight, assume positive intent while asking for clarification.&lt;/li&gt;
+&lt;li&gt;Make the effort to get to know each other; building rapport enables trust.&lt;/li&gt;
+&lt;li&gt;It&amp;rsquo;s impossible to know everything; you can&amp;rsquo;t know how your words are interpreted without asking.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;checking-in&#34;&gt;Checking in&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Schedule regular virtual coffee chats and happy hours.&lt;/li&gt;
+&lt;li&gt;Schedule 1:1s with team members.&lt;/li&gt;
+&lt;li&gt;Emphasize weekly retros as a way to continuously improve the way you work and get to know each other better.&lt;/li&gt;
+&lt;li&gt;Conduct monthly team health checks to focus on and track team happiness and productivity.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Remote Tips: Facilitation</title>
+      
+      <link>/guides/agile/remote-tips-facillitation/</link>
+      <pubDate>Thu, 01 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/agile/remote-tips-facillitation/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;setting-team-working-agreements-and-ground-rules&#34;&gt;Setting team working agreements and ground rules&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Agree on tools that everyone has access to.&lt;/li&gt;
+&lt;li&gt;Agree on how you will communicate, interact, and make decisions. This can be based on user manuals created by each team member:
+&lt;ul&gt;
+&lt;li&gt;Chat tools are used for _________ .&lt;/li&gt;
+&lt;li&gt;Email is used for ___________ .&lt;/li&gt;
+&lt;li&gt;I tap someone on the shoulder by doing _________.&lt;/li&gt;
+&lt;li&gt;Standup is for _________ .&lt;/li&gt;
+&lt;li&gt;Stand-down is for ____________.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Clearly set the agenda, desired outcomes and a timebox for each session.&lt;/li&gt;
+&lt;li&gt;Agree on hand gestures during video calls.&lt;/li&gt;
+&lt;li&gt;Maintain a team decision log.&lt;/li&gt;
+&lt;li&gt;Maintain a team TODO list or Kanban (e.g., on Miro or Trello).&lt;/li&gt;
+&lt;li&gt;Make the agenda visible to everyone for each session.&lt;/li&gt;
+&lt;li&gt;Use a speaking timer.&lt;/li&gt;
+&lt;li&gt;Agree on how feedback will be shared after each activity.&lt;/li&gt;
+&lt;li&gt;Set aside time before group activities for team members to reflect on their goals for the session.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;preparing-in-advance&#34;&gt;Preparing in advance&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Prepare a digital whiteboard with the activities that you want to run.&lt;/li&gt;
+&lt;li&gt;Keep prompts visible alongside your remote templates.&lt;/li&gt;
+&lt;li&gt;Practice walking through the session beforehand.&lt;/li&gt;
+&lt;li&gt;Add facilitator notes to slides and whiteboards.&lt;/li&gt;
+&lt;li&gt;Agree on who will facilitate.&lt;/li&gt;
+&lt;li&gt;Agree on who will co-facilitate to help respond to participants’ body language.&lt;/li&gt;
+&lt;li&gt;Allocate more time for remote activities.&lt;/li&gt;
+&lt;li&gt;Turn off your desktop notifications!&lt;/li&gt;
+&lt;li&gt;Set up breakout rooms in advance, if possible.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;keeping-participants-engaged-and-included&#34;&gt;Keeping participants engaged and included&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Instead of waiting for people to speak up, try prompting: &amp;ldquo;What are your thoughts, Abbie?&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Use attendees’ names to keep their attention.&lt;/li&gt;
+&lt;li&gt;Use a round-robin format to encourage everyone to speak.&lt;/li&gt;
+&lt;li&gt;Encourage everyone to use Gallery View on video calls.&lt;/li&gt;
+&lt;li&gt;Use apps (e.g., &lt;a href=&#34;https://krisp.ai/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Krisp&lt;/a&gt;) to reduce background noise instead of muting yourself.&lt;/li&gt;
+&lt;li&gt;Repeat yourself as distracted folks may not be fully following your narrative.&lt;/li&gt;
+&lt;li&gt;Use attention-grabbing phrases like “So in summary,” “Now this part is important,” etc.&lt;/li&gt;
+&lt;li&gt;Have more than one speaker to mix it up.&lt;/li&gt;
+&lt;li&gt;Use your camera and visuals.&lt;/li&gt;
+&lt;li&gt;Look at the camera and arrange your screen so that the speaker window is very close to the camera.&lt;/li&gt;
+&lt;li&gt;Keep your energy and excitement up.&lt;/li&gt;
+&lt;li&gt;Speak a bit slower than your usual pace in case of lag.&lt;/li&gt;
+&lt;li&gt;Light your face.&lt;/li&gt;
+&lt;li&gt;Clean up your desktop, tabs, downloads folder, etc., to avoid distracting people.&lt;/li&gt;
+&lt;li&gt;Move your mouse slowly and deliberately.&lt;/li&gt;
+&lt;li&gt;Ask people if they can see something specific on your screen.&lt;/li&gt;
+&lt;li&gt;Explain/demonstrate where your cursor is or what you want people to focus on.&lt;/li&gt;
+&lt;li&gt;Make windows full screen, enlarge your text, or zoom in.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;making-use-of-the-tools&#34;&gt;Making use of the tools&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Always keep video on.&lt;/li&gt;
+&lt;li&gt;Interact in real time (e.g., Miro, Screen, Tuple, etc.).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;using-dual-monitors&#34;&gt;Using dual monitors&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Duplicate the view: Use one screen to participate, and one to get a full view of the digital whiteboard and observe team activities.&lt;/li&gt;
+&lt;li&gt;View teammates on another screen while facilitating team activities to monitor for body language, sign language and other visual cues.&lt;/li&gt;
+&lt;li&gt;Use a separate screen for side-channel communication with other facilitators.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;other-remote-facilitation-resources&#34;&gt;Other remote facilitation resources&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/practitioners-blog/5-tips-for-effective-remote-pair-programming-while-working-from-home&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;5 tips for effective remote pair programming&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/resources-for-remote-software-teams/how-to-conduct-a-remote-event-storming-session&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;How to conduct a remote event storming session&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tanzu.vmware.com/content/resources-for-remote-software-teams&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu Blog | Resources for Remote Software Teams&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Remote Tips: Physical Space</title>
+      
+      <link>/guides/agile/remote-tips-physical-space/</link>
+      <pubDate>Thu, 01 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/agile/remote-tips-physical-space/</guid>
+      <description>
+
+        
+        &lt;p&gt;On this page, you’ll find examples of some VMware employees’ setups within their home in order to give you insight and inspiration on how to set up your own physical space. In addition to these examples, you’ll find a quick interview with each practitioner about how and why they set up their space this way.&lt;/p&gt;
+&lt;h2 id=&#34;setup-examples&#34;&gt;Setup examples&lt;/h2&gt;
+&lt;h3 id=&#34;alex-sherman-product-manager-atlanta&#34;&gt;Alex Sherman (Product Manager, Atlanta)&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/alex-sherman.jpg&#34; alt=&#34;Alex Sherman (Product Manager, Atlanta)&#34;  /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;how-comfortable-are-you-within-your-home-physical-space&#34;&gt;How comfortable are you within your home physical space?&lt;/h5&gt;
+&lt;p&gt;I’m very comfortable with my setup. I love it! I still switch it up by working a little bit in our dining room and then making my way up to my area upstairs. It’s hard to be in a single room all day!&lt;/p&gt;
+&lt;h5 id=&#34;what-are-your-favorite-items-and-why&#34;&gt;What are your favorite items and why?&lt;/h5&gt;
+&lt;p&gt;I’m enjoying my standup desk and balance board more than I thought I would. I feel like I’m able to focus a bit more by standing. I still take sitting breaks often. Having a second monitor is helpful as well.&lt;/p&gt;
+&lt;h5 id=&#34;are-there-particular-elements-that-stimulate-your-creativity&#34;&gt;Are there particular elements that stimulate your creativity?&lt;/h5&gt;
+&lt;p&gt;Yes! Having my old skateboard decks up in front of me give me something else to focus on outside of my screen. I love looking off into the different stickers, designs, and scratches that make up the decks.&lt;/p&gt;
+&lt;h5 id=&#34;are-there-constraints-you-have-and-had-to-work-around&#34;&gt;Are there constraints you have and had to work around?&lt;/h5&gt;
+&lt;p&gt;The only thing I feel restricted on is the impromptu conversations with coworkers. Yes, I’m able to get on a Zoom last minute with our team or Zoom bomb some engineers pairing, but it just feels like everything has to be scheduled. Physically I have everything I feel like I need except for the daily provided breakfasts.&lt;/p&gt;
+&lt;h3 id=&#34;anneliese-fish-designer-washington&#34;&gt;Anneliese Fish (Designer, Washington)&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/anneliese-fish.jpg&#34; alt=&#34;Anneliese Fish (Designer, Washington)&#34;  /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;how-comfortable-are-you-within-your-home-physical-space-1&#34;&gt;How comfortable are you within your home physical space?&lt;/h5&gt;
+&lt;p&gt;I am quite comfortable—in fact, I am exponentially more comfortable now that I have an office (room). I can close the door for privacy and sound reduction. Also, I decorated the entire space in a way that is conducive to me and brings me peace and inspiration.&lt;/p&gt;
+&lt;h5 id=&#34;what-are-your-favorite-items-and-why-1&#34;&gt;What are your favorite items and why?&lt;/h5&gt;
+&lt;p&gt;My favorite items are my pivot chair and standing desk. They help me feel awake and supported, while helping me remember to sit up straight. A close runner up is the nearby cat furniture, for pets and peace to help get through the day.&lt;/p&gt;
+&lt;h5 id=&#34;are-there-particular-elements-that-stimulate-your-creativity-1&#34;&gt;Are there particular elements that stimulate your creativity?&lt;/h5&gt;
+&lt;p&gt;The Kanban board on my wall helps me focus. The absence of clutter works the same way. Clean, clear and focused boosts my ability to focus on tasks. Also the chair in the corner is a good spot for me to take a break and read to promote continuous learning.&lt;/p&gt;
+&lt;h5 id=&#34;are-there-constraints-you-have-and-had-to-work-around-1&#34;&gt;Are there constraints you have and had to work around?&lt;/h5&gt;
+&lt;p&gt;Previously I was working out of the bedroom and my partner had a desk in the living room. This was challenging as my coworkers could hear her talking on a call and so I became conscious about not being on mute, which I think affected my productivity slightly. I was tempted to stay in bed during the day, but found a way to put my work “to bed” on weekends by stowing away all my gear in a backpack.&lt;/p&gt;
+&lt;h3 id=&#34;scott-windsor-engineer-seattle&#34;&gt;Scott Windsor (Engineer, Seattle)&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/scott-windsor.jpg&#34; alt=&#34;Scott Windsor (Engineer, Seattle)&#34;  /&gt;&lt;/p&gt;
+&lt;h5 id=&#34;how-comfortable-are-you-within-your-home-physical-space-2&#34;&gt;How comfortable are you within your home physical space?&lt;/h5&gt;
+&lt;p&gt;I’m fairly comfortable at home. I have a good, big desk with lots of space, headset, comfortable chair, and my ergonomic keyboard (I also have an ergo keyboard at work, so not that different).&lt;/p&gt;
+&lt;h5 id=&#34;what-are-your-favorite-items-and-why-2&#34;&gt;What are your favorite items and why?&lt;/h5&gt;
+&lt;p&gt;Probably the keyboard (it’s one of many that I’ve made).&lt;/p&gt;
+&lt;h5 id=&#34;are-there-particular-elements-that-stimulate-your-creativity-2&#34;&gt;Are there particular elements that stimulate your creativity?&lt;/h5&gt;
+&lt;p&gt;I like having a bookcase close by with tech books for reference. We just added that. I also have a lot of figures/toys but that’s just normal for the house.&lt;/p&gt;
+&lt;h5 id=&#34;are-there-constraints-you-have-and-had-to-work-around-2&#34;&gt;Are there constraints you have and had to work around?&lt;/h5&gt;
+&lt;p&gt;I think the big one is my wife getting used to me talking at home all day while pairing. Noise canceling headphones has been important for her to be able to work again.&lt;/p&gt;
+&lt;h2 id=&#34;gallery&#34;&gt;Gallery&lt;/h2&gt;
+&lt;h4 id=&#34;gereon-buschmann-product-manager-munich&#34;&gt;Gereon Buschmann (Product Manager, Munich)&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/gereon-buschmann.jpg&#34; alt=&#34;Gereon Buschmann (Product Manager, Munich)&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;florent-biville-engineer-franceremote&#34;&gt;Florent Biville (Engineer, France/Remote)&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/florent-biville.jpg&#34; alt=&#34;Florent Biville (Engineer, France/Remote)
+&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;hayk-galystan-engineer-yerevan&#34;&gt;Hayk Galystan (Engineer, Yerevan)&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/hayk-galystan.jpg&#34; alt=&#34;Hayk Galystan (Engineer, Yerevan)&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;red-dolan-designer-portland&#34;&gt;Red Dolan (Designer, Portland)&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/red-dolan.jpg&#34; alt=&#34;Red Dolan (Designer, Portland)&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;peter-tran-engineer-toronto&#34;&gt;Peter Tran (Engineer, Toronto)&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/peter-tran.jpg&#34; alt=&#34;Peter Tran (Engineer, Toronto)&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;nana-asiedu-ampem-engineer-london&#34;&gt;Nana Asiedu-Ampem (Engineer, London)&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/nana-asiedu.jpg&#34; alt=&#34;Nana Asiedu-Ampem (Engineer, London)&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;bill-glover-platform-architect-london&#34;&gt;Bill Glover (Platform Architect, London)&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/bill-glover.jpg&#34; alt=&#34;Bill Glover (Platform Architect, London)&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;janet-amaro-product-desgber-palo-alto&#34;&gt;Janet Amaro (Product Desgber, Palo Alto)&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/janet-amaro.jpg&#34; alt=&#34;Janet Amaro (Product Desgber, Palo Alto)&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;jonathan-sharpe-engineering-manager-london&#34;&gt;Jonathan Sharpe (Engineering Manager, London)&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/jonathan-sharpe.jpg&#34; alt=&#34;Jonathan Sharpe (Engineering Manager, London)&#34;  /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;ryan-hall-engineer-remote-usa&#34;&gt;Ryan Hall (Engineer, Remote USA)&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/agile/remote-physical-space/ryan-hall.jpg&#34; alt=&#34;Ryan Hall (Engineer, Remote USA)&#34;  /&gt;&lt;/p&gt;
+&lt;script&gt;
+    $(document).ready(function () {
+        // Take all images in the &#34;remote-physical-space&#34;, and wrap them in
+        // an &lt;a&gt; tag with appropriate attributes.
+        // We do this instead of using HTML in the .md file because:
+        // 1. It keeps the .md file nice and understandable
+        // 2. The src of markdown images may be modified by Hugo at build time.
+        //    Therefore, it should be used as a source of truth for paths, rather
+        //    than hardcoding path in some HTML.
+        $(&#39;img&#39;)
+            .filter(function(_, element) {
+                return $(element).attr(&#39;src&#39;).indexOf(&#39;remote-physical-space&#39;) !== -1;
+            })
+            .wrap(function() {
+                var element = $(this);
+                var src = element.attr(&#39;src&#39;);
+                var title = element.attr(&#39;alt&#39;);
+
+                return $(&#39;&lt;a&gt;&lt;/a&gt;&#39;)
+                    .attr(&#39;href&#39;, src)
+                    .attr(&#39;title&#39;, title)
+                    .attr(&#39;rel&#39;, &#39;gallery&#39;);
+            });
+
+        // Make all those &#34;&lt;a&gt;&#34; tags part of a lightbox gallery
+        $(&#34;a[rel=&#39;gallery&#39;]&#34;).fancybox();
+    });
+
+&lt;/script&gt;&lt;blockquote&gt;
+&lt;/blockquote&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Remote Tips: Tools and Tips</title>
+      
+      <link>/guides/agile/remote-tips-tools-and-tips/</link>
+      <pubDate>Thu, 01 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/agile/remote-tips-tools-and-tips/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;agreeing-on-the-tool-stack&#34;&gt;Agreeing on the tool stack&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Try to minimize your tool stack!&lt;/li&gt;
+&lt;li&gt;Agree with your team on which tools you’ll use for certain tasks:
+&lt;ul&gt;
+&lt;li&gt;Conversations via video/audio&lt;/li&gt;
+&lt;li&gt;Collaborate/ideate/whiteboard&lt;/li&gt;
+&lt;li&gt;Messaging/chat&lt;/li&gt;
+&lt;li&gt;Pair programming&lt;/li&gt;
+&lt;li&gt;Scheduling and recording events&lt;/li&gt;
+&lt;li&gt;Retros&lt;/li&gt;
+&lt;li&gt;Sharing documents&lt;/li&gt;
+&lt;li&gt;Product backlog&lt;/li&gt;
+&lt;li&gt;Team TODOs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Check out the &lt;a href=&#34;https://remote.com/tools&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Best Tools for Remote Work&lt;/a&gt; for tooling ideas.&lt;/li&gt;
+&lt;li&gt;When working with other teams (e.g., clients, collaborators) understand their tooling limitations and find the best alternatives you can.&lt;/li&gt;
+&lt;li&gt;Ensure everyone knows how to use the chosen tools before the project.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;learning-miro&#34;&gt;Learning Miro&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://help.miro.com/hc/en-us/articles/360018109574-Work-Smarter-not-Harder&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Work smarter, not harder&lt;/a&gt; (Miro blog).&lt;/li&gt;
+&lt;li&gt;Structure sections in the board from left to right.&lt;/li&gt;
+&lt;li&gt;Add running communications and updates at the top of the board.&lt;/li&gt;
+&lt;li&gt;Lock things that you don’t want to be moved before the session! Select immovable items and click the padlock icon in the context menu.&lt;/li&gt;
+&lt;li&gt;Use standard S / M / L sticky note sizes to keep sizing consistent; select a sticky note to see the size option alongside the color.&lt;/li&gt;
+&lt;li&gt;Voting can be done using emojis, colored circles, or with the Miro Vote feature.&lt;/li&gt;
+&lt;li&gt;Use large, brightly colored headings as waypoints to help people navigate the board.&lt;/li&gt;
+&lt;li&gt;Use the ‘Bring everyone to me’ feature to gather participants around your cursor - click your avatar in the top right.&lt;/li&gt;
+&lt;li&gt;Put content inside frames, and give frames useful names; use the frames tab to quickly overview and navigate the board by clicking the frames button in the bottom-left corner menu.&lt;/li&gt;
+&lt;li&gt;Low-fi visuals in Miro can encourage participation; if it’s too polished people can feel intimidated.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;using-miro-templates&#34;&gt;Using Miro templates&lt;/h2&gt;
+&lt;p&gt;We can save each other time if we create templates on Miro and share them with everyone.&lt;/p&gt;
+&lt;h4 id=&#34;ℹ-creating-your-own-miro-templates-and-sharing-with-others&#34;&gt;ℹ️ Creating your own Miro templates and sharing with others&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;Create your template content on your own Miro board; this board must be created under the team you want to share it with.&lt;/li&gt;
+&lt;li&gt;Click and drag over your content to select it.&lt;/li&gt;
+&lt;li&gt;Click the 3-dot button on the right side of the tooltip context menu that appears, and select “Save as template”.&lt;/li&gt;
+&lt;li&gt;Give your template a useful name that will be easy for others to search for.&lt;/li&gt;
+&lt;li&gt;(Optional) Add a helpful description.&lt;/li&gt;
+&lt;li&gt;(Optional) Click “Select the preview area” to set a thumbnail that others will see while searching for the template.&lt;/li&gt;
+&lt;li&gt;The sharing option will be “Personal” by default; select “Shared with the team”.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;ℹ-using-miro-templates-created-by-others&#34;&gt;ℹ️ Using Miro templates created by others&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;Create a new Miro board in your team space (this is important).&lt;/li&gt;
+&lt;li&gt;Click on the templates icon on the left side of the board.&lt;/li&gt;
+&lt;li&gt;Search for the template you need. If you want to see the &amp;ldquo;Introduction to Miro&amp;rdquo; template, for example, type “Introduction to Miro&amp;quot; into the search bar and click on it to add it to your board.&lt;/li&gt;
+&lt;li&gt;If you need to, you can customize the template that appears. This will not affect the original template for everyone else.&lt;/li&gt;
+&lt;li&gt;To share the board with your team and other collaborators use the Share button in the top-right of the screen.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;learning-zoom&#34;&gt;Learning Zoom&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Create easy-to-remember bit.ly links for Zoom rooms.&lt;/li&gt;
+&lt;li&gt;In the participants window, you will see options to:
+&lt;ul&gt;
+&lt;li&gt;Raise hand&lt;/li&gt;
+&lt;li&gt;Reply “yes” or “no”&lt;/li&gt;
+&lt;li&gt;Request to go slower or faster&lt;/li&gt;
+&lt;li&gt;Thumbs up/down&lt;/li&gt;
+&lt;li&gt;Clap&lt;/li&gt;
+&lt;li&gt;Request a break&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Practice features with other facilitators or close team members first.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;breakout-rooms&#34;&gt;Breakout Rooms&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Make sure a facilitator is present in each breakout room to guide conversations, or otherwise leave time for a single facilitator to visit each break out room to guide and do time checks.&lt;/li&gt;
+&lt;li&gt;Spend the time to set up breakout rooms before or during the session; people may need to be manually assigned to rooms; a co-facilitator helps!&lt;/li&gt;
+&lt;li&gt;When the time is up, everyone will be automatically kicked back to the main room - this can be an abrupt and jarring experience; advise participants how long you will break out for, and for how long an extension could be, if needed (e.g., 10 minutes, with the possibility of an extra 2 minutes).&lt;/li&gt;
+&lt;li&gt;Zoom will automatically maintain breakout rooms with the same participants in a single session - it helps to break into the same groups to maintain the rapport.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

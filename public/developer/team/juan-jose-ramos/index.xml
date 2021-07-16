@@ -1,0 +1,890 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Juan Jose Ramos</title>
+    <link>/team/juan-jose-ramos/</link>
+    <description>Recent content in Juan Jose Ramos on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 12 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/team/juan-jose-ramos/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Data: Geode Write-Behind Event Handling with Spring JPA</title>
+      
+      <link>/data/tanzu-gemfire/blog/geode-write-behind-event-handling-with-spring-jpa/</link>
+      <pubDate>Fri, 12 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/blog/geode-write-behind-event-handling-with-spring-jpa/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; is an in-memory data grid that provides real-time, consistent access to data-intensive applications throughout widely distributed cloud architectures. One of the most used features of Apache Geode is the &lt;em&gt;Write-Behind Cache Event Handling&lt;/em&gt; which allows the user to keep external databases in sync with the data stored within an Apache Geode region(s).&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://spring.io/projects/spring-data-jpa&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Data JPA&lt;/a&gt;, part of the larger &lt;a href=&#34;https://spring.io/projects/spring-data&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Data&lt;/a&gt; family, allows the user to easily implement JPA based repositories. The module itself deals with enhanced support for JPA based data access layers and makes it easier to build Spring-powered applications that use data access technologies.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.spring.io/spring-boot-data-geode-build/1.2.7.RELEASE/reference/html5/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot Data Geode&lt;/a&gt; provides the convenience of &lt;a href=&#34;https://spring.io/projects/spring-boot&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot’s&lt;/a&gt; convention over configuration approach using auto-configuration with the Spring Framework’s powerful abstractions and highly consistent programming model to truly simplify the development of Apache Geode applications in a Spring context.&lt;/p&gt;
+&lt;h2 id=&#34;why&#34;&gt;Why?&lt;/h2&gt;
+&lt;p&gt;Implementing a data access layer of an application is a cumbersome task, a lot of boilerplate code needs to be written and tested to execute simple queries, perform pagination, auditing, etc. Spring Data JPA allows the user to significantly improve the implementation of data access layers by reducing the effort to the amount that’s actually needed.&lt;/p&gt;
+&lt;p&gt;An &lt;a href=&#34;https://github.com/apache/geode/blob/develop/geode-core/src/main/java/org/apache/geode/cache/asyncqueue/AsyncEventListener.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;AsyncEventListener&lt;/a&gt; is a simple Apache Geode callback that asynchronously processes batches of events after they have been applied to an Apache Geode &lt;em&gt;Region&lt;/em&gt;. It’s widely used to implement a write-behind cache event handler to synchronize region updates with an external database. It’s, however, cumbersome to configure the &lt;em&gt;asynchronous-event-queue&lt;/em&gt; and the region itself using plain Apache Geode configuration files or Java API. Spring Boot Data Geode makes the process easier, faster, and less error-prone, simplifying the configuration, development, testing, and deployment of the application.&lt;/p&gt;
+&lt;p&gt;Having those technologies out there in the open, why would we want to spend hours and resources in developing and testing the parts on our own?… Guess what, we don’t!; instead, we’re gonna build a small and simple project to show how an Apache Geode write-behind event handling can be easily implemented with the help of Spring Data JPA and Spring Boot Data Geode.&lt;/p&gt;
+&lt;h2 id=&#34;how&#34;&gt;How?&lt;/h2&gt;
+&lt;p&gt;We will build an application that stores &lt;em&gt;Employee&lt;/em&gt; POJOs (Plain Old Java Objects) within an in-memory-based database. We won’t store those objects manually, though, our application will only use an Apache Geode &lt;em&gt;Region&lt;/em&gt; as the datastore, and we’ll leverage an &lt;em&gt;Asynchronous Event Queue&lt;/em&gt; to synchronize our &lt;em&gt;Region&lt;/em&gt; with the external database.&lt;/p&gt;
+&lt;h3 id=&#34;setting-things-up&#34;&gt;Setting Things Up&lt;/h3&gt;
+&lt;p&gt;The fastest and easiest way to set up a &lt;em&gt;Spring Application&lt;/em&gt; from scratch is to use &lt;a href=&#34;https://start.spring.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Initializr&lt;/a&gt;, which offers a fast way to pull in all the dependencies we need for an application and does a lot of the set up automatically.&lt;/p&gt;
+&lt;p&gt;This example needs the &lt;em&gt;H2 Database&lt;/em&gt;, &lt;em&gt;Spring Data JPA&lt;/em&gt;, and &lt;em&gt;Spring for Apache Geode dependencies&lt;/em&gt;. The following image shows the &lt;em&gt;Initializr&lt;/em&gt; set up for the sample project:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/geode-write-behind-event-handling-with-spring-jpa/initializr-screenshot.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;defining-the-entity&#34;&gt;Defining the Entity&lt;/h3&gt;
+&lt;p&gt;In this example we store &lt;code&gt;Employee&lt;/code&gt; objects, each annotated as a JPA entity, so let’s create that.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.examples.model&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;java.io.Serializable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;java.util.Objects&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;javax.persistence.Entity&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;javax.persistence.GeneratedValue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;javax.persistence.GenerationType&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;javax.persistence.Id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@Entity&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Employee&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;implements&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Serializable&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@Id&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;surname&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getSurname&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;surname&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;protected&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{}&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;surname&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;surname&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;surname&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;toString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Employee{&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;
+        &lt;span class=&#34;s&#34;&gt;&amp;#34;id=&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;
+        &lt;span class=&#34;s&#34;&gt;&amp;#34;, name=&amp;#39;&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;&amp;#39;\&amp;#39;&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;
+        &lt;span class=&#34;s&#34;&gt;&amp;#34;, surname=&amp;#39;&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;surname&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;&amp;#39;\&amp;#39;&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;
+        &lt;span class=&#34;sc&#34;&gt;&amp;#39;}&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;boolean&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Object&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;o&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;||&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;getClass&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getClass&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Objects&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Objects&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Objects&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;surname&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;surname&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hashCode&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;?&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;hashCode&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;31&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;?&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;hashCode&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;31&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;surname&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;?&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;surname&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;hashCode&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here we have an &lt;code&gt;Employee&lt;/code&gt; class with three attributes: &lt;code&gt;id&lt;/code&gt;, &lt;code&gt;name&lt;/code&gt;, and &lt;code&gt;surname&lt;/code&gt;. We also have two constructors: the default exists only for the sake of JPA, we will only use the other one to create instances of the &lt;code&gt;Employee&lt;/code&gt; class.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;Employee&lt;/code&gt; class is annotated with &lt;code&gt;Entity&lt;/code&gt;, indicating that it is a JPA entity. (Because no &lt;em&gt;Table&lt;/em&gt; annotation exists, it is assumed that this entity is mapped to a table named &lt;code&gt;Employee&lt;/code&gt;). The &lt;code&gt;Employee&lt;/code&gt; object’s &lt;code&gt;id&lt;/code&gt; property is annotated with &lt;code&gt;Id&lt;/code&gt; so that JPA recognizes it as the object’s ID. The other two properties, &lt;code&gt;name&lt;/code&gt;, and &lt;code&gt;surname&lt;/code&gt;, are left unannotated, it is assumed that they are mapped to columns that share the same names as the properties themselves.&lt;/p&gt;
+&lt;h3 id=&#34;creating-the-repository&#34;&gt;Creating the Repository&lt;/h3&gt;
+&lt;p&gt;Spring Data JPA focuses on using JPA to store data in a relational database, one of its “best features” is the ability to create repository implementations automatically from a repository interface (no boiler-plate code needed on our end, yay!).&lt;/p&gt;
+&lt;p&gt;We won’t be executing custom queries nor anything like that in our example, so we just need to create an empty repository interface that works with &lt;code&gt;Employee&lt;/code&gt; entities and let Spring Data JPA do its magic for us.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.examples.repository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.data.repository.CrudRepository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.examples.model.Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;EmployeeRepository&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CrudRepository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Our &lt;code&gt;EmployeeRepository&lt;/code&gt; extends the &lt;code&gt;CrudRepository&lt;/code&gt; interface; the type of entity and ID that it works with, &lt;code&gt;Employee&lt;/code&gt; and &lt;code&gt;Long&lt;/code&gt;, are specified in the generic parameters on &lt;code&gt;CrudRepository&lt;/code&gt;. By extending &lt;code&gt;CrudRepository&lt;/code&gt;, &lt;code&gt;EmployeeRepository&lt;/code&gt; inherits several methods for working with &lt;code&gt;Employee&lt;/code&gt; persistence, including methods for saving, deleting, and finding &lt;code&gt;Employee&lt;/code&gt; entities.&lt;/p&gt;
+&lt;h3 id=&#34;implementing-the-asynceventlistener&#34;&gt;Implementing the AsyncEventListener&lt;/h3&gt;
+&lt;p&gt;As stated before, an &lt;code&gt;AsyncEventListener&lt;/code&gt; asynchronously processes batches of events after they have been applied to a &lt;em&gt;Region&lt;/em&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.examples.config&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;java.util.List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.slf4j.Logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.slf4j.LoggerFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.beans.factory.annotation.Autowired&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.stereotype.Component&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.cache.asyncqueue.AsyncEvent&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.cache.asyncqueue.AsyncEventListener&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.examples.model.Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.examples.repository.EmployeeRepository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@Component&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;EmployeeAsyncEventListener&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;implements&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AsyncEventListener&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Logger&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;LoggerFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getLogger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EmployeeAsyncEventListener&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EmployeeRepository&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employeeRepository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;EmployeeAsyncEventListener&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EmployeeRepository&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employeeRepository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;employeeRepository&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employeeRepository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;boolean&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;processEvents&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AsyncEvent&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;events&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;events&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;forEach&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;asyncEvent&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;asyncEvent&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getDeserializedValue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+      &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Processing Employee {}...&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;toString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+      &lt;span class=&#34;n&#34;&gt;employeeRepository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;save&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+      &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Processing Employee {}... Done!&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;toString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;});&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In our case, the &lt;em&gt;Region&lt;/em&gt; contains &lt;code&gt;Employee&lt;/code&gt; instances, and we just need to delegate to our &lt;code&gt;EmployeeRepository&lt;/code&gt; in order to persist the entity in the external database (for the sake of simplicity, we won’t deal with errors nor transactional behavior right now).&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;Component&lt;/code&gt; annotation indicates that the class should be considered by &lt;em&gt;Spring&lt;/em&gt; as candidates for auto-detection when using annotation-based configuration and classpath scanning.&lt;/p&gt;
+&lt;h3 id=&#34;configuring-the-apache-geode-region&#34;&gt;Configuring the Apache Geode Region&lt;/h3&gt;
+&lt;p&gt;At this point we just need to wire things up, that is, define a &lt;code&gt;GeodeConfiguration&lt;/code&gt; class and annotate it with the &lt;code&gt;Configuration&lt;/code&gt; annotation to tag it as a source of bean definitions for the application context.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.examples.config&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.context.annotation.Bean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.context.annotation.Configuration&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.data.gemfire.ReplicatedRegionFactoryBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.data.gemfire.wan.AsyncEventQueueFactoryBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.cache.Cache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.cache.GemFireCache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.cache.asyncqueue.AsyncEventQueue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.examples.model.Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;GeodeConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;AsyncEventQueueFactoryBean&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;employeeAsyncEventQueue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GemFireCache&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EmployeeAsyncEventListener&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;asyncEventListener&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;AsyncEventQueueFactoryBean&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;queueFactoryBean&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AsyncEventQueueFactoryBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Cache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;queueFactoryBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setAsyncEventListener&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;asyncEventListener&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;queueFactoryBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Employees&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;ReplicatedRegionFactoryBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;employeesRegion&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GemFireCache&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AsyncEventQueue&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;asyncEventQueue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;ReplicatedRegionFactoryBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;regionFactoryBean&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ReplicatedRegionFactoryBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;regionFactoryBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setCache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;regionFactoryBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setPersistent&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;regionFactoryBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setAsyncEventQueues&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AsyncEventQueue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]{&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;asyncEventQueue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;});&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;regionFactoryBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;employeeAsyncEventQueue()&lt;/code&gt; method simply defines the Apache Geode &lt;em&gt;AsyncEventQueue&lt;/em&gt; that we are going to use as the container for our &lt;code&gt;EmployeeAsyncEventListener&lt;/code&gt;. The listener instance itself will be auto-magically instantiated and passed to our method by &lt;em&gt;Spring&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;employeesRegion()&lt;/code&gt; method just defines and configures the Apache Geode &lt;em&gt;Region&lt;/em&gt;, it attaches the &lt;em&gt;AsyncEventQueue&lt;/em&gt; and sets the &lt;em&gt;Region&lt;/em&gt; as non-persistent &lt;em&gt;Replicate&lt;/em&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;creating-the-application-class&#34;&gt;Creating The Application Class&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.examples&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.boot.SpringApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.boot.autoconfigure.SpringBootApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.data.gemfire.config.annotation.CacheServerApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.data.gemfire.config.annotation.EnableLogging&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@EnableLogging&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@SpringBootApplication&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@CacheServerApplication&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;JPAAsyncListenerApplication&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;SpringApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;run&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;JPAAsyncListenerApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;SpringBootApplication&lt;/code&gt; annotation is for convenience, it adds all of the following to our application:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Configuration:&lt;/em&gt; Tags the class as a source of bean definitions for the application context.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;ComponentScan:&lt;/em&gt; Tells Spring to look for other components, configurations, and services in the &lt;code&gt;org.apache.geode.examples&lt;/code&gt; package.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;EnableAutoConfiguration:&lt;/em&gt; Tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We also added some Spring Boot Data Geode annotations to customize the behavior of our Apache Geode &lt;em&gt;Cache&lt;/em&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;EnableLogging:&lt;/em&gt; Tells Spring Boot Data Geode to configure and enable Apache Geode system logging.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;CacheServerApplication:&lt;/em&gt; Tells Spring Boot Data Geode to enable an embedded Apache Geode &lt;em&gt;CacheServer&lt;/em&gt; instance. Moreover, this also implies an embedded peer &lt;em&gt;Cache&lt;/em&gt; must exist and, therefore, will be configured, constructed, and initialized as a Spring bean in the application context.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;running-the-application&#34;&gt;Running the Application&lt;/h3&gt;
+&lt;p&gt;Believe it or not, the work is done!… with a handful set of classes and annotations (and, as you’ve noticed, almost no code written by us) we have a fully working and operational application, so let’s test it!.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.examples&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import static&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.assertj.core.api.Assertions.assertThat&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import static&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.awaitility.Awaitility.await&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;java.util.ArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;java.util.List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;javax.annotation.Resource&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.junit.jupiter.api.Test&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.slf4j.Logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.slf4j.LoggerFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.beans.factory.annotation.Autowired&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.boot.test.context.SpringBootTest&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.cache.Region&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.cache.asyncqueue.AsyncEventQueue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.examples.model.Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.apache.geode.examples.repository.EmployeeRepository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@SpringBootTest&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;JPAAsyncListenerApplicationTest&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Logger&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;LoggerFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getLogger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;JPAAsyncListenerApplicationTest&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EmployeeRepository&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;repository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AsyncEventQueue&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;asyncEventQueue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Resource&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Employees&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Region&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employeesRegion&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Test&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;jpaListenerTest&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employees&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;employees&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;1L&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Zell&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Dincht&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;employees&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;2L&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Quistis&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Trepe&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;employees&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;3L&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Irvine&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Kinneas&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;employees&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;4L&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Rinoa&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Heartilly&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;employees&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;5L&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Squall&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Leonhart&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// DB empty at the beginning.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;assertThat&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;repository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;findAll&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isEmpty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Employees found with findAll():&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;-------------------------------&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;repository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;findAll&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;forEach&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;toString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()));&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;-------------------------------&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// Insert some employees into the Geode Region
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;employees&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;forEach&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employeesRegion&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// Wait for queues to drain (AsyncEventListener invoked).
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Waiting for AsyncEventQueue to drain...&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;await&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;untilAsserted&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;assertThat&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;asyncEventQueue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;size&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isEqualTo&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Waiting for AsyncEventQueue to drain... Done!.&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// DB should now have all the employees inserted through the AsyncEventListener.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;Iterable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;employeeList&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;repository&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;findAll&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;assertThat&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employeeList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;hasSize&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employees&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;size&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;employeeList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;forEach&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;assertThat&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employees&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;contains&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)));&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Employees found with findAll():&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;-------------------------------&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;employeeList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;forEach&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;toString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()));&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;-------------------------------&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The test is straightforward and simple: we check that the database is empty, insert some &lt;code&gt;Employee&lt;/code&gt; instances into the Apache Geode &lt;em&gt;Region&lt;/em&gt;, wait for the actual &lt;em&gt;Asynchronous Event Queue&lt;/em&gt; to be empty (the &lt;code&gt;AsyncEventListener&lt;/code&gt; processed all the events) and, at the very end, verify that the database contains exactly the &lt;code&gt;Employe&lt;/code&gt; instances we inserted into the &lt;em&gt;Region&lt;/em&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;whats-next&#34;&gt;What&amp;rsquo;s next?&lt;/h2&gt;
+&lt;p&gt;Check out the &lt;a href=&#34;https://github.com/jujoramos/geode-async-listener-spring-jpa&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;geode-async-listener-spring-jpa&lt;/a&gt; project and play around with it, you can add Transaction Management and Error Handling to the AsyncEventListener, build a cluster, etc.&lt;/p&gt;
+&lt;p&gt;Check out &lt;a href=&#34;https://docs.spring.io/spring-boot-data-geode-build/current/reference/html5/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Boot for Apache Geode&lt;/a&gt;, you can do way more things more easily and quickly, with just some extra annotations!.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Spring Security &amp; Geode</title>
+      
+      <link>/data/tanzu-gemfire/blog/spring-security-geode/</link>
+      <pubDate>Wed, 27 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/blog/spring-security-geode/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; is an in-memory data grid that provides real-time, consistent access to data-intensive applications throughout widely distributed cloud architectures. Starting with Geode 1.0.0, the &lt;em&gt;&lt;a href=&#34;https://github.com/apache/geode/blob/support/1.13/geode-core/src/main/java/org/apache/geode/security/SecurityManager.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SecurityManager&lt;/a&gt;&lt;/em&gt; interface was introduced to manage the authentication and authorization mechanisms in a single place, simplifying the implementation and interactions with all components in a consistent manner.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://spring.io/projects/spring-security&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Security&lt;/a&gt; is an extremely powerful and highly customizable framework that provides authentication, authorization, and protection against common attacks, it is the de-facto standard for securing Spring-based applications.&lt;/p&gt;
+&lt;h2 id=&#34;why&#34;&gt;Why?&lt;/h2&gt;
+&lt;p&gt;To secure an &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; cluster, the user needs to provide a custom implementation for the &lt;em&gt;&lt;a href=&#34;https://github.com/apache/geode/blob/support/1.13/geode-core/src/main/java/org/apache/geode/security/SecurityManager.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SecurityManager&lt;/a&gt;&lt;/em&gt; interface, so that the authentication and authorization logic is entirely encapsulated within the implementation itself.&lt;/p&gt;
+&lt;p&gt;The above is, generally speaking, a pretty straightforward task: connect to the external data source (database, LDAP server, text file, etc.) where users and roles are loaded from, validate the user and password, and load into the user object the required roles. I’m oversimplifying things here but, in general, it’s certainly pretty straightforward.&lt;/p&gt;
+&lt;p&gt;The problem, though, is the huge amount of boilerplate code we need to write and test to get this working: connect and manage the pool of connections to the database or active directory server, encode/decode the passwords, handle errors and checked exceptions, the list goes on and on…&lt;/p&gt;
+&lt;p&gt;How would we feel if, once that everything’s up and running, a customer requests to change the datastore where the credentials are loaded from? (remember: no matter what the context is, &lt;em&gt;&lt;strong&gt;the customer is always right!)&lt;/strong&gt;&lt;/em&gt;… ugh! we’ll have to start from scratch!!.&lt;/p&gt;
+&lt;p&gt;Why would we want to develop a tool to authenticate users against a database, if &lt;em&gt;&lt;a href=&#34;https://spring.io/projects/spring-security&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;spring-security&lt;/a&gt;&lt;/em&gt; already provides those implementations, fully tested and supported by the community, out of the box?. On the same page, why would we want to deal with the low-level code required to access and search an LDAP server, if &lt;em&gt;&lt;a href=&#34;https://spring.io/projects/spring-security&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;spring-security&lt;/a&gt;&lt;/em&gt; also does that for us?. The answer is easy: we don’t want to deal with all that low-level stuff and boilerplate code anymore, we just want to focus on our use case and business needs, that’s it.&lt;/p&gt;
+&lt;p&gt;So why reinvent the wheel and implement the &lt;em&gt;&lt;a href=&#34;https://github.com/apache/geode/blob/support/1.13/geode-core/src/main/java/org/apache/geode/security/SecurityManager.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SecurityManager&lt;/a&gt;&lt;/em&gt; to do the same things &lt;em&gt;&lt;a href=&#34;https://spring.io/projects/spring-security&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;spring-security&lt;/a&gt;&lt;/em&gt; already does for us?, it’s way easier (and more secure) to just choose an existing &lt;em&gt;&lt;a href=&#34;https://javadoc.io/doc/org.springframework.security/spring-security-core/latest/org/springframework/security/authentication/AuthenticationProvider.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;AuthenticationProvider&lt;/a&gt;&lt;/em&gt; and integrate it with our &lt;em&gt;&lt;a href=&#34;https://github.com/apache/geode/blob/support/1.13/geode-core/src/main/java/org/apache/geode/security/SecurityManager.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SecurityManager&lt;/a&gt;&lt;/em&gt; instead.&lt;/p&gt;
+&lt;h2 id=&#34;how&#34;&gt;How?&lt;/h2&gt;
+&lt;p&gt;We will implement a &lt;em&gt;&lt;a href=&#34;https://github.com/apache/geode/blob/support/1.13/geode-core/src/main/java/org/apache/geode/security/SecurityManager.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SecurityManager&lt;/a&gt;&lt;/em&gt; that, for authentication purposes, simply delegates to an already configured &lt;em&gt;&lt;a href=&#34;https://javadoc.io/doc/org.springframework.security/spring-security-core/latest/org/springframework/security/authentication/AuthenticationManager.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;AuthenticationManager&lt;/a&gt;&lt;/em&gt;, provided (and previously initialized) by &lt;em&gt;&lt;a href=&#34;https://spring.io/projects/spring-security&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;spring-security&lt;/a&gt;&lt;/em&gt;. For the authorization part, we’ll just verify whether or not the principal has granted permission to carry out the operation.&lt;/p&gt;
+&lt;h3 id=&#34;geodegrantedauthority&#34;&gt;GeodeGrantedAuthority&lt;/h3&gt;
+&lt;p&gt;Apache Geode uses the &lt;em&gt;&lt;a href=&#34;https://github.com/apache/geode/blob/support/1.13/geode-core/src/main/java/org/apache/geode/security/ResourcePermission.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ResourcePermission&lt;/a&gt;&lt;/em&gt; class to define the resource, operation, region, and the key involved in the action to be authorized. Instances of this class are passed into the &lt;em&gt;&lt;a href=&#34;https://github.com/apache/geode/blob/develop/geode-core/src/main/java/org/apache/geode/security/SecurityManager.java#L78&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SecurityManager.authorize&lt;/a&gt;&lt;/em&gt; method to determine whether to allow or deny the operation.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://spring.io/projects/spring-security&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring-Security&lt;/a&gt;, instead, uses the &lt;em&gt;&lt;a href=&#34;https://javadoc.io/doc/org.springframework.security/spring-security-core/latest/org/springframework/security/core/GrantedAuthority.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GrantedAuthority&lt;/a&gt;&lt;/em&gt; class to represent an authority granted to a principal.&lt;/p&gt;
+&lt;p&gt;To connect both implementations, we’ll define a wrapper class, &lt;em&gt;GeodeGrantedAuthority&lt;/em&gt;, that simply implements the &lt;em&gt;&lt;a href=&#34;https://javadoc.io/doc/org.springframework.security/spring-security-core/latest/org/springframework/security/core/GrantedAuthority.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GrantedAuthority&lt;/a&gt;&lt;/em&gt; interface from &lt;a href=&#34;https://spring.io/projects/spring-security&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;spring-security&lt;/a&gt; and encapsulates a &lt;em&gt;&lt;a href=&#34;https://github.com/apache/geode/blob/support/1.13/geode-core/src/main/java/org/apache/geode/security/ResourcePermission.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;ResourcePermission&lt;/a&gt;&lt;/em&gt; instance from &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;GeodeGrantedAuthority&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;implements&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GrantedAuthority&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ResourcePermission&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;resourcePermission&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ResourcePermission&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getResourcePermission&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;resourcePermission&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;GeodeGrantedAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;resource&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;operation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;target&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;resourcePermission&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ResourcePermission&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;resource&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;operation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;target&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;resourcePermission&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;toString&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;geodeauthoritiesmapper&#34;&gt;GeodeAuthoritiesMapper&lt;/h3&gt;
+&lt;p&gt;We don’t want to change our current stored roles and/or authorities, though, no matter what they are or how they are represented, to match the ones used by &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Instead, and to integrate both representations seamlessly, we’ll implement the &lt;em&gt;&lt;a href=&#34;https://javadoc.io/doc/org.springframework.security/spring-security-core/latest/org/springframework/security/core/authority/mapping/GrantedAuthoritiesMapper.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GrantedAuthoritiesMapper&lt;/a&gt;&lt;/em&gt; interface, which can be injected into the authentication layer to convert the authorities loaded from the storage into those which will be stored in the &lt;em&gt;&lt;a href=&#34;https://javadoc.io/doc/org.springframework.security/spring-security-core/latest/org/springframework/security/core/Authentication.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Authentication&lt;/a&gt;&lt;/em&gt; object.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;GeodeAuthoritiesMapper&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;implements&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GrantedAuthoritiesMapper&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;INVALID_AUTHORITY_ERROR&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;The authority can not be mapped to a valid Geode ResourcePermission: &amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+  &lt;span class=&#34;n&#34;&gt;GeodeGrantedAuthority&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;parseAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;stringAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;c1&#34;&gt;// TODO: Mapping logic here.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;exception&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IllegalArgumentException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;INVALID_AUTHORITY_ERROR&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;stringAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;exception&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Collection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GrantedAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;mapAuthorities&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Collection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GrantedAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;authorities&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Collection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GeodeGrantedAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;geodeGrantedAuthorities&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;authorities&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;forEach&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;grantedAuthority&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;geodeGrantedAuthorities&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;parseAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;grantedAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())));&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;geodeGrantedAuthorities&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;geodeauthenticationprovider&#34;&gt;GeodeAuthenticationProvider&lt;/h3&gt;
+&lt;p&gt;Even though the &lt;em&gt;&lt;a href=&#34;https://javadoc.io/doc/org.springframework.security/spring-security-core/latest/org/springframework/security/core/authority/mapping/GrantedAuthoritiesMapper.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GrantedAuthoritiesMapper&lt;/a&gt;&lt;/em&gt; interface is public and supposed to be implemented to convert loaded authorities from storage during the authentication phase, not every &lt;em&gt;&lt;a href=&#34;https://javadoc.io/doc/org.springframework.security/spring-security-core/latest/org/springframework/security/authentication/AuthenticationProvider.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;AuthenticationProvider&lt;/a&gt;&lt;/em&gt; has a public setter method to configure it (at least I couldn’t find it).&lt;/p&gt;
+&lt;p&gt;That said, the whole purpose of the &lt;em&gt;&lt;a href=&#34;https://javadoc.io/doc/org.springframework.security/spring-security-core/latest/org/springframework/security/authentication/dao/DaoAuthenticationProvider.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GeodeAuthenticationProvider&lt;/a&gt;&lt;/em&gt; class is to make that setter method available to users, it simply delegates everything else to the parent DaoAuthenticationProvider class.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;GeodeAuthenticationProvider&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DaoAuthenticationProvider&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;setAuthoritiesMapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GrantedAuthoritiesMapper&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;authoritiesMapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;super&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setAuthoritiesMapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;authoritiesMapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;springsecuritymanager&#34;&gt;SpringSecurityManager&lt;/h3&gt;
+&lt;p&gt;This is the main class, which implements the &lt;a href=&#34;https://github.com/apache/geode/blob/support/1.13/geode-core/src/main/java/org/apache/geode/security/SecurityManager.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SecurityManager&lt;/a&gt; interface from &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; and encapsulates both the authentication and authorization logic.&lt;/p&gt;
+&lt;p&gt;During initialization, we create the application context using the properties passed by &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; to the &lt;em&gt;&lt;a href=&#34;http://more%20easily%20and%20quickly%2C/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SecurityManager.init&lt;/a&gt;&lt;/em&gt; method, and obtain the single configured &lt;em&gt;&lt;a href=&#34;https://javadoc.io/doc/org.springframework.security/spring-security-core/latest/org/springframework/security/authentication/AuthenticationManager.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;AuthenticationManager&lt;/a&gt;&lt;/em&gt; instance.&lt;/p&gt;
+&lt;p&gt;We only require a single property to work: &lt;em&gt;security-spring-security-xml&lt;/em&gt;, which should refer to the spring-security XML configuration. To load the application context, we use the &lt;em&gt;&lt;a href=&#34;https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/support/FileSystemXmlApplicationContext.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;FileSystemXmlApplicationContext&lt;/a&gt;&lt;/em&gt; class, so the configuration file itself could be either in the filesystem &lt;em&gt;(“file:/path/to/file.xml”)&lt;/em&gt; or within the classpath &lt;em&gt;(“classpath:/path/to/file.xml”)&lt;/em&gt;. The “beauty” of this approach is that we can change the authentication layer entirely by just pointing to another configuration file, &lt;strong&gt;without changing a single line of code&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;init&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Properties&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;securityProps&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;securityProps&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;containsKey&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SECURITY_CONFIGURATION_XML&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IllegalArgumentException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NO_SECURITY_CONFIGURATION_FOUND_ERROR&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;springContext&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;synchronized&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;LOCK&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;springContext&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;springConfigurationPath&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;securityProps&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getProperty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SECURITY_CONFIGURATION_XML&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;springContext&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;FileSystemXmlApplicationContext&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;springConfigurationPath&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;springContext&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;registerShutdownHook&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+      &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;n&#34;&gt;authenticationManager&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;springContext&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getBean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AuthenticationManager&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the authentication part, we just obtain the credentials passed by &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; and delegate to the already initialized &lt;em&gt;&lt;a href=&#34;https://javadoc.io/doc/org.springframework.security/spring-security-core/latest/org/springframework/security/authentication/AuthenticationManager.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;AuthenticationManager&lt;/a&gt;&lt;/em&gt; instance.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Object&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;authenticate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Properties&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;credentials&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;throws&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AuthenticationFailedException&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;credentials&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getProperty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;USER_NAME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;password&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;credentials&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getProperty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;PASSWORD&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;Authentication&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;authentication&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;authenticationManager&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;authenticate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UsernamePasswordAuthenticationToken&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+
+  &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;authentication&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AuthenticationFailedException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;INVALID_CREDENTIALS_ERROR&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;authentication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the authorization part, we just get the &lt;em&gt;&lt;a href=&#34;https://javadoc.io/doc/org.springframework.security/spring-security-core/latest/org/springframework/security/core/GrantedAuthority.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GrantedAuthority&lt;/a&gt;&lt;/em&gt; list (all were transformed by our &lt;em&gt;GeodeAuthoritiesMapper&lt;/em&gt; already) from the principal passed by &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; and decide whether it has the required permissions to execute the action or not.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;boolean&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;authorize&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Object&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;principal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ResourcePermission&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;Authentication&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;authentication&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Authentication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;principal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;Collection&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GrantedAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;grantedAuthorities&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;authentication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getAuthorities&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+
+  &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GrantedAuthority&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;grantedAuthority&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;grantedAuthorities&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;grantedAuthority&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;instanceof&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GeodeGrantedAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;n&#34;&gt;GeodeGrantedAuthority&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;geodeGrantedAuthority&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GeodeGrantedAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;grantedAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+      &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;geodeGrantedAuthority&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getResourcePermission&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;implies&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+      &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;examples&#34;&gt;Examples&lt;/h2&gt;
+&lt;p&gt;The code itself is simple and self-explanatory, the only “hard part” is configuring &lt;em&gt;&lt;a href=&#34;https://spring.io/projects/spring-security&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;spring-security&lt;/a&gt;&lt;/em&gt; using the “old-school” XML approach instead of the new annotation or java configuration options (sorry about that, I still prefer to configure things step by step using XML, which in this case also has the benefit of not shipping the configuration with the actual implementation).&lt;/p&gt;
+&lt;h3 id=&#34;compile-and-deploy&#34;&gt;Compile and Deploy&lt;/h3&gt;
+&lt;p&gt;The first step is to download the project and build it, we’ll also need to add some dependencies to the &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; member’s classpath later on, so it’s a good time to get the dependencies generated now.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;geode-spring-security (master): ./gradlew build copyDependencies
+
+BUILD SUCCESSFUL in 2m 20s
+6 actionable tasks: 6 executed
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;update-member-configuration&#34;&gt;Update Member Configuration&lt;/h3&gt;
+&lt;p&gt;There are some extra libraries required for the integration to work as they’re not included in the member’s classpath by default. We have to carefully chose the spring version to match the one used by &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt;, having different versions of the same library within the class path can cause several headaches…&lt;/p&gt;
+&lt;p&gt;Below is the list of extra libraries that need to be added, all can be found under the directory build/dependencies (copied by the &lt;em&gt;copyDependencies&lt;/em&gt; &lt;a href=&#34;https://gradle.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;gradle&lt;/a&gt; task):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ls -l /workspace/extraLibs/
+geode-spring-security-1.0.0.jar
+spring-aop-5.2.1.RELEASE.jar
+spring-beans-5.2.1.RELEASE.jar
+spring-context-5.2.1.RELEASE.jar
+spring-expression-5.2.1.RELEASE.jar
+spring-security-config-5.2.1.RELEASE.jar
+spring-security-core-5.2.1.RELEASE.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Aside from that, we’ll also need to define some extra properties for Apache Geode to pick up our &lt;em&gt;&lt;a href=&#34;https://github.com/apache/geode/blob/support/1.13/geode-core/src/main/java/org/apache/geode/security/SecurityManager.java&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;SecurityManager&lt;/a&gt;&lt;/em&gt; implementation (see &lt;a href=&#34;https://geode.apache.org/docs/guide/112/managing/security/enable_security.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;), and to allow our servers to authenticate against the running locator.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/workspace/config/locator.properties
+security-manager=org.apache.geode.tools.security.SpringSecurityManager
+security-spring-security-xml=file:/workspace/config/inMemory-security-config.xml
+/workspace/config/server.properties
+security-username=clusterManager
+security-password=clusterManagerPassword
+security-spring-security-xml=file:/workspace/config/inMemory-security-config.xml
+/workspace/config/inMemory-security-config.xml
+&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;
+&amp;lt;beans:beans xmlns=&amp;quot;http://www.springframework.org/schema/security&amp;quot;
+             xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot;
+             xmlns:beans=&amp;quot;http://www.springframework.org/schema/beans&amp;quot;
+             xsi:schemaLocation=&amp;quot;
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd&amp;quot;&amp;gt;
+&amp;lt;user-service id=&amp;quot;inMemoryUserDetailsManager&amp;quot;&amp;gt;
+        &amp;lt;user name=&amp;quot;clientReader&amp;quot; password=&amp;quot;{noop}clientReaderPassword&amp;quot; authorities=&amp;quot;DATA:READ&amp;quot;/&amp;gt;
+        &amp;lt;user name=&amp;quot;clientWriter&amp;quot; password=&amp;quot;{noop}clientWriterPassword&amp;quot; authorities=&amp;quot;DATA:WRITE&amp;quot;/&amp;gt;
+        &amp;lt;user name=&amp;quot;clusterReader&amp;quot; password=&amp;quot;{noop}clusterReaderPassword&amp;quot; authorities=&amp;quot;CLUSTER:READ&amp;quot;/&amp;gt;
+        &amp;lt;user name=&amp;quot;clusterManager&amp;quot; password=&amp;quot;{noop}clusterManagerPassword&amp;quot; authorities=&amp;quot;CLUSTER:MANAGE&amp;quot;/&amp;gt;
+    &amp;lt;/user-service&amp;gt;
+&amp;lt;beans:bean id=&amp;quot;geodeAuthenticationProvider&amp;quot; class=&amp;quot;org.apache.geode.tools.security.GeodeAuthenticationProvider&amp;quot;&amp;gt;
+        &amp;lt;beans:property name=&amp;quot;authoritiesMapper&amp;quot;&amp;gt;
+            &amp;lt;beans:bean class=&amp;quot;org.apache.geode.tools.security.GeodeAuthoritiesMapper&amp;quot;/&amp;gt;
+        &amp;lt;/beans:property&amp;gt;
+        &amp;lt;beans:property name=&amp;quot;userDetailsService&amp;quot; ref=&amp;quot;inMemoryUserDetailsManager&amp;quot;/&amp;gt;
+&amp;lt;/beans:bean&amp;gt;
+&amp;lt;authentication-manager&amp;gt;
+        &amp;lt;authentication-provider ref=&amp;quot;geodeAuthenticationProvider&amp;quot;/&amp;gt;
+    &amp;lt;/authentication-manager&amp;gt;
+&amp;lt;/beans:beans&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;start-the-cluster&#34;&gt;Start The Cluster&lt;/h3&gt;
+&lt;p&gt;Now that all configuration steps are done, it’s time to start our secured Apache Geode cluster!.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gfsh&amp;gt;set variable --name=CURRENT_DIRECTORY --value=/workspace
+Value for variable CURRENT_DIRECTORY is now: /workspace.
+------------------------------------------------------------------
+gfsh&amp;gt;start locator --name=locator1 --security-properties-file=${CURRENT_DIRECTORY}/config/locator.properties --classpath=${CURRENT_DIRECTORY}/extraLibs/geode-spring-security-1.0.0.jar:${CURRENT_DIRECTORY}/extraLibs/spring-security-core-5.2.1.RELEASE.jar:${CURRENT_DIRECTORY}/extraLibs/spring-security-config-5.2.1.RELEASE.jar:${CURRENT_DIRECTORY}/extraLibs/spring-context-5.2.1.RELEASE.jar:${CURRENT_DIRECTORY}/extraLibs/spring-beans-5.2.1.RELEASE.jar:${CURRENT_DIRECTORY}/extraLibs/spring-aop-5.2.1.RELEASE.jar:${CURRENT_DIRECTORY}/extraLibs/spring-expression-5.2.1.RELEASE.jar
+Starting a Geode Locator in /Users/jramos/Desktop/Tickets/temporal/locator1...
+........
+Locator in /Users/jramos/Desktop/Tickets/temporal/locator1 on 192.168.8.102[10334] as locator1 is currently online.
+Process ID: 56700
+Uptime: 9 seconds
+Geode Version: 1.12.0
+Java Version: 1.8.0_221
+Log File: /Users/jramos/Desktop/Tickets/temporal/locator1/locator1.log
+JVM Arguments: -DgemfireSecurityPropertyFile=/Users/jramos/Desktop/Tickets/temporal/config/locator.properties -Dgemfire.enable-cluster-configuration=true -Dgemfire.load-cluster-configuration-from-dir=false -Dgemfire.launcher.registerSignalHandlers=true -Djava.awt.headless=true -Dsun.rmi.dgc.server.gcInterval=9223372036854775806
+Class-Path: /Users/jramos/Applications/Apache/Geode/1.12.0/apache-geode-1.12.0/lib/geode-core-1.12.0.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/geode-spring-security-1.0.0.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/spring-security-core-5.2.1.RELEASE.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/spring-security-config-5.2.1.RELEASE.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/spring-context-5.2.1.RELEASE.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/spring-beans-5.2.1.RELEASE.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/spring-aop-5.2.1.RELEASE.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/spring-expression-5.2.1.RELEASE.jar:/Users/jramos/Applications/Apache/Geode/1.12.0/apache-geode-1.12.0/lib/geode-dependencies.jar
+Unable to auto-connect (Security Manager may be enabled). Please use &amp;quot;connect --locator=192.168.8.102[10334] --user --password&amp;quot; to connect Gfsh to the locator.
+Authentication required to connect to the Manager.
+------------------------------------------------------------------
+gfsh&amp;gt;start server --name=server1 --security-properties-file=${CURRENT_DIRECTORY}/config/server.properties --locators=localhost[10334] --classpath=${CURRENT_DIRECTORY}/extraLibs/geode-spring-security-1.0.0.jar:${CURRENT_DIRECTORY}/extraLibs/spring-security-core-5.2.1.RELEASE.jar:${CURRENT_DIRECTORY}/extraLibs/spring-security-config-5.2.1.RELEASE.jar:${CURRENT_DIRECTORY}/extraLibs/spring-context-5.2.1.RELEASE.jar:${CURRENT_DIRECTORY}/extraLibs/spring-beans-5.2.1.RELEASE.jar:${CURRENT_DIRECTORY}/extraLibs/spring-aop-5.2.1.RELEASE.jar:${CURRENT_DIRECTORY}/extraLibs/spring-expression-5.2.1.RELEASE.jar
+Starting a Geode Server in /Users/jramos/Desktop/Tickets/temporal/server1...
+.....
+Server in /Users/jramos/Desktop/Tickets/temporal/server1 on 192.168.8.102[40404] as server1 is currently online.
+Process ID: 56756
+Uptime: 6 seconds
+Geode Version: 1.12.0
+Java Version: 1.8.0_221
+Log File: /Users/jramos/Desktop/Tickets/temporal/server1/server1.log
+JVM Arguments: -DgemfireSecurityPropertyFile=/Users/jramos/Desktop/Tickets/temporal/config/server.properties -Dgemfire.locators=localhost[10334] -Dgemfire.start-dev-rest-api=false -Dgemfire.use-cluster-configuration=true -XX:OnOutOfMemoryError=kill -KILL %p -Dgemfire.launcher.registerSignalHandlers=true -Djava.awt.headless=true -Dsun.rmi.dgc.server.gcInterval=9223372036854775806
+Class-Path: /Users/jramos/Applications/Apache/Geode/1.12.0/apache-geode-1.12.0/lib/geode-core-1.12.0.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/geode-spring-security-1.0.0.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/spring-security-core-5.2.1.RELEASE.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/spring-security-config-5.2.1.RELEASE.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/spring-context-5.2.1.RELEASE.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/spring-beans-5.2.1.RELEASE.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/spring-aop-5.2.1.RELEASE.jar:/Users/jramos/Desktop/Tickets/temporal/extraLibs/spring-expression-5.2.1.RELEASE.jar:/Users/jramos/Applications/Apache/Geode/1.12.0/apache-geode-1.12.0/lib/geode-dependencies.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;At this point the secured cluster is up and running, we must provide a valid user and password to be able to connect to it, and make sure we have the required privileges to execute the operations we want.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;------------------------------------------------------------------
+Valid User - CLUSTER:MANAGE authority not granted
+------------------------------------------------------------------
+gfsh&amp;gt;connect --user=clusterReader --password=clusterReaderPassword
+Connecting to Locator at [host=localhost, port=10334] ..
+Connecting to Manager at [host=192.168.8.102, port=1099] ..
+Successfully connected to: [host=192.168.8.102, port=1099]
+gfsh&amp;gt;shutdown --include-locators=true
+As a lot of data in memory will be lost, including possibly events in queues, do you really want to shutdown the entire distributed system? (Y/n): Y
+Unauthorized. Reason : org.springframework.security.authentication.UsernamePasswordAuthenticationToken@2d88af7c: Principal: org.springframework.security.core.userdetails.User@902a735d: Username: clusterReader; Password: [PROTECTED]; Enabled: true; AccountNonExpired: true; credentialsNonExpired: true; AccountNonLocked: true; Granted Authorities: CLUSTER:READ; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: org.apache.geode.tools.security.GeodeGrantedAuthority@425d23e5 not authorized for CLUSTER:MANAGE
+------------------------------------------------------------------
+Valid User - CLUSTER:MANAGE authority granted
+------------------------------------------------------------------
+gfsh&amp;gt;connect --user=clusterManager --password=clusterManagerPassword
+Connecting to Locator at [host=localhost, port=10334] ..
+Connecting to Manager at [host=192.168.8.102, port=1099] ..
+Successfully connected to: [host=192.168.8.102, port=1099]
+gfsh&amp;gt;shutdown --include-locators=true
+As a lot of data in memory will be lost, including possibly events in queues, do you really want to shutdown the entire distributed system? (Y/n): Y
+Shutdown is triggered
+gfsh&amp;gt;
+No longer connected to 192.168.8.102[1099].
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;what-next&#34;&gt;What next?&lt;/h2&gt;
+&lt;p&gt;Check out the &lt;a href=&#34;https://github.com/jujoramos/geode-spring-security&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;geode-spring-security&lt;/a&gt; project and play around with it, the &lt;em&gt;SpringSecurityManagerDistributedTest&lt;/em&gt; it’s a great starting point as it shows how to set different authentication mechanisms and stores (dataBase, in-Memory, and LDAP) &lt;em&gt;&lt;strong&gt;without changing a single line of code&lt;/strong&gt;&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Check out &lt;a href=&#34;https://spring.io/projects/spring-data-geode&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Data for Apache Geode&lt;/a&gt;, you can do way more things (including what we’ve done here) more easily and quickly, with just some extra annotations!.&lt;/p&gt;
+&lt;p&gt;Looking for other interesting use cases? check the following articles:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@jujoramos/geode-distributed-sequences-12626251d5e3&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Geode Distributed Sequences&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@jujoramos/the-command-region-pattern-14bc49594eca&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Command Region Pattern&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@huynhja/publishing-apache-geode-metrics-to-wavefront-6e9a6cf5992b&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Publishing Apache Geode Metrics to Wavefront&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@boglesby_2508/converting-all-apache-geode-statistics-to-micrometer-meters-e5c94fdc1c56&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Converting All Apache Geode Statistics to Micrometer Meters&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@boglesby_2508/remove-unused-pdxtypes-from-an-apache-geode-distributed-system-5a4f0e199e34&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Removing Unused PdxTypes from an Apache Geode Distributed System&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@huynhja/ingest-store-and-search-json-data-with-apache-kafka-and-apache-geode-fc6d0d2f9d9f&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ingest, Store and Search JSON data with Apache Kafka and Apache Geode&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Need help with a complex problem or want to validate your solution? share some details with the &lt;a href=&#34;https://markmail.org/search/?q=list%3Aorg.apache.geode.user&amp;#43;order%3Adate-backward&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;user&lt;/a&gt; list.&lt;/p&gt;
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/apache/geode&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode Repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/spring-projects/spring-security&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Security Repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/spring-projects/spring-data-geode&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Data Geode Repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jujoramos/geode-spring-security&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Geode Spring Security Repository&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: The Command Region Pattern</title>
+      
+      <link>/data/tanzu-gemfire/blog/command-region-pattern/</link>
+      <pubDate>Wed, 15 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/blog/command-region-pattern/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; is an in-memory data grid that provides real-time, consistent access to data-intensive applications throughout widely distributed cloud architectures. Its many features include fault-tolerance, high-availability, and WAN replication.&lt;/p&gt;
+&lt;p&gt;The multi-site or WAN topology is used to connect distinct clusters, they act as one distributed system when they are coupled, and they act as independent systems when communication between sites fails.&lt;/p&gt;
+&lt;p&gt;The &lt;em&gt;Command Pattern&lt;/em&gt; is a behavioral design pattern in which an object is used to encapsulate all information needed to perform an action or trigger an event.&lt;/p&gt;
+&lt;h2 id=&#34;why&#34;&gt;Why?&lt;/h2&gt;
+&lt;p&gt;Gateway Senders are responsible for transmitting events from one site to another and, by default, only the following operations are replicated across WAN sites:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Entry put.&lt;/li&gt;
+&lt;li&gt;Entry create.&lt;/li&gt;
+&lt;li&gt;Entry distributed destroy (not originated through expiration).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Sometimes we want to replicate more than that, specifically (but not limited to) notifying the remote sites about &lt;em&gt;Region Events&lt;/em&gt; (like &lt;em&gt;destroy&lt;/em&gt; or &lt;em&gt;clear&lt;/em&gt;) that happened on the local cluster. In order to do so, we can implement the &lt;em&gt;Command Region Pattern&lt;/em&gt;.
+I’ve seen this pattern successfully and widely applied in a lot of projects over the years but haven’t found a single point of reference about it, now is a good time to share some examples and reasoning behind the pattern itself.&lt;/p&gt;
+&lt;h2 id=&#34;how&#34;&gt;How?&lt;/h2&gt;
+&lt;p&gt;The idea is pretty straightforward: a custom &lt;em&gt;distributedCommand&lt;/em&gt; region will be used for distribution purposes, which will have a &lt;em&gt;DistributedCommandCacheWriter&lt;/em&gt; attached so we can execute the commands locally. The &lt;em&gt;DistributedCommand Region&lt;/em&gt; itself will exist on all clusters and the commands will be sent across the wire through Geode gateway-senders so remote clusters can receive them through Geode gateway-receivers and execute the unit of work as well.
+&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/command-region-pattern/diagrams/command-region-pattern-diagram.jpeg&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The client application creates a DistributedCommand instance and executes a put operation through the PROXY region.&lt;/li&gt;
+&lt;li&gt;The CacheWriter is invoked and the DistributedCommand is executed locally.&lt;/li&gt;
+&lt;li&gt;The DistributedCommand is added to the gateway-sender queue for distribution to remote clusters.&lt;/li&gt;
+&lt;li&gt;The DistributedCommand is distributed and received by a gateway-receiver on a remote cluster.&lt;/li&gt;
+&lt;li&gt;The DistributedCommand reaches a remote server, where the CacheWriter is invoked and the DistributedCommand is executed locally.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;em&gt;DistributedCommand&lt;/em&gt; interface.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;DistributedCommand&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+  &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;execute&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;default&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getClass&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getSimpleName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create as many implementations of the DistributedCommand interface as you need. Below is a dummy example, which does nothing but print &lt;em&gt;“Hello World from ${clientId}!”&lt;/em&gt; in the logs.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;HelloWorldCommand&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;implements&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DistributedCommand&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Serializable&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;transient&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Logger&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;LogService&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getLogger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clientId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;execute&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Hello World from {}!.&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clientId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a DistributedCommandCacheWriter, its only purpose is to execute the received command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;DistributedCommandCacheWriter&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CacheWriterAdapter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DistributedCommand&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;implements&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Declarable&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;transient&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Logger&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;LogService&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getLogger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;initialize&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Cache&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Properties&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;properties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;beforeCreate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EntryEvent&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DistributedCommand&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;throws&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CacheWriterException&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;DistributedCommand&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;distributedCommand&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;event&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getNewValue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Executing distributed command {}...&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;distributedCommand&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;distributedCommand&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;execute&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Executing distributed command {}... Done!.&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;distributedCommand&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Start two clusters (1 locator and 1 server each) for testing purposes.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gfsh&amp;gt; start locator --name=cluster1-locator --port=10334 --J=-Dgemfire.remote-locators=localhost[11334] --J=-Dgemfire.distributed-system-id=1 --J=-Dgemfire.jmx-manager-start=true --J=-Dgemfire.jmx-manager-port=1080 --J=-Dgemfire.jmx-manager-http-port=0
+gfsh&amp;gt; start server --name=cluster1-server --locators=localhost[10334] --server-port=40401
+gfsh&amp;gt; start locator --name=cluster2-locator --port=11334 --J=-Dgemfire.remote-locators=localhost[10334] --J=-Dgemfire.distributed-system-id=2 --J=-Dgemfire.jmx-manager-start=true --J=-Dgemfire.jmx-manager-port=1090 --J=-Dgemfire.jmx-manager-http-port=0
+gfsh&amp;gt; start server --name=cluster2-server --locators=localhost[11334] --server-port=40402
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Deploy the &lt;em&gt;Commands&lt;/em&gt; and &lt;em&gt;CacheWriter&lt;/em&gt; to both clusters (hint: use the &lt;strong&gt;gfsh deploy&lt;/strong&gt; command).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Connected to cluster1, create the &lt;em&gt;region&lt;/em&gt; and the &lt;em&gt;gateway-sender&lt;/em&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gfsh&amp;gt; connect --locator=localhost[10334]
+gfsh&amp;gt; create gateway-sender --id=sender1 --remote-distributed-system-id=2
+gfsh&amp;gt; create region --name=distributedCommand --type=REPLICATE_PROXY --gateway-sender-id=sender1 --cache-writer=org.apache.geode.tools.command.internal.DistributedCommandCacheWriter
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Connected to cluster2, create the &lt;em&gt;region&lt;/em&gt; and the &lt;em&gt;gateway-receiver&lt;/em&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gfsh&amp;gt; connect --locator=localhost[11334]
+gfsh&amp;gt; create gateway-receiver
+gfsh&amp;gt; create region --name=distributedCommand --type=REPLICATE_PROXY --cache-writer=org.apache.geode.tools.command.internal.DistributedCommandCacheWriter
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;That’s it, you’re ready to start replicating your units of work across clusters!.&lt;/p&gt;
+&lt;h2 id=&#34;example&#34;&gt;Example&lt;/h2&gt;
+&lt;p&gt;The following client application simply connects to cluster1 and inserts the &lt;em&gt;HelloWorldCommand&lt;/em&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;TestClass&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;ClientCacheFactory&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clientCacheFactory&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ClientCacheFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;addPoolLocator&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;10334&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;ClientCache&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clientCache&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clientCacheFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;create&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;Region&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DistributedCommand&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;region&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clientCache&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;.&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DistributedCommand&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;createClientRegionFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ClientRegionShortcut&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;PROXY&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;create&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;distributedCommand&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;region&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;1L&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;HelloWorldCommand&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;TestApplication1&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It’s easy to see in the logs from both servers (&lt;em&gt;cluster1-server&lt;/em&gt; and &lt;em&gt;cluster2-server&lt;/em&gt;) that the command was received and correctly executed by both clusters.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[info 2020/04/10 13:57:24.341 IST &amp;lt;ServerConnection on port 40401 Thread 2&amp;gt; tid=0x51] Executing distributed command HelloWorldCommand...
+[info 2020/04/10 13:57:24.341 IST &amp;lt;ServerConnection on port 40401 Thread 2&amp;gt; tid=0x51] Hello World from TestApplication1!.
+[info 2020/04/10 13:57:24.341 IST &amp;lt;ServerConnection on port 40401 Thread 2&amp;gt; tid=0x51] Executing distributed command HelloWorldCommand... Done!.
+-------------------------------------------------------------------
+[info 2020/04/10 13:57:24.873 IST &amp;lt;ServerConnection on port 5152 Thread 1&amp;gt; tid=0x42] Executing distributed command HelloWorldCommand...
+[info 2020/04/10 13:57:24.873 IST &amp;lt;ServerConnection on port 5152 Thread 1&amp;gt; tid=0x42] Hello World from TestApplication1!.
+[info 2020/04/10 13:57:24.873 IST &amp;lt;ServerConnection on port 5152 Thread 1&amp;gt; tid=0x42] Executing distributed command HelloWorldCommand... Done!.
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;whats-next&#34;&gt;What’s Next?&lt;/h2&gt;
+&lt;p&gt;Check out &lt;a href=&#34;https://github.com/jujoramos/geode-command-region-pattern&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;geode-command-region-pattern&lt;/a&gt; and play around with it, it allows you to test your commands in a distributed fashion using the &lt;a href=&#34;https://cwiki.apache.org/confluence/display/GEODE/About&amp;#43;Distributed&amp;#43;Testing&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;geode-dunit&lt;/a&gt; module.&lt;/p&gt;
+&lt;p&gt;There are several other really useful things that can be done through the usage of this pattern, like distributing a &lt;em&gt;Region.destroy()&lt;/em&gt; or &lt;em&gt;Region.clear()&lt;/em&gt; operation, execute a transaction on the remote cluster, the possibilities are endless, give it a try!&lt;/p&gt;
+&lt;p&gt;Looking for other interesting use cases?, check the following articles:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@jujoramos/geode-distributed-sequences-12626251d5e3&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Geode Distributed Sequences&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@huynhja/publishing-apache-geode-metrics-to-wavefront-6e9a6cf5992b&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Publishing Apache Geode Metrics to Wavefront&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@huynhja/ingest-store-and-search-json-data-with-apache-kafka-and-apache-geode-fc6d0d2f9d9f&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ingest, Store and Search JSON data with Apache Kafka and Apache Geode&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Need help with a complex problem or want to validate your solution?, share some details with the &lt;a href=&#34;https://markmail.org/search/?q=list%3Aorg.apache.geode.user&amp;#43;order%3Adate-backward&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;users&lt;/a&gt; lists.&lt;/p&gt;
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/apache/geode&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode Repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://geode.apache.org/community/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Join the Apache Geode Community&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cwiki.apache.org/confluence/display/GEODE/Asynchronous&amp;#43;Event&amp;#43;Distribution&amp;#43;Internals&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Asynchronous Event Distribution Internals&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Geode Distributed Sequences</title>
+      
+      <link>/data/tanzu-gemfire/blog/geode-distributed-sequences/</link>
+      <pubDate>Mon, 09 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/blog/geode-distributed-sequences/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; is an in-memory data grid that provides real-time, consistent access to data-intensive applications throughout widely distributed cloud architectures. Its many features include fault-tolerance, high-availability, distributed locks and function execution (implement your business logic where the data is stored instead of moving the data to your application!).
+A sequence, also known as a counter, is a feature supported by some database systems to produce unique values on demand, generally increasing the current value by 1 and returning the resulting value to the caller. These sequences are widely known and used, especially in legacy applications.&lt;/p&gt;
+&lt;p&gt;A sequence, also known as a counter, is a feature supported by some database systems to produce unique values on demand, generally increasing the current value by 1 and returning the resulting value to the caller. These sequences are widely known and used, especially in legacy applications.&lt;/p&gt;
+&lt;h2 id=&#34;why&#34;&gt;Why?&lt;/h2&gt;
+&lt;p&gt;In order to move a step closer to cloud-native applications and a little away from legacy RDBMS, it would be nice to have distributed sequences/counters directly managed by &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;how&#34;&gt;How?&lt;/h2&gt;
+&lt;p&gt;The first thing we have to keep in mind is that, even though we can generate unique sequential distributed sequences with Geode, &lt;strong&gt;we have to loosen the restriction about having no-gaps between the sequences.&lt;/strong&gt; If we don’t, there will always be a potential contention point (either while computing sequences or while sequentially executing the application work using the sequences) and, thus, fully parallel processing can not be truly achieved.
+If you are willing to allow gaps, continue reading further, if you don’t… well, this tool is not for you, don’t waste any more of your time :-).&lt;/p&gt;
+&lt;h2 id=&#34;the-solution&#34;&gt;The Solution&lt;/h2&gt;
+&lt;p&gt;Instead of embedding the sequence generation within the real-time processing, use the &lt;a href=&#34;https://github.com/jujoramos/geode-sequence-generator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Geode Sequence Generator&lt;/a&gt; and invoke the service occasionally to retrieve a big enough set of counters to work on.
+Ideally, the service should be invoked during client startup and the batch requested should be big enough to avoid multiple calls to the service in real-time. The above alleviates the contention on the servers and maintains scalability, allowing several client applications to truly process batches of work in parallel using the set of assigned sequentially generated IDs.&lt;/p&gt;
+&lt;h2 id=&#34;how-does-it-work&#34;&gt;How Does it Work?&lt;/h2&gt;
+&lt;p&gt;The tool primarily relies on &lt;code&gt;PERSISTENT&lt;/code&gt; regions, the &lt;code&gt;Distributed Lock Service&lt;/code&gt; and &lt;code&gt;Function Execution&lt;/code&gt;.
+There’s only one &lt;code&gt;Region&lt;/code&gt; acting as the backing store, no matter how many different sequences are managed, and a &lt;code&gt;Distributed Lock&lt;/code&gt; is acquired every time a sequence needs to be computed (thus the recommendation to avoid invoking the service multiple times in real-time and get a big enough batch of sequences to work on from the start).
+To initialize the backing &lt;code&gt;Region&lt;/code&gt;, the tool executes an initialization &lt;code&gt;Function&lt;/code&gt; through the usage of &lt;code&gt;FunctionService.onServers&lt;/code&gt;, allowing the user to choose exactly which servers will be used as the back end for the sequence generation (all by default).
+To generate or retrieve a batch of sequences, the tool executes a &lt;code&gt;Function&lt;/code&gt; through &lt;code&gt;FunctionService.onRegion&lt;/code&gt;, guaranteeing that only the server hosting the primary copy of the data will be reached.&lt;/p&gt;
+&lt;h2 id=&#34;examples&#34;&gt;Examples?&lt;/h2&gt;
+&lt;p&gt;All right, time to write some code, finally!.&lt;/p&gt;
+&lt;h3 id=&#34;compile-and-deploy&#34;&gt;Compile and Deploy&lt;/h3&gt;
+&lt;p&gt;The first step is to download the tool, build it and deploy it to a running Apache Geode cluster. We list the functions at the very end just to verify that they have been correctly registered through the gfsh deploy command.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/data-blogs/tanzu-gemfire/geode-distributed-sequences/geode-distributed-sequences-gfsh-deploy.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;compute-sequences&#34;&gt;Compute Sequences&lt;/h3&gt;
+&lt;p&gt;Add the jar file to your application’s class path, initialize the &lt;code&gt;ClientCache&lt;/code&gt;, initialize the &lt;code&gt;DistributedSequenceFactory&lt;/code&gt; and start retrieving/computing the distributed counters!.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;TestClient&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Worker&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ticketId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Worker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ticketId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;ticketId&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ticketId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;process&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;c1&#34;&gt;// Do something useful here.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;      &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Processed Ticket with Id: &amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ticketId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;throws&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ExecutionException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;InterruptedException&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;ClientCache&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clientCache&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ClientCacheFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;create&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;DistributedSequenceFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;initialize&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;clientCache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;ExecutorService&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;executors&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Executors&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newCachedThreadPool&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;DistributedSequence&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;distributedSequence&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DistributedSequenceFactory&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getSequence&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;ticketId&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;sequences&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;distributedSequence&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;nextBatch&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;1000&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Future&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;processedTickets&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;sequences&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;forEach&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sequence&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;processedTickets&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;executors&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;submit&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;n&#34;&gt;Worker&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;worker&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Worker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sequence&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+      &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;worker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;process&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;})));&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Future&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;future&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;processedTickets&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;future&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;n&#34;&gt;System&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;exit&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;what-next&#34;&gt;What next?&lt;/h2&gt;
+&lt;p&gt;Currently the tool must be downloaded and installed separately, the region is manually created and can be manually modified by client applications, which is a potential risk.
+Write an &lt;a href=&#34;https://cwiki.apache.org/confluence/display/GEODE/Lightweight&amp;#43;RFC&amp;#43;Process&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;RFC&lt;/a&gt; and discuss with the community to see whether it makes sense to have Distributed Sequences available in &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; out of the box.&lt;/p&gt;
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/apache/geode&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode Repository&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/jujoramos/geode-sequence-generator&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Geode Sequence Generator Repository&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Data: Pluggable OQL Method Authorization</title>
+      
+      <link>/data/tanzu-gemfire/blog/pluggable-oql-method-auth/</link>
+      <pubDate>Fri, 07 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/data/tanzu-gemfire/blog/pluggable-oql-method-auth/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; is an in-memory data grid that provides real-time, consistent access to data-intensive applications throughout widely distributed cloud architectures. Between its many features, Apache Geode provides a SQL-like query language called OQL that allows users to access data stored within the regions.&lt;/p&gt;
+&lt;h2 id=&#34;why&#34;&gt;Why?&lt;/h2&gt;
+&lt;p&gt;Before the release of &lt;a href=&#34;https://archive.apache.org/dist/geode/1.3.0/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode 1.3.0&lt;/a&gt;, the OQL engine used to allow any method invocation on objects present in the Geode member’s classpath, including mutators and, through the usage of &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/technotes/guides/reflection/index.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Java Reflection&lt;/a&gt;, internal Geode, JDK or external library methods. This allowed malicious users to do things like the following (ugh!!)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;region&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;destroyRegion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;region&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;getCache&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;close&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To prevent these problems, work was done to tighten up the security and, by default, disallow any method call not explicitly added to an internally hard-coded acceptance list.&lt;/p&gt;
+&lt;p&gt;After the change was in place and released, our users didn’t like this, at all!!&amp;hellip; it is fine to tighten up the security, but the change also prevented users from invoking methods from their own data model… ugh!!.&lt;/p&gt;
+&lt;h2 id=&#34;why-do-we-fall-sir-so-that-we-can-learn-to-pick-ourselves-up&#34;&gt;“Why do we fall, sir?&amp;hellip; So that we can learn to pick ourselves up.”&lt;/h2&gt;
+&lt;p&gt;The &lt;a href=&#34;https://geode.apache.org/community/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode community&lt;/a&gt; learns from previous errors and iterates to improve the end-user experience, that’s why the decision was made to change this “all or nothing approach” and provide users the ability to either choose from some general targeted use case out of box authorization implementations or create their own.&lt;/p&gt;
+&lt;h2 id=&#34;out-of-the-box-implementations&#34;&gt;Out of the Box Implementations&lt;/h2&gt;
+&lt;p&gt;Based on feedback from users, the &lt;a href=&#34;https://geode.apache.org/community/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode community&lt;/a&gt; tried to cover the most common use cases and scenarios when designing and implementing these authorizers; the full list with a brief description for each one is shown below.&lt;/p&gt;
+&lt;h3 id=&#34;restrictedmethodauthorizer&#34;&gt;&lt;em&gt;RestrictedMethodAuthorizer&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;The default “please secure it all” one, it denies everything except for the hard-coded list of known safe methods. Use this if you liked the approach introduced in &lt;a href=&#34;https://archive.apache.org/dist/geode/1.3.0/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode 1.3.0&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To configure this authorizer in your cluster, just execute the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gfsh alter query-service --method-authorizer=org.apache.geode.cache.query.security.RestrictedMethodAuthorizer
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;unrestrictedmethodauthorizer&#34;&gt;&lt;em&gt;UnrestrictedMethodAuthorizer&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;The “I want it all” one, it allows every method invocation except for the ones that are already flagged as “dangerous” by default, that is, those methods that can affect the internals of the cache and its regions and, of course, &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/technotes/guides/reflection/index.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Java reflection&lt;/a&gt;. Use this one for secured clusters where only trusted applications have access to the query engine, or whenever all entries within the cache are immutable.&lt;/p&gt;
+&lt;p&gt;To configure this authorizer in your cluster, execute the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gfsh alter query-service --method-authorizer=org.apache.geode.cache.query.security.UnrestrictedMethodAuthorizer 
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;javabeanaccessormethodauthorizer&#34;&gt;&lt;em&gt;JavaBeanAccessorMethodAuthorizer&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;The “play by the book” one, allowing only those methods from configured packages that follow the &lt;a href=&#34;https://download.oracle.com/otndocs/jcp/7224-javabeans-1.01-fr-spec-oth-JSpec/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JavaBean Specification 1.01&lt;/a&gt;; that is, methods that start with &lt;code&gt;get&lt;/code&gt; or &lt;code&gt;is&lt;/code&gt; followed by the attribute name. Use this one only when you’re 100% sure that all the developers have followed the mentioned specification.&lt;/p&gt;
+&lt;p&gt;To configure this authorizer in your cluster, just execute the command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gfsh alter query-service --method-authorizer=org.apache.geode.cache.query.security.JavaBeanAccessorMethodAuthorizer --authorizer-parameters=com.domain.model
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;regexmethodauthorizer&#34;&gt;&lt;em&gt;RegExMethodAuthorizer&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;The “flexible” one, allowing only those methods that match a regular expression provided by the user. &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; will still prevent the execution of methods that can mess up your cache and regions, along with &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/technotes/guides/reflection/index.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Java reflection&lt;/a&gt; calls, so you don’t need to worry about mistakenly matching dangerous methods that are already known. Use this one for clusters on which you know exactly what is deployed and when, so you can correctly tweak the RegEx to only allow what you want.&lt;/p&gt;
+&lt;p&gt;To configure this authorizer in your cluster, execute the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gfsh alter query-service --method-authorizer=org.apache.geode.cache.query.security.RegExMethodAuthorizer --authorizer-parameters=com.domain.model.*
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;bahhh-none-works-for-me-&#34;&gt;Bahhh… None Works For Me 😢&lt;/h2&gt;
+&lt;p&gt;This all looks good, but none of these authorizers work for my use case… regular expressions are too tricky, not all the methods I need to use in OQL follow the &lt;a href=&#34;https://download.oracle.com/otndocs/jcp/7224-javabeans-1.01-fr-spec-oth-JSpec/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;JavaBean Specification 1.01&lt;/a&gt; and the other two authorizers are either too restrictive or too permissive, what should I do?&lt;/p&gt;
+&lt;p&gt;Not to worry, now comes the fun part (some code, finally!), you can easily develop a custom authorizer and instruct &lt;a href=&#34;https://geode.apache.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode&lt;/a&gt; to use it whenever a method invocation authorization needs to be executed.&lt;/p&gt;
+&lt;p&gt;How? Easy, you just need to implement the &lt;code&gt;MethodInvocationAuthorizer&lt;/code&gt; interface and execute &lt;code&gt;gfsh alter query-service --method-authorizer=my.authorizer.ClassName&lt;/code&gt; to make sure all members use it. You need to keep in mind, though, that the authorizer will be invoked once per query execution (more on this later on), so the authorization logic must be lightning fast!!.&lt;/p&gt;
+&lt;h3 id=&#34;examples&#34;&gt;&lt;em&gt;Examples?&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Since &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/technotes/guides/language/annotations.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Java annotations&lt;/a&gt; are here to stay and a huge percentage of developers love to use them, let’s write an authorizer that relies on annotated methods to decide whether they should be allowed or denied during query execution.&lt;/p&gt;
+&lt;p&gt;The example assumes that you have access to modify the domain model and, more importantly, that you’re willing to do it.&lt;/p&gt;
+&lt;p&gt;Long story short, the authorize callback will only allow methods annotated with our custom annotation, if and only if the method is not already flagged as dangerous by Geode.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Target&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ElementType&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;METHOD&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Retention&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RetentionPolicy&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;RUNTIME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@interface&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Authorized&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;AnnotationBasedMethodAuthorizer&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;implements&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;MethodInvocationAuthorizer&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+ &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RestrictedMethodAuthorizer&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;geodeAuthorizer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+ &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+ &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;initialize&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Cache&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Set&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;parameters&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;// Register the default authorizer.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;geodeAuthorizer&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RestrictedMethodAuthorizer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cache&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+ &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+ &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+ &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;boolean&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;authorize&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Method&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;method&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Object&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;target&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;// Check if forbidden by Geode.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;geodeAuthorizer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isPermanentlyForbiddenMethod&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;method&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;target&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+   &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+  &lt;span class=&#34;c1&#34;&gt;// Check if annotation is present
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;method&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isAnnotationPresent&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Authorized&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+ &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;what-about-performance&#34;&gt;What About Performance?&lt;/h2&gt;
+&lt;p&gt;Considering that the authorization kicks in while the OQL is being executed, performance is certainly a concern and should be taken into consideration, nobody wants the same authorization logic to be invoked for every single object instance traversed by the query engine while building the result set. To optimize this, the query engine remembers whether the method has been already authorized or not for the current query context, basically meaning that the authorization logic will be called once and only once in the lifetime of a query for every new method seen while traversing the objects.&lt;/p&gt;
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/apache/geode&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Apache Geode Repository&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://cwiki.apache.org/confluence/display/GEODE/OQL&amp;#43;Method&amp;#43;Invocation&amp;#43;Security#OQLMethodInvocationSecurity-GeodeBasedMethodAuthorizer&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;OQL Method Invocation Security RFC&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://issues.apache.org/jira/browse/GEODE-6983&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;OQL Method Invocation Security JIRAs&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

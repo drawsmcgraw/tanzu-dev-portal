@@ -1,0 +1,636 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Josh Rosso</title>
+    <link>/team/josh-rosso/</link>
+    <description>Recent content in Josh Rosso on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 24 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/team/josh-rosso/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Container Networking</title>
+      
+      <link>/guides/kubernetes/container-networking/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/container-networking/</guid>
+      <description>
+
+        
+        &lt;p&gt;Kubernetes uses the &lt;a href=&#34;https://github.com/containernetworking/cni&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Container Network
+Interface&lt;/a&gt; (CNI) to provide
+networking functionality to containers. Networking is implemented in CNI
+plugins. The interface / plugin model enables Kubernetes to support many
+networking options implemented via plugins such as Calico, Antrea, and Cilium.&lt;/p&gt;
+&lt;p&gt;Anyone may write a CNI-plugin. The expectation is the plugin will support
+specific operations defined in the specification (e.g.
+&lt;a href=&#34;https://github.com/containernetworking/cni/blob/spec-v0.4.0/SPEC.md#parameters&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;0.4.0&lt;/a&gt;).
+These operations include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ADD&lt;/code&gt;: Add a container to the network.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;DEL&lt;/code&gt;: Delete a container from the network.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;CHECK&lt;/code&gt;: Check whether the container&amp;rsquo;s network is as expected.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;CNI Plugins are often only concerned with container to container networking.
+Kubernetes constructs such as
+&lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/service/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;services&lt;/a&gt; are
+still handled by kube-proxy. This means selecting a target pod for a service may
+still happen via IPtables (round-robin) on the host. Once the target pod is
+selected, the networking facilitated by the CNI plugin will pick up from there.
+Some plugins replace kube-proxy for their own alternative implementation.
+&lt;a href=&#34;https://cilium.io/blog/2019/08/20/cilium-16&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cilium&lt;/a&gt;, for example, has replaced
+kube-proxy for an implementation using
+&lt;a href=&#34;https://en.wikipedia.org/wiki/Berkeley_Packet_Filter&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;BPF&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Enforcement of &lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/network-policies&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;network
+policy&lt;/a&gt;
+is contingent on your choice of plugin. Some plugins, such as
+&lt;a href=&#34;https://github.com/coreos/flannel&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Flannel&lt;/a&gt;, do not enforce policy at all. This
+means that adding network policy objects to your cluster will have no impact.
+Most plugins, however, do enforce policy. Policy can be set for both ingress
+traffic to pods and egress traffic from pods. Kubernetes has a policy API that
+plugins may choose to respect. Some plugins, such as
+&lt;a href=&#34;https://docs.projectcalico.org/v3.11/reference/resources/networkpolicy&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Calico&lt;/a&gt;
+and &lt;a href=&#34;https://docs.cilium.io/en/v1.6/kubernetes/policy&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cilium&lt;/a&gt; offer extended
+APIs through Custom Resource Definitions (CRDs) that provide additional
+functionality. Kubernetes network policy is namespace scoped with no ability to
+apply cluster-wide policy. The only CNI-plugin that offers cluster-level policy
+is Calico&amp;rsquo;s
+&lt;a href=&#34;https://docs.projectcalico.org/v3.11/reference/resources/globalnetworkpolicy&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GlobalNetworkPolicy&lt;/a&gt;
+CRD.&lt;/p&gt;
+&lt;p&gt;Choosing a CNI Plugin comes down to your network topology, desired container
+networking features, and understanding of different routing protocols. Plugins
+that can be used in Kubernetes have all sorts of routing features such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;BGP for route sharing&lt;/li&gt;
+&lt;li&gt;Tunneling protocols (VXLAN, GRE, IP-in-IP, and more)&lt;/li&gt;
+&lt;li&gt;Native routing (no encapsulation)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;popular-tooling-and-approaches&#34;&gt;Popular Tooling and Approaches&lt;/h2&gt;
+&lt;h3 id=&#34;calico&#34;&gt;Calico&lt;/h3&gt;
+&lt;p&gt;Calico has been one of the predominant CNI-plugins since Kubernetes became
+popular. It supports a variety of routing modes including IP-in-IP, VXLAN, and
+Native (non-encapsulated). It even supports versatile routing options such as
+only encapsulating when crossing subnet boundaries. With Calico&amp;rsquo;s native-routing
+abilities, it does not need to incur encapsulation overhead. This means Calico
+can achieve near native network speeds.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Border_Gateway_Protocol&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;BGP&lt;/a&gt; is used to
+distribute routes when running in IP-in-IP or native routing modes. BGP is a
+well known route sharing protocol that many enterprise networks are capable of
+peering with. This enables enterprises to integrate pod networks into their
+networking fabric, making pods routable. This capability unlocks a multitude of
+network topologies.&lt;/p&gt;
+&lt;p&gt;Network Policy support in Calico is arguably the strongest of all CNI plugins.
+Historically, the work Calico did with network policy influenced Kubernetes
+adoption of those constructs. For example, Calico implemented egress policy
+before the Kubernetes project did. Along with full support for Kubernetes
+network policy, Calico offers its own
+&lt;a href=&#34;https://docs.projectcalico.org/v3.11/reference/resources/networkpolicy&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;NetworkPolicy&lt;/a&gt;
+and
+&lt;a href=&#34;https://docs.projectcalico.org/v3.11/reference/resources/globalnetworkpolicy&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;GlobalNetworkPolicy&lt;/a&gt;
+CRDs. These network policies offer advanced features. The global policy enables
+administrators to apply cluster-wide policies. Calico also supports mixing both
+Kubernetes native policies and its own CRDs.&lt;/p&gt;
+&lt;p&gt;Calico is the most common CNI-plugin we have seen in deployments. Tigera, the
+creators of Calico, offer extended enterprise features and support. Additionally
+VMware offers break-fix Calico support for those with the appropriate support
+subscription. With the above in mind, Calico is generally our first choice for
+CNI-plugin.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Diverse routing mode support.
+&lt;ul&gt;
+&lt;li&gt;IP-in-IP&lt;/li&gt;
+&lt;li&gt;Native&lt;/li&gt;
+&lt;li&gt;VXLAN&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Integrates with the Kubernetes API server.
+&lt;ul&gt;
+&lt;li&gt;No direct etcd access required.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Native routing incurs minimal overhead.
+&lt;ul&gt;
+&lt;li&gt;Supports cross-subnet only encapsulation.&lt;/li&gt;
+&lt;li&gt;Uses native routing for all intra-subnet routing.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;BGP route sharing enables advanced topologies.&lt;/li&gt;
+&lt;li&gt;Most capable network policy support.
+&lt;ul&gt;
+&lt;li&gt;Includes Calico-specific GlobalNetworkPolicy.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Break-fix support offered by VMware.&lt;/li&gt;
+&lt;li&gt;External data store not required
+&lt;ul&gt;
+&lt;li&gt;Uses Kubernetes API.&lt;/li&gt;
+&lt;li&gt;Scales with &lt;a href=&#34;https://github.com/projectcalico/typha&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;typha&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;BGP might not be possible in your environment
+&lt;ul&gt;
+&lt;li&gt;If so, Calico&amp;rsquo;s VXLAN mode does not use BGP.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;antrea&#34;&gt;Antrea&lt;/h3&gt;
+&lt;p&gt;Antrea provides container networking based on Open vSwitch. Using Open vSwitch,
+Antrea is capable of offering routing via VXLAN, Geneve, GRE, or STT
+encapsulation methods. Unlike Calico, Antrea can enforce networking rules inside
+Open vSwitch, which should provide more performant policy enforcement relative
+to IPtables.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/container-networking/antrea.png&#34; alt=&#34;Antrea&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Those familiar with Open vSwitch are likely to find Antrea a very compelling
+option. Since Antrea is still in pre-release, we don&amp;rsquo;t recommend it for
+production use cases at this time.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Support many encapsulation protocols.
+&lt;ul&gt;
+&lt;li&gt;VXLAN&lt;/li&gt;
+&lt;li&gt;Geneve&lt;/li&gt;
+&lt;li&gt;GRE&lt;/li&gt;
+&lt;li&gt;STT&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Familiar to users of Open vSwitch.&lt;/li&gt;
+&lt;li&gt;Performant network policy enforcement.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/vmware-tanzu/octant&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Octant&lt;/a&gt; UI support.&lt;/li&gt;
+&lt;li&gt;Break-fix support from VMware.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Must have Open vSwitch kernel module.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;nsx-t&#34;&gt;NSX-T&lt;/h3&gt;
+&lt;p&gt;NSX-T is an extremely capable network virtualization technology. It is used to
+facilitate networking in datacenters around the world. As such, it is very
+uncommon to see the NSX-T CNI plugin used unless an existing NSX-T deployment
+exists. Introducing a net new NSX-T deployment for a Kubernetes platform
+introduces a lot of operational overhead. It is also common for teams running
+Kubernetes on top of vSphere + NSX-T to run a different CNI-plugin (such as
+Calico or Flannel) on top of it.&lt;/p&gt;
+&lt;p&gt;With this in mind, we only recommend considering the NSX-T CNI plugin if there
+is an existing NSX-T deployment and a strong desire to integrate container
+networking with it directly.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;NSX-T is familiar to many VI Admins.&lt;/li&gt;
+&lt;li&gt;NSX-T makes container networking feel more like normal VM networking.
+&lt;ul&gt;
+&lt;li&gt;e.g. Namespaces are assigned their own subnets.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Architecting, Deploying, and Operating NSX-T is a non-trivial task.
+&lt;ul&gt;
+&lt;li&gt;It can be overkill for just container networking.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Unlike most plugins, you&amp;rsquo;re not running the pod network on top of another.
+&lt;ul&gt;
+&lt;li&gt;You&amp;rsquo;re instead using the existing network to run the pod network.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;cilium&#34;&gt;Cilium&lt;/h3&gt;
+&lt;p&gt;Cilium is a powerful CNI-plugin that uses
+&lt;a href=&#34;https://en.wikipedia.org/wiki/Berkeley_Packet_Filter&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;BPF&lt;/a&gt; to make routing
+decisions in a highly performant manner. Cilium has replaced kube-proxy, which
+facilitates services, for it&amp;rsquo;s own eBPF implementation. This makes service
+routing decisions O(1) rather than the time complexity it takes to traverse many
+IPtables chain rules.&lt;/p&gt;
+&lt;p&gt;Cilium&amp;rsquo;s network policy enforcement also uses BPF. Calico leverages IPtables,
+which can have its own scalability issues and troubleshooting complexity.
+Overall, Cilium appears to be a very promising CNI in the Kubernetes ecosystem.&lt;/p&gt;
+&lt;p&gt;Cilium is new to the ecosystem and does not have as many production stories as
+we&amp;rsquo;d expect before recommending it. It may be worth considering for lab
+environments, depending on your tolerance for risk and comfort with BPF, or
+you may want to hold off a little longer.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;BPF enables extremely fast routing decisions.
+&lt;ul&gt;
+&lt;li&gt;Services&lt;/li&gt;
+&lt;li&gt;Network Policy&lt;/li&gt;
+&lt;li&gt;Routing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Community support and enthusiasm is growing.
+&lt;ul&gt;
+&lt;li&gt;Likely to become a predominant CNI-plugin.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Need to ensure BPF kernel support.
+&lt;ul&gt;
+&lt;li&gt;Sometimes not possible in highly regulated environments.&lt;/li&gt;
+&lt;li&gt;Especially with older versions of RHEL.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;You cannot mix Cilium network policy with Kubernetes network policy.&lt;/li&gt;
+&lt;li&gt;Newer player in the ecosystem, still experiencing paper cuts.
+&lt;ul&gt;
+&lt;li&gt;CRD-based backend not scalable yet.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Storage Integration</title>
+      
+      <link>/guides/kubernetes/storage-integration/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/storage-integration/</guid>
+      <description>
+
+        
+        &lt;p&gt;Core Kubernetes does not concern itself with storage integration. At most, it
+provides a set of APIs, &lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/persistent-volumes/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Persistent
+Volumes&lt;/a&gt;,
+&lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Persistent Volume
+Claims&lt;/a&gt;,
+and &lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/storage-classes&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Storage
+Classes&lt;/a&gt;. By
+default, containers can use their own ephemeral storage system and/or leverage
+host storage. Both of these solutions are typically inadequate for enterprise
+workloads. Ephemeral storage goes away if the container dies. Host storage ties
+the container to a specific host and (depending on how you access host storage)
+it can be insecure in multi-tenant environments.&lt;/p&gt;
+&lt;p&gt;The model used by most enterprise platforms is to introduce a provider that can
+enable dynamic provisioning of volumes for workloads requiring some amount of
+persistence. Integration to providers is typically accomplished through a
+container storage interface (CSI) plugin. The following demonstrates the
+relationship.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/storage-integration/diagrams/dynamic-storage-provisioning.png&#34; alt=&#34;Dynamic Storage Provisioning&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;There is high variance in how the above works based on the provider. Some
+providers create multiple PVs ahead of time and make them available to workloads.
+The above is only meant to give a conceptual overview of how the flow might
+work.&lt;/p&gt;
+&lt;h3 id=&#34;container-storage-interface-csi&#34;&gt;Container Storage Interface (CSI)&lt;/h3&gt;
+&lt;p&gt;Kubernetes uses the &lt;a href=&#34;https://github.com/container-storage-interface/spec&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;container storage
+interface&lt;/a&gt; (CSI) to provide
+storage functionality to containers. Storage is implemented in CSI plugins. This
+interface / plugin model enables Kubernetes to support many storage options
+implemented via plugins (or drivers) such as
+&lt;a href=&#34;https://github.com/kubernetes-sigs/vsphere-csi-driver&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;vSphere&lt;/a&gt;,
+&lt;a href=&#34;https://dell.github.io/storage-plugin-docs/docs/dell-csi-driver/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;DellEMC&lt;/a&gt;,
+&lt;a href=&#34;https://github.com/libopenstorage/openstorage/tree/master/csi&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;portworx&lt;/a&gt;, &lt;a href=&#34;https://github.com/kubernetes-sigs/aws-ebs-csi-driver&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;AWS
+EFS&lt;/a&gt;, and
+&lt;a href=&#34;https://github.com/NetApp/trident&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;NetApp&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;A more complete list is available in the &lt;a href=&#34;https://kubernetes-csi.github.io/docs/drivers.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;CSI driver documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Prior to standardization around CSI, the implementation of storage integrations
+had high-variance across providers. There are two common models for running
+storage drivers in Kubernetes. These are through cloud providers and dedicated
+storage providers. Cloud providers (such as AWS and vSphere) package their
+storage driver into the provider, so that it can handle all the integration
+points such as provisioning load balancers and storage volumes. Dedicated
+integrations run as independent processes managing only storage. Below you&amp;rsquo;ll
+find explanations on each.&lt;/p&gt;
+&lt;h3 id=&#34;in-tree-providers&#34;&gt;In-tree Providers&lt;/h3&gt;
+&lt;p&gt;Historically, Kubernetes relied on in-tree &amp;ldquo;cloud&amp;rdquo; provider functionality for
+most storage integration. This method of integration predates CSI. These
+providers are referred to as in-tree because &lt;a href=&#34;https://github.com/kubernetes/kubernetes/tree/v1.18.0-alpha.2/pkg/cloudprovider&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;their code lives in the core
+kubernetes/kubernetes
+repo&lt;/a&gt;.
+With this model, every Kubernetes cluster has cloud provider logic in it, even
+if it wasn&amp;rsquo;t activated. In a cluster integrated with vCenter, the
+kube-apiserver, controller-manager, and kubelet will look as follows.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/storage-integration/diagrams/in-tree-provider.png&#34; alt=&#34;In-tree provider&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;As you can imagine, shipping these components with cloud-provider logic for
+every cut of Kubernetes is not a good model. Additionally, the in-tree model
+does not allow you to update the provider without updating your cluster. In-tree
+providers have been deprecated and are planned to be removed. You should &lt;strong&gt;not&lt;/strong&gt;
+use an in-tree provider for storage integration of your platform.&lt;/p&gt;
+&lt;h3 id=&#34;out-of-tree-providers&#34;&gt;Out-of-tree Providers&lt;/h3&gt;
+&lt;p&gt;Out-of-tree providers encapsulate cloud-provider logic in a controller. This
+controller is commonly referred to as a cloud-controller-manager (CCM). The CCM
+is deployed to your cluster and interacts with the cloud-provider&amp;rsquo;s APIs. The
+storage driver (CSI-plugin) often runs outside of the CCM, but can require the
+CCM to function correctly. In the case of vSphere, you install 3 components.&lt;/p&gt;
+
+
+
+
+
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Component&lt;/th&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Type&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Cloud Controller Manager&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;vsphere-cloud-controller&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Deployment&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Storage Controller&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;vsphere-csi-controller&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;StatefulSet&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Storage Driver (CSI-plugin)&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;vsphere-csi-node&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;DaemonSet&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;With these components installed, a 4 node Kubernetes cluster (assuming 1 master)
+would look as follows.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/storage-integration/diagrams/out-of-tree-provider-and-csi.png&#34; alt=&#34;Out-of-tree provider&#34;  /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;dedicated-storage-integrations&#34;&gt;Dedicated Storage Integrations&lt;/h3&gt;
+&lt;p&gt;Some storage providers have nothing to do with cloud-provider integration. In
+this case they run their integrations / drivers as isolated processes (pods in
+Kubernetes). An example of this model is NetApp&amp;rsquo;s
+&lt;a href=&#34;https://netapp-trident.readthedocs.io/en/stable-v19.10/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Trident&lt;/a&gt; integration.
+Running trident in a cluster will provision volumes against its supported
+providers, such as NetApp&amp;rsquo;s SolidFire. It also handles concerns around backup
+and recovery. Another common project that follows this model is
+&lt;a href=&#34;https://rook.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;rook&lt;/a&gt;, which provides integration with providers like Ceph and
+NFS.
+Also, Dell EMC &lt;a href=&#34;https://github.com/dell/karavi&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Container Storage Modules&lt;/a&gt; (formerly known as Karavi)
+enriches CSI with enterprise storage capabilities such as Authorization, Resiliency and others.&lt;/p&gt;
+&lt;h3 id=&#34;option-considerations&#34;&gt;Option Considerations&lt;/h3&gt;
+&lt;p&gt;There is no shortage of CSI-plugin options. For your environment, the decision
+may be easy because you only have one type of storage available to you, for
+example vSAN. However, if you&amp;rsquo;re thinking about integrating a new storage
+provider, it&amp;rsquo;s important that you consider the storage offerings and resiliency
+guarantees your platform needs to offer. Some key considerations are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What I/O speeds are required for platform workloads?&lt;/li&gt;
+&lt;li&gt;What disaster scenarios does the persistence layer need to handle?&lt;/li&gt;
+&lt;li&gt;How many workloads will need persistent storage?
+&lt;ul&gt;
+&lt;li&gt;How much storage do you need and what are your expansion requirements?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Do you need to offer dynamic volume resizing if a workload uses up its
+storage?&lt;/li&gt;
+&lt;li&gt;What backup scenarios (if any) do you plan to offer?
+&lt;ul&gt;
+&lt;li&gt;Alternatively, do you plan to make the application teams responsible for
+their backups?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;What storage system can you realistically operate? Ceph? vSAN?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Having conversations around these points will help you determine the best
+storage integration for you.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Workload Tenancy</title>
+      
+      <link>/guides/kubernetes/workload-tenancy/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/workload-tenancy/</guid>
+      <description>
+
+        
+        &lt;p&gt;Kubernetes is an inherently multi-tenant system. The term tenant can
+have many meanings. For the purpose of this page, we consider a workload (e.g.
+Kubernetes pod) to be a tenant. In most Kubernetes environments, pods are
+scheduled alongside other pods on the same hosts. Kubernetes has features that
+provide the illusion of workload boundaries such as namespaces. However, odds
+are pods in different namespaces will run together on the same host.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/workload-tenancy/diagrams/k8s-workers-tenancy.png&#34; alt=&#34;Worker Tenancy&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;With multiple tenants running on hosts, there are several concerns to account
+for.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Resource isolation between pods.&lt;/li&gt;
+&lt;li&gt;Workload scheduling decisions based on resource requests.&lt;/li&gt;
+&lt;li&gt;Workload scheduling decisions based on host properties.&lt;/li&gt;
+&lt;li&gt;Priority of workloads (e.g. removing workloads for more important ones).&lt;/li&gt;
+&lt;li&gt;Preventing cross-workload access to memory or data.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Kubernetes provides constructs to ensure workloads run well side-by-side. These
+configuration options have significant depth and can be especially challenging
+in environments where multiple teams are consumers. Additionally, platform teams
+often want to reduce cost by overcommitting resources on nodes. Without these
+constructs in place, workloads will run over each other and incur platform
+instability.&lt;/p&gt;
+&lt;h2 id=&#34;resource-limits-and-requests&#34;&gt;Resource Limits and Requests&lt;/h2&gt;
+&lt;p&gt;For resource contention, limits and requests are the most important concepts to
+understand. An example snippet of a pod setting a resource limit and request is
+as follows.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Pod&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;frontend&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;db&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;mysql&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;resources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;requests&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;memory&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;64Mi&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;cpu&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;250m&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;limits&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;memory&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;128Mi&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;cpu&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;500m&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;limits&#34;&gt;Limits&lt;/h3&gt;
+&lt;p&gt;Limits are enforced on the host level. This means that a container can not use
+more than its allotted resource limit. For CPU, throttling occurs when a process
+exceeds its limit. For memory, a workload is killed when it exceeds its limit.&lt;/p&gt;
+&lt;h3 id=&#34;request&#34;&gt;Request&lt;/h3&gt;
+&lt;p&gt;Requests are used by the scheduler to make scheduling decisions based on desired
+resources and availability. Requests are generally not enforced on the host. For
+memory, a pod can use more than its requested amount. If the node comes under
+contention, the pod may be killed. For CPU, requests are translated into CPU
+shares. This means the pod can use more than its requested CPU, but if the node
+comes under contention, CPU may be throttled to only what was requested.&lt;/p&gt;
+&lt;h3 id=&#34;quality-of-service&#34;&gt;Quality of Service&lt;/h3&gt;
+&lt;p&gt;Based on what is configured above, pods automatically get marked with a specific
+quality of service.&lt;/p&gt;
+
+
+
+
+
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;QoS&lt;/th&gt;
+&lt;th&gt;Condition&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Best Effort&lt;/td&gt;
+&lt;td&gt;No request or limit set&lt;/td&gt;
+&lt;td&gt;Pod is scheduled and uses any available resources to the host.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Guaranteed&lt;/td&gt;
+&lt;td&gt;Limits == Requests&lt;/td&gt;
+&lt;td&gt;The amount of resources a pod is scheduled for equals what its able to consume on the host. If the host comes under contention, the pod could be throttled or killed.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Burstable&lt;/td&gt;
+&lt;td&gt;Limits &amp;gt; Requests&lt;/td&gt;
+&lt;td&gt;A pod can &amp;ldquo;burst&amp;rdquo; beyond its resource request but not above its limit. If the host comes under contention, the pod could be throttled or killed.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;popular-tooling-and-approaches&#34;&gt;Popular Tooling and Approaches&lt;/h2&gt;
+&lt;p&gt;This section covers a multitude of configuration and our recommendations for
+each. For an in-depth guide on tuning these parameters, see the &lt;a href=&#34;../workload-tenancy-cluster-tuning&#34;&gt;Cluster Tuning
+Guide&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;guaranteed-pods&#34;&gt;Guaranteed Pods&lt;/h3&gt;
+&lt;p&gt;Guaranteed pods are created when only &lt;a href=&#34;https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#how-pods-with-resource-limits-are-run&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Resource
+limits&lt;/a&gt;
+are set. Resource limits are enforced on the host level. CPU limits enforce
+throttling when the limit is reached. Memory limits kill the workload when the
+limit is exceeded. In the absence of resource requests, the request is
+automatically set to that of the limit. This can be a good model as it ensures
+the amount of resources the workload is scheduled for is exactly the amount that
+will be available on the host (i.e. no overcommitting). This decreases the
+complexity of workloads. The downside to only using limits is you cannot
+overcommit resources. An example of overcommitting is where you set a limit
+higher than a request, which means the container can use more than is requested,
+unless the host comes under contention.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/workload-tenancy/guaranteed-pods.png&#34; alt=&#34;Guaranteed Pods&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Improved stability
+&lt;ul&gt;
+&lt;li&gt;Eliminates resource contention between workloads&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Reduced infra utilization
+&lt;ul&gt;
+&lt;li&gt;May result in underutilized compute resources&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Can lead to CPU throttling and OOM kills
+&lt;ul&gt;
+&lt;li&gt;Important to understand resource consumption profile of workloads&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;burstable-pods&#34;&gt;Burstable Pods&lt;/h3&gt;
+&lt;p&gt;An advanced use case of cluster resource allocation is to allow pods to burst
+beyond their resource requests and provide a high upper bounds. This enables
+nodes to be overcommitted, where more workloads are scheduled than could be
+handled should they all consume 100% of their CPU and memory resource requests.
+This model can be complex to implement correctly, but also can be the most cost
+effective.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/kubernetes/workload-tenancy/burstable-pod.png&#34; alt=&#34;Burstable Pods&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;When a host comes under contention, CPU is throttled back to the CPU shares
+allocated via the resource request. Once resources free up, containers are able
+to consume the unused resources again.&lt;/p&gt;
+&lt;p&gt;We recommend you &lt;strong&gt;do not&lt;/strong&gt; overcommit memory. Overcommitting memory can cause
+instability in workloads as they are killed when the host comes under resource
+contention.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Possibly improved infra resource utilization&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Potential for resource contention&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;pod-disruption-budgets&#34;&gt;Pod Disruption Budgets&lt;/h3&gt;
+&lt;p&gt;During the life of a Kubernetes cluster, there are many voluntary events, which
+can impact workloads. An example would be draining specific nodes to perform
+maintenance. &lt;code&gt;PodDisruptionBudget&lt;/code&gt;s (PDB) allow you to set a minimum number of
+instances available for your application to ensure Kubernetes blocks before
+continuing with an operation that would break that PDB.&lt;/p&gt;
+&lt;p&gt;For any workload that requires a minimum number of instances running, this is
+recommended.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Improved stability through availability guarantees&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Potential to stall upgrades
+&lt;ul&gt;
+&lt;li&gt;If cluster resources are under contention, an upgrade may stall to respect
+the disruption budget&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;limit-ranges&#34;&gt;Limit Ranges&lt;/h3&gt;
+&lt;p&gt;A &lt;code&gt;LimitRange&lt;/code&gt; sets the maximum or minimum resource limits and requests a pod
+can be declared to use. It also allows for configuring default values, should a
+pod be submitted without these setting in place. The &lt;code&gt;LimitRange&lt;/code&gt; is namespace
+scoped and recommended for administrators to enforce a sensible default and
+limit per-pod.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Provides &amp;ldquo;guardrails&amp;rdquo; for development teams&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Possibly confusing for tenants that don&amp;rsquo;t know how resource values are being set&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;resource-quotas&#34;&gt;Resource Quotas&lt;/h3&gt;
+&lt;p&gt;A &lt;code&gt;ResourceQuota&lt;/code&gt; enables an administrator to set the aggregate resources
+available to a given namespace. It also enables the administrator to limit the
+number of objects that can be created within the namespace, which is referred to
+as object count quota.&lt;/p&gt;
+&lt;p&gt;Below are some of the resources that can be placed under object count quota:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;count/persistentvolumeclaims&lt;/li&gt;
+&lt;li&gt;count/services&lt;/li&gt;
+&lt;li&gt;count/secrets&lt;/li&gt;
+&lt;li&gt;count/configmaps&lt;/li&gt;
+&lt;li&gt;count/replicationcontrollers&lt;/li&gt;
+&lt;li&gt;count/deployments.apps&lt;/li&gt;
+&lt;li&gt;count/replicasets.apps&lt;/li&gt;
+&lt;li&gt;count/statefulsets.apps&lt;/li&gt;
+&lt;li&gt;count/jobs.batch&lt;/li&gt;
+&lt;li&gt;count/cronjobs.batch&lt;/li&gt;
+&lt;li&gt;count/deployments.extensions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For multi-team environments, these constraints can be beneficial to enforce.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Provides controls over resource consumption&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Can be over-restrictive in single-tenant environments&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

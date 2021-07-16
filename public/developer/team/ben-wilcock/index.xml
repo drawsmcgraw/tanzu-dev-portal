@@ -1,0 +1,777 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – </title>
+    <link>/team/ben-wilcock/</link>
+    <description>Recent content on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/team/ben-wilcock/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Python Like A Pro: Managing Global Packages</title>
+      
+      <link>/guides/python/gs-python-installing-global-packages/</link>
+      <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/python/gs-python-installing-global-packages/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;why-you-need-this-guide&#34;&gt;Why You Need This Guide&lt;/h2&gt;
+&lt;p&gt;There are loads of super-useful Python-based tools available in the &lt;a href=&#34;https://pip.pypa.io/en/stable/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Python Package Installer&lt;/a&gt; &amp;mdash; also known as &amp;lsquo;pip&amp;rsquo;. &lt;a href=&#34;http://www.mypy-lang.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;MyPy&lt;/a&gt; the static type checker, &lt;a href=&#34;https://flake8.pycqa.org/en/latest/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Flake8&lt;/a&gt; the awesome code linter, &lt;a href=&#34;https://black.readthedocs.io/en/stable/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Black&lt;/a&gt; the &amp;lsquo;uncompromising code formatter,&amp;rsquo; and &lt;a href=&#34;https://nicolargo.github.io/glances/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Glances&lt;/a&gt; the &amp;lsquo;eye on your system,&amp;rsquo; are all great examples. These are Python packages that are useful globally, across all your Python projects, and beyond!&lt;/p&gt;
+&lt;p&gt;But, as detailed in &lt;a href=&#34;https://packaging.python.org/guides/installing-stand-alone-command-line-tools/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pip&amp;rsquo;s CLI tools documentation&lt;/a&gt;, &amp;ldquo;&lt;em&gt;installing packages and their dependencies to the same global environment can cause version conflicts, and break dependencies that the operating system has on Python packages&lt;/em&gt;.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;Unsurprisingly, the bright folks in &amp;lsquo;python-land&amp;rsquo; have a solution to this problem &amp;mdash; in the form of &lt;a href=&#34;https://pipxproject.github.io/pipx/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;PipX&lt;/a&gt;. PipX is a tool that allows the installation of Python packages in an isolated environment. Because PipX isolates them, their installation won&amp;rsquo;t disrupt each other or your system.&lt;/p&gt;
+&lt;p&gt;Follow the steps below to get started with PipX.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-start&#34;&gt;Before You Start&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://ubuntu.com/download/desktop&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ubuntu 20.04 LTS&lt;/a&gt; provides the reference baseline operating system for this guide. Many Python developers use Linux, and Ubuntu is the most popular Linux distribution. Microsoft also distributes Ubuntu as part of the &lt;a href=&#34;https://ubuntu.com/wsl&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Windows Subsystem for Linux&lt;/a&gt;, so it&amp;rsquo;s available to most Windows 10 users. On Mac OS, most of the tools shown here are available from Homebrew.&lt;/p&gt;
+&lt;p&gt;When following this guide, it helps if you&amp;rsquo;re starting from a clean system. That way, any existing or additional Python installs can&amp;rsquo;t cause issues or confusion as you follow the steps below. If your system isn&amp;rsquo;t clean, try following this guide in a new virtual machine first, so you know what to expect when you try it for real.&lt;/p&gt;
+&lt;p&gt;Finally, if you&amp;rsquo;d prefer to watch a video on this guide, scroll down to the bottom of the page and hit &amp;lsquo;play.&amp;rsquo;&lt;/p&gt;
+&lt;h3 id=&#34;step-1-install-pip-and-pipx&#34;&gt;Step 1: Install Pip And PipX&lt;/h3&gt;
+&lt;p&gt;To install &lt;a href=&#34;https://pipxproject.github.io/pipx/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;PipX&lt;/a&gt;, you first need to install &lt;a href=&#34;https://pip.pypa.io/en/stable/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pip&lt;/a&gt; into your system&amp;rsquo;s Python environment. In Ubuntu &amp;mdash; and WSL environments based upon Ubuntu &amp;mdash; that means adding some packages from the built-in Ubuntu package manager like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo apt install python3-pip python3-venv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now those packages are installed, go ahead and install &lt;a href=&#34;https://pipxproject.github.io/pipx/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pipx&lt;/a&gt; using pip, the system version of Python, and the following commands:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now close your terminal for those changes to take effect.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;exit&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;step-2-install-a-global-command-line-package-with-pipx&#34;&gt;Step 2: Install A Global Command Line Package With PipX&lt;/h3&gt;
+&lt;p&gt;Open a new terminal window and test that &lt;code&gt;pipx&lt;/code&gt; works by calling up pipx&amp;rsquo;s built-in help.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pipx --help
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The help details all the PipX commands. Now try installing the &lt;a href=&#34;https://nicolargo.github.io/glances/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Glances&lt;/a&gt; package globally using &lt;code&gt;pipx install&lt;/code&gt; as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pipx install glances
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After you see the message confirming the installation is complete, run the glances command-line tool by typing &lt;code&gt;glances&lt;/code&gt; at the prompt as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;glances
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The Glances tool will start and show you various live statistics about your computer.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/python/screenshots/gs-python-global-packages-screenshot-python-glances.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;What&amp;rsquo;s cool about &lt;a href=&#34;https://nicolargo.github.io/glances/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Glances&lt;/a&gt; is that it&amp;rsquo;s cross-platform, can run in the terminal, but also offers a way for you to access the machine stats over the network using a web browser. Pretty neat!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Quit glances by issuing the stop command &lt;code&gt;Ctrl-C&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To check the installation of Glances has not altered your system&amp;rsquo;s &lt;code&gt;pip&lt;/code&gt; packages, use the &lt;code&gt;pip list&lt;/code&gt; command.  Glances will &lt;em&gt;not&lt;/em&gt; appear on this list.&lt;/p&gt;
+&lt;p&gt;To see a list of tools installed by &lt;code&gt;pipx&lt;/code&gt;, use the &lt;code&gt;pipx list&lt;/code&gt; command. You will see that Glances &lt;em&gt;is&lt;/em&gt; present on this list.&lt;/p&gt;
+&lt;h3 id=&#34;step-3-run-a-tool-without-installation-with-pipx&#34;&gt;Step 3: Run A Tool Without Installation With PipX&lt;/h3&gt;
+&lt;p&gt;When you&amp;rsquo;re unsure if a package is right for you, PipX offers a way to try the package without installing it. Let&amp;rsquo;s try this feature using the fun &amp;mdash; but mostly useless &amp;mdash; &lt;code&gt;pycowsay&lt;/code&gt; package:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pipx run pycowsay mooooooo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first argument after &lt;code&gt;pipx run&lt;/code&gt; is always assumed to be the name of the package you would like to run. PipX will download &lt;code&gt;pycowsay&lt;/code&gt; and run it in a temporary virtual environment. Any arguments after the package name go straight to the package you&amp;rsquo;re running. The result of the command is the classic cow saying &lt;code&gt;moooooo&lt;/code&gt; as seen in the screenshot below:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/python/screenshots/gs-python-global-packages-screenshot-python-pycowsay.png&#34; alt=&#34;img&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;If you decide that &lt;code&gt;pycowsay&lt;/code&gt; is definitely for you, you can install it permanently using the &lt;code&gt;pipx install&lt;/code&gt; command you saw in Step 2.&lt;/p&gt;
+&lt;h2 id=&#34;keep-leaning&#34;&gt;Keep Leaning&lt;/h2&gt;
+&lt;p&gt;To find out more about PipX, check out the &lt;a href=&#34;https://pipxproject.github.io/pipx/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;PipX website&lt;/a&gt;, the &lt;a href=&#34;https://pipxproject.github.io/pipx/docs/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;PipX docs&lt;/a&gt; or try &lt;code&gt;pipx --help&lt;/code&gt;. To get help on a specific command type &lt;code&gt;pipx &amp;lt;command&amp;gt; --help&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you liked this guide, you might like the others in our &amp;lsquo;Python Like A Pro&amp;rsquo; series:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;Install Python Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-managing-python-packages&#34;&gt;Managing Python Project Dependencies Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;Build Python Docker Containers Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cf-gs&#34;&gt;Run Python In Production Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here&amp;rsquo;s the video to accompany this guide.&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/CKtaKhKOo-Y&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Python Like A Pro: Managing Project Dependencies</title>
+      
+      <link>/guides/python/gs-managing-python-packages/</link>
+      <pubDate>Wed, 19 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/python/gs-managing-python-packages/</guid>
+      <description>
+
+        
+        &lt;h2 id=&#34;why-do-you-need-this-guide&#34;&gt;Why Do You Need This Guide?&lt;/h2&gt;
+&lt;p&gt;Suppose you&amp;rsquo;ve already mastered the fine art of &lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;installing multiple versions of Python&lt;/a&gt; on your computer using &lt;a href=&#34;https://github.com/pyenv/pyenv&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Pyenv&lt;/a&gt;. In that case, you&amp;rsquo;re probably keen to control your Python projects and the packages they use.&lt;/p&gt;
+&lt;p&gt;For a pro-developer, this means mastering some additional tools &amp;mdash; tools designed to help you maintain a healthy degree of separation between your &amp;lsquo;system&amp;rsquo; dependencies and your project dependencies. Without these tools, your system quickly becomes a tangled mess of incompatible packages that break your projects and disrupt your flow.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;This guide follows on where &amp;lsquo;&lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;Python Like A Pro: Installing Python&lt;/a&gt;&amp;rsquo; left off. To complete it, you&amp;rsquo;ll need the &lt;code&gt;pyenv&lt;/code&gt; tool installed on your system and Python 3.8.5 and Python 2.7.18, both installed using the &lt;code&gt;pyenv install&lt;/code&gt; command as discussed in that earlier guide.&lt;/p&gt;
+&lt;p&gt;Check you have Pyenv and the Python versions required using the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv versions
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If successful, you&amp;rsquo;ll see output similar to that below, confirming that &lt;code&gt;pyenv&lt;/code&gt; is working and that Python 3.8.5 and 2.7.18 are available. If not successful, go back to the &lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;earlier guide&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;* system &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt; by /home/ben/.pyenv/version&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  2.7.18
+  3.8.5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, if you&amp;rsquo;d prefer to watch a video on this guide, scroll down to the bottom of the page and hit &amp;lsquo;play.&amp;rsquo;&lt;/p&gt;
+&lt;h2 id=&#34;managing-python-project-dependencies&#34;&gt;Managing Python Project Dependencies&lt;/h2&gt;
+&lt;p&gt;As a rule of thumb, it&amp;rsquo;s best if each Python project you work on has its own set of dependencies, both on the version of Python it needs, but also on any dependencies you install via &lt;a href=&#34;https://pip.pypa.io/en/stable/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pip&lt;/a&gt;. This model is especially true if your work involves tens or even hundreds of Python projects &amp;mdash; like a microservices project.&lt;/p&gt;
+&lt;p&gt;In the past, giving each Python project its independence was difficult. There was no built-in way to achieve isolation between &lt;em&gt;all&lt;/em&gt; your Python projects.  Fortunately, the &lt;a href=&#34;https://github.com/pyenv/pyenv-virtualenv&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Pyenv &amp;lsquo;VirtualEnv&amp;rsquo;&lt;/a&gt; project can fix this issue, and it works with all Python versions including version 2.&lt;/p&gt;
+&lt;p&gt;Pyenv-virtualenv lets you:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;isolate Python projects using a workspace known as a &amp;lsquo;virtual environment.&amp;rsquo;&lt;/li&gt;
+&lt;li&gt;link a Python project to a specific Python version.&lt;/li&gt;
+&lt;li&gt;isolate the pip dependencies within a Python project.&lt;/li&gt;
+&lt;li&gt;automatically switch to the correct virtual environment for the current project.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Let&amp;rsquo;s get &amp;lsquo;hands-on&amp;rsquo; and take a closer look at &lt;code&gt;pyenv virtualenv&lt;/code&gt; in action.&lt;/p&gt;
+&lt;h3 id=&#34;step-1-create-a-python-385-project&#34;&gt;Step 1: Create A Python 3.8.5 Project&lt;/h3&gt;
+&lt;p&gt;Make a new folder and in this folder begin a new Python 3 project by adding a ready-made Python program file like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir python-3-project
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; python-3-project
+curl https://raw.githubusercontent.com/benwilcock/buildpacks-python-demo/master/web.py -o web.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;To see the sample code in the hello world program you just downloaded, use &lt;code&gt;cat web.py&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Now, still within the &lt;code&gt;python-3-project&lt;/code&gt; folder, create a new Python 3.8.5 virtual environment using &lt;code&gt;pyenv virtualenv &amp;lt;version&amp;gt; &amp;lt;project-name&amp;gt;&lt;/code&gt; like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv virtualenv 3.8.5 py3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then, activate the new &lt;code&gt;py3&lt;/code&gt; virtual environment within the &lt;code&gt;python-3-project&lt;/code&gt; folder as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv &lt;span class=&#34;nb&#34;&gt;local&lt;/span&gt; py3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;At this point, your prompt may change slightly to confirm that the virtual environment is active. The folder will contain a new hidden file called &lt;code&gt;.python-version&lt;/code&gt;. This file contains the name of the virtual environment currently active for this folder &amp;mdash; in this case, &lt;code&gt;py3&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# .python-version&lt;/span&gt;
+py3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;step-2-add-some-package-dependencies&#34;&gt;Step 2: Add Some Package Dependencies&lt;/h3&gt;
+&lt;p&gt;From this point on, any dependencies you install while in this folder will be specific to the &lt;code&gt;py3&lt;/code&gt; virtual environment. Add the &lt;a href=&#34;https://palletsprojects.com/p/flask/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Flask&lt;/a&gt; and &lt;a href=&#34;https://gunicorn.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Gunicorn&lt;/a&gt; packages as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pip install Flask gunicorn
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, when you list the currently installed pip packages with &lt;code&gt;pip list&lt;/code&gt;, the list displayed includes Flask and Gunicorn. The version of Gunicorn should be &lt;code&gt;20.x.x&lt;/code&gt; or higher because this was the first version designed exclusively for Python 3. Freeze the pip installed packages and their versions into a file with the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pip freeze &amp;gt; requirements.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The contents of the &lt;code&gt;requirements.txt&lt;/code&gt; file should be similar to those shown below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# requirements.txt&lt;/span&gt;
+&lt;span class=&#34;nv&#34;&gt;click&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;7.1.2
+&lt;span class=&#34;nv&#34;&gt;Flask&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;1.1.2
+&lt;span class=&#34;nv&#34;&gt;gunicorn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;20.0.4
+&lt;span class=&#34;nv&#34;&gt;itsdangerous&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;1.1.0
+&lt;span class=&#34;nv&#34;&gt;Jinja2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;2.11.2
+&lt;span class=&#34;nv&#34;&gt;MarkupSafe&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;1.1.1
+&lt;span class=&#34;nv&#34;&gt;Werkzeug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;1.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;step-3-test-the-application&#34;&gt;Step 3: Test The Application&lt;/h3&gt;
+&lt;p&gt;Use Gunicorn and Flask to run the &lt;code&gt;web.py&lt;/code&gt; application as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gunicorn --bind&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0.0.0.0:8080 web:app
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When Gunicorn starts, it reports its version as &lt;code&gt;20.x.x&lt;/code&gt; like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2020-08-19 10:37:08 +0100&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;11875&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;INFO&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; Starting gunicorn 20.0.4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, point your browser to &lt;code&gt;http://localhost:8080&lt;/code&gt; and you&amp;rsquo;ll be greeted with the legend &lt;strong&gt;&amp;ldquo;Hello, World!&amp;quot;&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;step-4-leave-the-project-folder&#34;&gt;Step 4: Leave The Project Folder&lt;/h3&gt;
+&lt;p&gt;Finally, leave the &lt;code&gt;python-3-project&lt;/code&gt; folder.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; ..
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;py3&lt;/code&gt; virtual environment will deactivate itself, and your regular command prompt will reappear. The command &lt;code&gt;pyenv version&lt;/code&gt; will confirm which version of Python is currently active now you&amp;rsquo;ve left the &lt;code&gt;python-3-project&lt;/code&gt; folder.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# result of &amp;#39;pyenv version&amp;#39; (in my case)&lt;/span&gt;
+system &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt; by /home/ben/.pyenv/version&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Should you ever move back into the &lt;code&gt;python-3-project&lt;/code&gt; folder, pyenv will automatically activate the &lt;code&gt;py3&lt;/code&gt; virtual environment.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;step-5-rinse-and-repeat-with-python-2817&#34;&gt;Step 5: Rinse And Repeat With Python 2.8.17&lt;/h3&gt;
+&lt;p&gt;Repeat steps 1-4 above, but this time, create a folder called &lt;code&gt;python-2-project&lt;/code&gt; and use Python version 2.7.18 as the basis of your virtual environment. The updated commands for step 1 are as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir python-2-project
+&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; python-2-project
+pyenv virtualenv 2.8.17 py2
+pyenv &lt;span class=&#34;nb&#34;&gt;local&lt;/span&gt; py2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In step 2, install the same packages via &lt;code&gt;pip&lt;/code&gt;, but this time notice how the version of Gunicorn that pip installs changes to &lt;code&gt;19.x.x&lt;/code&gt;. Version 19 of Gunicorn was the last version to support Python 2.&lt;/p&gt;
+&lt;p&gt;In step 3, run your app in Gunicorn as before, but this time, you&amp;rsquo;ll notice that it&amp;rsquo;s Gunicorn version &lt;code&gt;19.x.x&lt;/code&gt; that has started:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2020-08-19 11:14:52 +0000&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;15150&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;INFO&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; Starting gunicorn 19.10.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;To discover more of what &lt;code&gt;pyenv&lt;/code&gt; can do for you, check out the &lt;a href=&#34;https://github.com/pyenv/pyenv&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pyenv website&lt;/a&gt; or try &lt;code&gt;pyenv --help&lt;/code&gt;. To get help on a specific command in pyenv type &lt;code&gt;pyenv &amp;lt;command&amp;gt; --help&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you liked this guide, you might find these others in our &amp;lsquo;Python Like A Pro&amp;rsquo; series useful:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;Install Python Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-installing-global-packages&#34;&gt;Managing Python Global Packages Like A Pro&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;Build Python Docker Containers Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cf-gs&#34;&gt;Run Python In Production Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here’s the video to accompany this guide:&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/7Id2EU0zjw8&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Python Like A Pro: How to Install Python</title>
+      
+      <link>/guides/python/gs-python-like-a-pro/</link>
+      <pubDate>Fri, 14 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/python/gs-python-like-a-pro/</guid>
+      <description>
+
+        
+        &lt;h3 id=&#34;why-do-you-need-this-guide&#34;&gt;Why do you need this guide?&lt;/h3&gt;
+&lt;p&gt;As a professional Python developer, you&amp;rsquo;ll be asked to work on a wide variety of projects. The tools you&amp;rsquo;ll use to do that work may need to change on a project-by-project basis. One day you may be maintaining some legacy code written in Python 2; the next day, you may be prototyping in the very latest version of Python 3.&lt;/p&gt;
+&lt;p&gt;And here lies the problem. The &lt;a href=&#34;https://www.jetbrains.com/lp/python-developers-survey-2019/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;2019 Python Developers Survey&lt;/a&gt; found that 66% of Python developers get their Python interpreter either from their operating system or from a downloaded installer. For these developers, switching between Python versions is not easy and could result in a broken system.&lt;/p&gt;
+&lt;p&gt;So in this guide, you&amp;rsquo;ll learn how to install many different versions of Python at the same time and discover how to switch between them with ease.&lt;/p&gt;
+&lt;h3 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h3&gt;
+&lt;p&gt;There&amp;rsquo;s a lot of different OS and package management choices out there.  But in the &lt;a href=&#34;https://www.jetbrains.com/lp/python-developers-survey-2019/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Python Survey&lt;/a&gt; mentioned earlier, Linux was shown to be the most popular OS. &lt;a href=&#34;https://ubuntu.com/download/desktop&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ubuntu 20.04&lt;/a&gt; has been chosen as the baseline for this guide because it&amp;rsquo;s the latest LTS of the most popular Linux distribution. Ubuntu is also used in the &lt;a href=&#34;https://ubuntu.com/wsl&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Windows Subsystem for Linux&lt;/a&gt;, so it&amp;rsquo;s available to most Windows 10 based developers. On Mac OS, most of the tools shown here can be added via Homebrew.&lt;/p&gt;
+&lt;p&gt;When following this guide, it helps if you&amp;rsquo;re starting from a clean system. That way, any existing or additional Python installs can&amp;rsquo;t cause issues or confusion as you follow the steps below. If your system isn&amp;rsquo;t clean, try following this guide in a new Ubuntu virtual machine first, just so you know what to expect.&lt;/p&gt;
+&lt;p&gt;Finally, if you&amp;rsquo;d prefer to watch a video on this guide, scroll down to the bottom of the page and hit &amp;lsquo;play.&amp;rsquo;&lt;/p&gt;
+&lt;h3 id=&#34;installing-python-like-a-pro&#34;&gt;Installing Python Like A Pro&lt;/h3&gt;
+&lt;p&gt;Having the ability to install and switch between Python versions in seconds &amp;mdash; without affecting your operating system &amp;mdash; will make your job much easier. Fortunately, there&amp;rsquo;s a tool that can help.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/pyenv/pyenv&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Pyenv&lt;/a&gt; is an open-source command-line tool that&amp;rsquo;s easy to install and takes care of the messy business of installing and managing multiple Python versions.&lt;/p&gt;
+&lt;p&gt;Pyenv lets you:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;install multiple versions of Python at the same time.&lt;/li&gt;
+&lt;li&gt;change your global version at any time.&lt;/li&gt;
+&lt;li&gt;use different Python versions &amp;lsquo;per-project&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;override your Python version with an environment variable.&lt;/li&gt;
+&lt;li&gt;search for commands present in multiple versions of Python at once.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Follow the steps below to install the &lt;code&gt;pyenv&lt;/code&gt; tool on your system.&lt;/p&gt;
+&lt;h4 id=&#34;step-1-getting-your-system-ready&#34;&gt;Step 1: Getting Your System Ready&lt;/h4&gt;
+&lt;p&gt;Ubuntu 20.04 ships with version 3.8.2 of Python pre-installed as the &amp;lsquo;system&amp;rsquo; version of Python. You&amp;rsquo;ll want to keep this, but it&amp;rsquo;s helpful to make it respond to all &lt;code&gt;python&lt;/code&gt; commands. By default, it will only respond to &lt;code&gt;python3&lt;/code&gt;. To fix this, you can install the &lt;code&gt;python-is-python3&lt;/code&gt; command like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo apt install python-is-python3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you&amp;rsquo;re not using Ubuntu 20.04, your system may already respond to the command &lt;code&gt;python&lt;/code&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;step-2-installing-pyenv&#34;&gt;Step 2: Installing Pyenv&lt;/h4&gt;
+&lt;p&gt;Installation is simple. A script in the open-source &lt;a href=&#34;https://github.com/pyenv/pyenv-installer&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;pyenv-installer&lt;/a&gt; project installs everything you need onto your computer.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://pyenv.run &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After the script has run, you&amp;rsquo;ll need to add the following lines to the bottom of your &lt;code&gt;.bashrc&lt;/code&gt; file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;PATH&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$HOME&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;/.pyenv/bin:&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$PATH&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;eval&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;pyenv init -&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;nb&#34;&gt;eval&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;pyenv virtualenv-init -&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;If you&amp;rsquo;re new to Linux, you can do this by opening the Terminal application and typing &lt;code&gt;nano .bashrc&lt;/code&gt;. Nano uses arrows to navigate, &lt;code&gt;ctrl-o&lt;/code&gt; to write the changes out, and &lt;code&gt;ctrl-x&lt;/code&gt; to quit.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Once that&amp;rsquo;s done, close your terminal session (type &lt;code&gt;exit&lt;/code&gt;) and then open a new terminal.&lt;/p&gt;
+&lt;p&gt;Next, we need to add some system libraries so that Pyenv can build Python directly from the Python source code. This list may change from time to time, so always check for the latest advice in the &lt;a href=&#34;https://github.com/pyenv/pyenv/wiki/Common-build-problems&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Pyenv Wiki&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can check if your installation is ready with the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv doctor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If this command reports, &lt;code&gt;&amp;quot;Congratulations! You are ready to build pythons!&amp;quot;&lt;/code&gt; then you&amp;rsquo;re good to go.&lt;/p&gt;
+&lt;h4 id=&#34;step-3-installing-python-385&#34;&gt;Step 3: Installing Python 3.8.5&lt;/h4&gt;
+&lt;p&gt;First of all, to see the full list of the available Python versions &amp;mdash; there are a lot &amp;mdash; type the following command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv install --list
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s install the very latest version of Python &amp;mdash; which is 3.8.5 &amp;mdash; using the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv install 3.8.5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Pyenv will now download, build, and install the requested version of Python.&lt;/p&gt;
+&lt;p&gt;Finally, tell &lt;code&gt;pyenv&lt;/code&gt; to rehash its list of &amp;lsquo;shims&amp;rsquo; to make sure the new version of Python you just added is ready for use. Shims are the programs &lt;code&gt;pyenv&lt;/code&gt; uses to redirect your Python calls. Rehashing instructs &lt;code&gt;pyenv&lt;/code&gt; to install shims for all Python binaries known to &lt;code&gt;pyenv&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv rehash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;step-4-switching-between-python-versions&#34;&gt;Step 4: Switching Between Python Versions&lt;/h4&gt;
+&lt;p&gt;Now that Python 3.8.5 is installed, let&amp;rsquo;s take a look at the Python versions that &lt;code&gt;pyenv&lt;/code&gt; reports are available for use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv versions
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Your versions list might look something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;* system &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt; by /home/ben/.pyenv/version&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  3.8.5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;*&lt;/code&gt; next to &amp;lsquo;system&amp;rsquo; tells you that the system version of Python is currently the global default. To change the global default to the 3.8.5 release that you just installed, type:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv global 3.8.5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To check which version of Python your system is now using globally, ask Python for its version number like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;python -V
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The answer should be &amp;lsquo;Python 3.8.5.&amp;rsquo;&lt;/p&gt;
+&lt;p&gt;To switch back to your system version of Python, you can use the special &amp;lsquo;system&amp;rsquo; keyword like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pyenv global system
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And that&amp;rsquo;s it. You can now install and switch between many different versions of Python any time you like!&lt;/p&gt;
+&lt;h3 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h3&gt;
+&lt;p&gt;To find out more about what pyenv can do for you, check out the &lt;a href=&#34;https://github.com/pyenv/pyenv&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;website&lt;/a&gt; or try &lt;code&gt;pyenv --help&lt;/code&gt;. To get help on a specific command type &lt;code&gt;pyenv &amp;lt;command&amp;gt; --help&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you liked this guide, you might find these others in our &amp;lsquo;Python Like A Pro&amp;rsquo; series useful:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-managing-python-packages&#34;&gt;Managing Python Project Dependencies Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-installing-global-packages&#34;&gt;Managing Python Global Packages Like A Pro&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;Build Python Docker Containers Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cf-gs&#34;&gt;Run Python In Production Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here&amp;rsquo;s the video to accompany this guide:&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/nXbe6Hmb_k0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Python Like A Pro: Building Docker Containers</title>
+      
+      <link>/videos/python-build-containers-for-python-apps-the-easy-way-with-buildpacks/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/python-build-containers-for-python-apps-the-easy-way-with-buildpacks/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Python Like A Pro: Installing Python &amp; Switching Versions</title>
+      
+      <link>/videos/python-installing-python-like-a-pro/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/python-installing-python-like-a-pro/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Python Like A Pro: Managing Global Packages</title>
+      
+      <link>/videos/python-managing-global-deps-like-a-pro-with-pipx/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/python-managing-global-deps-like-a-pro-with-pipx/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Python Like A Pro: Managing Project Packages</title>
+      
+      <link>/videos/python-managing-python-dependencies-like-a-pro/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/python-managing-python-dependencies-like-a-pro/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Videos: Python Like A Pro: Run In Production</title>
+      
+      <link>/videos/python-deploy-python-to-production-in-seconds/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/videos/python-deploy-python-to-production-in-seconds/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Boot RSocket Sample</title>
+      
+      <link>/samples/spring-boot-rsocket-demo/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-boot-rsocket-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Cloud Data Flow Sample</title>
+      
+      <link>/samples/spring-cloud-data-flow-demo/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-cloud-data-flow-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Python Like A Pro: How To Deploy Python Application Into Production</title>
+      
+      <link>/guides/python/cf-gs/</link>
+      <pubDate>Tue, 28 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/python/cf-gs/</guid>
+      <description>
+
+        
+        &lt;p&gt;In this guide, you&amp;rsquo;ll learn how to get a Python application into production in seconds.&lt;/p&gt;
+&lt;p&gt;Production is super important. It&amp;rsquo;s where your users meet your code and where you get recognition for all the hard work you&amp;rsquo;ve put in. Production is where your company competes, and where it gets rewarded for all the risks it&amp;rsquo;s taken &amp;mdash; large and small.&lt;/p&gt;
+&lt;p&gt;Getting code into production quickly and regularly is life changing for developers like yourself. It opens the door to true agility &amp;mdash; a huge win for you, your team, and your company. But if the path to production is littered with roadblocks, getting your applications out there will be tiring and time consuming.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s where Cloud Foundry comes in.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-cloud-foundry&#34;&gt;What Is Cloud Foundry?&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://cloudfoundry.org&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Foundry&lt;/a&gt; is an open-source platform that simplifies the lives of developers. Cloud Foundry&amp;rsquo;s &lt;a href=&#34;https://www.cloudfoundry.org/application-runtime/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;lsquo;Application Runtime&amp;rsquo;&lt;/a&gt; takes your application code &amp;mdash; written in Python or a number of other languages or frameworks &amp;mdash; and runs it on any cloud, including Azure, AWS, GCP, Kubernetes, or even vSphere VMs.&lt;/p&gt;
+&lt;p&gt;A unique feature of Cloud Foundry is its smooth developer experience. Using a single command you can have your code running in a safe, secure, and stable environment in seconds. Once running, Cloud Foundry takes care of everything else including log streaming, health monitoring, scaling, networking, load-balancing, and makes everyday chores like starting and stopping applications a breeze.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;There are a few things you need to do before getting started with Cloud Foundry:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Install the &lt;a href=&#34;https://docs.cloudfoundry.org/cf-cli/install-go-cli.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Cloud Foundry CLI&lt;/a&gt; tool on your computer. This is the tool you will use to interact with Cloud Foundry. You can check that the tool is working by issuing the command &lt;code&gt;cf help&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Decide which Cloud Foundry you&amp;rsquo;re going to use and obtain it&amp;rsquo;s endpoint URL. If you don&amp;rsquo;t have a Cloud Foundry to work with, consider installing Cloud Foundry locally onto Kubernetes on your computer by following the steps in &lt;a href=&#34;/guides/kubernetes/cf4k8s-gs&#34;&gt;this guide&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note: Cloud Foundry goes by many names. There are many &lt;a href=&#34;https://www.cloudfoundry.org/thefoundry/#cert-distros&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;&amp;lsquo;certified distributions&amp;rsquo;&lt;/a&gt; that offer Cloud Foundry as a commercial product. The &lt;a href=&#34;https://tanzu.vmware.com/application-service&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu Application Service&lt;/a&gt; is one example. It is certified to meet the Cloud Foundry open-source standard and is fully compatible with the &lt;a href=&#34;https://docs.cloudfoundry.org/cf-cli/install-go-cli.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;cf CLI&lt;/a&gt; tool.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;get-the-sample-python-application&#34;&gt;Get The Sample Python Application&lt;/h2&gt;
+&lt;p&gt;Download the sample Python application from Github and make the sample application&amp;rsquo;s folder your current working directory as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; git clone https://github.com/benwilcock/buildpacks-python-demo.git
+&amp;gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; buildpacks-python-demo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the folder you will notice three text files, &lt;code&gt;web.py&lt;/code&gt;, &lt;code&gt;requirements.txt&lt;/code&gt;, and &lt;code&gt;Procfile&lt;/code&gt;. If you already know what each of these files is for, you can skip ahead to the next section. If you want to know more about them, read on.&lt;/p&gt;
+&lt;p&gt;The file &lt;code&gt;web.py&lt;/code&gt; contains a hello-world web application written in &lt;code&gt;Python3&lt;/code&gt; using the &lt;code&gt;Flask&lt;/code&gt; and &lt;code&gt;MarkupSafe&lt;/code&gt; libraries.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;flask&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Flask&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;markupsafe&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;escape&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;app&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Flask&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;vm&#34;&gt;__name__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello_world&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Hello, World!&amp;#39;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/hello/&amp;lt;username&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello_user&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;# say hello to that user&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Hello &lt;/span&gt;&lt;span class=&#34;si&#34;&gt;%s&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;%&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;escape&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The file &lt;code&gt;requirements.txt&lt;/code&gt; clarifies which libraries your application is dependent on, and their versions. Pip can generate the contents of this file for you using the command &lt;code&gt;pip freeze&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;click==7.1.2
+Flask==1.1.2
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+Werkzeug==1.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;Procfile&lt;/code&gt; specifies the command-line used to execute the application at runtime. In this case the Procfile declares that the &lt;code&gt;web.py&lt;/code&gt; file contains your &lt;code&gt;FLASK_APP&lt;/code&gt;, calls &lt;code&gt;flask run&lt;/code&gt;, and binds the web-server to the &lt;code&gt;--host&lt;/code&gt; with the IP address &lt;code&gt;0.0.0.0&lt;/code&gt;. It is expected that the &lt;code&gt;--port&lt;/code&gt; to bind the application to will be set as an environment variable using the name &lt;code&gt;$PORT&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;web: FLASK_APP=web.py python3 -m flask run --host=0.0.0.0 --port=$PORT
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Cloud Foundry&amp;rsquo;s buildpack system uses these files to determine that your application is a Python application. Follow the steps below to run this application in Cloud Foundry.&lt;/p&gt;
+&lt;h2 id=&#34;login-to-cloud-foundry&#34;&gt;Login To Cloud Foundry&lt;/h2&gt;
+&lt;p&gt;You can login to your Cloud Foundry application service using the &lt;code&gt;cf login&lt;/code&gt; command as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf login -a &amp;lt;your-api-url&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;cf&lt;/code&gt; tool will then prompt you for your credentials and ask you to select an &amp;lsquo;org&amp;rsquo; and a &amp;lsquo;space&amp;rsquo;. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf login -a CF_API_ENDPOINT_URL
+API endpoint: CF_API_ENDPOINT_URL
+
+Email: &amp;lt;enter-your-email&amp;gt;
+
+Password: &amp;lt;enter-your-password&amp;gt;
+
+Select an org:
+1. tanzu-devrel
+
+&amp;lt;enter-selected-org-number&amp;gt;
+
+Select a space:
+1. development
+2. production
+
+&amp;lt;enter-selected-space-number&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you&amp;rsquo;re using your employers Cloud Foundry, the login process may be different. For example, you may have single sign on (SSO) rather than a username and password and you may be restricted in terms of which orgs and spaces are available to you.&lt;/p&gt;
+&lt;p&gt;&amp;lsquo;Org and space&amp;rsquo; are simply Cloud Foundry terms for application partitioning. Depending on how your cloud foundry was set up, you may see very different names and options. Cloud Foundry doesn&amp;rsquo;t attach any special meaning to these names. Production could just as easily be called &amp;lsquo;bob&amp;rsquo; if that makes sense in your organization. Ask your platform team for advice on which space to use.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Don&amp;rsquo;t really push apps to production unless it&amp;rsquo;s definitely safe for you to do so!&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;If at any point you need to remind yourself which API url, org, or space you are currently using, you can use the &lt;code&gt;cf target&lt;/code&gt; command like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf target
+
+api endpoint:   CF_API_ENDPOINT_URL
+api version:    2.151.0
+user:           &amp;lt;your-email&amp;gt;
+org:            tanzu-devrel
+space:          production
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If at any time you need help with a specific command such as &lt;code&gt;cf login&lt;/code&gt; simply ask for context specific help using the &lt;code&gt;--help&lt;/code&gt; option as shown below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf login --help
+
+NAME:
+   login - Log user in
+
+USAGE:
+   cf login &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-a API_URL&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-u USERNAME&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-p PASSWORD&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-o ORG&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-s SPACE&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--sso &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; --sso-passcode PASSCODE&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--origin ORIGIN&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;run-your-python-application-in-the-production-space&#34;&gt;Run Your Python Application In The &amp;lsquo;Production&amp;rsquo; Space&lt;/h2&gt;
+&lt;p&gt;The &lt;code&gt;cf target&lt;/code&gt; command above confirmed that the &lt;code&gt;production&lt;/code&gt; space is the current target for your applications. Any space is fine, it doesn&amp;rsquo;t have to be production, the process is the same.&lt;/p&gt;
+&lt;p&gt;The command you use to run your application on Cloud Foundry is &lt;code&gt;cf push&lt;/code&gt;. You must give the application a name when you push it. In the example below the name &lt;code&gt;python-demo&lt;/code&gt; has been used:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf push python-demo --random-route
+Pushing app python-demo to org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;You don&amp;rsquo;t have to use &lt;code&gt;--random-route&lt;/code&gt; either, it just prevents clashes when an app exists with the same name elsewhere on your Cloud Foundry instance.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The &lt;code&gt;cf push&lt;/code&gt; command uses a technology called &amp;lsquo;&lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;buildpacks&lt;/a&gt;&amp;rsquo; to put your Python application into a Docker container before running it. The process takes no more than a minute or two on average. During that time, Cloud Foundry will communicate what the buildpack is doing before finally confirming that your application is running.&lt;/p&gt;
+&lt;p&gt;When the application has started, Cloud Foundry will alert you and give you the route (URL) that has been assigned to the application.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;Waiting &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; app to start...
+
+name:              python-demo
+requested state:   started
+routes:            python-demo-lean-quokka-sc.cfapps.io
+last uploaded:     Tue &lt;span class=&#34;m&#34;&gt;28&lt;/span&gt; Jul 16:32:38 BST &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt;
+stack:             cflinuxfs3
+buildpacks:        python
+
+type:            web
+instances:       1/1
+memory usage:    1024M
+start command:   &lt;span class=&#34;nv&#34;&gt;FLASK_APP&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;web.py python3 -m flask run --host&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0.0.0.0 --port&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$PORT&lt;/span&gt;
+     state     since                  cpu    memory       disk           details
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;   running   2020-07-28T15:32:55Z   0.0%   4.3M of 1G   214.6M of 1G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this case, the route assigned to this application by Cloud Foundry is &lt;code&gt;python-demo-lean-quokka-sc.cfapps.io&lt;/code&gt;. Your application&amp;rsquo;s route will be different. You will use the route &lt;strong&gt;you&lt;/strong&gt; have been given to test that you can communicate with the application.&lt;/p&gt;
+&lt;h2 id=&#34;test-your-python-application-is-running&#34;&gt;Test Your Python Application Is Running&lt;/h2&gt;
+&lt;p&gt;To test the application is running, issue a HTTP GET request to the route Cloud Foundry gave to you when you used the &lt;code&gt;cf push&lt;/code&gt; command in the previous step.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; http python-demo-lean-quokka-sc.cfapps.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The application will respond with the legend &amp;lsquo;Hello, World!&amp;rsquo; like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;HTTP/1.1 &lt;span class=&#34;m&#34;&gt;200&lt;/span&gt; OK
+Connection: keep-alive
+Content-Length: &lt;span class=&#34;m&#34;&gt;13&lt;/span&gt;
+Content-Type: text/html&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;charset&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;utf-8
+Date: Tue, &lt;span class=&#34;m&#34;&gt;28&lt;/span&gt; Jul &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt; 15:37:41 GMT
+Server: Werkzeug/1.0.1 Python/3.8.3
+X-Vcap-Request-Id: 7b49d6ff-30d3-46c1-75d8-0bb75275b75d
+
+Hello, World!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The test above uses the &lt;a href=&#34;https://httpie.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;HTTPie&lt;/a&gt; tool, but you could also use &lt;code&gt;curl&lt;/code&gt; or a regular web browser. It&amp;rsquo;s up to you.&lt;/p&gt;
+&lt;h2 id=&#34;theres-more&#34;&gt;There&amp;rsquo;s More&lt;/h2&gt;
+&lt;p&gt;Here&amp;rsquo;s a few more commonly used &lt;code&gt;cf&lt;/code&gt; commands for you. Don&amp;rsquo;t forget, you can use &lt;code&gt;cf help&lt;/code&gt; to get a full list of all the available commands at any time, and &lt;code&gt;cf &amp;lt;command&amp;gt; --help&lt;/code&gt; will give you detailed information on each of them.&lt;/p&gt;
+&lt;h3 id=&#34;listing-your-applications&#34;&gt;Listing Your Applications&lt;/h3&gt;
+&lt;p&gt;You can see a list of all the applications you have running in your current space at any time using the &lt;code&gt;cf apps&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf apps
+Getting apps in org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;...
+OK
+
+name          requested state   instances   memory   disk   urls
+python-demo   started           1/1         1G       1G     python-demo-lean-quokka-sc.cfapps.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;getting-detailed-application-status&#34;&gt;Getting Detailed Application Status&lt;/h3&gt;
+&lt;p&gt;You can get fine-grained application status using the &lt;code&gt;cf app&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf app python-demo
+Showing health and status &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; app python-demo in org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;...
+
+name:              python-demo
+requested state:   started
+routes:            python-demo-lean-quokka-sc.cfapps.io
+last uploaded:     Tue &lt;span class=&#34;m&#34;&gt;28&lt;/span&gt; Jul 16:32:38 BST &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt;
+stack:             cflinuxfs3
+buildpacks:        python
+
+type:           web
+instances:      1/1
+memory usage:   1024M
+     state     since                  cpu    memory        disk           details
+&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;   running   2020-07-28T15:32:55Z   0.5%   30.8M of 1G   214.6M of 1G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;tailing-an-applications-log&#34;&gt;Tailing An Applications Log&lt;/h3&gt;
+&lt;p&gt;You can view the log stream for your application in realtime with the &lt;code&gt;cf logs&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf logs python-demo
+Retrieving logs &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; app python-demo in org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;...
+
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can get recent logs (rather than a tail of the log) using the &lt;code&gt;--recent&lt;/code&gt; option.&lt;/p&gt;
+&lt;h3 id=&#34;deleting-removing-an-application&#34;&gt;Deleting (Removing) An Application&lt;/h3&gt;
+&lt;p&gt;You can remove and delete your application from Cloud Foundry at any time using the &lt;code&gt;cf delete&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; cf delete python-demo
+Really delete the app python-demo?&amp;gt; y
+Deleting app python-demo in org tanzu-devrel / space production as &amp;lt;your-email&amp;gt;...
+OK
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;Most Cloud Foundry installations include a Python Buildpack. But did you know that you can use buildpacks without using Cloud Foundry? Buildpacks are a fabulous, sustainable, stress-free way to get code into Docker containers. To find out how to use them in your Python tool chain take a look at our &lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;Python buildpack guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Did you know that can push Docker images directly to Cloud Foundry? You use the same &lt;code&gt;cf push&lt;/code&gt; command but add the &lt;code&gt;--docker-image&lt;/code&gt; option. Take a look at the help for the push command for more information or read the docs &lt;a href=&#34;http://cli.cloudfoundry.org/en-US/cf/push.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Did you know that you can run Cloud Foundry directly on top of Kubernetes? That means you can get the same smooth &lt;code&gt;cf push&lt;/code&gt; experience on your Kubernetes cluster. Just think, less YAML, less &lt;code&gt;kubectl&lt;/code&gt;, less stress! You can get started with our &lt;a href=&#34;/guides/kubernetes/cf4k8s-gs&#34;&gt;CF for K8s guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you liked this guide, you might find these others in our &amp;lsquo;Python Like A Pro&amp;rsquo; series useful:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;Install Python Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-managing-python-packages&#34;&gt;Managing Python Project Dependencies Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-installing-global-packages&#34;&gt;Managing Python Global Packages Like A Pro&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cnb-gs-python&#34;&gt;Build Python Docker Containers Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And if you&amp;rsquo;d prefer to see Cloud Foundry in action without actually following the steps above, check out our video guide:&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/qLg2xtQ5kTA&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Python Like A Pro: Building Docker Containers</title>
+      
+      <link>/guides/python/cnb-gs-python/</link>
+      <pubDate>Tue, 21 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/python/cnb-gs-python/</guid>
+      <description>
+
+        
+        &lt;p&gt;Packaging your application code into Docker containers is a tricky business. Python code is no exception. There are a &lt;em&gt;ton&lt;/em&gt; of best practices that you need to know about if you&amp;rsquo;re going to build a container that is safe, secure, and maintainable over the long term. &lt;a href=&#34;https://buildpacks.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Buildpacks&lt;/a&gt; codify these best practices, and they&amp;rsquo;re open-source, so they&amp;rsquo;re a great way to turn your application code into runnable containers.&lt;/p&gt;
+&lt;p&gt;And because buildpacks completely remove the need for a &lt;code&gt;Dockerfile&lt;/code&gt;, they dramatically simplify the maintenance of your container images &amp;mdash; particularly useful if you have multiple images to maintain. They&amp;rsquo;re no &amp;lsquo;flash-in-the-pan&amp;rsquo; either. Developed by Heroku in 2011, and also used in Cloud Foundry, buildpacks have built and run millions of production workloads!&lt;/p&gt;
+&lt;p&gt;For Python developers, there are currently two implementations of the Buildpack standard which provide Python compatible buildpacks. One is from Google and the other is from Heroku. In this guide, you&amp;rsquo;ll learn how to use Heroku&amp;rsquo;s Python buildpack to create a container image for a sample Python application.&lt;/p&gt;
+&lt;h2 id=&#34;before-you-begin&#34;&gt;Before You Begin&lt;/h2&gt;
+&lt;p&gt;There are a few things you need to do before getting started with Python Buildpacks:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Install &lt;a href=&#34;https://hub.docker.com/search?type=edition&amp;amp;offering=community&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Desktop&lt;/a&gt;. The &lt;code&gt;pack&lt;/code&gt; CLI requires the Docker daemon, so you&amp;rsquo;ll need to have that installed and running locally.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check out &lt;a href=&#34;https://kube.academy/courses/containers-101&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Containers 101&lt;/a&gt; on KubeAcademy, particularly if you&amp;rsquo;ve never worked with containers or Docker before.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Follow the documentation for &lt;a href=&#34;https://buildpacks.io/docs/install-pack/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;installing &lt;code&gt;pack&lt;/code&gt;&lt;/a&gt; in your local environment.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;[Optional] If you are completely new to buildpacks, you might prefer to first read up on &lt;a href=&#34;/guides/containers/cnb-what-is&#34;&gt;what are buildpacks?&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;using-buildpacks-with-python&#34;&gt;Using Buildpacks With Python&lt;/h2&gt;
+&lt;p&gt;Buildpacks work the same way no matter what language the code is written in. In this guide you&amp;rsquo;ll use a simple Python application, but remember that the process works in the same way for Node.JS, Java, Go, PHP, and more.&lt;/p&gt;
+&lt;p&gt;Follow the steps below to quickly create a container image for a Python application using the Heroku Python Buildpack.&lt;/p&gt;
+&lt;h3 id=&#34;get-the-sample-python-application&#34;&gt;Get The Sample Python Application&lt;/h3&gt;
+&lt;p&gt;Download the sample Python application from Github and make the sample application&amp;rsquo;s folder your current working directory as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; git clone https://github.com/benwilcock/buildpacks-python-demo.git
+&amp;gt; &lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; buildpacks-python-demo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the folder you will notice three text files, &lt;code&gt;web.py&lt;/code&gt;, &lt;code&gt;requirements.txt&lt;/code&gt;, and &lt;code&gt;Procfile&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The file &lt;code&gt;web.py&lt;/code&gt; contains a hello-world web application written in &lt;code&gt;Python3&lt;/code&gt; using the &lt;code&gt;Flask&lt;/code&gt; and &lt;code&gt;MarkupSafe&lt;/code&gt; libraries.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;flask&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Flask&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;markupsafe&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;escape&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;app&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Flask&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;vm&#34;&gt;__name__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello_world&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Hello, World!&amp;#39;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@app&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/hello/&amp;lt;username&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello_user&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;# say hello to that user&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Hello &lt;/span&gt;&lt;span class=&#34;si&#34;&gt;%s&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;%&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;escape&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The file &lt;code&gt;requirements.txt&lt;/code&gt; clarifies which libraries your application is dependent on, and their versions. Pip can generate the contents of this file for you using the command &lt;code&gt;pip freeze&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;click==7.1.2
+Flask==1.1.2
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+Werkzeug==1.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;Procfile&lt;/code&gt; specifies the command-line used to execute the application at runtime. In this case the Procfile declares that the &lt;code&gt;web.py&lt;/code&gt; file contains your &lt;code&gt;FLASK_APP&lt;/code&gt;, calls &lt;code&gt;flask run&lt;/code&gt;, and binds the web-server to the &lt;code&gt;--host&lt;/code&gt; with the IP address &lt;code&gt;0.0.0.0&lt;/code&gt;. It is expected that the &lt;code&gt;--port&lt;/code&gt; to bind the application to will be set as an environment variable using the name &lt;code&gt;$PORT&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;web: FLASK_APP=web.py python3 -m flask run --host=0.0.0.0 --port=$PORT
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;get-the-list-of-suggested-builders&#34;&gt;Get The List Of Suggested Builders&lt;/h3&gt;
+&lt;p&gt;There are many implementations of the &lt;a href=&#34;https://buildpacks.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Buildpacks&lt;/a&gt; standard. These implementations are called &amp;lsquo;builders&amp;rsquo;. To discover the very latest list of suggested builders, use the &lt;code&gt;pack suggest-builders&lt;/code&gt; command as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; pack suggest-builders
+
+Suggested builders:
+	Google:                gcr.io/buildpacks/builder:v1                 Ubuntu &lt;span class=&#34;m&#34;&gt;18&lt;/span&gt; base image with buildpacks &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; .NET, Go, Java, Node.js, and Python
+	Heroku:                heroku/buildpacks:18                         heroku-18 base image with buildpacks &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; Ruby, Java, Node.js, Python, Golang, &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt; PHP
+	Paketo Buildpacks:     gcr.io/paketo-buildpacks/builder:full-cf     cflinuxfs3 base image with buildpacks &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; Java, .NET, NodeJS, Golang, PHP, HTTPD and NGINX
+        ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As you can see, both &lt;a href=&#34;https://github.com/heroku/heroku-buildpack-python&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Heroku&lt;/a&gt; and &lt;a href=&#34;https://github.com/GoogleCloudPlatform/buildpacks&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Google Cloud Platform&lt;/a&gt; offer open-source Python compatible builders. For this exercise, you&amp;rsquo;ll use the Heroku builder, but you could just as easily use Google&amp;rsquo;s.&lt;/p&gt;
+&lt;h3 id=&#34;set-heroku-as-your-default-builder&#34;&gt;Set Heroku As Your Default Builder&lt;/h3&gt;
+&lt;p&gt;Copy the name of the builder that you want to set as your default from the list above &amp;mdash; in this case it&amp;rsquo;s &lt;code&gt;heroku/buildpacks:18&lt;/code&gt; &amp;mdash; and use the &lt;code&gt;pack set-default-builder&lt;/code&gt; command to set this buildpack as the default as shown below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; pack set-default-builder heroku/buildpacks:18
+Builder heroku/buildpacks:18 is now the default builder
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;use-pack-to-create-your-container-image&#34;&gt;Use &lt;code&gt;pack&lt;/code&gt; To Create Your Container Image&lt;/h3&gt;
+&lt;p&gt;To run the builder and create your Python application container image, use the command &lt;code&gt;pack build&lt;/code&gt;. Be sure to also specify an image name for the container in the format &amp;ldquo;&amp;lt;repository&amp;gt;/&amp;lt;container-name&amp;gt;:&amp;lt;tag&amp;gt;&amp;rdquo; as shown in the following example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; pack build benwilcock/python-sample:1.0.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The process of building the image will now begin. The first time you do this, you will notice that docker is downloading a series of container image &amp;lsquo;layers.&amp;rsquo; This is because buildpacks are also containers, so they must first be pulled by Docker before the buildpack can be run locally. Once these images are in your cache, the process is much quicker. The output looks something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;18: Pulling from heroku/buildpacks
+4e20becbd46f: Pull &lt;span class=&#34;nb&#34;&gt;complete&lt;/span&gt;
+3c742a4a0f38: Already exists
+ab0f59294661: Downloading &lt;span class=&#34;o&#34;&gt;[=============================&lt;/span&gt;&amp;gt;                     &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;  16.05MB/26.96MB
+Digest: sha256:296e4f3394e3147a61bd8b08d3c46c0dfa2bf2d4266ed598241cf2419dc96fa3
+Status: Image is up to date &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; heroku/buildpacks:18
+18: Pulling from heroku/pack
+Digest: sha256:219a7621db58790ace66a87d33a200cd89aeda03192994e11a05967fbf8892f6
+Status: Image is up to date &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; heroku/pack:18
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt;&amp;gt; DETECTING
+heroku/python   0.2
+heroku/procfile 0.5
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt;&amp;gt; ANALYZING
+Restoring metadata &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;heroku/python:shim&amp;#34;&lt;/span&gt; from &lt;span class=&#34;nv&#34;&gt;cache&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt;&amp;gt; RESTORING
+Restoring data &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;heroku/python:shim&amp;#34;&lt;/span&gt; from &lt;span class=&#34;nv&#34;&gt;cache&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt;&amp;gt; BUILDING
+-----&amp;gt; No change in requirements detected, installing from cache
+-----&amp;gt; Installing SQLite3
+-----&amp;gt; Installing requirements with pip
+-----&amp;gt; Discovering process types
+       Procfile declares types     -&amp;gt; &lt;span class=&#34;nv&#34;&gt;web&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt;&amp;gt; EXPORTING
+Reusing layer &lt;span class=&#34;s1&#34;&gt;&amp;#39;launcher&amp;#39;&lt;/span&gt;
+Reusing layer &lt;span class=&#34;s1&#34;&gt;&amp;#39;heroku/python:profile&amp;#39;&lt;/span&gt;
+Adding 1/1 app layer&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;s&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+Reusing layer &lt;span class=&#34;s1&#34;&gt;&amp;#39;config&amp;#39;&lt;/span&gt;
+*** Images &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;a904788f7748&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;:
+      index.docker.io/benwilcock/python-sample:1.0.0
+Adding cache layer &lt;span class=&#34;s1&#34;&gt;&amp;#39;heroku/python:shim&amp;#39;&lt;/span&gt;
+Successfully built image benwilcock/python-sample:1.0.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When you see the words &amp;ldquo;Successfully built image&amp;rdquo; the process is complete. Your new container image will now be available in your local Docker image repository. You can list the images in your local repository with the command &lt;code&gt;docker images&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; docker images
+REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE
+benwilcock/python-sample    1.0.0               59843a212207        &lt;span class=&#34;m&#34;&gt;40&lt;/span&gt; years ago        651MB
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Already we&amp;rsquo;re benefiting from buildpack engineering! Notice that the &lt;code&gt;CREATED&lt;/code&gt; date says &amp;ldquo;40 years ago&amp;rdquo;. This is a best practice whereby the timestamps of layers are &amp;lsquo;zeroed&amp;rsquo; to make container builds more reproducible, cache-able, and to avoid unnecessary image downloads. You can read more &lt;a href=&#34;https://buildpacks.io/docs/reference/reproducibility/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;test-the-container-image&#34;&gt;Test The Container Image&lt;/h3&gt;
+&lt;p&gt;Testing the container is no more difficult than running the image with the &lt;code&gt;docker run&lt;/code&gt; command as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; docker run -d -ePORT&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8080&lt;/span&gt; -p8080:8080 --name python-sample benwilcock/python-sample:1.0.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now the container image of your application is running in the background, simply query the &lt;code&gt;http://localhost:8080&lt;/code&gt; endpoint, either using a command-line tool like &lt;a href=&#34;https://httpie.org/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Httpie&lt;/a&gt; as shown below, or a regular web browser.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; http localhost:8080/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Your application will respond with the legend &amp;ldquo;Hello, World!&amp;rdquo; like so:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;HTTP/1.0 200 OK
+Content-Length: 13
+Content-Type: text/html; charset=utf-8
+Date: Tue, 21 Jul 2020 10:27:47 GMT
+Server: Werkzeug/1.0.1 Python/3.6.11
+
+Hello, World!
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And you&amp;rsquo;re done! You built your sample Python application into an OCI compliant Docker container image without resorting to a &lt;code&gt;Dockerfile&lt;/code&gt;. Heroku will take care of most of the underlying maintenance tasks on the operating system and the Python interpreter. All you need to do is re-run &lt;code&gt;pack build&lt;/code&gt; and you&amp;rsquo;ll get a fresh image. If nothing changed, neither will your image.&lt;/p&gt;
+&lt;h3 id=&#34;tidy-up&#34;&gt;Tidy Up&lt;/h3&gt;
+&lt;p&gt;You can stop and remove the container from Docker as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&amp;gt; docker stop python-sample
+&amp;gt; docker rm python-sample
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h3&gt;
+&lt;p&gt;Learn more about buildpacks right here on the Tanzu Developer Center with these great guides:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;/guides/containers/cnb-what-is&#34;&gt;Buildpacks: What Are They?&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;/guides/containers/cnb-gs-pack&#34;&gt;Getting Started With The &lt;code&gt;pack&lt;/code&gt; CLI&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;/guides/containers/cnb-gs-kpack&#34;&gt;Getting Started With Automated Builds Using &lt;code&gt;kpack&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Find out more about what the &lt;code&gt;pack&lt;/code&gt; tool can do by using the &lt;code&gt;--help&lt;/code&gt; command and browsing the &lt;a href=&#34;https://buildpacks.io&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Buildpacks.io&lt;/a&gt; website.&lt;/p&gt;
+&lt;p&gt;If you liked this guide, you might find these others in our &amp;lsquo;Python Like A Pro&amp;rsquo; series useful:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-like-a-pro&#34;&gt;Install Python Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-managing-python-packages&#34;&gt;Managing Python Project Dependencies Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/gs-python-installing-global-packages&#34;&gt;Managing Python Global Packages Like A Pro&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/guides/python/cf-gs&#34;&gt;Run Python In Production Like A Pro!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And if you&amp;rsquo;d prefer to see the buildpack in action without actually following the steps above, check out the accompanying YouTube video guide:&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/JS_YIn49xuw&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Cloud Stream Demo</title>
+      
+      <link>/samples/spring-cloud-stream-demo/</link>
+      <pubDate>Tue, 21 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-cloud-stream-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

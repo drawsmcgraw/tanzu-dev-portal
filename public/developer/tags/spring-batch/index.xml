@@ -1,0 +1,75 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Spring Batch</title>
+    <link>/tags/spring-batch/</link>
+    <description>Recent content in Spring Batch on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 29 Jan 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/spring-batch/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Creating Batch Microservices with Spring Batch</title>
+      
+      <link>/guides/spring/spring-batch/</link>
+      <pubDate>Fri, 29 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/spring-batch/</guid>
+      <description>
+
+        
+        &lt;p&gt;A batch microservice is a short-lived process that launches as the result of some trigger (typically a clock), or that is executed on demand. While &lt;em&gt;batch processing&lt;/em&gt; may seem like a holdover from another era, it is still used widely for all kinds of asynchronous transaction and file processing workloads such as extract, transform, and load (ETL). Data science makes use of batch processing for the training of AI models and other asynchronous tasks.&lt;/p&gt;
+&lt;p&gt;This article highlights how three Spring projects (along with Spring Boot) support building batch microservices: Spring Batch, Spring Cloud Task, and Spring Cloud Data Flow.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Spring Batch&lt;/strong&gt; is a minimalistic framework to run batch processing applications.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Spring Cloud&lt;/strong&gt; Task is a wrapper allowing you to run short-lived microservices using Spring Cloud along with Spring Boot.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Spring Cloud Data Flow&lt;/strong&gt; allows you to build composed tasks orchestrating Spring Batch jobs as Spring Cloud Tasks. This allows the decomposition of a batch job into reusable parts that can be independently tested, deployed, and orchestrated at a level higher than a single job and reused in different workflows.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All three frameworks are complementary.&lt;/p&gt;
+&lt;h2 id=&#34;spring-batch&#34;&gt;Spring Batch&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://spring.io/projects/spring-batch&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Batch&lt;/a&gt; provides reusable functions that are essential in processing large volumes of records, including logging/tracing, transaction management, job processing statistics, job restart, skip, and resource management. It also provides more advanced technical services and features that will enable extremely high-volume and high-performance batch jobs through optimization and partitioning techniques. Simple as well as complex, high-volume batch jobs can leverage the framework in a highly scalable manner to process significant volumes of information.&lt;/p&gt;
+&lt;p&gt;For more details, see also:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/tv/spring-live/0007/&#34;&gt;Cloud Native Batch Processing&lt;/a&gt; (video)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.spring.io/spring-batch/docs/current/reference/html/domain.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;The Domain Language of Batch&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;spring-cloud-task&#34;&gt;Spring Cloud Task&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.spring.io/spring-cloud-task/docs/2.3.0-M1/reference/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Task&lt;/a&gt;  supports the development of short-lived microservices. In general, these perform simple tasks on demand and then terminate. Batch applications are one example where short-lived processes are useful.&lt;/p&gt;
+&lt;p&gt;Spring Cloud Task allows a user to develop and run short-lived microservices using Spring Cloud and run them locally, in the cloud, or with Spring Cloud Data Flow. Just add &lt;code&gt;@EnableTask&lt;/code&gt; and run your app as a Spring Boot app (single application context).&lt;/p&gt;
+&lt;p&gt;Spring Cloud Task records the lifecycle events of a given task. The lifecycle consists of a single task execution. This is a physical execution of a Spring Boot application configured to be a task (annotated with the &lt;code&gt;@EnableTask&lt;/code&gt; annotation).&lt;/p&gt;
+&lt;p&gt;Spring Cloud Task requires a SQL database, for a &lt;code&gt;TaskRepository&lt;/code&gt;, similar to the Spring Batch &lt;code&gt;JobRepository&lt;/code&gt;. The following databases are supported:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;H2&lt;/li&gt;
+&lt;li&gt;HSQLDB&lt;/li&gt;
+&lt;li&gt;MySql&lt;/li&gt;
+&lt;li&gt;Oracle&lt;/li&gt;
+&lt;li&gt;Postgres&lt;/li&gt;
+&lt;li&gt;SqlServer&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you are new to Spring Cloud Task:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Read the &lt;a href=&#34;https://docs.spring.io/spring-cloud-task/docs/current/reference/#getting-started&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Getting Started&lt;/a&gt; docs.&lt;/li&gt;
+&lt;li&gt;Review &lt;a href=&#34;https://github.com/spring-cloud/spring-cloud-task/tree/master/spring-cloud-task-samples&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Code Samples&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;spring-cloud-data-flow&#34;&gt;Spring Cloud Data Flow&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://spring.io/projects/spring-cloud-dataflow&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Spring Cloud Data Flow&lt;/a&gt; (SCDF) supports microservice-based Streaming and Batch data processing for Cloud Foundry and Kubernetes. It provides tools to create complex topologies for streaming and batch data pipelines. The data pipelines consist of Spring Boot apps, built using the Spring Cloud Stream or Spring Cloud Task microservice frameworks. Spring Cloud Data Flow supports a range of data processing use cases, from ETL to import/export, event streaming, and predictive analytics. SCDF’s &lt;a href=&#34;https://dataflow.spring.io/docs/feature-guides/batch/scheduling/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;BatchScheduler&lt;/a&gt; supports scheduling batch jobs at a set time or in response to an event.&lt;/p&gt;
+&lt;h2 id=&#34;learn-more&#34;&gt;Learn More&lt;/h2&gt;
+&lt;p&gt;Along with the links in this guide, the following videos provide a good introduction to batch processing and related topics:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/tv/spring-live/0007/&#34;&gt;Cloud Native Batch Processing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/tv/springone-tour/0007/&#34;&gt;Data Processing With Spring - Day 1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/tv/springone-tour/0008/&#34;&gt;Data Processing With Spring - Day 2&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

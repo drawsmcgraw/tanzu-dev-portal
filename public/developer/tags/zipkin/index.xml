@@ -1,0 +1,237 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Zipkin</title>
+    <link>/tags/zipkin/</link>
+    <description>Recent content in Zipkin on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 29 Jan 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/zipkin/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Implementing Distributed Tracing</title>
+      
+      <link>/guides/microservices/distributed-tracing/</link>
+      <pubDate>Fri, 29 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/microservices/distributed-tracing/</guid>
+      <description>
+
+        
+        &lt;p&gt;When a request comes into a monolithic application, it&amp;rsquo;s fairly easy to trace through what happened as a result of that request because everything is self-contained. However, when a request comes into a microservice (remember GUI apps can be microservices, they just render HTML instead of JSON), that request could result in a cascading chain of 10 other HTTP calls to various other services. You might also be interested in knowing when a particular service makes non-HTTP calls, such as to a database or a message queue.&lt;/p&gt;
+&lt;p&gt;This guide discusses some of the things that are required from an architectural standpoint to support distributed tracing and then describes some implementations, tools, and libraries to facilitate this.&lt;/p&gt;
+&lt;p&gt;What you will discover is that the vast majority of modern distributed tracing solutions are either based on, or inspired by, the &lt;a href=&#34;http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/36356.pdf&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Google Dapper Whitepaper&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-distributed-tracing&#34;&gt;What is Distributed Tracing?&lt;/h2&gt;
+&lt;p&gt;Distributed tracing allows the logs (or other metadata) for applications to span servers. More importantly, these logs need to be able to span not only multiple instances of a single service, but need to be able to correlate the activity of multiple services.&lt;/p&gt;
+&lt;p&gt;When service A calls service B which in turn calls service C, you need to be able to correlate certain log data and statistics about that single request. Manually fishing through logs to try and find the trace related to one client-originated call across an ecosystem of many services, each with multiple application instances, is a nightmare.&lt;/p&gt;
+&lt;p&gt;The solution is distributed tracing. Regardless of how you implement it, it always involves the creation of an &lt;em&gt;origination ID&lt;/em&gt; as well as individual &lt;em&gt;span IDs&lt;/em&gt;. The terminology may vary across different servers, libraries, and agent implementations, but the concepts are the same. Let&amp;rsquo;s take a look at the following simple request:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;User requests the page &lt;code&gt;/myprofile&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;Page calls account service
+&lt;ul&gt;
+&lt;li&gt;Account service calls LDAP&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Page calls profile service
+&lt;ul&gt;
+&lt;li&gt;Profile service calls database&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;User receives a profile page.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In order for a tracing system to monitor this entire request flow—with multiple instances of the web app, account service, and profile service running—an origination ID is needed that spans the entire request flow, no matter what gets called or how. Each individual step must generate and use &lt;em&gt;span IDs&lt;/em&gt; so that the trace for the individual steps can be viewed as a single step as well as part of a larger whole (the original request).&lt;/p&gt;
+&lt;p&gt;Decorated with IDs, we might have the following:&lt;/p&gt;
+
+
+
+
+
+&lt;table class=&#34;table&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Origination ID&lt;/th&gt;
+&lt;th&gt;Span ID&lt;/th&gt;
+&lt;th&gt;Activity&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;abc123&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;span1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;User Requests the page &lt;code&gt;/myprofile&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;abc123&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;span1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Page calls account service&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;abc123&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;span2&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Account service handles request&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;abc123&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;span1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Page calls profile service&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;abc123&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;span3&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Profile service handles request&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;abc123&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;span3&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Profile service queries database&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;abc123&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;span1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Render requested page&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Drawn out as a sequence diagram, this single user-initiated request might look something like this:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/microservices/tracing-sample-ms-transaction.png&#34; alt=&#34;Sample Microservice Transaction&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;The goal of distributed tracing is to maintain enough context so that you (or a tool) can collect sufficient data from distributed trace logs to reconstitute or &lt;em&gt;reverse&lt;/em&gt; a sequence diagram from the available data for any given initiating request.&lt;/p&gt;
+&lt;p&gt;Ideally, with the right metadata, tools, and libraries, you will be able to determine how much time was spent at each step in the sequence diagram, whether anything went wrong during those times, and dive into the detailed trace output for each step in the sequence. All of this should be available to you while being able to roll up or collapse the individual steps in the request so you can examine the entire request.&lt;/p&gt;
+&lt;h2 id=&#34;implementation-in-java&#34;&gt;Implementation in Java&lt;/h2&gt;
+&lt;p&gt;There is nothing preventing you from creating your own code to solve this problem, however, the usual caveats apply when discussing large projects that reinvent the wheel. Keep in mind that your goal is to spend as much time as possible building applications, not building tools to support applications when such tools already exist.&lt;/p&gt;
+&lt;p&gt;Code-wise, the implementation core is relatively simple. For every inbound request, examine the HTTP headers. If there is a &lt;em&gt;trace id&lt;/em&gt; then you know you are part of some larger activity. If there isn&amp;rsquo;t, create a new one. Always create a new &lt;em&gt;span id&lt;/em&gt;. Then, just make the trace and span context available to your code so you can add additional troubleshooting, diagnostic, and metric information for collection later.&lt;/p&gt;
+&lt;h3 id=&#34;tracing-with-spring-cloud-sleuth-and-zipkin&#34;&gt;Tracing with Spring Cloud Sleuth and Zipkin&lt;/h3&gt;
+&lt;p&gt;There are already tools and libraries that solve this problem in the &lt;strong&gt;Spring Cloud&lt;/strong&gt; / &lt;strong&gt;Spring Boot&lt;/strong&gt; space - &lt;em&gt;Sleuth&lt;/em&gt; and &lt;em&gt;Zipkin&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Using these tools, the larger, outermost request (we referred to this as the originator or &lt;em&gt;origination ID&lt;/em&gt; above) is called the &lt;strong&gt;trace&lt;/strong&gt;, and individual steps within this request are called &lt;strong&gt;spans&lt;/strong&gt;. Additional information and metadata can be attached to a &lt;strong&gt;span&lt;/strong&gt; through the use of &lt;strong&gt;tags&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;You can learn more about using Zipkin in the guide: &lt;a href=&#34;/guides/spring/spring-zipkin/&#34;&gt;Getting Started with Zipkin and Spring Boot&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;implementation-in-net&#34;&gt;Implementation in .NET&lt;/h2&gt;
+&lt;p&gt;The same general rules apply to .NET, maintain the trace and span context at the request inbound and outbound level, and emit log information to &lt;strong&gt;STDOUT&lt;/strong&gt; decorated with that information.&lt;/p&gt;
+&lt;p&gt;You can use the extension points available in &lt;strong&gt;WCF&lt;/strong&gt;, &lt;strong&gt;ASP.NET&lt;/strong&gt; or the &lt;strong&gt;Web API&lt;/strong&gt; to trap inbound and outbound requests, which would allow you to not only create and maintain trace and span contexts, but also do things like emit logs with elapsed time calculations per-span, which can then be rolled up by external tools.&lt;/p&gt;
+&lt;p&gt;There is a &lt;a href=&#34;https://github.com/openzipkin/zipkin4net&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;.NET client library for Zipkin&lt;/a&gt; that can be used if you&amp;rsquo;re interested in working with Zipkin.&lt;/p&gt;
+&lt;p&gt;Projects like &lt;a href=&#34;https://steeltoe.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Steeltoe&lt;/a&gt; now utilize Zipkin.&lt;/p&gt;
+&lt;h2 id=&#34;implementation-in-node&#34;&gt;Implementation in Node&lt;/h2&gt;
+&lt;p&gt;Once again, the same high-level rules apply. The goal is to emit information with enough context so that correlations can be determined by some monitoring or analysis tool. There are a number of frameworks available in Node that facilitate this kind of instrumentation.&lt;/p&gt;
+&lt;h2 id=&#34;use-of-agent-based-distributed-tracing-systems&#34;&gt;Use of Agent-Based Distributed Tracing Systems&lt;/h2&gt;
+&lt;p&gt;There are a number of solutions to the distributed tracing problem that involve installing an agent on a virtual machine. This agent can then monitor traffic and perform correlation so that you can see a directed graph of correlated activity for your entire infrastructure. The problem with agent-based solutions is that they require installation on a virtual machine, which is a cloud native anti-pattern.&lt;/p&gt;
+&lt;p&gt;If you can avoid installing an agent then you should do so. There are plenty of implementations of the &lt;strong&gt;Google Dapper&lt;/strong&gt; whitepaper available, none of which require agent installations and prefer instead to inject code aspects or annotations to deal with distributed tracing.&lt;/p&gt;
+&lt;h2 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h2&gt;
+&lt;p&gt;Distributed tracing is essential for troubleshooting microservices applications, so it’s worth the effort to learn about it. What you will discover is that the vast majority of modern distributed tracing solutions are either based on, or inspired by, the &lt;a href=&#34;http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/36356.pdf&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Google Dapper Whitepaper&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To learn more about observability in cloud native environments, visit our &lt;a href=&#34;/patterns/observability/&#34;&gt;Observability pattern&lt;/a&gt;. And be sure and read the guide &lt;a href=&#34;/guides/spring/spring-zipkin/&#34;&gt;Getting Started with Zipkin and Spring Boot&lt;/a&gt; if you’re implementing microservices in the Spring environment.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Samples: Spring Zipkin Demo</title>
+      
+      <link>/samples/spring-zipkin-demo/</link>
+      <pubDate>Mon, 26 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/samples/spring-zipkin-demo/</guid>
+      <description>
+
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      
+      <title>Guides: Getting Started with Zipkin and Spring Boot</title>
+      
+      <link>/guides/spring/spring-zipkin/</link>
+      <pubDate>Mon, 26 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/spring/spring-zipkin/</guid>
+      <description>
+
+        
+        &lt;p&gt;The moment you facilitate one application making a request to another over the network, you  introduce significant complexity. Maybe “significant” is relative, but ask yourself, “What could go wrong?” Because the more services you introduce that your application comes to rely on, the harder it becomes to diagnose any problems that crop up. Is the application slow because of the network? Or is it because one of the services is taking a long time to process? Or something else?&lt;/p&gt;
+&lt;p&gt;This is where tracing can help. Tracing, at the most basic level, tracks requests as they come into the application and flow through the system. It measures how long a request takes to move from point to point, as well as how long it spends in a specific service. Having this insight makes it easier to quickly home in on a problem, rather than guessing, hunting, or outright assuming where a problem may be.&lt;/p&gt;
+&lt;p&gt;There are many tracing solutions out there, but in this post we will look at one of the more popular ones: &lt;a href=&#34;https://zipkin.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Zipkin&lt;/a&gt;. With a powerful community behind it, Zipkin offers instrumentation for numerous languages, frameworks, and data services, and in many cases  getting started is as simple as including a dependency or two and adding a few lines of code. As an example, we will run through  how you can take an existing Spring Boot application and implement Zipkin tracing into it.&lt;/p&gt;
+&lt;h2 id=&#34;standing-up-zipkin&#34;&gt;Standing Up Zipkin&lt;/h2&gt;
+&lt;p&gt;Before instrumenting your code and collecting traces, you must first stand up an instance of Zipkin to which you can send those collections. You have several options, all documented in the &lt;a href=&#34;https://zipkin.io/pages/quickstart.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Zipkin Quickstart&lt;/a&gt;, with the easiest being to run it on Docker. If you have Docker running locally already, you can get Zipkin running with one command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -d -p 9411:9411 openzipkin/zipkin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you don’t have Docker locally but you do have Java installed, it’s almost as easy to run it on your machine. You can download a pre-built JAR and run it with the following commands:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -sSL https://zipkin.io/quickstart.sh &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; bash -s
+java -jar zipkin.jar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Whichever way you choose to run Zipkin, you’ll find it accessible on your machine at http://127.0.0.1:9411. If you open your browser to this address and see Zipkin running, you’re good to go!&lt;/p&gt;
+&lt;h2 id=&#34;preparing-the-demo&#34;&gt;Preparing the Demo&lt;/h2&gt;
+&lt;p&gt;How you instrument your code largely depends on the language, framework, and libraries that you use. For this post, we’ll look at an example &lt;a href=&#34;https://github.com/BrianMMcClain/spring-zipkin-demo&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;written in Java with Spring Boot&lt;/a&gt;. If you’re not a Java developer, they are more likely than not some &lt;a href=&#34;https://zipkin.io/pages/tracers_instrumentation.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;great examples for your language of choice&lt;/a&gt;. For this example, we’ll instrument a bare-bones Spring Boot application consisting of a frontend that calls a backend service, which will also be a Spring Boot application.&lt;/p&gt;
+&lt;p&gt;Let’s assume that both applications started as a basic &lt;a href=&#34;/guides/spring/spring-build-api&#34;&gt;Spring Boot application built with the Spring Web dependency&lt;/a&gt;. The frontend has one endpoint located at &lt;code&gt;/&lt;/code&gt;, which when called, reaches out to the backend. The backend also has a single endpoint, also located at &lt;code&gt;/&lt;/code&gt;, that simply returns the string “backend.” Finally, the frontend sends a response to the user that reads, “Hello from the backend!”&lt;/p&gt;
+&lt;h2 id=&#34;instrumenting-the-backend&#34;&gt;Instrumenting the Backend&lt;/h2&gt;
+&lt;p&gt;Let’s first start by instrumenting the backend. This can be done with two additions to the existing code. First, add the &lt;code&gt;spring-cloud-starter-zipkin&lt;/code&gt; dependency to the &lt;code&gt;pom.xml&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-starter-zipkin&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, you’ll need an additional configuration to your &lt;code&gt;application.properties&lt;/code&gt; file (or if you prefer, this can also be done in the &lt;code&gt;application.yml&lt;/code&gt; file):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;spring.application.name=backend
+server.port=8082
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will tell Zipkin the name of the application while annotating the different pieces of each trace, which will allow you to easily track requests as they flow from the frontend to the backend. We’ve also configured the backend to start on port 8082 so that it doesn’t try to run on the same port as the frontend.&lt;/p&gt;
+&lt;p&gt;That’s it! Much like many of the Spring Boot components, the rest is automatically taken care of for you. All that remains is to instrument the frontend!&lt;/p&gt;
+&lt;h2 id=&#34;instrumenting-the-frontend&#34;&gt;Instrumenting the Frontend&lt;/h2&gt;
+&lt;p&gt;You will need to add one additional piece to the frontend, but first, you’ll do the same work that you did with the backend. Start by adding the &lt;code&gt;spring-cloud-starter-zipkin&lt;/code&gt; dependency:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+	&lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-starter-zipkin&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, in your &lt;code&gt;application.properties&lt;/code&gt; file, configure the name of the frontend application:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;spring.application.name=frontend
+server.port=8080
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The other piece to configure is how the requests are sent to the backend. We need to create a client that will be automatically configured to capture traces as it sends requests, then combine that data with the requests coming into the frontend. For this, we’ll allow the &lt;code&gt;WebController&lt;/code&gt; class to automatically configure a &lt;code&gt;RestTemplate&lt;/code&gt; object for us. To do this, here is all the necessary code :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;com.github.brianmmcclain.springzipkindemo&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.web.bind.annotation.GetMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.web.bind.annotation.RestController&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.web.client.RestTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.beans.factory.annotation.Autowired&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;org.springframework.context.annotation.Bean&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+
+&lt;span class=&#34;nd&#34;&gt;@RestController&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;WebController&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+
+    &lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt; 
+    &lt;span class=&#34;n&#34;&gt;RestTemplate&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;restTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&#34;nd&#34;&gt;@GetMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;helloWorld&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;restTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getForObject&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;http://localhost:8082&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;lt;h1&amp;gt;Hello from the &amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;response&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;!&amp;lt;/h1&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt; 
+    &lt;span class=&#34;n&#34;&gt;RestTemplate&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;restTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RestTemplate&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;WebController&lt;/code&gt; class is given the &lt;code&gt;@RestController&lt;/code&gt; annotation, which tells our application that it will be the class that will handle the logic for HTTP requests as they come in. The class has a variable named &lt;code&gt;restTemplate&lt;/code&gt; of type &lt;code&gt;RestTemplate&lt;/code&gt; and given the &lt;code&gt;@Autowired&lt;/code&gt; annotation that will automatically create the &lt;code&gt;RestTemplate&lt;/code&gt;. It also has the &lt;code&gt;helloWorld&lt;/code&gt; method with the &lt;code&gt;GetMapping(“/”)&lt;/code&gt; annotation, which tells our code to invoke this method when the application receives requests on the &lt;code&gt;/&lt;/code&gt; endpoint. This method sends the request to the backend, constructs the response, and sends it back to the user. Finally, the &lt;code&gt;restTemplate&lt;/code&gt; bean of type &lt;code&gt;RestTemplate&lt;/code&gt; is  what the Autowired &lt;code&gt;restTemplate&lt;/code&gt; variable will look for when being created. In this case, the bean returns a new &lt;code&gt;RestTemplate&lt;/code&gt; object, into which the &lt;code&gt;spring-cloud-starter-zipkin&lt;/code&gt; dependency will hook.&lt;/p&gt;
+&lt;h2 id=&#34;running-the-demo&#34;&gt;Running the Demo&lt;/h2&gt;
+&lt;p&gt;With Zipkin already running, it’s now time to start up both the frontend and the backend applications. Because they are Spring Boot applications, you can open two terminals, navigate to the two code bases, and run the same command to start both of them:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;./mvnw spring-boot:run
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will start the frontend on port 8080 as well as start the backend on port 8082. Once both applications are up and running, send a request or two to the frontend application located at &lt;a href=&#34;http://localhost:8080&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:8080&lt;/a&gt;. For each request, you should be greeted with the phrase, “Hello from the backend!” After you’ve sent some traffic to the application, you can reach Zipkin running at &lt;a href=&#34;http://localhost:9411/zipkin/?serviceName=backend&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;http://localhost:9411/zipkin/?serviceName=backend&lt;/a&gt;, click “Run Query,” and will be greeted with all   your application’s recent traces:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/zipkin-spring-1.png&#34; alt=&#34;List of traces in Zipkin&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;By clicking on one of these traces, you can dig further into the entire flow of a request. This is great for troubleshooting issues in large, complex distributed applications where figuring out exactly where a request is slowing down can be a real challenge:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/zipkin-spring-2.png&#34; alt=&#34;Individual Zipkin trace&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;Zipkin also allows you to visualize the services on which your application depends. If you click on the “Dependencies” page on the left-hand panel, you’ll be shown this visualization for your application:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/guides/spring/screenshots/zipkin-spring-3.png&#34; alt=&#34;Zipkin dependency graph&#34;  /&gt;&lt;/p&gt;
+&lt;p&gt;While simple for this use case, you can imagine how useful this feature will be as your application’s needs for external services grows.&lt;/p&gt;
+&lt;h2 id=&#34;whats-next&#34;&gt;What’s Next?&lt;/h2&gt;
+&lt;p&gt;If you’re not a Java or Spring developer, take a look at some of the available examples out there for your &lt;a href=&#34;https://zipkin.io/pages/tracers_instrumentation.html&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;language and framework of choice&lt;/a&gt;! There is instrumentation available for many languages, such as &lt;a href=&#34;https://github.com/openzipkin/zipkin-ruby&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Ruby&lt;/a&gt;, &lt;a href=&#34;https://github.com/Yelp/py_zipkin&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Python&lt;/a&gt;, &lt;a href=&#34;https://github.com/openzipkin-contrib/zipkin-go-opentracing&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Go&lt;/a&gt;, and may more! Looking to dig even deeper into observability? Make sure to check out our collection of &lt;a href=&#34;/patterns/observability/&#34;&gt;content&lt;/a&gt;, which covers metrics, logging, and tracing.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

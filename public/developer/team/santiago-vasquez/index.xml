@@ -1,0 +1,153 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – </title>
+    <link>/team/santiago-vasquez/</link>
+    <description>Recent content on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/team/santiago-vasquez/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Blog: What’s New in .NET Core for Containers and Microservices</title>
+      
+      <link>/blog/whats-new-in-.net-core-for-containers-and-microservices/</link>
+      <pubDate>Wed, 22 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/whats-new-in-.net-core-for-containers-and-microservices/</guid>
+      <description>
+
+        
+        &lt;p&gt;Throughout most of my career as a developer, I have written code using .NET (mostly C#). But lately, I have been spending more time with Spring, and I keep hearing comments about exciting changes in .NET around containers. I decided it was time to go back and check out what I had missed. This article highlights some of these changes, emphasizing the ones most relevant to containers and microservices; after all, I am part of the &lt;a href=&#34;https://tanzu.vmware.com/tanzu&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;VMware Tanzu Portfolio&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Microsoft released .NET Core 3.0 on Sept. 23, 2019, and a couple of months later, on Dec. 3, 2019, version 3.1 followed. Version 3.0 had already reached its end of life, while version 3.1, with its LTS designation, will have support until Dec. 3, 2022 (more details &lt;a href=&#34;https://dotnet.microsoft.com/platform/support/policy/dotnet-core&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;.NET Core 3.1 contains a tiny number of changes compared to version 3.0. These are mainly related to Blazor and Windows Desktop, in addition to the LTS designation. The bulk of significant changes were in version 3.0. I have selected a subset of items that I believe have a more significant impact on my day-to-day role at VMware Tanzu Labs. For the complete list of changes, go &lt;a href=&#34;https://devblogs.microsoft.com/dotnet/announcing-net-core-3-0/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt; and &lt;a href=&#34;https://devblogs.microsoft.com/dotnet/announcing-net-core-3-1/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;from-container-friendly-to-container-aware&#34;&gt;From Container-Friendly to Container-Aware&lt;/h2&gt;
+&lt;p&gt;Before version 3, running .NET Core in a container was not for the faint of heart. CoreCLR was inefficient when allocating GC heaps and quickly ran into Out-of-Memory situations. The new version of .NET Core has made significant progress to make it a correct container runtime by adding support for memory and CPU limits.&lt;/p&gt;
+&lt;p&gt;Microsoft is actively producing images for multiple platforms (x64, ARM32, ARM64) and operating systems (macOS, Alpine, CentOS, Debian, Fedora, Ubuntu, Windows).&lt;/p&gt;
+&lt;p&gt;The example below creates an Alpine-based Docker image for an ASP.NET Core 3.1 application that runs in a container limited to 10MB of memory.&lt;/p&gt;
+&lt;h4 id=&#34;dockerfilealpine-x64-slim&#34;&gt;Dockerfile.alpine-x64-slim&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;# https://hub.docker.com/_/microsoft-dotnet-core
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build
+WORKDIR /source
+
+# copy csproj and restore as distinct layers
+COPY *.sln .
+COPY aspnetapp/*.csproj ./aspnetapp/
+RUN dotnet restore -r linux-musl-x64
+
+# copy everything else and build app
+COPY aspnetapp/. ./aspnetapp/
+WORKDIR /source/aspnetapp
+RUN dotnet publish -c release -o /app -r linux-musl-x64 --self-contained true --no-restore /p:PublishTrimmed=true /p:PublishReadyToRun=true
+
+# final stage/image
+FROM mcr.microsoft.com/dotnet/core/runtime-deps:3.1-alpine
+WORKDIR /app
+COPY --from=build /app ./
+
+ENTRYPOINT [&amp;quot;./aspnetapp&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;build-the-aspnet-core-app-docker-image&#34;&gt;Build the ASP.NET Core App Docker image&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;docker build --pull -t aspnetapp:alpine-slim -f Dockerfile.alpine-x64-slim .&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id=&#34;run-the-aspnet-core-app-docker-container-limiting-memory&#34;&gt;Run the ASP.NET Core App Docker container limiting memory&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;docker run --rm -d -p 8080:80 -m=10mb --name my-aspnet-app aspnetapp:alpine-slim&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;docker-images-size-improvements&#34;&gt;Docker Images Size Improvements&lt;/h2&gt;
+&lt;p&gt;.NET Core 3.0 brings smaller runtime Docker images. For example, the ASP.NET Core runtime Docker image for the Alpine distribution is a little over 100MB. There are also additional size improvement examples from the Linux amd64 images on &lt;a href=&#34;https://hub.docker.com/_/microsoft-dotnet-core-aspnet/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Docker Hub&lt;/a&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Alpine
+3.1.6-alpine3.12 = 105MB (34% smaller)
+2.1.20-alpine3.12 = 160MB
+
+Debian
+3.1.6-buster-slim = 207MB (18% smaller)
+2.1.20-stretch-slim = 253MB
+
+Ubuntu
+3.1.6-focal = 221MB (20% smaller)
+2.1.20-focal = 276MB
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In addition to smaller runtime images, the SDK includes a tool that analyzes an application and creates self-contained distributions that include only the required runtime libraries, reducing the image size even further (more details &lt;a href=&#34;https://docs.microsoft.com/en-us/dotnet/core/deploying/trim-self-contained&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;).&lt;/p&gt;
+&lt;h2 id=&#34;faster-start-up-time-by-default&#34;&gt;Faster Start-up Time by Default&lt;/h2&gt;
+&lt;p&gt;.NET Core 2.x had tiered compilation disabled by default. Version 3.0 enables it by default. With tiered compilation, one can opt to have the first tier compilation load precompiled code from assemblies created using the &lt;code&gt;ReadytoRun&lt;/code&gt; format (more details &lt;a href=&#34;https://docs.microsoft.com/en-us/dotnet/core/whats-new/dotnet-core-3-0#readytorun-images&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;) ahead of time instead of just-in-time.&lt;/p&gt;
+&lt;p&gt;To compile a project using the &lt;code&gt;ReadyToRun&lt;/code&gt; format, add the &lt;code&gt;&amp;lt;PublishReadyToRun&amp;gt;&lt;/code&gt; setting:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;PropertyGroup&amp;gt;
+  &amp;lt;PublishReadyToRun&amp;gt;true&amp;lt;/PublishReadyToRun&amp;gt;
+&amp;lt;/PropertyGroup&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then publish as a self-contained app. The example below targets the Linux ARM64 runtime.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;dotnet publish -c Release -r linux-arm64 --self-contained
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;grpc-support&#34;&gt;gRPC Support&lt;/h2&gt;
+&lt;p&gt;ASP.NET Core 3.0 adds support for building gRPC services that are well suited for microservices scenarios requiring low latency and high throughput. In addition, the Protobuf lightweight message payloads are ideal for limited bandwidth channels like 2G and 3G mobile networks.&lt;/p&gt;
+&lt;p&gt;Proto files included in .NET applications automatically generate .NET types for gRPC services, client, and messages.&lt;/p&gt;
+&lt;h4 id=&#34;proto-file-greeterproto&#34;&gt;Proto file (Greeter.proto)&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;syntax = &amp;quot;proto3&amp;quot;;
+
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply);
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;.NET types generated from proto files can be used as base classes and can be connected to other .NET Core features like Dependency Injection, Logging, Authentication, etc.&lt;/p&gt;
+&lt;h4 id=&#34;greeterservicecs&#34;&gt;GreeterService.cs&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;public class GreeterService : Greeter.GreeterBase
+{
+	private readonly ILogger&amp;lt;GreeterService&amp;gt; _logger;
+
+	public GreeterService(ILogger&amp;lt;GreeterService&amp;gt; logger)
+	{
+    	_logger = logger;
+	}
+
+	public override Task&amp;lt;HelloReply&amp;gt; SayHello(HelloRequest request,
+    	ServerCallContext context)
+	{
+    	_logger.LogInformation(&amp;quot;Saying hello to {Name}&amp;quot;, request.Name);
+    	return Task.FromResult(new HelloReply
+    	{
+        	Message = &amp;quot;Hello &amp;quot; + request.Name
+    	});
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;gRPC services can be hosted on ASP.NET Core applications.&lt;/p&gt;
+&lt;h4 id=&#34;startupcs&#34;&gt;Startup.cs&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;app.UseEndpoints(endpoints =&amp;gt;
+{
+	endpoints.MapGrpcService&amp;lt;GreeterService&amp;gt;();
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Mode details can be found &lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/grpc/?view=aspnetcore-3.1&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;browser-samesite&#34;&gt;Browser SameSite&lt;/h2&gt;
+&lt;p&gt;Changes in the SameSite implementation (an HTTP cookies standard extension) by Chrome and Firefox are breaking authentication mechanisms in sites that use OpenID and other protocols that must opt out by sending the HTTP header &lt;code&gt;SameSite=none&lt;/code&gt;. ASP.NET Core 3.1 updated the default cookie-emitting behaviors to match the changes in the latest versions of popular browsers (more details &lt;a href=&#34;https://devblogs.microsoft.com/aspnet/upcoming-samesite-cookie-changes-in-asp-net-and-asp-net-core/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt; and &lt;a href=&#34;https://docs.microsoft.com/en-us/dotnet/core/compatibility/3.0-3.1#http-browser-samesite-changes-impact-authentication&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;).&lt;/p&gt;
+&lt;h2 id=&#34;other-changes-worth-calling-out&#34;&gt;Other Changes Worth Calling Out&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;C# 8 includes new features, like async streams, nullable reference types, static local functions, using declarations, additional pattern matchings, interfaces default implementations&lt;/li&gt;
+&lt;li&gt;Diagnostic improvements (details &lt;a href=&#34;https://devblogs.microsoft.com/dotnet/introducing-diagnostics-improvements-in-net-core-3-0/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Distributed tracing (details &lt;a href=&#34;https://devblogs.microsoft.com/aspnet/improvements-in-net-core-3-0-for-troubleshooting-and-monitoring-distributed-apps/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Faster JSON serialization based on &lt;code&gt;Span&amp;lt;T&amp;gt;&lt;/code&gt; (details &lt;a href=&#34;https://devblogs.microsoft.com/dotnet/try-the-new-system-text-json-apis/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;here&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;reference&#34;&gt;Reference&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://devblogs.microsoft.com/dotnet/using-net-and-docker-together-dockercon-2019-update/&#34;&gt;https://devblogs.microsoft.com/dotnet/using-net-and-docker-together-dockercon-2019-update/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://devblogs.microsoft.com/dotnet/running-with-server-gc-in-a-small-container-scenario-part-0/&#34;&gt;https://devblogs.microsoft.com/dotnet/running-with-server-gc-in-a-small-container-scenario-part-0/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://devblogs.microsoft.com/dotnet/running-with-server-gc-in-a-small-container-scenario-part-1-hard-limit-for-the-gc-heap/&#34;&gt;https://devblogs.microsoft.com/dotnet/running-with-server-gc-in-a-small-container-scenario-part-1-hard-limit-for-the-gc-heap/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://devblogs.microsoft.com/aspnet/grpc-vs-http-apis/&#34;&gt;https://devblogs.microsoft.com/aspnet/grpc-vs-http-apis/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/grpc/?view=aspnetcore-3.1&#34;&gt;https://docs.microsoft.com/en-us/aspnet/core/grpc/?view=aspnetcore-3.1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/grpc/aspnetcore?view=aspnetcore-3.1&amp;amp;tabs=visual-studio&#34;&gt;https://docs.microsoft.com/en-us/aspnet/core/grpc/aspnetcore?view=aspnetcore-3.1&amp;amp;tabs=visual-studio&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.microsoft.com/en-us/dotnet/core/compatibility/3.0-3.1#http-browser-samesite-changes-impact-authentication&#34;&gt;https://docs.microsoft.com/en-us/dotnet/core/compatibility/3.0-3.1#http-browser-samesite-changes-impact-authentication&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/&#34;&gt;https://devblogs.microsoft.com/dotnet/try-out-nullable-reference-types/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/dotnet/dotnet-docker/blob/master/samples/aspnetapp/README.md&#34;&gt;https://github.com/dotnet/dotnet-docker/blob/master/samples/aspnetapp/README.md&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/richlander/dotnet-docker-limits&#34;&gt;https://github.com/richlander/dotnet-docker-limits&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,57 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VMware Tanzu Developer Center – Disaster Recovery</title>
+    <link>/tags/disaster-recovery/</link>
+    <description>Recent content in Disaster Recovery on VMware Tanzu Developer Center</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 26 Feb 2021 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/tags/disaster-recovery/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      
+      <title>Guides: Backing Up, Restoring, and Migrating Resources with Velero</title>
+      
+      <link>/guides/kubernetes/what-is-velero/</link>
+      <pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/kubernetes/what-is-velero/</guid>
+      <description>
+
+        
+        &lt;p&gt;Velero is an open source tool for safely backing up and restoring resources in a Kubernetes cluster, performing disaster recovery, and migrating resources and persistent volumes to another Kubernetes cluster.&lt;/p&gt;
+&lt;p&gt;Velero offers key data protection features, such as scheduled backups, retention schedules, and pre- or post-backup hooks for custom actions. Velero can help protect data stored in persistent volumes and makes your entire Kubernetes cluster more resilient.&lt;/p&gt;
+&lt;h1 id=&#34;velero-use-cases&#34;&gt;Velero Use Cases&lt;/h1&gt;
+&lt;p&gt;Here are some of the things Velero can do:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Back up your cluster and restore it in case of loss.&lt;/li&gt;
+&lt;li&gt;Recover from disaster.&lt;/li&gt;
+&lt;li&gt;Copy cluster resources to other clusters.&lt;/li&gt;
+&lt;li&gt;Replicate your production environment to create development and testing environments.&lt;/li&gt;
+&lt;li&gt;Take a snapshot of your application&amp;rsquo;s state before upgrading a cluster.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;velero-components-and-architecture&#34;&gt;Velero Components and Architecture&lt;/h1&gt;
+&lt;p&gt;Velero consists of two main components:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A server that runs on your cluster&lt;/li&gt;
+&lt;li&gt;A command-line utility that runs locally&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Velero supports plug-ins to enable it to work with different storage systems and Kubernetes platforms. You can run Velero in clusters on a cloud provider or on premises.&lt;/p&gt;
+&lt;h1 id=&#34;how-velero-works&#34;&gt;How Velero Works&lt;/h1&gt;
+&lt;p&gt;Each Velero operation&amp;ndash;on-demand backup, scheduled backup, restoration&amp;ndash;is a custom resource that is defined with a Kubernetes custom resource definition, or CRD, and stored in &lt;code&gt;etcd&lt;/code&gt;. Velero includes controllers that process the CRDs to back up and restore resources. You can back up or restore all objects in your cluster, or you can filter objects by type, namespace, or label.&lt;/p&gt;
+&lt;p&gt;Data protection is a chief concern for application owners who want to make sure that they can restore a cluster to a known good state, recover from a crashed cluster, or migrate to a new environment. Velero provides those capabilities.&lt;/p&gt;
+&lt;h3 id=&#34;keep-learning&#34;&gt;Keep Learning&lt;/h3&gt;
+&lt;p&gt;On the &lt;a href=&#34;https://velero.io/&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Velero home page&lt;/a&gt; you can get information on the latest release and download Velero from Github.&lt;/p&gt;
+&lt;p&gt;To get started using Velero read our guide, &lt;a href=&#34;/guides/kubernetes/velero-gs&#34;&gt;Getting Started with Velero&lt;/a&gt;, and watch these videos covering two of Velero’s useful features, &lt;a href=&#34;https://kube.academy/courses/cluster-operations/lessons/backuprestore&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Backup and Restore&lt;/a&gt;, and &lt;a href=&#34;https://www.youtube.com/watch?v=q2FCxheA8VI&amp;amp;list=PL7bmigfV0EqQRysvqvqOtRNk4L5S7uqwM&amp;amp;index=5&amp;amp;t=0s&#34; target=&#34;_blank&#34; rel=&#34;nofollow&#34;&gt;Migration&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>
